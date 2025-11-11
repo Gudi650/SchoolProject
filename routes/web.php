@@ -5,6 +5,7 @@ use App\Http\Controllers\ParentregistrationController;
 use App\Http\Controllers\Student;
 use App\Http\Controllers\Teacherprofile;
 use App\Http\Controllers\TeacherregistrationController;
+use App\Http\Controllers\TeacherRoleController;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Route;
 
@@ -45,11 +46,15 @@ Route::middleware('auth')->group(function () {
         return view('TeacherPanel.announcements');
     })->name('teacher.announcements');
 
+
+
     //profile route using controller
     Route::get('/teacher-profile', [Teacherprofile::class, 'showProfile'])->name('teacher.profile');
 
     //update profile route
     Route::post('/teacher-profile', [Teacherprofile::class, 'updateProfile'])->name('teacher.updateprofile');
+
+
 
     //for post exam results
     Route::get('/teacher-postresults', function () {
@@ -81,11 +86,12 @@ Route::middleware('auth')->group(function () {
         return view('TeacherPanel.generateexamtimetable');
     })->name('teacher.generateexamtimetable');
 
-    //for assign roles
-    Route::get('/teacher-assignroles', function () {
-        return view('TeacherPanel.assignroles');
-    })->name('teacher.assignroles');
+    //route to show available teacher roles using controller
+    Route::get('/teacher-assignroles', [TeacherRoleController::class, 'showAssignRoles'])->name('teacher.assignroles');
 
+    //handle submitted assigned roles form
+    Route::post('/teacher-assignroles', [TeacherRoleController::class, 'assignTeacherRoles'])->name('teacher.assignroles.submit');
+    
     //assign subjects
     Route::get('/teacher-assignsubjects', function () {
         return view('TeacherPanel.assignsubjects');

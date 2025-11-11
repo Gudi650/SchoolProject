@@ -10,6 +10,15 @@ class TeacherRole extends Model
     /** @use HasFactory<\Database\Factories\TeacherRoleFactory> */
     use HasFactory;
 
-    
+    //protectd filables fields
+    protected $fillable = [
+        'name',
+    ];
 
+
+    //define the relationship with the AssignedRole model
+    public function assignedRoles()
+    {
+        return $this->hasMany(AssignedRole::class, 'teacher_role_id');
+    }
 }

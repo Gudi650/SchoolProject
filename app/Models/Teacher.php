@@ -32,4 +32,10 @@ class Teacher extends Model
         return $this->belongsTo(School::class);
     }
 
+    //linking with assigned roles model
+    public function assignedroles()
+    {
+        return $this->hasMany(AssignedRole::class);
+    }
+
 }

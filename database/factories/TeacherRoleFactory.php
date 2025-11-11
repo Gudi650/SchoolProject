@@ -16,8 +16,20 @@ class TeacherRoleFactory extends Factory
      */
     public function definition(): array
     {
+        //redefining the job titles to use in tinker
+
+        $jobTitles = [
+            'Head Teacher',
+            'Discipline Teacher',
+            'Academic Teacher',
+            'Class Teacher',
+            'Teacher',
+            'Librarian',
+        ];
+
+
         return [
-            //
+            'name' => $this->faker->randomElement($jobTitles),
         ];
     }
 }
