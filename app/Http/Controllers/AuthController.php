@@ -102,6 +102,8 @@ class AuthController extends Controller
         
     }
 
+
+    //logout function
     public function logout(Request $request)
     {
         Auth::logout();
@@ -112,6 +114,34 @@ class AuthController extends Controller
 
         //redirecting to the login page after logout
         return redirect()->route('showlogin');
+    }
+
+
+    //change password function 
+    public function changePassword(Request $request)
+    {
+        //validate the input data
+        $validatedData = $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        //get the currently authenticated user
+        $user = Auth::user();
+
+        //check if the current password matches
+        if (!password_verify($validatedData['current_password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['The provided current password is incorrect.'],
+            ]);
+        }
+
+        //update the user's password
+        $user->password = bcrypt($validatedData['new_password']);
+        $user->save();
+
+        //redirect back with a success message
+        return redirect()->back()->with('success', 'Password changed successfully.');
     }
 
 

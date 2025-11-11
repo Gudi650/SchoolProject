@@ -39,6 +39,12 @@ class TeacherregistrationController extends Controller
         // Replace with actual logic to get the school ID
         $schoolId = '1';
 
+
+        //get the teacher record
+        $teacher = Teacher::where('user_id', $userId)->first();
+
+        if ($teacher) {
+
         //create a new teacher record
         Teacher::updateOrCreate(
             ['user_id' => $userId], // Assuming there's a user_id foreign key in the teachers table
@@ -53,9 +59,9 @@ class TeacherregistrationController extends Controller
                 'subject_specialization' => $validatedData['subject_specialization'],
                 'qualification' => $validatedData['qualification'],
             ]
-
-
         );  
+
+        }
 
         //redirect to the teacher panel dashboard with success message
 

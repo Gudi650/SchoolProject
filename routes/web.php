@@ -3,7 +3,9 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ParentregistrationController;
 use App\Http\Controllers\Student;
+use App\Http\Controllers\Teacherprofile;
 use App\Http\Controllers\TeacherregistrationController;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\Route;
 
 
@@ -43,10 +45,11 @@ Route::middleware('auth')->group(function () {
         return view('TeacherPanel.announcements');
     })->name('teacher.announcements');
 
-    //for profile
-    Route::get('/teacher-profile', function () {
-        return view('TeacherPanel.profile');
-    })->name('teacher.profile');
+    //profile route using controller
+    Route::get('/teacher-profile', [Teacherprofile::class, 'showProfile'])->name('teacher.profile');
+
+    //update profile route
+    Route::post('/teacher-profile', [Teacherprofile::class, 'updateProfile'])->name('teacher.updateprofile');
 
     //for post exam results
     Route::get('/teacher-postresults', function () {

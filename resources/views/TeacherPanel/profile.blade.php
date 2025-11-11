@@ -3,9 +3,13 @@
     <main class="flex-1 md:ml-64 p-4 md:p-10 min-w-0 overflow-x-auto">
         <div class="max-w-6xl mx-auto min-w-0">
           <header class="relative bg-white p-4 md:p-6 rounded-lg shadow-sm mb-6">
+
             <div class="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg bg-indigo-800 opacity-25"></div>
+
             <div class="flex items-center justify-between gap-4 relative pl-3 md:pl-4">
+
               <style> .hero-content { position: relative; z-index: 10; } </style>
+
               <div class="flex items-center gap-3 hero-content">
                 <button id="sidebarToggle" aria-label="Open sidebar" class="md:hidden p-2 bg-indigo-600 text-white rounded"> 
                   <i class="bi bi-list"></i> 
@@ -20,23 +24,61 @@
               </div>
               <div class="flex items-center gap-3 hero-content">
                 <div class="text-sm text-gray-500 text-right hidden sm:block">
-                  <div class="uppercase tracking-wide text-xs text-gray-400">Today</div>
-                  <div class="font-medium">Nov 5, 2025</div>
+
+                  <div class="uppercase tracking-wide text-xs text-gray-400">
+                    Today
+                  </div>
+
+                  <div class="font-medium">
+                    Nov 5, 2025
+                  </div>
+
                 </div>
-                <a href="profile_edit.html" id="editLink" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-sm">Edit Profile</a>
+
+                <!--link to edit profile page-->
+                <a href="profile_edit.html" id="editLink" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-sm">
+                  Edit Profile
+                </a>
+
               </div>
             </div>
           </header>
 
   <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="bg-white p-6 rounded shadow text-center">
+
+          <!--checking for teacher object-->
+          @if (isset($teacher) && $teacher)
+            <!-- use $teacher safely -->
+            <div class="bg-white p-6 rounded shadow text-center">      
+
             <img src="https://www.gravatar.com/avatar/?d=mp&s=128" alt="avatar" class="w-32 h-32 rounded-full mx-auto mb-4" />
-            <h2 class="text-xl font-semibold text-indigo-700">John Doe</h2>
-            <p class="text-sm text-gray-500">Role: Teacher</p>
+
+            <h2 class="text-xl font-semibold text-indigo-700">
+              {{ $teacher->fname }} {{ $teacher->lname }}
+            </h2>
+
+            <p class="text-sm text-gray-500">
+              Role: Teacher
+            </p>
+
             <div class="mt-6 text-center md:text-left text-sm text-gray-600 space-y-2">
-              <div><strong>Email:</strong> <span id="displayEmail">johndoe@example.com</span></div>
-              <div><strong>Phone:</strong> <span id="displayPhone">+1 555 0100</span></div>
-              <div><strong>Location:</strong> <span id="displayLocation">City, Country</span></div>
+              <div>
+                <strong>Email:</strong> 
+                <span id="displayEmail">
+                  {{ $teacher->email }}
+                </span>
+              </div>
+
+              <div><strong>Phone:</strong> 
+                <span id="displayPhone">
+                  {{ $teacher->phone }}
+                </span>
+              </div>
+
+              <div><strong>Location:</strong>
+                <span id="displayLocation">
+                  {{ $teacher->city }} {{ $teacher->country }}
+                </span></div>
               <div class="mt-4 flex justify-center md:justify-start">
                 <button id="changePasswordBtn" class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 transition">
                   <i class="bi bi-key-fill text-sm"></i>
@@ -44,8 +86,206 @@
                 </button>
               </div>
             </div>
+          </div><!--end of the left side:profile summary-->
+
+          <!-- Profile Details Form -->
+          <div class="lg:col-span-2 bg-white p-6 rounded shadow">
+  
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Profile Details</h3>
+
+            <form id="profileForm" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Full name</label>
+                  <input id="fullName" 
+                  type="text" 
+                  class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" value="{{ $teacher->fname }} {{ $teacher->lname }}" disabled />
+                </div>
+
+                <div>
+
+                  <label class="block text-sm font-medium text-gray-700">
+                    Email
+                  </label>
+
+                  <input id="email" 
+                  type="email" 
+                  class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" 
+                  value="{{ $teacher->email }}" disabled />
+
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">
+                    Phone
+                  </label>
+
+                  <input id="phone" 
+                  type="tel" 
+                  class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" 
+                  value="{{ $teacher->phone }}" disabled />
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">
+                    Location
+                  </label>
+
+                  <input id="location" 
+                  type="text" 
+                  class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" 
+                  value="{{ $teacher->city }}, {{ $teacher->country }}" disabled />
+
+                </div>
+
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Bio</label>
+                <textarea id="bio" rows="4" class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" disabled>Experienced class teacher focused on student-centred learning.</textarea>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <!-- no action buttons in static frontend -->
+              </div>
+            </form>
           </div>
 
+          <!-- Edit Profile Modal -->
+
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 sm:mx-6 md:mx-0 overflow-hidden">
+
+        <div class="flex items-center justify-between p-4 bg-indigo-50 border-b">
+
+          <div class="flex items-center gap-3">
+            <span class="p-2 bg-indigo-100 text-indigo-700 rounded-lg">
+              <i class="bi bi-person-badge-fill"></i>
+            </span>
+            <h3 class="text-lg font-semibold text-indigo-700">
+              Edit Profile
+            </h3>
+          </div>
+
+          <!--the exit icon button-->
+          <button id="modalClose" class="text-indigo-600 hover:text-indigo-800 text-2xl leading-none">
+            &times;
+          </button>
+        </div>
+
+        <!--body of the modal-->
+        <div class="p-4 md:p-6">
+
+          <form 
+          action="{{ route('teacher.updateprofile') }}"
+          method="POST"
+          class="space-y-4">
+            @csrf
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+
+                <label class="block text-sm font-medium text-gray-700">
+                  Phone Number
+                </label>
+
+                <input type="tel" 
+                autocomplete="name" 
+                class="mt-1 block w-full border border-gray-200 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200" 
+                name="phone"
+                value="{{ $teacher->phone }}" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700">
+                  Email
+                </label>
+                <input type="email" 
+                autocomplete="email" 
+                class="mt-1 block w-full border border-gray-200 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200" 
+                value="{{ $teacher->email }}" />
+              </div>
+
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">
+                Bio
+              </label>
+
+              <textarea rows="4" class="mt-1 block w-full border border-gray-200 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200">
+                Experienced class teacher focused on student-centred learning.
+              </textarea>
+            </div>
+
+            <div class="flex items-center justify-end gap-3">
+
+              <button type="button" id="modalCancel" 
+              class="px-4 py-2 rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
+                Cancel
+              </button>
+
+              <button type="submit" 
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-sm hover:from-indigo-700 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300"> 
+              <i class="bi bi-save-fill"></i>
+               Save
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+          
+
+          <!--else statement if no teacher object-->
+          @else
+          <!-- use $teacher safely -->
+            <div class="bg-white p-6 rounded shadow text-center">      
+
+            <img src="https://www.gravatar.com/avatar/?d=mp&s=128" alt="avatar" class="w-32 h-32 rounded-full mx-auto mb-4" />
+
+            <h2 class="text-xl font-semibold text-indigo-700">
+              John Doe
+            </h2>
+
+            <p class="text-sm text-gray-500">
+              Role: Teacher
+            </p>
+
+            <div class="mt-6 text-center md:text-left text-sm text-gray-600 space-y-2">
+              <div>
+                <strong>Email:</strong> 
+                <span id="displayEmail">
+                  email
+                </span>
+              </div>
+
+              <div><strong>Phone:</strong> 
+                <span id="displayPhone">
+                  phone
+                </span>
+              </div>
+
+              <div><strong>Location:</strong>
+                <span id="displayLocation">
+                  city,country
+                </span></div>
+              <div class="mt-4 flex justify-center md:justify-start">
+                <button id="changePasswordBtn" class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 transition">
+                  <i class="bi bi-key-fill text-sm"></i>
+                  <span class="text-sm font-medium">Change Password</span>
+                </button>
+              </div>
+            </div>
+          </div><!--end of the left side:profile summary-->
+
+          
+            <!-- Profile Details Form -->
           <div class="lg:col-span-2 bg-white p-6 rounded shadow">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Profile Details</h3>
             <form id="profileForm" class="space-y-4">
@@ -79,6 +319,8 @@
               </div>
             </form>
           </div>
+
+          @endif
   </section>
 
         <!-- Assigned Classes & Subjects (separate full-width section) -->
@@ -106,37 +348,88 @@
     </div>
 
     <!-- Edit Profile Modal -->
+
     <div id="editModal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+
       <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 sm:mx-6 md:mx-0 overflow-hidden">
+
         <div class="flex items-center justify-between p-4 bg-indigo-50 border-b">
+
           <div class="flex items-center gap-3">
-            <span class="p-2 bg-indigo-100 text-indigo-700 rounded-lg"><i class="bi bi-person-badge-fill"></i></span>
-            <h3 class="text-lg font-semibold text-indigo-700">Edit Profile</h3>
+            <span class="p-2 bg-indigo-100 text-indigo-700 rounded-lg">
+              <i class="bi bi-person-badge-fill"></i>
+            </span>
+            <h3 class="text-lg font-semibold text-indigo-700">
+              Edit Profile
+            </h3>
           </div>
-          <button id="modalClose" class="text-indigo-600 hover:text-indigo-800 text-2xl leading-none">&times;</button>
+
+          <!--the exit icon button-->
+          <button id="modalClose" class="text-indigo-600 hover:text-indigo-800 text-2xl leading-none">
+            &times;
+          </button>
         </div>
+
+        <!--body of the modal-->
         <div class="p-4 md:p-6">
+
           <form class="space-y-4">
+            @csrf
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700">Full name</label>
-                <input type="text" autocomplete="name" class="mt-1 block w-full border border-gray-200 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200" value="John Doe" />
+
+                <label class="block text-sm font-medium text-gray-700">
+                  Full name
+                </label>
+
+                <input type="text" 
+                autocomplete="name" 
+                class="mt-1 block w-full border border-gray-200 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200" 
+                name="fullName"
+                value="John Doe" />
               </div>
+
               <div>
-                <label class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" autocomplete="email" class="mt-1 block w-full border border-gray-200 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200" value="johndoe@example.com" />
+                <label class="block text-sm font-medium text-gray-700">
+                  Email
+                </label>
+                <input type="email" 
+                autocomplete="email" 
+                class="mt-1 block w-full border border-gray-200 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200" value="johndoe@example.com" />
               </div>
+
             </div>
+
             <div>
-              <label class="block text-sm font-medium text-gray-700">Bio</label>
-              <textarea rows="4" class="mt-1 block w-full border border-gray-200 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200">Experienced class teacher focused on student-centred learning.</textarea>
+              <label class="block text-sm font-medium text-gray-700">
+                Bio
+              </label>
+
+              <textarea rows="4" class="mt-1 block w-full border border-gray-200 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200">
+                Experienced class teacher focused on student-centred learning.
+              </textarea>
             </div>
+
             <div class="flex items-center justify-end gap-3">
-              <button type="button" id="modalCancel" class="px-4 py-2 rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50">Cancel</button>
-              <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-sm hover:from-indigo-700 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300"> <i class="bi bi-save-fill"></i> Save</button>
+
+              <button type="button" id="modalCancel" 
+              class="px-4 py-2 rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
+                Cancel
+              </button>
+
+              <button type="button" 
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-sm hover:from-indigo-700 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300"> 
+              <i class="bi bi-save-fill"></i>
+               Save
+              </button>
+
             </div>
+
           </form>
+
         </div>
+
       </div>
     </div>
 
