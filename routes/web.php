@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssignClasses;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ParentregistrationController;
 use App\Http\Controllers\Student;
@@ -47,6 +48,8 @@ Route::middleware('auth')->group(function () {
     })->name('teacher.announcements');
 
 
+///////////////////////////////////////////////
+
 
     //profile route using controller
     Route::get('/teacher-profile', [Teacherprofile::class, 'showProfile'])->name('teacher.profile');
@@ -55,6 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/teacher-profile', [Teacherprofile::class, 'updateProfile'])->name('teacher.updateprofile');
 
 
+////////////////////////////////////////////
 
     //for post exam results
     Route::get('/teacher-postresults', function () {
@@ -86,23 +90,32 @@ Route::middleware('auth')->group(function () {
         return view('TeacherPanel.generateexamtimetable');
     })->name('teacher.generateexamtimetable');
 
+    //////////////////////////////////////////////////////////// taecher role assignment routes
+
     //route to show available teacher roles using controller
     Route::get('/teacher-assignroles', [TeacherRoleController::class, 'showAssignRoles'])->name('teacher.assignroles');
 
     //handle submitted assigned roles form
     Route::post('/teacher-assignroles', [TeacherRoleController::class, 'assignTeacherRoles'])->name('teacher.assignroles.submit');
-    
+
+    ////////////////////////////////////////////////////////////// end of teacher role assignment routes
+
     //assign subjects
     Route::get('/teacher-assignsubjects', function () {
         return view('TeacherPanel.assignsubjects');
     })->name('teacher.assignsubjects');
 
-    //assign classes
-    Route::get('/teacher-assignclasses', function () {
-        return view('TeacherPanel.assignclasses');
-    })->name('teacher.assignclasses');
-
 /////////////////////////////////////////////////////////////
+
+    //show assign classes
+    Route::get('/teacher-assignclasses', [AssignClasses::class, 'showAssignClasses'])->name('teacher.assignclasses');
+
+    //assign classes route to handle form submission
+    Route::post('/teacher-assignclasses', [AssignClasses::class, 'assignClasses'])->name('teacher.assignclasses.submit');
+
+
+
+/////////////////////////////////////////////////////////////end of teacher panel routes
 
 
     //routes to handle student and parent registrations submissions

@@ -20,4 +20,10 @@ class School extends Model
         'country',
     ];
 
+    //relationship with class available model (many-to-many)
+    public function classAvailables()
+    {
+        return $this->hasMany(ClassAvailable::class);
+    }
+
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('class-availables', function (Blueprint $table) {
             $table->id();
             $table->string('name');   //name of class available
-            $table->unsignedBigInteger('school_id')->unique(); // Link to school table
+            $table->unsignedBigInteger('school_id'); // Link to school table
             $table->timestamps();
 
             // Foreign key constraint

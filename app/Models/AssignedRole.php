@@ -29,6 +29,6 @@ class AssignedRole extends Model
     //relationship with ClassAvailable model
     public function classAvailable()
     {
-        return $this->belongsTo(ClassAvailable::class);
+        return $this->belongsTo(ClassAvailable::class, 'class-available_id');
     }
 }
