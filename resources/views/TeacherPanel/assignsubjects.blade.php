@@ -193,11 +193,10 @@
                           Assign
                         </button>
 
-                        <button data-modal-target="#modal-T-1004" class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-200 text-indigo-700 hover:bg-indigo-50 transition text-sm">
+                        <button data-modal-target="#modal-T-1004" class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-200 text-indigo-700 hover:bg-indigo-50 transition text-sm open-left-edit"
+                                data-teacher-name="Peter Kiplagat" data-teacher-id="T-1004">
                           <i class="bi bi-pencil-fill"></i>
-                          <span class="hidden sm:inline">
-                            Edit
-                          </span>
+                          <span class="hidden sm:inline">Edit</span>
                         </button>
 
                       </div>
@@ -266,11 +265,10 @@
                       Assign
                     </button>
 
-                    <button data-modal-target="#modal-T-1002" class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-200 text-indigo-700 hover:bg-indigo-50 transition text-sm">
+                    <button data-modal-target="#modal-T-1002" class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-200 text-indigo-700 hover:bg-indigo-50 transition text-sm open-left-edit"
+                            data-teacher-name="Samuel Otieno" data-teacher-id="T-1002">
                       <i class="bi bi-pencil-fill"></i>
-                      <span class="hidden sm:inline">
-                        Edit
-                      </span>
+                      <span class="hidden sm:inline">Edit</span>
                     </button>
 
                   </div>
@@ -298,9 +296,8 @@
       </main>
     </div>
 
-    <!-- Static per-teacher Manage modals -->
-
-    <div id="modal-T-1004" class="hidden fixed inset-0 z-40 items-center justify-center bg-black bg-opacity-40 px-4">
+    <!-- Reusable modal (single instance for all rows/cards) -->
+    <div id="reusableModal" class="hidden fixed inset-0 z-40 items-center justify-center bg-black bg-opacity-40 px-4">
       <div class="max-w-lg w-full bg-white rounded-xl shadow-lg p-6 md:p-8">
         <div class="-mx-6 -mt-6 mb-4">
           <div class="bg-indigo-50 p-4 rounded-t-xl">
@@ -308,111 +305,89 @@
               <div class="flex items-center gap-3">
                 <i class="bi bi-journal-bookmark-fill text-indigo-700 text-lg"></i>
                 <div>
-                  <h3 class="text-lg md:text-xl font-semibold text-indigo-800">Edit Assignments — Peter Kiplagat</h3>
-                  <div class="text-xs text-indigo-600">T-1004</div>
+                  <h3 class="text-lg md:text-xl font-semibold text-indigo-800">Edit Assignments — <span id="reusableModalTeacherName">Teacher</span></h3>
+                  <div id="reusableModalTeacherId" class="text-xs text-indigo-600">ID</div>
                 </div>
               </div>
-              <button class="close-static-modal text-indigo-600 hover:text-indigo-800" aria-label="Close modal"><i class="bi bi-x-lg"></i></button>
+              <button id="reusableModalClose" class="text-indigo-600 hover:text-indigo-800" aria-label="Close modal"><i class="bi bi-x-lg"></i></button>
             </div>
           </div>
         </div>
 
-        <form class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form id="reusableModalForm" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="text-xs font-medium text-gray-700">Grade</label>
-            <select class="mt-1 block w-full border border-gray-200 rounded px-3 py-2 bg-white text-sm">
+            <select id="reusableModalGrade" class="mt-1 block w-full border border-gray-200 rounded px-3 py-2 bg-white text-sm">
               <option>Grade 1</option>
               <option>Grade 2</option>
               <option>Grade 3</option>
+              <option>Grade 4</option>
+              <option>Grade 5</option>
+              <option>Grade 6</option>
             </select>
           </div>
 
           <div>
             <label class="text-xs font-medium text-gray-700">Subject</label>
-            <select class="mt-1 block w-full border border-gray-200 rounded px-3 py-2 bg-white text-sm">
+            <select id="reusableModalSubject" class="mt-1 block w-full border border-gray-200 rounded px-3 py-2 bg-white text-sm">
               <option>Mathematics</option>
               <option>English</option>
               <option>Science</option>
-            </select>
-          </div>
-
-          <div class="md:col-span-2">
-            <label class="text-xs font-medium text-gray-700">Notes (optional)</label>
-            <textarea class="mt-1 w-full border border-gray-200 rounded p-2 text-sm" rows="3" placeholder="Add a note about this assignment..."></textarea>
-          </div>
-        </form>
-
-          <div class="mt-6 flex items-center justify-end gap-3">
-            <button class="close-static-modal px-4 py-2 border rounded text-sm hover:bg-red-200 hover:text-red-800 transition-colors">Cancel</button>
-            <button class="close-static-modal px-4 py-2 bg-indigo-600 text-white rounded text-sm">Save changes</button>
-          </div>
-      </div>
-    </div>
-
-    <div id="modal-T-1005" class="hidden fixed inset-0 z-40 items-center justify-center bg-black bg-opacity-40 px-4">
-      <div class="max-w-lg w-full bg-white rounded-xl shadow-lg p-6 md:p-8">
-        <div class="-mx-6 -mt-6 mb-4">
-          <div class="bg-indigo-50 p-4 rounded-t-xl">
-            <div class="flex items-start justify-between px-6 md:px-8">
-              <div class="flex items-center gap-3">
-                <i class="bi bi-journal-bookmark-fill text-indigo-700 text-lg"></i>
-                <div>
-                  <h3 class="text-lg md:text-xl font-semibold text-indigo-800">Edit Assignments — Mary Wambui</h3>
-                  <div class="text-xs text-indigo-600">T-1005</div>
-                </div>
-              </div>
-              <button class="close-static-modal text-indigo-600 hover:text-indigo-800" aria-label="Close modal"><i class="bi bi-x-lg"></i></button>
-            </div>
-          </div>
-        </div>
-
-        <form class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="text-xs font-medium text-gray-700">Grade</label>
-            <select class="mt-1 block w-full border border-gray-200 rounded px-3 py-2 bg-white text-sm">
-              <option>Grade 1</option>
-              <option selected>Grade 2</option>
-              <option>Grade 3</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="text-xs font-medium text-gray-700">Subject</label>
-            <select class="mt-1 block w-full border border-gray-200 rounded px-3 py-2 bg-white text-sm">
               <option>History</option>
-              <option>English</option>
-              <option>Mathematics</option>
+              <option>Geography</option>
+              <option>Art</option>
             </select>
           </div>
 
           <div class="md:col-span-2">
             <label class="text-xs font-medium text-gray-700">Notes (optional)</label>
-            <textarea class="mt-1 w-full border border-gray-200 rounded p-2 text-sm" rows="3" placeholder="Add a note about this assignment..."></textarea>
+            <textarea id="reusableModalNotes" class="mt-1 w-full border border-gray-200 rounded p-2 text-sm" rows="3" placeholder="Add a note about this assignment..."></textarea>
           </div>
         </form>
 
-          <div class="mt-6 flex items-center justify-end gap-3">
-            <button class="close-static-modal px-4 py-2 border rounded text-sm hover:bg-red-200 hover:text-red-800 transition-colors">Cancel</button>
-            <button class="close-static-modal px-4 py-2 bg-indigo-600 text-white rounded text-sm">Save changes</button>
-          </div>
+        <div class="mt-6 flex items-center justify-end gap-3">
+          <button id="reusableModalCancel" class="px-4 py-2 border rounded text-sm hover:bg-red-200 hover:text-red-800 transition-colors">Cancel</button>
+          <button id="reusableModalSave" class="px-4 py-2 bg-indigo-600 text-white rounded text-sm">Save changes</button>
+        </div>
       </div>
     </div>
-    
+
     <script>
     document.addEventListener('DOMContentLoaded', function(){
-      
+      const modal = document.getElementById('reusableModal');
+      const closeBtn = document.getElementById('reusableModalClose');
+      const cancelBtn = document.getElementById('reusableModalCancel');
+      const saveBtn = document.getElementById('reusableModalSave');
 
-      // Modal open/close for static modals
-      document.querySelectorAll('[data-modal-target]').forEach(b => b.addEventListener('click', function(){
-        const sel = this.dataset.modalTarget || this.getAttribute('data-modal-target');
-        if(!sel) return;
-        const modal = document.querySelector(sel);
-        if(modal){ modal.classList.remove('hidden'); modal.classList.add('flex'); }
-      }));
-      document.querySelectorAll('.close-static-modal').forEach(b => b.addEventListener('click', function(){ const modal = this.closest('[id^="modal-"]'); if(modal){ modal.classList.add('hidden'); modal.classList.remove('flex'); } }));
-      // clicking overlay on static modals to close
-      document.querySelectorAll('[id^="modal-T-"]').forEach(m=> m.addEventListener('click', function(e){ if(e.target===m){ m.classList.add('hidden'); m.classList.remove('flex'); } }));
+      function openModal() {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+      function closeModal() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      // Open reusable modal for any Edit button.
+      // NOTE: JS will NOT populate any form fields or set teacher data.
+      // Server (PHP) will supply data when you implement backend later.
+      document.addEventListener('click', function(e){
+        const btn = e.target.closest('.open-left-edit, [data-open-left-edit]');
+        if(!btn) return;
+        e.preventDefault();
+        openModal();
+      });
+
+      // close handlers
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', function(e){ if(e.target === modal) closeModal(); });
+
+      // Save: closes modal only. Backend form submission will be implemented in PHP later.
+      saveBtn.addEventListener('click', function(){
+        closeModal();
+      });
     });
     </script>
-
-</x-Teacher-sidebar>
+ 
+ </x-Teacher-sidebar>
