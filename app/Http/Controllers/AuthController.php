@@ -22,10 +22,9 @@ class AuthController extends Controller
     }
 
     //handling login form submission
-
     public function login(Request $request)
     {
-        //alidate the data
+        //validate the data
         $validatedData = $request-> validate([
             'email' => 'required|email',
             'password' => 'required|string',
@@ -34,39 +33,38 @@ class AuthController extends Controller
         //attempt login
         $successlogin =  Auth::attempt($validatedData);
 
-        //checking for succesful login
+        //checking for successful login
         if($successlogin){
 
-            //regenerate sessioin cookies
+            //regenerate session cookies
             $request->session()->regenerate();
 
             //get the role of the logged in user
             $user = Auth::user();
 
-            if($user->roles ==='teacher'){
+            if($user->roles === 'teacher'){
                 //redirect to a specific page after successful login
                 return redirect()->route('teacher.dashboard');
             }
 
-            if($user->roles ==='student'){
+            if($user->roles === 'student'){
                 //redirect to a specific page after successful login
                 return redirect()->route('student.homepage');
             }
-        }
 
+            // fallback redirect
+            return redirect()->route('student.homepage');
+        }
 
         //if login fails, redirect back with an error message
         throw ValidationException::withMessages([
             'credentials' => ['The provided credentials are incorrect.'],
         ]);
-        
     }
-
 
     //handling signup form submission
     public function signup(Request $request)
     {
-
         //validate the input data
         $validatedData = $request->validate([
             'fname' => 'required|string|max:255',
@@ -89,19 +87,17 @@ class AuthController extends Controller
         //login the user 
         Auth::login($user);
 
-        //redirect to a specific page after successful signup
-
         //checking user role and redirecting accordingly
-        if($user->roles ==='teacher'){
+        if($user->roles === 'teacher'){
             return redirect()->route('showteacherregistration');
         }
-        if($user->roles ==='student'){
+        if($user->roles === 'student'){
             return redirect()->route('studentregistration');
         }
 
-        
+        // default fallback
+        return redirect()->route('studentregistration');
     }
-
 
     //logout function
     public function logout(Request $request)
@@ -109,13 +105,12 @@ class AuthController extends Controller
         Auth::logout();
 
         //terminating the session
-        $request ->session() ->invalidate();
-        $request ->session() ->regenerateToken();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         //redirecting to the login page after logout
         return redirect()->route('showlogin');
     }
-
 
     //change password function 
     public function changePassword(Request $request)
@@ -143,6 +138,4 @@ class AuthController extends Controller
         //redirect back with a success message
         return redirect()->back()->with('success', 'Password changed successfully.');
     }
-
-
 }

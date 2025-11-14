@@ -72,7 +72,15 @@
                   <div>
                     <p class="text-sm text-gray-500">Address</p>
                     <p class="font-medium">
+<<<<<<< HEAD
                       {{ collect([optional($student)->district, optional($student)->city])->filter()->implode(', ') ?: 'District, City' }}
+=======
+                      @if($student->district || $student->city)
+                          {{ trim(($student->district ? $student->district : '') . ($student->district && $student->city ? ', ' : '') . ($student->city ? $student->city : '')) }}
+                      @else
+                          District, City
+                      @endif
+>>>>>>> b7e19385cc0f8d8bba96503bf52346d204319504
                     </p>
                   </div>
                 </div>
@@ -99,7 +107,11 @@
                   <div>
                     <p class="text-sm text-gray-500">Gender</p>
                     <p class="font-medium">
+<<<<<<< HEAD
                       {{ optional($parent)->gender ?: 'Not given' }}
+=======
+                      {{ $parent->gender ? $parent->gender : 'Not given' }}
+>>>>>>> b7e19385cc0f8d8bba96503bf52346d204319504
                     </p>
                   </div>
                 </div>
@@ -109,7 +121,11 @@
                   <div>
                     <p class="text-sm text-gray-500">Contact</p>
                     <p class="font-medium">
+<<<<<<< HEAD
                       {{ optional($parent)->phone ?: '' }}
+=======
+                      {{ $parent->phone ? $parent->phone : '' }}
+>>>>>>> b7e19385cc0f8d8bba96503bf52346d204319504
                     </p>
                   </div>
                 </div>
@@ -119,7 +135,15 @@
                   <div>
                     <p class="text-sm text-gray-500">Address</p>
                     <p class="font-medium">
+<<<<<<< HEAD
                       {{ collect([optional($parent)->district, optional($parent)->city])->filter()->implode(', ') ?: 'District, City' }}
+=======
+                      @if($parent->district || $parent->city)
+                          {{ trim(($parent->district ? $parent->district : '') . ($parent->district && $parent->city ? ', ' : '') . ($parent->city ? $parent->city : '')) }}
+                      @else
+                          District, City
+                      @endif
+>>>>>>> b7e19385cc0f8d8bba96503bf52346d204319504
                     </p>
                   </div>
                 </div>

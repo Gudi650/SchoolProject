@@ -1,5 +1,6 @@
 <?php
 
+<<<<<<< HEAD
 use App\Http\Controllers\AssignClasses;
 use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AuthController;
@@ -9,13 +10,21 @@ use App\Http\Controllers\Teacherprofile;
 use App\Http\Controllers\TeacherregistrationController;
 use App\Http\Controllers\TeacherRoleController;
 use App\Models\Teacher;
+=======
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ParentregistrationController;
+use App\Http\Controllers\Student;
+>>>>>>> b7e19385cc0f8d8bba96503bf52346d204319504
 use Illuminate\Support\Facades\Route;
 
 
 //create middleware to the routes that require authentication
 Route::middleware('auth')->group(function () {
 
+<<<<<<< HEAD
     //routes for homepage student panel
+=======
+>>>>>>> b7e19385cc0f8d8bba96503bf52346d204319504
     Route::get('/', [Student::class, 'index'])->name('student.homepage');
 
     Route::get('/student-panel/exams-results', function () {
@@ -37,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::view('/student-panel/attendance/attendancereport', 'StudentPanel.attendance.attendancereport')->name('student.attendance.report');
 
 
+<<<<<<< HEAD
     ///////////////////////////////////////////////////////////
     //for dashboard
     Route::get('/teacher-dashboard', function () {
@@ -125,6 +135,8 @@ Route::middleware('auth')->group(function () {
 
 /////////////////////////////////////////////////////////////end of teacher panel routes
 
+=======
+>>>>>>> b7e19385cc0f8d8bba96503bf52346d204319504
 
     //routes to handle student and parent registrations submissions
     Route::post('/studentregistration', [ParentregistrationController::class, 'StudentRegistration'])->name('studentregistration');
@@ -155,6 +167,7 @@ Route::get('/studentregistration',[ParentregistrationController::class , 'showSt
 
 //routes handling login and signup form submissions
 Route::post('/login', [AuthController::class , 'login'])->name('login');
+<<<<<<< HEAD
 Route::post('/signup', [AuthController::class , 'signup'])->name('signup');
 
 
@@ -168,3 +181,6 @@ Route::get('teacher-registration',[TeacherregistrationController::class, 'showTe
 
 //route to handle teacher registration form submission
 Route::post('teacher-registration',[TeacherregistrationController::class, 'register'])->name('teacherregistration');
+=======
+Route::post('/signup', [AuthController::class , 'signup'])->name('signup');
+>>>>>>> b7e19385cc0f8d8bba96503bf52346d204319504
