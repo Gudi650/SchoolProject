@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AssignClasses;
+use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ParentregistrationController;
 use App\Http\Controllers\Student;
@@ -100,10 +101,17 @@ Route::middleware('auth')->group(function () {
 
     ////////////////////////////////////////////////////////////// end of teacher role assignment routes
 
-    //assign subjects
-    Route::get('/teacher-assignsubjects', function () {
-        return view('TeacherPanel.assignsubjects');
-    })->name('teacher.assignsubjects');
+
+///////////////////////////////////////////////////////////////    
+
+
+
+    //view assign subject route 
+    Route::get('/teacher-assignsubjects', [AssignedSubjectController::class, 'showAssignedSubjects'])->name('teacher.assignsubjects');
+
+    //assign subject to teachers route to handle form submission
+    Route::post('/teacher-assignsubjects', [AssignedSubjectController::class, 'assignSubjectToTeacher'])->name('teacher.assignsubjects.submit');
+
 
 /////////////////////////////////////////////////////////////
 

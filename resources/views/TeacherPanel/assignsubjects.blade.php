@@ -94,22 +94,62 @@
               <table class="min-w-full divide-y divide-gray-100 bg-white">
                 <thead class="bg-white">
                   <tr>
-                    <th class="p-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Teacher</th>
-                    <th class="p-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ID</th>
-                    <th class="p-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Current Assignments</th>
-                    <th class="p-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Quick Assign</th>
-                    <th class="p-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Manage</th>
+                    <th class="p-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Teacher
+                    </th>
+
+                    <th class="p-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      ID
+                    </th>
+
+                    <th class="p-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Current Assignments
+                    </th>
+
+                    <th class="p-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Quick Assign
+                    </th>
+
+                    <th class="p-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Manage
+                    </th>
+
                   </tr>
                 </thead>
                 <tbody id="tableBody" class="bg-white divide-y divide-gray-100">
 
+                  <!--check if the teacher is available-->
+                  @if (isset($teachers) && $teachers )
+                    
+                  <!--loop through the teachers-->
+                  @foreach ($teachers as $teacher)
 
-                  <tr class="hover:bg-indigo-50/20 transition-colors cursor-default">
+                  <!--single row-->
+                  
+                  <tr class="hover:bg-indigo-50/20 transition-colors cursor-default
+                  border-b border-gray-100">
+
+                    <!--form to collect data from each row-->
+                    <form
+                    action = "{{ route('teacher.assignsubjects.submit') }}"
+                    method = "POST"
+                    >
+
+                    @csrf
+
+                    <!--hidden input to pass teacher_id-->
+                    <input type="hidden" name="teacher_id" value="{{ $teacher->id }}">
+
+                    <!--hidden input to pass school_id-->
+                    <input type="hidden" name="school_id" value="{{ $teacher->school_id }}">
+
+
                     <td class="p-4 align-top align-middle max-w-xs">
 
                       <div class="min-w-0">
                         <div class="font-medium text-sm text-gray-800 truncate">
-                          Peter Kiplagat
+                          {{ $teacher->fname }}
+                          {{ $teacher->lname }}
                         </div>
 
                         <div class="text-xs text-gray-500">
@@ -120,13 +160,17 @@
 
                         <div class="mt-1 flex flex-wrap gap-1">
 
-                          <span class="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">
-                            Geography
-                          </span>
+                          <!--display teachers qualifications-->
 
                           <span class="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">
-                            Art
+                            {{ $teacher->subject_specialization }}
                           </span>
+
+                          <!--
+                          <span class="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">
+                            Art
+                          </span> 
+                          -->
 
                         </div>
                       </div>
@@ -138,50 +182,80 @@
 
                     <td class="p-4 align-top align-middle">
 
-                      <div class="flex flex-wrap gap-2">
+                      <!--check for current assignments-->
 
-                        <div class="text-sm text-gray-400">
-                          No assignments
+                      @if (isset($assignedTeachers) && $assignedTeachers )
+
+                      <!--loop through all the asigned subjects-->
+                      @foreach ($assignedTeachers as $assignedTeacher )
+                        <!--check if the assigned teacher matches the current teacher-->
+                        @if ($assignedTeacher->teacher_id == $teacher->id)
+
+                          <div class="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs mb-1">
+
+                            <!--display class name and subject name-->
+                            {{$assignedTeacher->classAvailable->name }} • {{$assignedTeacher->availablesubject->subject_name }}
+
+                          </div>
+
+                        @endif
+                      @endforeach
+
+                      @else 
+                        <div class="flex flex-wrap gap-2">
+
+                          <div class="text-sm text-gray-400">
+                            No assignments
+                          </div>
                         </div>
-                        
+                      @endif
 
-                      </div>
-
-                      <div class="flex flex-wrap gap-2">
-
-                        <div class="text-sm text-gray-400">
-                          No assignments
-                        </div>
-                        
-                      </div>
                     </td>
 
                     <td class="p-4 align-top align-middle w-80">
                       <div class="flex flex-wrap items-center gap-2">
 
+                        <!--display the subjects option of the schools-->
+                        @if (isset($subjects) && $subjects)
+
                         <!--option to select the subject-->
-                        <select class="border px-2 py-1 rounded text-sm">
-                          <option>Grade 1</option>
-                          <option>Grade 2</option>
-                          <option>Grade 3</option>
-                          <option>Grade 4</option>
-                          <option>Grade 5</option>
-                          <option>Grade 6</option>
+                        <select 
+                          name= "availablesubject_id"
+                          class="border px-2 py-1 rounded text-sm">
+
+                          @foreach ($subjects as $subject)
+                            <option
+                            value = "{{ $subject->id }}"
+                            >{{ $subject->subject_name }}</option>
+                          @endforeach
+
                         </select>
+                        @else
+                        <div class="text-sm text-red-600">
+                          No subjects available for your school.
+                        </div>
+                        @endif
 
                         <!--option to select the class to teach the subject selected-->
 
-                        <select class="border px-2 py-1 rounded text-sm">
-                          <option>Mathematics</option>
-                          <option>English</option>
-                          <option>Science</option>
-                          <option>History</option>
-                          <option>Geography</option>
-                          <option>Art</option>
-                          <option>Physical Education</option>
-                          <option>Computer Studies</option>
-                        </select>
+                        <!--display the subjects option of the schools-->
+                        @if (isset($classes) && $classes)
 
+                          <select 
+                          name = "class_id"
+                          class="border px-2 py-1 rounded text-sm">
+                            @foreach ($classes as $class)
+                              <option
+                              value="{{ $class->id }}"
+                              >{{ $class->name }}</option>
+                              
+                            @endforeach
+                          </select>
+                        @else
+                        <div class="text-sm text-red-600">
+                          No classes available for your school.
+                        </div>
+                        @endif
                         <!-- Assign moved to Manage column -->
                       </div>
                     </td>
@@ -189,20 +263,48 @@
                     <td class="p-4 align-top align-middle text-center">
                       <div class="flex items-center justify-center gap-2">
 
-                        <button class="px-3 py-1 bg-indigo-600 text-white rounded text-sm">
+                        <button 
+                        type="submit"
+                        class="px-3 py-1 bg-indigo-600 text-white rounded text-sm">
                           Assign
                         </button>
 
                         <button data-modal-target="#modal-T-1004" class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-200 text-indigo-700 hover:bg-indigo-50 transition text-sm open-left-edit"
-                                data-teacher-name="Peter Kiplagat" data-teacher-id="T-1004">
+                                data-teacher-name="{{ $teacher->fname }} {{ $teacher->lname }}" 
+
+                                data-teacher-id="T-1004">
+
                           <i class="bi bi-pencil-fill"></i>
-                          <span class="hidden sm:inline">Edit</span>
+                          <span class="hidden sm:inline">
+                            Edit
+                          </span>
+
                         </button>
 
                       </div>
                     </td>
 
+                    <!--end of form-->
+                    </form>
+
                   </tr>
+
+                  @endforeach
+
+                  <!--now check if there is no data set at all-->
+                  @else
+                
+                    <!--display message for empy teachers-->
+                    <div class="p-4">
+                      <div class="text-sm text-red-600">
+                        No teachers found for your school.
+                      </div>
+                    </div>
+                  </div>
+
+                  @endif
+
+                  
                 </tbody>
               </table>
             </div>
@@ -211,12 +313,35 @@
           <!-- Cards mobile -->
           <div id="cardsWrap" class="md:hidden space-y-3">
 
-            <div class="p-3 border rounded-md bg-white">
+            <!--single card-->
+
+            <!--check for teachers-->
+            @if (isset($teachers) && $teachers )
+              
+            <!--loop through teachers as well-->
+            @foreach ($teachers as $teacher)
+
+              <!--opening form to take the class and subject assignment and the teacher-id-->
+
+              <form 
+              action="{{ route('teacher.assignsubjects.submit') }}"
+              method = "POST">
+
+              @csrf
+
+              <!--hidden input to pass teacher_id-->
+              <input type="hidden" name="teacher_id" value="{{ $teacher->id }}">
+
+              <!--hidden input to pass school_id-->
+              <input type="hidden" name="school_id" value="{{ $teacher->school_id }}">
+
+              <div class="p-3 border rounded-md bg-white"> 
               <div class="space-y-2">
                 <div class="min-w-0">
 
                   <div class="font-medium text-sm text-gray-800 truncate">
-                    Samuel Otieno
+                    {{ $teacher->fname }} 
+                    {{ $teacher->lname }}
                   </div>
 
                   <div class="text-xs text-gray-500">
@@ -230,7 +355,7 @@
                   <div class="mt-1 flex flex-wrap gap-1">
 
                     <span class="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">
-                      Science
+                      {{ $teacher->subject_specialization }}
                     </span>
 
                     <span class="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">
@@ -241,27 +366,72 @@
 
                 <div class="mt-2"> 
                   <div class="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs">
-                    Grade 3 • Science
+                    Not assigned yet
+
+                    <!--
+                      Grade 3 • Science
+                    -->
+
                   </div> 
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2">
 
-                  <select class="border px-2 py-1 rounded text-sm w-1/2">
-                    <option>Grade 1</option>
-                    <option>Grade 2</option>
-                    <option selected>Grade 3</option>
-                  </select>
+                  <!--check for classes available in the school-->
+                  @if (isset($classes) && $classes )
+                    
+                    <select 
+                    name = "class_id"
+                    class="border px-2 py-1 rounded text-sm w-1/2">
 
-                  <select class="border px-2 py-1 rounded text-sm w-1/2">
-                    <option>Mathematics</option>
-                    <option>English</option>
-                    <option selected>Science</option>
-                  </select>
+                      <!--loop the classes available-->
+                      @foreach ($classes as $class)
+                        <option 
+                         value = "{{ $class->id }}"
+                         selected >
+                          {{ $class->name }}
+                        </option>
+                      @endforeach
+
+                    </select>
+                  @else
+
+                    <div class="text-sm text-red-600 w-1/2">
+                      No classes available for your school.
+                    </div>
+
+                  @endif
+                  <!--check for subjects available in the school-->
+
+                    @if (isset($subjects) && $subjects)
+
+                      <select 
+                        name="availablesubject_id"
+                        class="border px-2 py-1 rounded text-sm w-1/2">
+
+                        <!--loop the subjects available-->
+                        @foreach ($subjects as $subject)
+                          <option 
+                            value = "{{ $subject->id }}" 
+                            selected>
+                            {{ $subject->subject_name }}
+                          </option>
+                        @endforeach
+                      </select>
+                    
+                    @else
+
+                    <div class="text-sm text-red-600 w-1/2">
+                      No subjects available for your school yet.
+                    </div>
+
+                    @endif
 
                   <div class="ml-auto flex items-center gap-2">
 
-                    <button class="px-3 py-1 bg-indigo-600 text-white rounded text-sm">
+                    <button 
+                    type="submit"
+                    class="px-3 py-1 bg-indigo-600 text-white rounded text-sm">
                       Assign
                     </button>
 
@@ -274,10 +444,23 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </div> <!--end of single card-->
+ 
+              </form>
+            @endforeach
 
-          <div class="mt-4 flex items-center justify-between">
+            @else
+
+              <div class="p-4">
+                <div class="text-sm text-red-600">
+                  No teachers found for your school.
+                </div>
+              </div>
+            @endif
+
+          </div>  <!--end of cards wrap-->
+
+          <div class="mt-4 flex items-center justify-between ">
             <div class="text-sm text-gray-600" id="selectionInfo">
             </div>
             <div class="flex items-center gap-2">
@@ -316,7 +499,11 @@
 
         <form id="reusableModalForm" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="text-xs font-medium text-gray-700">Grade</label>
+
+            <label class="text-xs font-medium text-gray-700">
+              Grade
+            </label>
+
             <select id="reusableModalGrade" class="mt-1 block w-full border border-gray-200 rounded px-3 py-2 bg-white text-sm">
               <option>Grade 1</option>
               <option>Grade 2</option>
@@ -340,8 +527,12 @@
           </div>
 
           <div class="md:col-span-2">
-            <label class="text-xs font-medium text-gray-700">Notes (optional)</label>
+            <label class="text-xs font-medium text-gray-700">
+              Notes (optional)
+            </label>
+
             <textarea id="reusableModalNotes" class="mt-1 w-full border border-gray-200 rounded p-2 text-sm" rows="3" placeholder="Add a note about this assignment..."></textarea>
+
           </div>
         </form>
 

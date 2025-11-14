@@ -26,4 +26,10 @@ class School extends Model
         return $this->hasMany(ClassAvailable::class);
     }
 
+    //relationship with availablesubjet model
+    public function availablesubjects()
+    {
+        return $this->hasMany(availablesubject::class);
+    }
+
 }
