@@ -44,7 +44,7 @@
           </div>
 
           <form id="resultsForm" class="space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
               <div>
                 <label class="text-sm text-gray-600">Subject</label>
                 <select id="resSubject" class="w-full border rounded px-3 py-2">
@@ -62,57 +62,72 @@
                 </select>
               </div>
               <div>
-                <label class="text-sm text-gray-600">Exam Date</label>
-                <input id="resDate" type="date" class="w-full border rounded px-3 py-2" />
+
+                <label class="text-sm text-gray-600">
+                  Exam Name
+                </label>
+
+                <input id="resName" type="text" class="w-full border rounded px-3 py-2" placeholder="e.g. Midterm Term 1" />
+                
+              </div>
+              <div class="flex items-end">
+                <label class="sr-only">Submit</label>
+                <button id="topSubmit" type="submit" class="w-full px-3 h-10 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm">
+                  Submit
+                </button>
               </div>
             </div>
 
-    <div class="overflow-x-auto rounded-t-lg shadow max-w-full"> 
-      <table id="resTable" class="w-full table-auto divide-y divide-gray-200 text-sm mt-3 bg-white min-w-0">
-                    <thead class="bg-gradient-to-r from-indigo-50 to-indigo-100 border-b">
-                      <tr class="text-left text-indigo-700 text-xs uppercase tracking-wide">
-                        <th class="p-3 sticky top-0 bg-indigo-50">#</th>
-                        <th class="p-3 sticky top-0 bg-indigo-50">Student</th>
-                        <th class="p-3 sticky top-0 bg-indigo-50">Admission</th>
-                        <th class="p-3 sticky top-0 bg-indigo-50">Marks</th>
-                        <th class="p-3 sticky top-0 bg-indigo-50">Grade</th>
-                        <th class="p-3 sticky top-0 bg-indigo-50">Remarks</th>
-                        <th class="p-3 sticky top-0 bg-indigo-50">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
-      <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="p-2">1</td>
-                        <td class="p-2">John Doe</td>
-                        <td class="p-2">12345</td>
-                        <td class="p-2"><input class="w-full max-w-full border px-2 py-1 rounded marks" value="85" type="number" min="0" max="100"></td>
-                        <td class="p-2"><div class="grade text-sm font-medium"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">A</span></div></td>
-                        <td class="p-2"><input class="w-full border px-2 py-1 rounded remarks" value="Good work"></td>
-                        <td class="p-2">
+            <!-- form action buttons -->
+            <!-- <div class="flex items-center gap-3">
+              <button id="addRow" type="button" class="px-3 py-2 bg-indigo-600 text-white rounded">Add Student Row</button>
+              <button id="saveResults" type="submit" class="px-3 py-2 bg-green-600 text-white rounded">Save Results</button>
+              <button id="clearResults" type="button" class="px-3 py-2 border rounded">Clear</button>
+            </div> -->
+          </form>
 
-                          <button type="button" 
-                            class="edit-row text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded mr-2">
-                                Edit
-                          </button>
-                        
-                          <button type="button" 
-                          class="remove-row text-red-600 bg-red-50 hover:bg-red-100 px-2 py-1 rounded transition">
-                                Remove
-                          </button>
+          <!-- Results Table (kept inside the same Post Exam Results section) -->
+          <div class="bg-white mt-6">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold">Results Table</h2>
+              <p class="text-sm text-gray-500">View and update student marks (frontend demo).</p>
+            </div>
 
-                        </td>
+            <div class="overflow-x-auto rounded-t-lg shadow max-w-full"> 
+              <table id="resTable" class="w-full table-auto divide-y divide-gray-200 text-sm mt-3 bg-white min-w-0">
+                <thead class="bg-gradient-to-r from-indigo-50 to-indigo-100 border-b">
+                  <tr class="text-left text-indigo-700 text-xs uppercase tracking-wide">
+                    <th class="p-3 sticky top-0 bg-indigo-50">#</th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">Student</th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">Admission</th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">Marks</th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">Grade</th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">Remarks</th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">Action</th>
                   </tr>
-      <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="p-2">2</td>
-                        <td class="p-2">Jane Smith</td>
-                        <td class="p-2">12346</td>
-                        <td class="p-2"><input class="w-full max-w-full border px-2 py-1 rounded marks" value="72" type="number" min="0" max="100"></td>
-                        <td class="p-2"><div class="grade text-sm font-medium"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">B</span></div></td>
-                        <td class="p-2"><input class="w-full border px-2 py-1 rounded remarks" value="Needs improvement"></td>
-                        <td class="p-2">
-                          <button type="button" class="edit-row text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded mr-2">Edit</button>
-                          <button type="button" class="remove-row text-red-600 bg-red-50 hover:bg-red-100 px-2 py-1 rounded transition">Remove</button>
-                        </td>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-100">
+                  <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="p-2">1</td>
+                    <td class="p-2">John Doe</td>
+                    <td class="p-2">12345</td>
+                    <td class="p-2"><input class="w-full max-w-full border px-2 py-1 rounded marks" value="85" type="number" min="0" max="100"></td>
+                    <td class="p-2"><div class="grade text-sm font-medium"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">A</span></div></td>
+                    <td class="p-2"><input class="w-full border px-2 py-1 rounded remarks" value="Good work"></td>
+                    <td class="p-2">
+                      <button type="button" class="edit-row text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded mr-2">Edit</button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="p-2">2</td>
+                    <td class="p-2">Jane Smith</td>
+                    <td class="p-2">12346</td>
+                    <td class="p-2"><input class="w-full max-w-full border px-2 py-1 rounded marks" value="72" type="number" min="0" max="100"></td>
+                    <td class="p-2"><div class="grade text-sm font-medium"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">B</span></div></td>
+                    <td class="p-2"><input class="w-full border px-2 py-1 rounded remarks" value="Needs improvement"></td>
+                    <td class="p-2">
+                      <button type="button" class="edit-row text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded mr-2">Edit</button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -122,24 +137,141 @@
             <div id="mobileResList" class="md:hidden mt-3 space-y-2">
               <!-- cards populated by JS for small screens -->
             </div>
-
-            <div class="flex items-center gap-3">
-              <button id="addRow" type="button" class="px-3 py-2 bg-indigo-600 text-white rounded">Add Student Row</button>
-              <button id="saveResults" type="submit" class="px-3 py-2 bg-green-600 text-white rounded">Save Results</button>
-              <button id="clearResults" type="button" class="px-3 py-2 border rounded">Clear</button>
-            </div>
-          </form>
-
-          <!-- Posted results (client-side demo) -->
-          <div id="posted" class="mt-6">
-            <h3 class="font-semibold mb-3">Posted Results (Demo)</h3>
-            <div id="postedList" class="space-y-3 text-sm text-gray-700">
-              <!-- appended results will appear here -->
+           
+            <!-- Action buttons placed below the results table -->
+            <div class="flex items-center gap-3 mt-4">
+               <button id="saveResults" type="button" class="px-3 py-2 bg-green-600 text-white rounded">Save Results</button>
+               <button id="clearResults" type="button" class="px-3 py-2 border rounded border-gray-300 hover:bg-red-100 hover:text-red-700 transition-colors duration-150">Clear</button>
             </div>
           </div>
-          
         </section>
 
+        <!-- Posted results (client-side demo) -->
+        <div id="posted" class="mt-6">
+          <div class="bg-white border rounded-lg shadow-sm overflow-hidden">
+            <!-- Header -->
+            <div class="px-5 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <div class="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow">
+                  <i class="bi bi-file-earmark-text-fill"></i>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold text-indigo-800">Posted Results (Demo)</h3>
+                  <p class="text-sm text-indigo-600">Snapshot of submitted marks for the selected exam.</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <button class="flex items-center gap-2 px-3 py-2 bg-white border rounded text-sm text-indigo-700 hover:bg-indigo-50">
+                  <i class="bi bi-printer"></i>
+                  Print
+                </button>
+                <button class="flex items-center gap-2 px-3 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700">
+                  <i class="bi bi-download"></i>
+                  Export CSV
+                </button>
+              </div>
+            </div>
+
+            <!-- Summary / chips -->
+            <div class="px-5 pb-4 border-t md:flex md:items-center md:justify-between md:gap-6">
+              <div class="flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-2 bg-white/60 px-3 py-2 rounded shadow-sm">
+                  <span class="text-xs text-gray-500">Subject</span>
+                  <span id="postedSubject" class="text-sm font-medium text-indigo-800">Mathematics</span>
+                </div>
+                <div class="flex items-center gap-2 bg-white/60 px-3 py-2 rounded shadow-sm">
+                  <span class="text-xs text-gray-500">Grade / Class</span>
+                  <span id="postedGrade" class="text-sm font-medium text-indigo-800">Grade 9</span>
+                </div>
+                <div class="flex items-center gap-2 bg-white/60 px-3 py-2 rounded shadow-sm">
+                  <span class="text-xs text-gray-500">Exam</span>
+                  <span id="postedExam" class="text-sm font-medium text-indigo-800">Midterm Term 1</span>
+                </div>
+              </div>
+
+              <div class="mt-3 md:mt-0 flex items-center gap-4">
+                <div class="text-sm">
+                  <div class="text-xs text-gray-500">Average</div>
+                  <div class="text-indigo-800 font-semibold">78.5%</div>
+                </div>
+                <div class="text-sm">
+                  <div class="text-xs text-gray-500">Top</div>
+                  <div class="text-green-700 font-semibold">94</div>
+                </div>
+                <div class="text-sm">
+                  <div class="text-xs text-gray-500">Lowest</div>
+                  <div class="text-red-600 font-semibold">42</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table area -->
+            <div class="p-4">
+              <div class="overflow-x-auto rounded-md shadow-sm bg-white">
+                <table class="w-full table-auto divide-y divide-gray-200 text-sm">
+                  <thead class="bg-indigo-50">
+                    <tr class="text-left text-indigo-700 text-xs uppercase tracking-wide">
+                      <th class="p-3">#</th>
+                      <th class="p-3">Student</th>
+                      <th class="p-3">Admission</th>
+                      <th class="p-3">Marks</th>
+                      <th class="p-3">Grade</th>
+                      <th class="p-3">Remarks</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-100">
+                    <!-- hardcoded demo rows -->
+                    <tr class="hover:bg-gray-50 transition-colors">
+                      <td class="p-3">1</td>
+                      <td class="p-3">John Doe</td>
+                      <td class="p-3">12345</td>
+                      <td class="p-3 font-medium text-indigo-800">85</td>
+                      <td class="p-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">A</span></td>
+                      <td class="p-3 text-gray-600">Good work</td>
+                    </tr>
+
+                    <tr class="hover:bg-gray-50 transition-colors">
+                      <td class="p-3">2</td>
+                      <td class="p-3">Jane Smith</td>
+                      <td class="p-3">12346</td>
+                      <td class="p-3 font-medium text-indigo-800">72</td>
+                      <td class="p-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">B</span></td>
+                      <td class="p-3 text-gray-600">Needs improvement</td>
+                    </tr>
+
+                    <tr class="hover:bg-gray-50 transition-colors">
+                      <td class="p-3">3</td>
+                      <td class="p-3">Samuel K.</td>
+                      <td class="p-3">12347</td>
+                      <td class="p-3 font-medium text-indigo-800">61</td>
+                      <td class="p-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">C</span></td>
+                      <td class="p-3 text-gray-600">Satisfactory</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Mobile stacked cards -->
+              <div class="md:hidden mt-4 space-y-3">
+                <div class="p-3 bg-white rounded-lg shadow-sm border">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-sm font-medium text-indigo-800">John Doe</div>
+                      <div class="text-xs text-gray-500">Adm: 12345</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-sm font-semibold text-indigo-800">85</div>
+                      <div class="text-xs"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">A</span></div>
+                    </div>
+                  </div>
+                  <div class="mt-2 text-xs text-gray-600">Good work</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+          
         <!-- Edit Row Modal -->
         <div id="editRowModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-40">
           <div class="bg-white w-full max-w-md rounded-lg p-6 shadow-xl transform transition-all">
