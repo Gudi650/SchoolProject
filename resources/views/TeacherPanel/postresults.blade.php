@@ -52,7 +52,7 @@
           </div>
 
           <form 
-            action = ""
+            action = "{{ route('teacher.postresults.submit') }}"
             method="POST"
             id="resultsForm" 
           class="space-y-4">
@@ -69,14 +69,21 @@
                 <!--get the subjects assigned to the logged in teacher-->
                 <!--check if the assigned teacher is available-->
 
-                @if (isset($allassigned) && $allassigned)
+                @if (isset($allassigned) && $allassigned->isNotEmpty())
 
                   <!--loop through the assigned subjects and create options-->
-                  <select id="resSubject" class="w-full border rounded px-3 py-2">
+                  <select 
+                  name="subject_id"
+                  id="resSubject" 
+                  class="w-full border rounded px-3 py-2">
+
                     @foreach ($allassigned as $assigned)
 
-                      <option>
+                      <option 
+                      value="{{ $assigned->availablesubject->id }}">
+
                         {{ $assigned->availablesubject->subject_name }}
+
                       </option>
                       
                     @endforeach
@@ -97,11 +104,17 @@
                 @if (isset($allassigned) && $allassigned)
 
                   <!--loop through the assigned subjects and create options-->
-                  <select id="resGrade" class="w-full border rounded px-3 py-2">
+                  <select 
+                  name = "class_id"
+                  id="resGrade" 
+                  class="w-full border rounded px-3 py-2">
                     @foreach ($allassigned as $assigned)
 
-                      <option>
+                      <option 
+                      value="{{ $assigned->classAvailable->id }}">
+
                         {{ $assigned->classAvailable->name }}
+
                       </option>
                       
                     @endforeach
@@ -117,7 +130,12 @@
                   Exam Name
                 </label>
 
-                <input id="resName" type="text" class="w-full border rounded px-3 py-2" placeholder="e.g. Midterm Term 1" />
+                <input id="resName" 
+                name="TermName"
+                type="text" 
+                class="w-full border rounded px-3 py-2" 
+                value = "{{ old('TermName') }}"
+                placeholder="e.g. Midterm Term 1" />
                 
               </div>
               <div class="flex items-end">
@@ -126,7 +144,9 @@
                   Submit
                 </label>
 
-                <button id="topSubmit" type="submit" class="w-full px-3 h-10 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm">
+                <button id="topSubmit" 
+                type="submit" 
+                class="w-full px-3 h-10 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm">
                   Search
                 </button>
 
@@ -142,7 +162,14 @@
             
           </form>
 
+
           <!-- Results Table (kept inside the same Post Exam Results section) -->
+
+          <!--display only if the student is valid(after the search) -->
+
+          @if ( isset($students) && $students->isNotEmpty() )
+            
+
           <div class="bg-white mt-6">
             <div class="flex items-center justify-between mb-4">
               <h2 class="text-lg font-semibold">
@@ -184,28 +211,53 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100">
-                  <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="p-2">1</td>
-                    <td class="p-2">John Doe</td>
-                    <td class="p-2">12345</td>
-                    <td class="p-2"><input class="w-full max-w-full border px-2 py-1 rounded marks" value="85" type="number" min="0" max="100"></td>
-                    <td class="p-2"><div class="grade text-sm font-medium"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">A</span></div></td>
-                    <td class="p-2"><input class="w-full border px-2 py-1 rounded remarks" value="Good work"></td>
+
+                  <!--loop through the students-->
+                  @foreach ($students as $student )
+                    
+                    <tr class="hover:bg-gray-50 transition-colors">
+
                     <td class="p-2">
-                      <button type="button" class="edit-row text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded mr-2">Edit</button>
+                      {{ $tableid = $tableid + 1 }}
+                    </td>
+
+                    <td class="p-2">
+                      {{ $student->fname }} {{ $student->lname }}
+                    </td>
+
+                    <td class="p-2">
+                      12345
+                    </td>
+
+                    <td class="p-2">
+                      <input class="w-full max-w-full border px-2 py-1 rounded marks" value="85" type="number" min="0" max="100">
+                    </td>
+
+                    <td class="p-2">
+                      <div class="grade text-sm font-medium">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          A
+                        </span>
+                      </div>
+                    </td>
+
+                    <td class="p-2">
+                      <input class="w-full border px-2 py-1 rounded remarks" value="Good work">
+                    </td>
+
+                    <td class="p-2">
+
+                      <button type="submit" 
+                      class="edit-row text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded mr-2">
+                        Edit
+                      </button>
+
                     </td>
                   </tr>
-                  <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="p-2">2</td>
-                    <td class="p-2">Jane Smith</td>
-                    <td class="p-2">12346</td>
-                    <td class="p-2"><input class="w-full max-w-full border px-2 py-1 rounded marks" value="72" type="number" min="0" max="100"></td>
-                    <td class="p-2"><div class="grade text-sm font-medium"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">B</span></div></td>
-                    <td class="p-2"><input class="w-full border px-2 py-1 rounded remarks" value="Needs improvement"></td>
-                    <td class="p-2">
-                      <button type="button" class="edit-row text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded mr-2">Edit</button>
-                    </td>
-                  </tr>
+
+                  @endforeach
+
+                  
                 </tbody>
               </table>
             </div>
@@ -220,7 +272,10 @@
                <button id="saveResults" type="button" class="px-3 py-2 bg-green-600 text-white rounded">Save Results</button>
                <button id="clearResults" type="button" class="px-3 py-2 border rounded border-gray-300 hover:bg-red-100 hover:text-red-700 transition-colors duration-150">Clear</button>
             </div>
-          </div>
+          </div><!--end of post results table -->
+
+          @endif
+
         </section>
 
         <!-- Posted results (client-side demo) -->
@@ -487,14 +542,7 @@
               renderMobileRows();
             });
     
-            // Minimal frontend-only save: prevent form from doing any backend action.
-            if (resultsForm) {
-              resultsForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                // intentionally silent — no frontend message shown
-              });
-            }
-
+            
             // Safe stub: if mobile rendering was removed earlier, avoid runtime errors.
             function renderMobileRows(){
               const container = document.getElementById('mobileResList');

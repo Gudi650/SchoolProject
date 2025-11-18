@@ -60,8 +60,11 @@ Route::middleware('auth')->group(function () {
 
 ////////////////////////////////////////////
 
-    //route to show the page
+    //route to show the post exam page
     Route::get('/teacher-postresults', [PostExamResults::class , 'showPostExamPage'])->name('teacher.postresults');
+
+    //route to handle the post exam results form submission
+    Route::post('/teacher-postresults', [PostExamResults::class , 'postExamResults'])->name('teacher.postresults.submit');
 
 
 
@@ -93,7 +96,7 @@ Route::middleware('auth')->group(function () {
         return view('TeacherPanel.generateexamtimetable');
     })->name('teacher.generateexamtimetable');
 
-    //////////////////////////////////////////////////////////// taecher role assignment routes
+    //////////////////////////////////////////////////////////// teacher role assignment routes
 
     //route to show available teacher roles using controller
     Route::get('/teacher-assignroles', [TeacherRoleController::class, 'showAssignRoles'])->name('teacher.assignroles');
