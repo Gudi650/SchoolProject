@@ -102,23 +102,39 @@
                 Class/Grade
               </label>
 
-              <select id="classGrade" 
-              name="class" 
-              value = "{{ old('class') }}"
-              required 
-              class="w-full p-2 border rounded"
-              >
+              <!--check if $classes is passed from the controller-->
+              @if (isset($classes) && $classes->isNotEmpty() )
+
+                <select id="classGrade" 
+                name="class_id" 
+                value = "{{ old('class') }}"
+                required 
+                class="w-full p-2 border rounded"
+                >
+                
                 <option value="">Select class</option>
-                <option value="Grade 1">Grade 1</option>
-                <option value="Grade 2">Grade 2</option>
-                <option value="Grade 3">Grade 3</option>
-                <option value="Grade 4">Grade 4</option>
-                <option value="Grade 5">Grade 5</option>
-                <option value="Grade 6">Grade 6</option>
-                <option>Grade 7</option>
+                <!--loop through to get the classes-->
+                @foreach ($classes as $class )
+
+                  <option value="{{ $class->id }}">
+                    {{ $class->name }}
+                  </option>
+
+                @endforeach
+
+                @else
+                <div>
+                  <p class="">
+                     are not yet assigned in your school!
+                  </p>
+                </div>
+
+              @endif
+
 
               </select>
             </div>
+
             <div>
               <label class="block text-sm text-gray-600 mb-1">
                 Date of Birth
@@ -136,21 +152,41 @@
         </div>
 
         <div class="border rounded p-4">
-          <div class="text-lg font-medium mb-3">Student Address</div>
+
+          <div class="text-lg font-medium mb-3">
+            Student Address
+          </div>
+
           <div>
+
             <label class="block text-sm text-gray-600 mb-1">
               Street Address
             </label>
+
             <input id="street" name="street" class="w-full p-2 border rounded" placeholder="Street address"/>
           </div>
+
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             <div>
-              <label class="block text-sm text-gray-600 mb-1">Ward</label>
+
+              <label class="block text-sm text-gray-600 mb-1">
+                Ward
+              </label>
+
               <input id="city" name="ward" class="w-full p-2 border rounded" placeholder="Ward"/>
+
             </div>
+
             <div>
-              <label class="block text-sm text-gray-600 mb-1">District</label>
-              <input id="state" name="district" class="w-full p-2 border rounded" placeholder="District"/>
+              <label class="block text-sm text-gray-600 mb-1">
+                District
+              </label>
+
+              <input id="state" 
+              name="district" 
+              class="w-full p-2 border rounded" 
+              placeholder="District"/>
+
             </div>
             <div>
               <label class="block text-sm text-gray-600 mb-1">City</label>

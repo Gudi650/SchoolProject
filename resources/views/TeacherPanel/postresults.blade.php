@@ -38,28 +38,78 @@
 
         <!-- Post Exam Results section copied from exam.html -->
         <section class="bg-white p-6 rounded-lg shadow-sm mt-6">
+
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold">Post Exam Results</h2>
-            <p class="text-sm text-gray-500">Enter marks per student and save results for the selected exam.</p>
+
+            <h2 class="text-lg font-semibold">
+              Post Exam Results
+            </h2>
+
+            <p class="text-sm text-gray-500">
+              Enter marks per student and save results for the selected exam.
+            </p>
+
           </div>
 
-          <form id="resultsForm" class="space-y-4">
+          <form 
+            action = ""
+            method="POST"
+            id="resultsForm" 
+          class="space-y-4">
+
+            @csrf
+
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
               <div>
-                <label class="text-sm text-gray-600">Subject</label>
-                <select id="resSubject" class="w-full border rounded px-3 py-2">
-                  <option>Mathematics</option>
-                  <option>Science</option>
-                  <option>English</option>
-                </select>
+
+                <label class="text-sm text-gray-600">
+                  Subject
+                </label>
+                
+                <!--get the subjects assigned to the logged in teacher-->
+                <!--check if the assigned teacher is available-->
+
+                @if (isset($allassigned) && $allassigned)
+
+                  <!--loop through the assigned subjects and create options-->
+                  <select id="resSubject" class="w-full border rounded px-3 py-2">
+                    @foreach ($allassigned as $assigned)
+
+                      <option>
+                        {{ $assigned->availablesubject->subject_name }}
+                      </option>
+                      
+                    @endforeach
+
+                  </select>
+                  
+                @endif
               </div>
+
               <div>
-                <label class="text-sm text-gray-600">Grade / Class</label>
-                <select id="resGrade" class="w-full border rounded px-3 py-2">
-                  <option>Grade 9</option>
-                  <option>Grade 10</option>
-                  <option>Grade 11</option>
-                </select>
+                <label class="text-sm text-gray-600">
+                  Grade / Class
+                </label>
+
+                <!--get the subjects assigned to the logged in teacher-->
+                <!--check if the assigned teacher is available-->
+
+                @if (isset($allassigned) && $allassigned)
+
+                  <!--loop through the assigned subjects and create options-->
+                  <select id="resGrade" class="w-full border rounded px-3 py-2">
+                    @foreach ($allassigned as $assigned)
+
+                      <option>
+                        {{ $assigned->classAvailable->name }}
+                      </option>
+                      
+                    @endforeach
+
+                  </select>
+                  
+                @endif
+
               </div>
               <div>
 
@@ -71,10 +121,15 @@
                 
               </div>
               <div class="flex items-end">
-                <label class="sr-only">Submit</label>
-                <button id="topSubmit" type="submit" class="w-full px-3 h-10 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm">
+
+                <label class="sr-only">
                   Submit
+                </label>
+
+                <button id="topSubmit" type="submit" class="w-full px-3 h-10 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm">
+                  Search
                 </button>
+
               </div>
             </div>
 
@@ -84,26 +139,48 @@
               <button id="saveResults" type="submit" class="px-3 py-2 bg-green-600 text-white rounded">Save Results</button>
               <button id="clearResults" type="button" class="px-3 py-2 border rounded">Clear</button>
             </div> -->
+            
           </form>
 
           <!-- Results Table (kept inside the same Post Exam Results section) -->
           <div class="bg-white mt-6">
             <div class="flex items-center justify-between mb-4">
-              <h2 class="text-lg font-semibold">Results Table</h2>
-              <p class="text-sm text-gray-500">View and update student marks (frontend demo).</p>
+              <h2 class="text-lg font-semibold">
+                Results Table
+              </h2>
+
+              <p class="text-sm text-gray-500">
+                View and update student marks (frontend demo).
+              </p>
+
             </div>
 
             <div class="overflow-x-auto rounded-t-lg shadow max-w-full"> 
               <table id="resTable" class="w-full table-auto divide-y divide-gray-200 text-sm mt-3 bg-white min-w-0">
                 <thead class="bg-gradient-to-r from-indigo-50 to-indigo-100 border-b">
                   <tr class="text-left text-indigo-700 text-xs uppercase tracking-wide">
-                    <th class="p-3 sticky top-0 bg-indigo-50">#</th>
-                    <th class="p-3 sticky top-0 bg-indigo-50">Student</th>
-                    <th class="p-3 sticky top-0 bg-indigo-50">Admission</th>
-                    <th class="p-3 sticky top-0 bg-indigo-50">Marks</th>
-                    <th class="p-3 sticky top-0 bg-indigo-50">Grade</th>
-                    <th class="p-3 sticky top-0 bg-indigo-50">Remarks</th>
-                    <th class="p-3 sticky top-0 bg-indigo-50">Action</th>
+
+                    <th class="p-3 sticky top-0 bg-indigo-50">
+                      #
+                    </th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">
+                      Student
+                    </th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">
+                      Admission
+                    </th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">
+                      Marks
+                    </th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">
+                      Grade
+                    </th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">
+                      Remarks
+                    </th>
+                    <th class="p-3 sticky top-0 bg-indigo-50">
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100">

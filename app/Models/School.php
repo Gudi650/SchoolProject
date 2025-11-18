@@ -32,4 +32,16 @@ class School extends Model
         return $this->hasMany(availablesubject::class);
     }
 
+    //relationship with student model(one to many)
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
+
+    //relationship with teacher model(one to many)
+    public function teachers()
+    {
+        return $this->hasMany(Teacher::class);
+    }
+
 }

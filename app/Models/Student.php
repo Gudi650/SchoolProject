@@ -16,11 +16,12 @@ class Student extends Model
         'email',
         'date_of_birth',
         'gender',
-        'class',
+        'class_id',
         'street',
         'ward',
         'city',
-        'district'
+        'district',
+        'school_id'
     ];
 
 
@@ -32,6 +33,16 @@ class Student extends Model
     public function parent_data()
     {
         return $this->hasOne(ParentData::class);
+    }
+
+    public function classAvailables()
+    {
+        return $this->belongsTo(ClassAvailable::class, 'class_id');
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class, 'school_id');
     }
 
 }

@@ -30,4 +30,12 @@ class ClassAvailable extends Model
         return $this->hasMany(AssignedRole::class, 'class-available_id');
     }
 
+    //relationship with Student model (one-to-many)
+    public function students()
+    {
+        return $this->hasMany(Student::class, 'class_id');
+    }
+
+
+
 }

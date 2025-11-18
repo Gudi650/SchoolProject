@@ -38,4 +38,12 @@ class Teacher extends Model
         return $this->hasMany(AssignedRole::class);
     }
 
+    //linking with assigned subjects model
+    public function assignedSubjects()
+    {
+        return $this->hasMany(AssignedSubject::class);
+    }
+
+    
+
 }

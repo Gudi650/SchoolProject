@@ -17,7 +17,7 @@
     </div>
     <div class="w-full md:w-1/2 p-8">
 
-      <form action="{{ route('showsignup') }}" method="POST" class="space-y-4 mt-6 ">
+      <form action="{{ route('signup') }}" method="POST" class="space-y-4 mt-6 ">
 
         @csrf
 
@@ -54,15 +54,31 @@
             <option value="admin">Admin</option>
           </select>
 
-          <select 
-          name="school" 
-          class="p-2 border rounded"
+          <!--check school from database-->
+          <!--check if the $school variable is passed from the controller-->
+
+          @if (isset($schools) &&$schools->isNotEmpty()) 
+            
+            <select 
+            name="school_id" 
+            class="p-2 border rounded"
            required>
+
             <option value="">Select Your School:</option>
-            <option value="school1">School 1</option>
-            <option value="school2">School 2</option>
-            <option value="school3">School 3</option>
-          </select>
+            <!--loop through th schools -->
+            @foreach ( $schools as $school )
+
+              <option value = "{{ $school->id }}" >
+                 {{ $school->name }}
+              </option>
+              
+            @endforeach
+
+            </select>
+
+          @endif
+
+          
 
         </div>
 

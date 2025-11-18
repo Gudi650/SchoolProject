@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\School;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
@@ -18,7 +19,14 @@ class AuthController extends Controller
     //showing the signup page
     public function showSignUp()
     {
-        return view('signup');
+
+        //pass data to the signup view
+        //get the available schools registered in the system
+        $schools = School::all();
+
+        //pass the schools data to the signup view
+
+        return view('signup',['schools' => $schools]);
     }
 
     //handling login form submission
@@ -74,6 +82,9 @@ class AuthController extends Controller
             'email_confirmation' => 'required|same:email',
             'password' => 'required|string|min:8|confirmed',
         ]);
+
+        //get the school id from the selected school and store it in session
+        session()->put('school_id', $request->input('school_id'));
 
         //create user in the database
         $user = User::create([

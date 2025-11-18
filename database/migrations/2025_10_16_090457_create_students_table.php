@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->date('date_of_birth');
             $table->string('gender');
-            $table ->string('class');
+            $table ->string('class_id');
             $table->string('phone')->nullable();
             $table->string('street')->nullable();
             $table->string('ward')->nullable();
@@ -29,7 +29,7 @@ return new class extends Migration
 
             // Foreign key constraint
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
+            $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
 
         });
     }

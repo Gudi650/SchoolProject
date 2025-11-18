@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClassAvailable;
 use App\Models\ParentData;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -18,7 +19,13 @@ class ParentregistrationController extends Controller
     //showing the student registration page
     public function showStudentRegistration()
     {
-        return view('studentregistration');
+
+        //get the classes where the school id is equal to the session school id
+        $classes = ClassAvailable::where('school_id', session('school_id'))->get();
+
+        
+        //pass the data to the view as well
+        return view('studentregistration', ['classes' => $classes]);
 
     }
 
@@ -80,7 +87,7 @@ class ParentregistrationController extends Controller
             'email' => 'nullable|email|unique:students,email',
             'date_of_birth' => 'required|date',
             'gender' => 'required|string|in:male,female',
-            'class' => 'required|string',
+            'class_id' => 'required|integer|exists:class-availables,id',
             'street' => 'nullable|string|max:255',
             'ward' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
@@ -91,10 +98,14 @@ class ParentregistrationController extends Controller
         //Merge the user_id into the validated data before saving
         $validatedData['user_id'] = $user->id;
 
+        //merge school_id to the validated data from a session
+        $validatedData['school_id'] = session('school_id');
+
         //create or update student record in the database
 
         Student::updateOrCreate(
-            ['user_id' => $user->id], // Assuming there's a user_id foreign key in the students table
+            // Assuming there's a user_id foreign key in the students table
+            ['user_id' => $user->id], 
             $validatedData
         );
 

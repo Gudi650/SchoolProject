@@ -4,6 +4,7 @@ use App\Http\Controllers\AssignClasses;
 use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ParentregistrationController;
+use App\Http\Controllers\PostExamResults;
 use App\Http\Controllers\Student;
 use App\Http\Controllers\Teacherprofile;
 use App\Http\Controllers\TeacherregistrationController;
@@ -59,10 +60,13 @@ Route::middleware('auth')->group(function () {
 
 ////////////////////////////////////////////
 
-    //for post exam results
-    Route::get('/teacher-postresults', function () {
-        return view('TeacherPanel.postresults');
-    })->name('teacher.postresults');
+    //route to show the page
+    Route::get('/teacher-postresults', [PostExamResults::class , 'showPostExamPage'])->name('teacher.postresults');
+
+
+
+////////////////////////////////////////////
+
 
     //for generateresults pagee
     Route::get('/teacher-generateresults', function () {
