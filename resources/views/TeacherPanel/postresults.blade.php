@@ -538,8 +538,33 @@
                         </td>
 
                         <td class="p-3">
-                          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            A
+                        @php
+                            $s = isset($result->score) ? (int)$result->score : null;
+                            if ($s === null || $s === '') {
+                                $grade = null;
+                            } elseif ($s >= 85) {
+                                $grade = 'A';
+                            } elseif ($s >= 70) {
+                                $grade = 'B';
+                            } elseif ($s >= 55) {
+                                $grade = 'C';
+                            } elseif ($s >= 40) {
+                                $grade = 'D';
+                            } else {
+                                $grade = 'F';
+                            }
+                            $classes = [
+                                'A' => 'bg-green-100 text-green-800',
+                                'B' => 'bg-yellow-100 text-yellow-800',
+                                'C' => 'bg-orange-100 text-orange-800',
+                                'D' => 'bg-indigo-100 text-indigo-800',
+                                'F' => 'bg-red-100 text-red-800',
+                                null => 'bg-gray-100 text-gray-600',
+                            ];
+                        @endphp
+
+                          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium {{ $classes[$grade] }}">
+                            {{ $grade ?? 'N/A' }}
                           </span>
                         </td>
 
