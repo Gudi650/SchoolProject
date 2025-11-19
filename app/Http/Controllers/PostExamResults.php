@@ -66,10 +66,7 @@ class PostExamResults extends Controller
             //get the average score
             $averagescore = $this -> getAverageScore();
         }
-
-        
     
-
         return view('TeacherPanel.postresults', [
             'allassigned' => $assigned,
             'students' => $students,
@@ -206,6 +203,34 @@ class PostExamResults extends Controller
             ->where('subject_id', session()->get('subject_id'))
             ->avg('score');
 
+    }
+
+    //function to handle the modal updates
+    public function updateExamResult(Request $request)
+    {
+        //validate the incoming request data
+        $validatedData = $request->validate([
+            'score' => 'required|numeric|min:0|max:100',
+            'remarks' => 'nullable|string|max:255',
+            'result_id' => 'required|exists:exam_results,student_id',
+        ]);
+
+        //update the exam result record
+        ExamResults::where('student_id', $validatedData['result_id'])
+            ->where('school_id', session()->get('school_id'))
+            ->where('exam_date', session()->get('exam_date'))
+            ->where('class_id', session()->get('class_id'))
+            ->where('subject_id', session()->get('subject_id'))
+            ->update([
+                'score' => $validatedData['score'],
+                'remarks' => $validatedData['remarks'] ?? null,
+            ]);
+        
+
+        
+
+        //redirect back with success message
+        return redirect()->route('teacher.postresults')->with('success', 'Exam result updated successfully.');
     }
 
 

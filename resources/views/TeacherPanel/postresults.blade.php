@@ -501,7 +501,7 @@
 
               <div class="overflow-x-auto rounded-md shadow-sm bg-white">
 
-                <table class="w-full table-auto divide-y divide-gray-200 text-sm">
+                <table id="postedResultsTable" class="w-full table-auto divide-y divide-gray-200 text-sm">
 
                   <thead class="bg-indigo-50">
 
@@ -551,7 +551,13 @@
                         <td class="p-3">
                           <!-- Edit button-->
                           <button type="button" 
-                          class="edit-row text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded mr-2">
+                          class="edit-row text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded mr-2"
+                          data-name="{{ $result->students->fname }} {{ $result->students->lname }}"
+                          data-marks="{{ $result->score }}"
+                          data-remarks="{{ $result->remarks }}"
+                          data-id="{{ $result->student_id }}"
+
+                          >
                             Edit
                           </button>
                         </td>
@@ -571,177 +577,253 @@
                 </table>
               </div>
 
-              <!-- Mobile stacked cards -->
-              <div class="md:hidden mt-4 space-y-3">
-                <div class="p-3 bg-white rounded-lg shadow-sm border">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <div class="text-sm font-medium text-indigo-800">John Doe</div>
-                      <div class="text-xs text-gray-500">Adm: 12345</div>
-                    </div>
-                    <div class="text-right">
-                      <div class="text-sm font-semibold text-indigo-800">85</div>
-                      <div class="text-xs"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">A</span></div>
-                    </div>
-                  </div>
-                  <div class="mt-2 text-xs text-gray-600">Good work</div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
           
         <!-- Edit Row Modal -->
         <div id="editRowModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-40">
+
           <div class="bg-white w-full max-w-md rounded-lg p-6 shadow-xl transform transition-all">
+
             <div class="flex items-start justify-between gap-4">
+
               <div class="flex items-center gap-3">
+
                 <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-indigo-700 flex items-center justify-center text-white shadow">
                   <i class="bi bi-pencil-square"></i>
                 </div>
+
                 <div>
-                  <h2 class="text-lg font-semibold text-indigo-800">Edit Student Result</h2>
-                  <p class="text-sm text-gray-500">Update marks and remarks for the selected student.</p>
+                  <h2 class="text-lg font-semibold text-indigo-800">
+                    Edit Student Result
+                  </h2>
+
+                  <p class="text-sm text-gray-500">
+                    Update marks and remarks for the selected student.
+                  </p>
+
                 </div>
               </div>
+
               <button id="closeEditBtn" aria-label="Close edit" class="text-gray-400 hover:text-gray-700 p-2 rounded-md">
                 <i class="bi bi-x-lg"></i>
-              </button>
+              </button><!--termination button-->
+
             </div>
 
-            <form id="editRowForm" class="space-y-4 mt-4">
+            <form id="editRowForm" 
+            class="space-y-4 mt-4"
+            action="{{ route('teacher.editexamresults.submit') }}"
+            method = "POST"
+            >
+
+              @csrf
+
+              <!-- result identifier (set by JS from button data-id or data-result-id) -->
+              <input type="hidden" id="editResultId" name="result_id" value="">
+
               <div>
-                <label class="text-sm text-gray-600">Student</label>
-                <input id="editStudent" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+
+                <label class="text-sm text-gray-600">
+                  Student Name
+                </label>
+
+                <input id="editStudent" 
+                class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" 
+                />
+
               </div>
+
               <div>
-                <label class="text-sm text-gray-600">Admission</label>
-                <input id="editAdm" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+
+                <label class="text-sm text-gray-600">
+                  Marks
+                </label>
+
+                <input id="editMarks" 
+                type="number" min="0" max="100" 
+                class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" 
+                name = "score" 
+                />
+
               </div>
+
               <div>
-                <label class="text-sm text-gray-600">Marks</label>
-                <input id="editMarks" type="number" min="0" max="100" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+
+                <label class="text-sm text-gray-600">
+                  Remarks
+                </label>
+
+                <input id="editRemarks" 
+                class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+
               </div>
-              <div>
-                <label class="text-sm text-gray-600">Remarks</label>
-                <input id="editRemarks" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-              </div>
+
               <div class="flex justify-end gap-3">
-                <button type="button" id="cancelEditBtn" class="px-4 py-2 border rounded-md bg-white hover:bg-red-50 text-red-600 hover:text-red-700 transition-colors duration-150">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700">Save</button>
+
+                <button type="button" id="cancelEditBtn" 
+                class="px-4 py-2 border rounded-md bg-white hover:bg-red-50 text-red-600 hover:text-red-700 transition-colors duration-150">
+                  Cancel
+                </button>
+
+                <button type="submit" 
+                class="px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700">
+                  Save
+                </button>
               </div>
             </form>
+          
           </div>
-        </div>
+        </div><!--end of modal-->
     </main>
 
     <script>
-    
-        // Page-specific exam/results script (kept intact)
-        (function(){
-            const resTable = document.getElementById('resTable');
-            const addRow = document.getElementById('addRow');
-            const resultsForm = document.getElementById('resultsForm');
-            const subjectSelect = document.getElementById('resSubject');
-            const gradeSelect = document.getElementById('resGrade');
-            
-            // If no results table on the page, exit early
-            if (!resTable) return;
-    
-            function calcGrade(mark){
-              const m = Number(mark);
-              if(isNaN(m) || m==='') return '';
-              if(m>=85) return 'A';
-              if(m>=70) return 'B';
-              if(m>=55) return 'C';
-              if(m>=40) return 'D';
-              return 'F';
+    document.addEventListener('DOMContentLoaded', function () {
+      const resTable = document.getElementById('resTable');
+      const postedTable = document.getElementById('postedResultsTable');
+      const resultsForm = document.getElementById('resultsForm');
+      const subjectSelect = document.getElementById('resSubject');
+      const gradeSelect = document.getElementById('resGrade');
+
+      // modal elements
+      const editRowModal = document.getElementById('editRowModal');
+      const editRowForm = document.getElementById('editRowForm');
+      const editResultId = document.getElementById('editResultId'); // new hidden input
+      const editStudent = document.getElementById('editStudent');
+      const editMarks = document.getElementById('editMarks');
+      const editRemarks = document.getElementById('editRemarks');
+      const cancelEditBtn = document.getElementById('cancelEditBtn');
+      const closeEditBtn = document.getElementById('closeEditBtn');
+
+      // utility: grade calc + UI update
+      function calcGrade(mark){
+        const m = Number(mark);
+        if(isNaN(m) || mark === '' || mark === null) return '';
+        if(m>=85) return 'A';
+        if(m>=70) return 'B';
+        if(m>=55) return 'C';
+        if(m>=40) return 'D';
+        return 'F';
+      }
+
+      function updateGrades(){
+        const table = resTable || postedTable;
+        if(!table) return;
+        table.querySelectorAll('tbody tr').forEach(row=>{
+          const markEl = row.querySelector('.marks');
+          const gradeEl = row.querySelector('.grade');
+          if(markEl && gradeEl){
+            const g = calcGrade(markEl.value);
+            let span = gradeEl.querySelector('span');
+            if(!span){
+              span = document.createElement('span');
             }
-    
-            function updateGrades(){
-              resTable.querySelectorAll('tbody tr').forEach(row=>{
-                const markEl = row.querySelector('.marks');
-                const gradeEl = row.querySelector('.grade');
-                if(markEl && gradeEl){
-                  const g = calcGrade(markEl.value);
-                  const span = gradeEl.querySelector('span') || document.createElement('span');
-                  span.textContent = g;
-                  span.className = 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ' +
-                    (g==='A' ? 'bg-green-100 text-green-800' : g==='B' ? 'bg-yellow-100 text-yellow-800' : g==='C' ? 'bg-orange-100 text-orange-800' : g==='D' ? 'bg-indigo-100 text-indigo-800' : g==='F' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-600');
-                  if(!gradeEl.contains(span)) gradeEl.innerHTML = ''; gradeEl.appendChild(span);
-                }
-              });
-              renderMobileRows();
+            span.textContent = g;
+            span.className = 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ' +
+              (g==='A' ? 'bg-green-100 text-green-800' :
+               g==='B' ? 'bg-yellow-100 text-yellow-800' :
+               g==='C' ? 'bg-orange-100 text-orange-800' :
+               g==='D' ? 'bg-indigo-100 text-indigo-800' :
+               g==='F' ? 'bg-red-100 text-red-800' :
+               'bg-gray-100 text-gray-600');
+            gradeEl.innerHTML = '';
+            gradeEl.appendChild(span);
+          }
+        });
+        renderMobileRows();
+      }
+
+      // attach marks listeners for resTable inputs (live grade calc)
+      if(resTable){
+        resTable.querySelectorAll('.marks').forEach(inp => inp.addEventListener('input', updateGrades));
+        // preserve previous "remove" behaviour (no-op)
+        resTable.querySelectorAll('.remove-row').forEach(btn => btn.addEventListener('click', function(){ console.log('Remove disabled in frontend demo'); }));
+      }
+
+      // render mobile rows (kept simple)
+      function renderMobileRows(){
+        const container = document.getElementById('mobileResList');
+        if(!container) return;
+        container.innerHTML = '';
+        const table = resTable || postedTable;
+        if(!table) return;
+        table.querySelectorAll('tbody tr').forEach(tr => {
+          // minimal mobile card, keep empty to avoid duplication unless needed
+        });
+      }
+
+      // open/close modal helpers
+      function openModal(){
+        if(!editRowModal) return;
+        editRowModal.classList.remove('hidden');
+        editRowModal.classList.add('flex');
+      }
+
+      function closeModal(){
+        if(!editRowModal) return;
+        editRowModal.classList.add('hidden');
+        editRowModal.classList.remove('flex');
+        // clear any temporary identifier
+        editRowModal.removeAttribute('data-result-id');
+        // do not forcibly clear inputs (server may fill them). If desired, uncomment:
+        // if(editStudent) editStudent.value = '';
+        // if(editMarks) editMarks.value = '';
+        // if(editRemarks) editRemarks.value = '';
+      }
+
+      // attach edit handlers to any container/table or global .edit-row buttons
+      function attachEditHandlers(root){
+        const container = root || document;
+        container.querySelectorAll('.edit-row').forEach(btn => {
+          // remove previous handler if re-attaching
+          if(btn._editHandler) btn.removeEventListener('click', btn._editHandler);
+          btn._editHandler = function(e){
+            e.preventDefault();
+            const name = btn.dataset.name ?? '';
+            const marks = btn.dataset.marks ?? '';
+            const remarks = btn.dataset.remarks ?? '';
+            const resultId = btn.dataset.resultId ?? btn.dataset.id ?? null;
+            if(editStudent && name !== '') editStudent.value = name;
+            if(editMarks && marks !== '') editMarks.value = marks;
+            if(editRemarks && remarks !== '') editRemarks.value = remarks;
+            if(resultId && editRowModal) {
+              editRowModal.setAttribute('data-result-id', resultId);
+              if(editResultId) editResultId.value = resultId; // populate hidden input for form submit
+            } else {
+              if(editRowModal) editRowModal.removeAttribute('data-result-id');
+              if(editResultId) editResultId.value = '';
             }
-    
-            // attach listeners to existing static rows/controls
-            resTable.querySelectorAll('.marks').forEach(inp=> inp.addEventListener('input', updateGrades));
-    
-            // disable remove action: keep button but do not remove rows
-            resTable.querySelectorAll('.remove-row').forEach(btn=> btn.addEventListener('click', function(){
-              // intentional no-op to prevent row removal
-              console.log('Remove disabled in frontend demo');
-            }));
-    
-            resTable.querySelectorAll('.edit-row').forEach(btn=> btn.addEventListener('click', function(e){
-              e.preventDefault(); // prevent accidental form submit
-              const tr = this.closest('tr'); if(tr) openEditModal(tr);
-            }));
-    
-            const editRowModal = document.getElementById('editRowModal');
-            const editRowForm = document.getElementById('editRowForm');
-            const editStudent = document.getElementById('editStudent');
-            const editAdm = document.getElementById('editAdm');
-            const editMarks = document.getElementById('editMarks');
-            const editRemarks = document.getElementById('editRemarks');
-            const cancelEditBtn = document.getElementById('cancelEditBtn');
-            let currentEditingRow = null;
-    
-            function openEditModal(row){
-              currentEditingRow = row;
-              const cols = row.querySelectorAll('td');
-              const student = cols[1].querySelector('input') ? cols[1].querySelector('input').value : (cols[1].textContent||'').trim();
-              const adm = cols[2].querySelector('input') ? cols[2].querySelector('input').value : (cols[2].textContent||'').trim();
-              const marks = (cols[3].querySelector('input')||{value:''}).value;
-              const remarks = (cols[5].querySelector('input')||{value:''}).value;
-              editStudent.value = student;
-              editAdm.value = adm;
-              editMarks.value = marks;
-              editRemarks.value = remarks;
-              editRowModal.classList.remove('hidden');
-              editRowModal.classList.add('flex');
-            }
-    
-            function closeEditModal(){
-              editRowModal.classList.add('hidden');
-              editRowModal.classList.remove('flex');
-              currentEditingRow = null;
-            }
-    
-  // re-enable modal close handlers so Cancel and X work again
-  if (cancelEditBtn) cancelEditBtn.addEventListener('click', closeEditModal);
-  const closeEditBtn = document.getElementById('closeEditBtn');
-  if (closeEditBtn) closeEditBtn.addEventListener('click', closeEditModal);
-    
-            editRowForm.addEventListener('submit', function(e){
-              e.preventDefault();
-              // In this frontend-only mode we DO NOT write changes back to the table.
-              // Show a brief confirmation inside the modal instead.
-              // intentionally do not show any frontend messages; backend will handle notifications later
-              // still update the grade visuals in the table just in case (non-persistent)
-              updateGrades();
-              renderMobileRows();
-            });
-    
-            
-            // Safe stub: if mobile rendering was removed earlier, avoid runtime errors.
-            function renderMobileRows(){
-              const container = document.getElementById('mobileResList');
-              if(!container || !resTable) return;
-              // keep empty — mobile cards are optional and populated elsewhere when needed
-              container.innerHTML = '';
-            }
-        })();
-        
+            openModal();
+            // notify any listener to fetch server content if needed
+            window.dispatchEvent(new CustomEvent('editModal:opened', { detail: { button: btn, modal: editRowModal } }));
+          };
+          btn.addEventListener('click', btn._editHandler);
+        });
+      }
+
+      // initial attach (covers both tables)
+      attachEditHandlers();
+
+      // also attach to specific tables if you dynamically load rows later
+      if(resTable) attachEditHandlers(resTable);
+      if(postedTable) attachEditHandlers(postedTable);
+
+      // closing
+      if(cancelEditBtn) cancelEditBtn.addEventListener('click', closeModal);
+      if(closeEditBtn) closeEditBtn.addEventListener('click', closeModal);
+      document.addEventListener('keydown', function (e) { if(e.key === 'Escape') closeModal(); });
+
+      // Let Laravel handle edit form submission (no e.preventDefault). If you want AJAX, listen to 'editModal:opened' and perform fetch.
+      // If you previously had JS intercepting editRowForm submit to prevent navigation, remove that interception.
+      if(editRowForm){
+        // remove any prior listener that prevented default (defensive)
+        if(editRowForm._submitHandler) editRowForm.removeEventListener('submit', editRowForm._submitHandler);
+        // keep default behaviour (server-side submit). If you want to intercept, add a handler here.
+      }
+
+      // initial grade rendering for posted table
+      updateGrades();
+    });
     </script>
 </x-Teacher-sidebar>

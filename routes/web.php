@@ -69,6 +69,9 @@ Route::middleware('auth')->group(function () {
     //route to handle the post exam results form submission
     Route::post('/teacher-postresults', [PostExamResults::class , 'postExamResults'])->name('teacher.postresults.submit');
 
+    //route to handle the edit modal exam results form submission
+    Route::post('/teacher-editexamresults', [PostExamResults::class , 'updateExamResult'])->name('teacher.editexamresults.submit');
+
 
 //////////////////////////////////////////////////////////////////
 
