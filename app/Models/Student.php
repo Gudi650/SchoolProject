@@ -45,4 +45,10 @@ class Student extends Model
         return $this->belongsTo(School::class, 'school_id');
     }
 
+    //relationship with exam results
+    public function examResults()
+    {
+        return $this->hasMany(ExamResults::class, 'student_id');
+    }   
+
 }

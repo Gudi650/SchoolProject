@@ -41,9 +41,14 @@ class Teacher extends Model
     //linking with assigned subjects model
     public function assignedSubjects()
     {
-        return $this->hasMany(AssignedSubject::class);
+        return $this->hasMany(AssignedSubject::class, 'teacher_id');
     }
 
+    //linking with exam results model
+    public function examResults()
+    {
+        return $this->hasMany(ExamResults::class);
+    }   
     
 
 }

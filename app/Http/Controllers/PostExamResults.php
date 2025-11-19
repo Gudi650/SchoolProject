@@ -30,19 +30,55 @@ class PostExamResults extends Controller
         // If a class was chosen previously, load students for the GET view (PRG)
         $students = null;
         $tableid = 0;
+        $tabledid = $tableid;
+        
+
         if (session()->has('class_id') && $teacher) {
             $school_id = $teacher->school_id;
             $students = Student::where('class_id', session('class_id'))
                 ->where('school_id', $school_id)
                 ->get();
         }
+        
 
+        // ensure studentresults is always defined for the view
+        $studentresults = collect();
+
+        //if  results was uploaded successfully
+        if(session()->get('school_id') && session()->get('exam_date'))
+        {
+            //fetch data from ExamResults table in db 
+            $school_id = session()->get('school_id');
+            $exam_date = session()->get('exam_date');
+
+            $studentresults = ExamResults::where('school_id', $school_id)
+                        ->where('exam_date', $exam_date)
+                        ->where('class_id', session('class_id'))
+                        ->where('subject_id', session('subject_id'))
+                        ->get();            
+                        
+            //get the lowest score
+            $lowestScore = $this->getLowestScore();
+
+            //get the highest score
+            $highestScore = $this->getHighestScore();
+
+            //get the average score
+            $averagescore = $this -> getAverageScore();
+        }
+
+        
     
 
         return view('TeacherPanel.postresults', [
             'allassigned' => $assigned,
             'students' => $students,
             'tableid' => $tableid,
+            'studentresults' => $studentresults,
+            'tabledid' => $tabledid,
+            'lowestScore' => $lowestScore ?? null,
+            'highestScore' => $highestScore ?? null,
+            'averagescore' => $averagescore ?? null,
         ]);
     }
 
@@ -55,6 +91,7 @@ class PostExamResults extends Controller
             'class_id' => 'required|exists:class-availables,id',
             'TermName' => 'required|string',
             'subject_id' => 'required|exists:availablesubjects,id',
+            'exam_date' => 'required|date',
             //'results_file' => 'required|file|mimes:csv,txt',
         ]);
 
@@ -62,6 +99,7 @@ class PostExamResults extends Controller
         session()->put('class_id', $validatedData['class_id']);
         session()->put('TermName', $validatedData['TermName']);
         session()->put('subject_id', $validatedData['subject_id']);
+        session()->put('exam_date', $validatedData['exam_date']);
         
         //try and obtain the school_id using the teacher
         //get the active teacher of the teacher
@@ -74,10 +112,6 @@ class PostExamResults extends Controller
         //get student who are in class with class_id given and in the same school as the teacher
 
         $students = Student::where('class_id', session()->get('class_id'))->where('school_id', $school_id)->get();
-
-
-        //table id in the results table
-        $tableid = 0;
 
 
         // Do not return view from POST — redirect to GET route (PRG)
@@ -100,6 +134,7 @@ class PostExamResults extends Controller
             'subject_id.*' => 'required|exists:availablesubjects,id',
             'class_id.*' => 'required|exists:class-availables,id',
             'teacher_id' => 'required|exists:teachers,id',
+            'exam_date' => 'required|date',
         ]);
 
         //teacher_id is a single scalar (applies to all rows)
@@ -107,6 +142,9 @@ class PostExamResults extends Controller
 
         //TermName is a single scalar (applies to all rows)
         $termName = $validatedData['TermName'];
+
+        //exam_date is a single scalar (applies to all rows)
+        $examDate = $validatedData['exam_date'];
 
         //get the school_id using the teacher id
         $teacher = Teacher::find($teacherId);
@@ -128,14 +166,47 @@ class PostExamResults extends Controller
                 'remarks' => $validatedData['remarks'][$index] ?? null,
                 // Assuming school_id can be obtained from the teacher
                 'school_id' => $schoolId,
+                'exam_date' => $examDate,
             ]);
         }
+
 
         //return 
         return redirect()->route('teacher.postresults')->with('success', 'Results saved');
 
     }
 
-    
+    //set function to get the lowest score
+    private function getLowestScore()
+    {
+        return ExamResults::where('school_id', session()->get('school_id'))
+            ->where('exam_date', session()->get('exam_date'))
+            ->where('class_id', session()->get('class_id'))
+            ->where('subject_id', session()->get('subject_id'))
+            ->min('score');
+    }
+
+    //function to get the highest score
+    private function getHighestScore()
+    {
+        return ExamResults::where('school_id', session()->get('school_id'))
+            ->where('exam_date', session()->get('exam_date'))
+            ->where('class_id', session()->get('class_id'))
+            ->where('subject_id', session()->get('subject_id'))
+            ->max('score');
+    }
+
+    //function for averagescore
+    private function getAverageScore()
+    {
+
+        return ExamResults::where('school_id', session()->get('school_id'))
+            ->where('exam_date', session()->get('exam_date'))
+            ->where('class_id', session()->get('class_id'))
+            ->where('subject_id', session()->get('subject_id'))
+            ->avg('score');
+
+    }
+
 
 }

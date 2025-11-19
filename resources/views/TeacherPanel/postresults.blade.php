@@ -138,6 +138,19 @@
                 placeholder="e.g. Midterm Term 1" />
                 
               </div>
+              <div>
+
+                <label class="text-sm text-gray-600">
+                  Exam Date
+                </label>
+
+                <input id="resName" 
+                name="exam_date"
+                type="date" 
+                class="w-full border rounded px-3 py-2" 
+                placeholder="e.g. Midterm Term 1" />
+                
+              </div>
               <div class="flex items-end">
 
                 <label class="sr-only">
@@ -152,13 +165,6 @@
 
               </div>
             </div>
-
-            <!-- form action buttons -->
-            <!-- <div class="flex items-center gap-3">
-              <button id="addRow" type="button" class="px-3 py-2 bg-indigo-600 text-white rounded">Add Student Row</button>
-              <button id="saveResults" type="submit" class="px-3 py-2 bg-green-600 text-white rounded">Save Results</button>
-              <button id="clearResults" type="button" class="px-3 py-2 border rounded">Clear</button>
-            </div> -->
             
           </form>
 
@@ -167,7 +173,7 @@
 
           <!--display only if the student is valid(after the search) -->
 
-          @if ( isset($students) && $students->isNotEmpty() )
+          @if ( isset($students) && $students->isNotEmpty() &&$studentresults->isEmpty() )
             
 
           <div class="bg-white mt-6">
@@ -264,6 +270,11 @@
                     name = "teacher_id"
                     value = "{{ session('activeTeacher')->id }}">
 
+                    <!--pas the exam-date to form from session as hidden input-->
+                    <input type="hidden"
+                    name ="exam_date"
+                    value="{{ session()->get('exam_date') }}" >
+
                     <td class="p-2">
 
                       <!--marks input-->
@@ -331,12 +342,6 @@
                class="px-3 py-2 bg-green-600 text-white rounded">
                 Save Results
               </button>
-
-              <button id="clearResults" 
-               type="button" 
-               class="px-3 py-2 border rounded border-gray-300 hover:bg-red-100 hover:text-red-700 transition-colors duration-150">
-                Clear
-              </button>
                
             </div>
           </div><!--end of post results table -->
@@ -346,6 +351,9 @@
           @endif
 
         </section>
+
+        <!--check if the studentresults is available-->
+        @if (isset($studentresults) && $studentresults->isNotEmpty())
 
         <!-- Posted results (client-side demo) -->
         <div id="posted" class="mt-6">
@@ -388,6 +396,8 @@
             </div>
 
             <!-- Summary / chips -->
+            
+
             <div class="px-5 pb-4 border-t md:flex md:items-center md:justify-between md:gap-6">
 
               <div class="flex flex-wrap items-center gap-3">
@@ -398,7 +408,9 @@
                   </span>
 
                   <span id="postedSubject" class="text-sm font-medium text-indigo-800">
-                    Mathematics
+
+                    {{ session('activeTeacher')->assignedSubjects->where('availablesubject_id', session('subject_id'))->first()->availablesubject->subject_name ?? 'N/A' }}
+                    
                   </span>
 
                 </div>
@@ -408,7 +420,9 @@
                   </span>
 
                   <span id="postedGrade" class="text-sm font-medium text-indigo-800">
-                    Grade 9
+
+                    {{ session('activeTeacher')->assignedSubjects->where('availablesubject_id', session('subject_id'))->first()->classAvailable->name ?? 'N/A' }}
+
                   </span>
 
                 </div>
@@ -418,7 +432,7 @@
                   </span>
 
                   <span id="postedExam" class="text-sm font-medium text-indigo-800">
-                    Midterm Term 1
+                    {{ session('TermName') }}
                   </span>
 
                 </div>
@@ -426,33 +440,57 @@
 
               <div class="mt-3 md:mt-0 flex items-center gap-4">
                 <div class="text-sm">
+
                   <div class="text-xs text-gray-500">
                     Average
                   </div>
 
-                  <div class="text-indigo-800 font-semibold">
-                    78.5%
-                  </div>
+                  <!--check if averagescore is available-->
+                  @if (isset($averagescore) && $averagescore !== null )
+                    
+                    <div class="text-indigo-800 font-semibold">
+                      {{ $averagescore }}%
+                    </div>
+
+                  @endif
 
                 </div>
+
                 <div class="text-sm">
                   <div class="text-xs text-gray-500">
                     Top
                   </div>
 
-                  <div class="text-green-700 font-semibold">
-                    94
-                  </div>
+                  <!--check if highest score is available-->
+                  @if (isset($highestScore) && $highestScore !== null )
+                    
+                    <div class="text-green-700 font-semibold">
+                      {{ $highestScore }}
+                    </div>
+
+                  @else
+
+                    <div class="text-gray-500">N/A</div>
+
+                  @endif
+
+                  
 
                 </div>
                 <div class="text-sm">
+
                   <div class="text-xs text-gray-500">
                     Lowest
                   </div>
 
-                  <div class="text-red-600 font-semibold">
-                    42
-                  </div>
+                  <!--check if lowest score is available-->
+                  @if (isset($lowestScore) && $lowestScore !== null)
+                    <div class="text-indigo-800 font-semibold">
+                      {{ $lowestScore }}
+                    </div>
+                  @else
+                    <div class="text-gray-500">N/A</div>
+                  @endif
 
                 </div>
               </div>
@@ -471,10 +509,10 @@
 
                       <th class="p-3">#</th>
                       <th class="p-3">Student</th>
-                      <th class="p-3">Admission</th>
                       <th class="p-3">Marks</th>
                       <th class="p-3">Grade</th>
                       <th class="p-3">Remarks</th>
+                      <th class="p-3">Action</th>
 
                     </tr>
                   </thead>
@@ -483,43 +521,52 @@
 
                     <!-- hardcoded demo rows -->
 
-                    <tr class="hover:bg-gray-50 transition-colors">
-                      <td class="p-3">
-                        1
-                      </td>
+                    <!--loop through the studentresults-->
+                    @foreach ($studentresults as $result )
+                      <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="p-3">
+                          {{ $tabledid = $tabledid + 1}}
+                        </td>
 
-                      <td class="p-3">
-                        John Doe
-                      </td>
+                        <td class="p-3">
+                          {{ $result->students->fname }} 
+                          {{ $result->students->lname }}
+                        </td>
 
-                      <td class="p-3">
-                        12345
-                      </td>
+                        <td class="p-3 font-medium text-indigo-800">
+                          {{ $result->score }}
+                        </td>
 
-                      <td class="p-3 font-medium text-indigo-800">
-                        85
-                      </td>
+                        <td class="p-3">
+                          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            A
+                          </span>
+                        </td>
 
-                      <td class="p-3">
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          A
-                        </span>
-                      </td>
+                        <td class="p-3 text-gray-600">
+                          Good work
+                        </td>
 
-                      <td class="p-3 text-gray-600">
-                        Good work
-                      </td>
+                        <!--action button-->
+                        <td class="p-3">
+                          <!-- Edit button-->
+                          <button type="button" 
+                          class="edit-row text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded mr-2">
+                            Edit
+                          </button>
+                        </td>
+
+                      </tr>
+                    @endforeach
                       
-                    </tr>
+                    @else
+                      <tr>
+                        <td colspan="6" class="p-4 text-center text-gray-500">
+                          No results posted yet.
+                        </td>
+                      </tr>
+                    @endif
 
-                    <tr class="hover:bg-gray-50 transition-colors">
-                      <td class="p-3">3</td>
-                      <td class="p-3">Samuel K.</td>
-                      <td class="p-3">12347</td>
-                      <td class="p-3 font-medium text-indigo-800">61</td>
-                      <td class="p-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">C</span></td>
-                      <td class="p-3 text-gray-600">Satisfactory</td>
-                    </tr>
                   </tbody>
                 </table>
               </div>

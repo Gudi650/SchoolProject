@@ -16,6 +16,7 @@ class ExamResults extends Model
         'TermName',
         'score',
         'remarks',
+        'exam_date',
     ];
 
     //define relationships below

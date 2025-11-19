@@ -28,4 +28,10 @@ class availablesubject extends Model
         return $this->belongsTo(School::class, 'school_id');
     }
 
+    //relationship with assigned subjects
+    public function assignedSubjects()
+    {
+        return $this->hasMany(AssignedSubject::class, 'availablesubject_id');
+    }
+
 }
