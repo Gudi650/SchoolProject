@@ -12,6 +12,7 @@ class ExamResults extends Model
         'subject_id',
         'teacher_id',
         'school_id',
+        'class_id',
         'TermName',
         'score',
         'remarks',
@@ -41,6 +42,12 @@ class ExamResults extends Model
     public function school()
     {
         return $this->belongsTo(School::class, 'school_id');
+    }
+
+    //relationship to ClassAvailable
+    public function classavailable()
+    {
+        return $this->belongsTo(ClassAvailable::class, 'class_id');
     }
 
 

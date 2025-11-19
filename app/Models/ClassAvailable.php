@@ -36,6 +36,12 @@ class ClassAvailable extends Model
         return $this->hasMany(Student::class, 'class_id');
     }
 
+    //relationship with ExamResults model (one-to-many)
+    public function examResults()
+    {
+        return $this->hasMany(ExamResults::class, 'class_id');  
+    }
+
 
 
 }

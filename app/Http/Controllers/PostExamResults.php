@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ExamResults;
 use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -26,13 +27,28 @@ class PostExamResults extends Controller
         //store $assigned in a session
         session()->put('assigned', $assigned);
 
-        // pass the data to the view
-        return view('TeacherPanel.postresults', ['allassigned' => $assigned]);
+        // If a class was chosen previously, load students for the GET view (PRG)
+        $students = null;
+        $tableid = 0;
+        if (session()->has('class_id') && $teacher) {
+            $school_id = $teacher->school_id;
+            $students = Student::where('class_id', session('class_id'))
+                ->where('school_id', $school_id)
+                ->get();
+        }
+
+    
+
+        return view('TeacherPanel.postresults', [
+            'allassigned' => $assigned,
+            'students' => $students,
+            'tableid' => $tableid,
+        ]);
     }
 
 
     //function to handle the post exam results form submission
-    public function postExamResults(Request $request)
+    public function postExamController(Request $request)
     {
 
         $validatedData = $request->validate([
@@ -63,12 +79,61 @@ class PostExamResults extends Controller
         //table id in the results table
         $tableid = 0;
 
-        //return to the view
-        return view('TeacherPanel.postresults', [
-            'students' => $students,
-            'allassigned' => session()->get('assigned'),
-            'tableid' => $tableid,
+
+        // Do not return view from POST — redirect to GET route (PRG)
+        return redirect()->route('teacher.postresults');
+
+
+    }
+
+    //function to take the score inputs and save them to the database
+
+    public function postExamResults(Request $request)
+    {
+        //code to save the exam results to the database will go here
+        //validate the incoming request data
+        $validatedData = $request->validate([
+            'student_id.*' => 'required|exists:students,id',
+            'score.*' => 'required|numeric|min:0|max:100',
+            'remarks.*' => 'nullable|string|max:255',
+            'TermName' => 'required|string',
+            'subject_id.*' => 'required|exists:availablesubjects,id',
+            'class_id.*' => 'required|exists:class-availables,id',
+            'teacher_id' => 'required|exists:teachers,id',
         ]);
+
+        //teacher_id is a single scalar (applies to all rows)
+        $teacherId = $validatedData['teacher_id'];
+
+        //TermName is a single scalar (applies to all rows)
+        $termName = $validatedData['TermName'];
+
+        //get the school_id using the teacher id
+        $teacher = Teacher::find($teacherId);
+        $schoolId = $teacher->school_id;
+
+        //store schoolId in session
+        session()->put('school_id', $schoolId);
+
+        //loop through each student's result and save to database
+        foreach ($validatedData['student_id'] as $index => $studentId) {
+            //create a new exam result record
+            ExamResults::create([
+                'student_id' => $studentId,
+                'class_id' => $validatedData['class_id'][$index],
+                'subject_id' => $validatedData['subject_id'][$index],
+                'teacher_id' => $teacherId,
+                'TermName' => $termName,
+                'score' => $validatedData['score'][$index],
+                'remarks' => $validatedData['remarks'][$index] ?? null,
+                // Assuming school_id can be obtained from the teacher
+                'school_id' => $schoolId,
+            ]);
+        }
+
+        //return 
+        return redirect()->route('teacher.postresults')->with('success', 'Results saved');
+
     }
 
     

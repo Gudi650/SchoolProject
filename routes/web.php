@@ -63,12 +63,14 @@ Route::middleware('auth')->group(function () {
     //route to show the post exam page
     Route::get('/teacher-postresults', [PostExamResults::class , 'showPostExamPage'])->name('teacher.postresults');
 
+    //route to handle the post exam results controller form submission
+    Route::post('/teacher-postresults-controller', [PostExamResults::class , 'postExamController'])->name('teacher.postresultscontroller.submit');
+
     //route to handle the post exam results form submission
     Route::post('/teacher-postresults', [PostExamResults::class , 'postExamResults'])->name('teacher.postresults.submit');
 
 
-
-////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
 
 
     //for generateresults pagee
