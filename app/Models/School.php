@@ -23,7 +23,7 @@ class School extends Model
     //relationship with class available model (many-to-many)
     public function classAvailables()
     {
-        return $this->hasMany(ClassAvailable::class);
+        return $this->hasMany(ClassAvailable::class, 'school_id');
     }
 
     //relationship with availablesubjet model
@@ -41,7 +41,7 @@ class School extends Model
     //relationship with teacher model(one to many)
     public function teachers()
     {
-        return $this->hasMany(Teacher::class);
+        return $this->hasMany(Teacher::class, 'school_id');
     }
 
 }

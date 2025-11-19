@@ -29,7 +29,7 @@ class Teacher extends Model
     //linking to the school model
     public function schools()
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class, 'school_id');
     }
 
     //linking with assigned roles model

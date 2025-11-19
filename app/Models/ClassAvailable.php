@@ -21,7 +21,7 @@ class ClassAvailable extends Model
     //relationship with school model (many-to-many)
     public function school()
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class, 'school_id');
     }
 
     //relationship with AssignedRole model (one-to-many)

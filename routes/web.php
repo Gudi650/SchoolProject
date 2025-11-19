@@ -3,6 +3,7 @@
 use App\Http\Controllers\AssignClasses;
 use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GenerateExamController;
 use App\Http\Controllers\ParentregistrationController;
 use App\Http\Controllers\PostExamResults;
 use App\Http\Controllers\Student;
@@ -76,10 +77,14 @@ Route::middleware('auth')->group(function () {
 //////////////////////////////////////////////////////////////////
 
 
-    //for generateresults pagee
-    Route::get('/teacher-generateresults', function () {
-        return view('TeacherPanel.generateresults');
-    })->name('teacher.generateresults');
+
+
+    //for generate exam page
+    Route::get('/teacher-generateresults', [GenerateExamController::class, 'generateExamPage'])->name('teacher.generateresults');
+
+
+////////////////////////////////////////////////////////
+
 
     //for generate timetable
     Route::get('/teacher-generatetimetable', function () {
