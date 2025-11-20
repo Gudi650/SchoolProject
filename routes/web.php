@@ -82,6 +82,11 @@ Route::middleware('auth')->group(function () {
     //for generate exam page
     Route::get('/teacher-generateresults', [GenerateExamController::class, 'generateExamPage'])->name('teacher.generateresults');
 
+    //Route for search exam results before the generation of results
+    Route::post('/teacher-searchexamresults', [GenerateExamController::class, 'searchExamResults'])->name('teacher.searchexamresults');
+
+    
+
 
 ////////////////////////////////////////////////////////
 

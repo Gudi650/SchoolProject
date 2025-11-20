@@ -48,68 +48,131 @@
 
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+          <form action="{{ route('teacher.searchexamresults') }}" method="POST">
 
-            <div>
+          @csrf
 
-              <label class="text-sm text-gray-600">
-                Select Class
-              </label>
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
 
-              <!-- check if $classes is passed from controller -->
-              @if (isset($classes) && $classes->isNotEmpty() )
-                
-                <select id="avgGradeSelect" 
-                name = "class_id"
-                class="w-full border rounded px-3 py-2">
-                  <option value="" disabled selected>Select Class</option>
-                  @foreach ($classes as $class)
-                    <option value="{{ $class->id }}">{{ $class->name }}</option>
-                  @endforeach
+              <div>
+
+                <label class="text-sm text-gray-600">
+                  Select Class
+                </label>
+
+                <!-- check if $classes is passed from controller -->
+                @if (isset($classes) && $classes->isNotEmpty() )
+                  
+                  <select id="avgGradeSelect" 
+                  name = "class_id"
+                  class="w-full border rounded px-3 py-2">
+                    <option value="" disabled selected>Select Class</option>
+                    @foreach ($classes as $class)
+                      <option value="{{ $class->id }}">{{ $class->name }}</option>
+                    @endforeach
+                  </select>
+
+                @endif
+
+              </div><!--end of exam term-->
+
+              <!--choose exam-date section-->
+              <div>
+
+                <label class="text-sm text-gray-600">
+                  Select Exam Date
+                </label>
+
+                <!--check if $examDates is passed from controller-->
+                @if (isset($examDates) && $examDates->isNotEmpty())
+
+                  <select id="avgGradeSelect" 
+                  name = "exam-date"
+                  class="w-full border rounded px-3 py-2">
+                  
+                    <option value="" disabled selected>
+                      Select Exam Date
+                    </option>
+
+                    @foreach ($examDates as $examDate)
+                      <option value="{{ $examDate }}">{{ \Carbon\Carbon::parse($examDate)->format('F d, Y') }}</option>
+                    @endforeach
+
+                  @else
+
+                    <option class="text-red-500">
+                      No exams date posted yet
+                    </option>
+                  
+                @endif
                 </select>
 
-              @endif
 
-            </div>
+              </div><!--end of exam-date-->
 
-            <div>
+              <!--exam name section-->
+              <div>
 
-              <label class="text-sm text-gray-600">
-                Select Exam Term
-              </label>
+                <label class="text-sm text-gray-600">
+                  Select Exam Name
+                </label>
 
-              <!-- check if $classes is passed from controller -->
-              @if (isset($classes) && $classes->isNotEmpty() )
-                
-                <select id="avgGradeSelect" 
-                name = "class_id"
-                class="w-full border rounded px-3 py-2">
-                
+                <!--check if examnames is passed from controller-->
+                @if (isset($examNames) && $examNames->isNotEmpty())
+                  
+                  <select id="avgExamSelect" 
+                  name = "exam-name"
+                  class="w-full border rounded px-3 py-2">
+
                   <option value="" disabled selected>
-                    Select Exam Term
+                      Select Exam Name
                   </option>
 
-                  @foreach ($classes as $class)
-                    <option value="{{ $class->id }}">{{ $class->name }}</option>
+                  @foreach ($examNames as $examName)
+                    <option value="{{ $examName }}">
+                      {{ $examName }}
+                    </option>
+                    
                   @endforeach
+
+                  @else
+
+                    <option class="text-red-500">
+                      No exam names posted yet
+                    </option>
+
+                @endif
                 </select>
 
-              @endif
+              </div><!-- end of exam name-->
 
-            </div>
+              <div class="flex gap-2 ml-5">
 
-            
+                <button id="SearchBtn" type="submit" name="action" value="search"
+                  class="px-20 py-2 bg-indigo-600 text-white rounded">
+                  Search
+                </button>
+                
+              </div>
 
-            <div class="flex gap-2 justify-end">
+          </div><!--end of grid-->
 
-              <button id="generateAvgBtn" class="px-4 py-2 bg-indigo-600 text-white rounded">
-                Generate
-              </button>
+          <div class="flex gap-2 justify-end my-2">
 
-              <button id="exportCsvBtn" class="px-4 py-2 border rounded hover:bg-red-100 hover:text-red-700 hover:border-red-200 transition-colors focus:outline-none focus:ring-2 focus:ring-red-200">Export CSV</button>
-            </div>
+            <button id="generateAvgBtn" 
+            type="submit" 
+            name="action" 
+            value="generate"
+            class="ml-2 px-4 py-2 bg-green-600 text-white rounded">
+              Generate
+            </button>
+
+            <button id="exportCsvBtn" class="px-4 py-2 border rounded hover:bg-red-100 hover:text-red-700 hover:border-red-200 transition-colors focus:outline-none focus:ring-2 focus:ring-red-200">
+              Export CSV
+            </button>
 
           </div>
+          </form>
 
           <div class="mt-4">
             <!-- Desktop table -->
@@ -120,38 +183,128 @@
                 <thead class="bg-gradient-to-r from-indigo-50 to-indigo-100 sticky top-0">
 
                   <tr class="text-xs text-indigo-700 uppercase tracking-wider">
-                    <th class="p-3 text-left">Rank</th>
-                    <th class="p-3 text-left">Student</th>
-                    <th class="p-3 text-center">Mathematics</th>
-                    <th class="p-3 text-center">English</th>
-                    <th class="p-3 text-center">Kiswahili</th>
+                    <th class="p-3 text-left">
+                      Rank
+                    </th>
+
+                    <th class="p-3 text-left">
+                      Student
+                    </th>
+
+                    <!--check for $subjects passed from controller-->
+                    @if (isset($subjects) && $subjects->isNotEmpty())
+                      @foreach ($subjects as $subject)
+
+                        <th class="p-3 text-center">
+                          {{ $subject->subject_name }}
+                        </th>
+
+                      @endforeach
+
+                    @endif
+
                     <th class="p-3 text-right">Total</th>
                     <th class="p-3 text-right">Average</th>
+
                   </tr>
 
                 </thead>
 
                 <tbody class="bg-white">
 
-                  <tr class="bg-white hover:bg-gray-50 transition-colors">
-                    <td class="p-3 font-medium">1</td>
-                    <td class="p-3">John Doe</td>
-                    <td class="p-3 text-center">85</td>
-                    <td class="p-3 text-center">78</td>
-                    <td class="p-3 text-center">90</td>
-                    <td class="p-3 text-right font-medium">253</td>
-                    <td class="p-3 text-right"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">84.33</span></td>
+                  <!--check if $examResult is passed from controller-->
 
-                  </tr>
-                  <tr class="bg-gray-50 hover:bg-gray-100 transition-colors">
-                    <td class="p-3 font-medium">2</td>
-                    <td class="p-3">Jane Smith</td>
-                    <td class="p-3 text-center">72</td>
-                    <td class="p-3 text-center">68</td>
-                    <td class="p-3 text-center">74</td>
-                    <td class="p-3 text-right font-medium">214</td>
-                    <td class="p-3 text-right"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">71.33</span></td>
-                  </tr>
+                  @if (isset($examResults) && $examResults->isNotEmpty())
+
+                    <!-- get the student values -->
+                    @foreach ($students as $student )
+                      
+                      <tr 
+                      data-student-id = "{{ $student->id }}"
+                      class="bg-white hover:bg-gray-50 transition-colors">
+
+                      <td class="p-3 font-medium">
+                        1
+                      </td>
+
+                      <td class="p-3">
+                        {{ $student->fname }}
+                        {{ $student->lname }}
+
+                        <!--obtain the student id-->
+                        <span class = "hidden">
+                          {{ session()->put('student_id', $student->id) }}
+                        </span>
+                        
+                      </td> 
+                      <!--loop through the exam-results to get the scores per subject of the student using student id-->
+
+                      <!--check if { session()->get('student_id') }} exists -->
+
+                      @if (session()->get('student_id')  )
+
+                        <!--get the score from $examResults where student_id matches-->
+
+                        @foreach ($subjects as $subject)
+
+                          @php
+                            
+                            $score = $examResults->where('student_id', session()->get('student_id'))
+                            ->where('subject_id', $subject->id)
+                            ->first();
+
+                            $totalScore = 0;
+
+                          @endphp
+
+                          <td class="p-3 text-center">
+
+                            @if ($score)
+                              {{ $score->score }}
+                            @else
+                              N/A
+                            @endif
+
+                          </td>
+
+                         
+
+                        @endforeach
+                        
+                      @endif
+
+                      <!--check if $resultSummaries is passed from controller-->
+
+                      @if (isset($resultSummaries) && !empty($resultSummaries[ $student->id ]) )
+
+                        <td class="p-3 text-right font-medium">
+                          {{ $resultSummaries[ $student->id ]['total_score'] }}
+                        </td>
+
+                        <td class="p-3 text-right">
+                          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            {{ number_format($resultSummaries[ $student->id ]['average_score'], 2) }}
+                          </span>
+                        </td>
+                        
+                      @endif
+
+                      </tr>
+                  
+                    @endforeach
+
+                    
+                  @else
+
+                    <tr>
+                      <td colspan="{{ isset($subjects) ? $subjects->count() + 4 : 4 }}" class="p-4 text-center text-gray-500">
+                        No results found. Please adjust your filters and try again.
+                      </td>
+                    </tr>
+
+                  @endif
+
+                  
                 </tbody>
               </table>
             </div>
