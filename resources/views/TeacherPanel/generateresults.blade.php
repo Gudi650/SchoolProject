@@ -156,23 +156,23 @@
               </div>
 
           </div><!--end of grid-->
+          </form>
 
           <div class="flex gap-2 justify-end my-2">
 
-            <button id="generateAvgBtn" 
-            type="submit" 
-            name="action" 
-            value="generate"
-            class="ml-2 px-3 py-2 bg-green-600 text-white rounded">
-              Save Results
-            </button>
+            <form action="{{ route('teacher.savegeneratedresults') }}" method="POST" class="inline">
+              @csrf
+              <button id="saveGeneratedBtn" type="submit" class="ml-2 px-3 py-2 bg-green-600 text-white rounded">
+                Save Results
+              </button>
+            </form>
 
             <button id="exportCsvBtn" class="px-4 py-2 border rounded hover:bg-red-100 hover:text-red-700 hover:border-red-200 transition-colors focus:outline-none focus:ring-2 focus:ring-red-200">
               Export CSV
             </button>
 
           </div>
-          </form>
+          
 
           <div class="mt-4">
             <!-- Desktop table -->
@@ -343,6 +343,33 @@
       </main>
     </div>
 
+    {{-- flash / toast messages --}}
+    @if(session('success') || session('error') || $errors->any())
+      <div id="flashToast" class="fixed top-6 right-6 z-50 space-y-2">
+        @if(session('success'))
+          <div class="px-4 py-3 rounded shadow bg-green-50 border border-green-200 text-green-800" role="alert">
+            {{ session('success') }}
+          </div>
+        @endif
+
+        @if(session('error'))
+          <div class="px-4 py-3 rounded shadow bg-red-50 border border-red-200 text-red-800" role="alert">
+            {{ session('error') }}
+          </div>
+        @endif
+
+        @if($errors->any())
+          <div class="px-4 py-3 rounded shadow bg-red-50 border border-red-200 text-red-800" role="alert">
+            <ul class="list-disc pl-5">
+              @foreach($errors->all() as $err)
+                <li>{{ $err }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
+      </div>
+    @endif
+
     <script>
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -360,6 +387,16 @@
           const a = document.createElement('a'); a.href = url; a.download = 'class_averages.csv'; a.click(); URL.revokeObjectURL(url);
         });
       }
+
+      const toast = document.getElementById('flashToast');
+      if (!toast) return;
+      // auto-dismiss after 5s with fade
+      setTimeout(() => {
+        toast.classList.add('transition', 'duration-500', 'opacity-0');
+        setTimeout(() => toast.remove(), 600);
+      }, 5000);
+      // allow click-to-dismiss
+      toast.addEventListener('click', () => toast.remove());
     });
     </script>
 

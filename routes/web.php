@@ -80,11 +80,17 @@ Route::middleware('auth')->group(function () {
 
 
     //for generate exam page
-    Route::get('/teacher-generateresults', [GenerateExamController::class, 'generateExamPage'])->name('teacher.generateresults');
+    Route::get('/teacher-generateresults', 
+    [GenerateExamController::class, 'generateExamPage'])
+    ->name('teacher.generateresults');
 
     //Route for search exam results before the generation of results
-    Route::post('/teacher-searchexamresults', [GenerateExamController::class, 'searchExamResults'])->name('teacher.searchexamresults');
+    Route::post('/teacher-searchexamresults', [GenerateExamController::class, 'searchExamResults'])
+    ->name('teacher.searchexamresults');
 
+    // Save generated summaries (POST)
+    Route::post('teacher-savegeneratedresults', [GenerateExamController::class, 'saveGeneratedResults'])
+    ->name('teacher.savegeneratedresults');
     
 
 
