@@ -146,10 +146,10 @@
 
               </div><!-- end of exam name-->
 
-              <div class="flex gap-2 ml-5">
+              <div class="flex gap-2 ml-2">
 
                 <button id="SearchBtn" type="submit" name="action" value="search"
-                  class="px-20 py-2 bg-indigo-600 text-white rounded">
+                  class="px-24 py-2 bg-indigo-600 text-white rounded">
                   Search
                 </button>
                 
@@ -163,8 +163,8 @@
             type="submit" 
             name="action" 
             value="generate"
-            class="ml-2 px-4 py-2 bg-green-600 text-white rounded">
-              Generate
+            class="ml-2 px-3 py-2 bg-green-600 text-white rounded">
+              Save Results
             </button>
 
             <button id="exportCsvBtn" class="px-4 py-2 border rounded hover:bg-red-100 hover:text-red-700 hover:border-red-200 transition-colors focus:outline-none focus:ring-2 focus:ring-red-200">
@@ -224,7 +224,7 @@
                       class="bg-white hover:bg-gray-50 transition-colors">
 
                       <td class="p-3 font-medium">
-                        1
+                        {{ $resultSummaries[$student->id]['rank'] }}
                       </td>
 
                       <td class="p-3">
