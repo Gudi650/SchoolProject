@@ -106,6 +106,19 @@ class PostExamResults extends Controller
         $school_id = $teacher->school_id;
 
 
+        //check if there is an exam_date already existing for the same class and subject in the same school as the teacher
+        $existingResults = ExamResults::where('class_id', $validatedData['class_id'])
+            ->where('subject_id', $validatedData['subject_id'])
+            ->where('exam_date', $validatedData['exam_date'])
+            ->where('school_id', $school_id)
+            ->first();
+
+        //if there are existing results, redirect back with error message
+        if ($existingResults) {
+            return redirect()->route('teacher.postresults')->with('error', 'Results for this class, subject, and exam date already exist.');
+        }
+
+
         //get student who are in class with class_id given and in the same school as the teacher
 
         $students = Student::where('class_id', session()->get('class_id'))->where('school_id', $school_id)->get();
