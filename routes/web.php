@@ -117,6 +117,12 @@ Route::middleware('auth')->group(function () {
         return view('TeacherPanel.generateexamtimetable');
     })->name('teacher.generateexamtimetable');
 
+
+    //for registering students
+    Route::get('/teacher-registerstudents', function () {
+        return view('TeacherPanel.registerattendance');
+    })->name('teacher.registerstudents');
+
     //////////////////////////////////////////////////////////// teacher role assignment routes
 
     //route to show available teacher roles using controller

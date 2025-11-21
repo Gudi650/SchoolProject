@@ -137,7 +137,7 @@
               <ul id="attendanceMenu" class="hidden mt-1 space-y-1">
 
                 <li>
-                  <a href="./attendance_register.html" 
+                  <a href="{{ route('teacher.registerstudents') }}" 
                     class="group flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 pl-10">
                       <i class="bi bi-person-plus text-lg text-gray-600 group-hover:text-indigo-600 transition-colors duration-150"></i>
                       <span>Register</span>
