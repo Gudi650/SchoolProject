@@ -61,98 +61,125 @@
 
   {{-- Flash & validation messages (insert after header, before main content) --}}
   <style>
-    .flash-message {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: .75rem;
-      padding: .75rem 1rem;
-      border-radius: .375rem;
-      margin-bottom: .75rem;
-      box-shadow: 0 6px 18px rgba(2,6,23,0.06);
-      transition: opacity .35s ease, transform .35s ease;
-    }
-    .flash-hidden { opacity: 0; transform: translateY(-8px); pointer-events: none; }
-    .flash-success { background:#ecfdf5; border:1px solid #bbf7d0; color:#065f46; }
-    .flash-error   { background:#fff1f2; border:1px solid #fecaca; color:#7f1d1d; }
-    .flash-info    { background:#eff6ff; border:1px solid #bfdbfe; color:#1e3a8a; }
-    .flash-close { background:transparent; border:0; font-size:1.1rem; line-height:1; cursor:pointer; color:inherit; }
-  </style>
+  .flash {
+    display:flex; align-items:flex-start; gap:0.75rem;
+    padding:12px 14px; border-radius:12px; margin-bottom:12px;
+    box-shadow:0 8px 24px rgba(2,6,23,0.06); position:relative; overflow:hidden;
+    transform-origin:top; transition:opacity .3s ease, transform .3s ease;
+  }
+  .flash--success{ background:linear-gradient(90deg,#ecfdf5,#f0fdf4); border:1px solid #bbf7d0; color:#065f46; }
+  .flash--error{ background:linear-gradient(90deg,#fff1f2,#fff7f7); border:1px solid #fecaca; color:#7f1d1d; }
+  .flash--info{ background:linear-gradient(90deg,#eff6ff,#f8fbff); border:1px solid #bfdbfe; color:#1e3a8a; }
+  .flash__icon{ width:36px; height:36px; flex:0 0 36px; display:flex; align-items:center; justify-content:center; border-radius:8px; background:rgba(255,255,255,0.6); }
+  .flash__content{ flex:1 1 auto; min-width:0; }
+  .flash__title{ font-weight:700; margin-bottom:2px; font-size:14px; }
+  .flash__msg{ font-size:13px; color:inherit; opacity:.95; line-height:1.2; }
+  .flash__close{ background:transparent; border:0; color:inherit; font-size:18px; cursor:pointer; padding:6px; margin-left:8px; }
+  .flash__bar{ position:absolute; left:0; right:0; bottom:0; height:4px; background:linear-gradient(90deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02)); }
+  .flash__bar > i{ display:block; height:100%; background:currentColor; width:100%; transform-origin:left; transition:transform linear; }
+  .flash-hidden{ opacity:0; transform:translateY(-8px) scale(.99); pointer-events:none; }
+</style>
 
-  <div id="flash-messages">
-    @if(session('success'))
-      <div class="flash-message flash-success" role="alert" data-timeout="5000">
-        <div>
-          <strong class="block">Success</strong>
-          <div class="mt-1">{{ session('success') }}</div>
-        </div>
-        <button type="button" class="flash-close" aria-label="Close">&times;</button>
+<div id="flash-messages">
+  @if(session('success'))
+    <div class="flash flash--success" role="status" aria-live="polite" data-timeout="5000">
+      <div class="flash__icon" aria-hidden="true">
+        <!-- check icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
       </div>
-    @endif
-
-    @if(session('error'))
-      <div class="flash-message flash-error" role="alert" data-timeout="7000">
-        <div>
-          <strong class="block">Error</strong>
-          <div class="mt-1">{{ session('error') }}</div>
-        </div>
-        <button type="button" class="flash-close" aria-label="Close">&times;</button>
+      <div class="flash__content">
+        <div class="flash__title">Success</div>
+        <div class="flash__msg">{{ session('success') }}</div>
       </div>
-    @endif
+      <button type="button" class="flash__close" aria-label="Close">&times;</button>
+      <div class="flash__bar" aria-hidden="true"><i style="background:#10b981"></i></div>
+    </div>
+  @endif
 
-    @if(session('info'))
-      <div class="flash-message flash-info" role="status" data-timeout="5000">
-        <div>
-          <strong class="block">Info</strong>
-          <div class="mt-1">{{ session('info') }}</div>
-        </div>
-        <button type="button" class="flash-close" aria-label="Close">&times;</button>
+  @if(session('error'))
+    <div class="flash flash--error" role="alert" data-timeout="7000">
+      <div class="flash__icon" aria-hidden="true">
+        <!-- x icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </div>
-    @endif
+      <div class="flash__content">
+        <div class="flash__title">Error</div>
+        <div class="flash__msg">{{ session('error') }}</div>
+      </div>
+      <button type="button" class="flash__close" aria-label="Close">&times;</button>
+      <div class="flash__bar" aria-hidden="true"><i style="background:#ef4444"></i></div>
+    </div>
+  @endif
 
-    @if($errors->any())
-      <div class="flash-message flash-error" role="alert" data-timeout="9000">
-        <div>
-          <strong class="block">Please fix the following</strong>
-          <ul class="mt-1 list-disc list-inside">
+  @if(session('info'))
+    <div class="flash flash--info" role="status" data-timeout="5000">
+      <div class="flash__icon" aria-hidden="true">
+        <!-- info icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      </div>
+      <div class="flash__content">
+        <div class="flash__title">Info</div>
+        <div class="flash__msg">{{ session('info') }}</div>
+      </div>
+      <button type="button" class="flash__close" aria-label="Close">&times;</button>
+      <div class="flash__bar" aria-hidden="true"><i style="background:#3b82f6"></i></div>
+    </div>
+  @endif
+
+  @if($errors->any())
+    <div class="flash flash--error" role="alert" data-timeout="9000">
+      <div class="flash__icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+      <div class="flash__content">
+        <div class="flash__title">Please fix the following</div>
+        <div class="flash__msg">
+          <ul style="margin:6px 0 0 16px; padding:0;">
             @foreach($errors->all() as $error)
               <li>{{ $error }}</li>
             @endforeach
           </ul>
         </div>
-        <button type="button" class="flash-close" aria-label="Close">&times;</button>
       </div>
-    @endif
-  </div>
+      <button type="button" class="flash__close" aria-label="Close">&times;</button>
+      <div class="flash__bar" aria-hidden="true"><i style="background:#ef4444"></i></div>
+    </div>
+  @endif
+</div>
 
-  <script>
-    (function(){
-      const flashes = document.querySelectorAll('#flash-messages .flash-message');
-      flashes.forEach(el => {
-        const timeout = parseInt(el.getAttribute('data-timeout') || 5000, 10);
-
-        // auto hide after timeout
-        const t = setTimeout(() => hideFlash(el), timeout);
-
-        // manual close
-        const btn = el.querySelector('.flash-close');
-        if (btn) {
-          btn.addEventListener('click', () => {
-            clearTimeout(t);
-            hideFlash(el);
-          });
-        }
-      });
-
-      function hideFlash(el) {
-        el.classList.add('flash-hidden');
-        // remove from DOM after transition
-        setTimeout(() => {
-          if (el && el.parentNode) el.parentNode.removeChild(el);
-        }, 400);
+<script>
+  (function(){
+    const flashes = document.querySelectorAll('#flash-messages .flash');
+    flashes.forEach(el => {
+      const timeout = parseInt(el.getAttribute('data-timeout') || 5000, 10);
+      const bar = el.querySelector('.flash__bar > i');
+      // animate progress by scaling X
+      if(bar){
+        bar.style.transform = 'scaleX(1)';
+        bar.style.transition = `transform ${timeout}ms linear`;
+        // start from full width then shrink to zero for visual countdown
+        requestAnimationFrame(()=> {
+          bar.style.transform = 'scaleX(0)';
+        });
       }
-    })();
-  </script>
+
+      const hide = () => {
+        el.classList.add('flash-hidden');
+        setTimeout(()=> el.remove(), 350);
+      };
+
+      const t = setTimeout(hide, timeout);
+
+      const closeBtn = el.querySelector('.flash__close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          clearTimeout(t);
+          hide();
+        });
+      }
+    });
+  })();
+</script>
 
   <!-- CONTROLS & TABLE SECTION: grade/date controls, action buttons, attendance table -->
   <section class="bg-white p-6 rounded-md shadow-lg">
@@ -194,11 +221,12 @@
 
                 <div class="hidden md:flex items-center gap-2">
 
-                  <button type="submit" 
-                  formaction="{{ route('registerstudentattendance.allpresent') }}"
-                  class="px-3 py-2 btn-success text-white rounded-sm text-sm">
-                    All present
-                  </button>
+                  <!-- add id to desktop button for easier JS hook -->
+                  <button id="allPresentBtnDesktop" type="button"
+                  data-formaction="{{ route('registerstudentattendance.allpresent') }}"
+                   class="px-3 py-2 btn-success text-white rounded-sm text-sm">
+                     All present
+                   </button>
                   
 
                   <button id="allPresentExceptBtn" type="button" class="px-3 py-2 btn-primary text-white rounded-sm text-sm">
@@ -214,10 +242,13 @@
                     <span>All present except…</span>
                   </button>
 
-                  <button id="allPresentBtnMobile" type="button" class="inline-flex items-center justify-center w-full btn-success text-white rounded-sm text-sm px-3 py-2" aria-label="All present">
-                    <i class="bi bi-people-fill mr-2"></i>
-                    <span>All present</span>
-                  </button>
+                  <!-- make mobile "All present" submit the form too and give it an id -->
+                  <button id="allPresentBtnMobile" type="button"
+                    data-formaction="{{ route('registerstudentattendance.allpresent') }}"
+                     class="inline-flex items-center justify-center w-full btn-success text-white rounded-sm text-sm px-3 py-2" aria-label="All present">
+                     <i class="bi bi-people-fill mr-2"></i>
+                     <span>All present</span>
+                   </button>
 
                 </div>
               </div>
@@ -341,131 +372,151 @@
               live filtering in JavaScript.
             -->
 
-            <div id="exceptionsList" class="max-h-56 overflow-auto space-y-1 mb-3"></div>
+            <div id="exceptionsList" class="max-h-56 overflow-auto space-y-1 mb-3">
+              <form id="exceptionsForm" method="POST" 
+              action="">
+
+                @csrf
+                {{-- include date if you want to persist the chosen date --}}
+
+                <input type="hidden" 
+                name="date" 
+                value="">
+
+                @foreach($students as $student)
+
+                  <label class="flex items-center gap-2 p-1">
+                    <input type="checkbox" 
+                    name="absent_students[]" 
+                    value="{{ $student->id }}"
+                    >
+                    <span class="text-sm">{{ $student->fname }} {{ $student->lname }}{{ $student->admission ? ' ('.$student->admission.')' : '' }}</span>
+                  </label>
+
+                @endforeach
+              </form>
+
+            </div>
             
             <div class="flex items-center justify-end gap-2">
-              <!-- Cancel: subtle red hover to indicate cancelling action (keeps default look otherwise) -->
-              <button id="exceptionsCancel" class="px-3 py-2 border rounded-sm hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-100 transition-colors duration-150">
+              
+              <button id="exceptionsCancel" type="button" class="px-3 py-2 border rounded-sm hover:bg-red-100">
                 Cancel
               </button>
 
-              <button id="exceptionsApply" class="px-3 py-2 btn-primary text-white rounded-sm">
+              <!-- submit the modal form to server -->
+              <button id="exceptionsApply" form="exceptionsForm" type="submit" class="px-3 py-2 btn-primary text-white rounded-sm">
                 Apply
               </button>
-
             </div>
 
           </div>
         </div>
+
+        <!-- Confirm "All present" modal -->
+<div id="confirmAllPresentModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+  <div class="relative w-full max-w-sm bg-white rounded-md shadow-lg p-5">
+    <div class="flex items-start gap-3">
+      <div class="flex-shrink-0">
+        <div class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center">
+          <!-- icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+      </div>
+      <div class="min-w-0">
+
+        <h4 class="text-lg font-semibold text-gray-800">
+          Confirm action
+        </h4>
+
+        <p class="text-sm text-gray-600 mt-1">
+          Mark ALL students as Present?
+        </p>
+        
+      </div>
+    </div>
+
+    <div class="mt-4 flex justify-end gap-3">
+
+      <button id="confirmAllPresentCancel" type="button" class="px-3 py-2 border rounded-sm hover:bg-red-100">
+        Cancel
+      </button>
+
+      <button id="confirmAllPresentConfirm" type="button" class="px-3 py-2 btn-success text-white rounded-sm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const form = document.getElementById('registerForm');
+  const modal = document.getElementById('confirmAllPresentModal');
+  const cancelBtn = document.getElementById('confirmAllPresentCancel');
+  const confirmBtn = document.getElementById('confirmAllPresentConfirm');
+
+  let targetAction = null;
+  let targetMethod = 'POST';
+
+  function openModal(action, method = 'POST'){
+    targetAction = action;
+    targetMethod = method || 'POST';
+    modal.classList.remove('hidden');
+  }
+  function closeModal(){
+    modal.classList.add('hidden');
+    targetAction = null;
+  }
+
+  ['allPresentBtnDesktop','allPresentBtnMobile'].forEach(id=>{
+    const btn = document.getElementById(id);
+    if(!btn) return;
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      const action = btn.dataset.formaction || btn.getAttribute('formaction');
+      const method = btn.dataset.formmethod || btn.getAttribute('formmethod') || 'POST';
+      if(!action){
+        // fallback: native confirm then submit
+        if(confirm('Mark ALL students as Present?')) form.submit();
+        return;
+      }
+      openModal(action, method);
+    });
+  });
+
+  cancelBtn && cancelBtn.addEventListener('click', closeModal);
+
+  confirmBtn && confirmBtn.addEventListener('click', function(){
+    if(!targetAction) return closeModal();
+    form.action = targetAction;
+    form.method = (targetMethod || 'POST').toUpperCase();
+    closeModal();
+    form.submit();
+  });
+});
+</script>
       
       </main>
       </main>
     </div>
 
     <script>
-    // Shared JS (inlined)
-    document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        // Exceptions modal: only open/close (no DOM population)
+        const btn = document.getElementById('allPresentExceptBtn');
+        const btnM = document.getElementById('allPresentExceptBtnMobile');
+        const modal = document.getElementById('exceptionsModal');
+        const close = document.getElementById('exceptionsClose');
+        const cancel = document.getElementById('exceptionsCancel');
 
+        function open(){ if(modal) modal.classList.remove('hidden'); }
+        function closeModal(){ if(modal) modal.classList.add('hidden'); }
 
-  // ---------- All present except... (static modal + minimal JS) ----------
-  // The modal provides a simple, client-side way to mark a small set of
-  // students as absent while marking everyone else present. The implementation
-  // follows three small responsibilities:
-  //  1) populate() - read the current table rows and build a searchable list
-  //     of checkboxes. Each label gets a `data-search` value that's the
-  //     lowercased concatenation of student name + admission number so we can
-  //     filter quickly without querying the table repeatedly.
-  //  2) search input - listens for 'input' events and hides/shows labels by
-  //     checking substring membership against label.dataset.search (real-time
-  //     filtering / instant feedback).
-  //  3) apply() - reads checked items and updates the underlying radio
-  //     inputs in the attendance table (mark checked as Absent, others Present).
-  // Keeping this logic tiny and DOM-driven makes it easy to port to server
-  // integration later (match by admission number or student id when available).
-  (function(){
-    const btn = document.getElementById('allPresentExceptBtn');
-    const btnM = document.getElementById('allPresentExceptBtnMobile');
-    const modal = document.getElementById('exceptionsModal');
-    const search = document.getElementById('exceptionsSearch');
-    const list = document.getElementById('exceptionsList');
-    const close = document.getElementById('exceptionsClose');
-    const cancel = document.getElementById('exceptionsCancel');
-    const apply = document.getElementById('exceptionsApply');
-
-    // Build the checkbox list from current table rows.
-    // Each label stores a `data-search` string for fast client-side filtering.
-    // Note: the checkbox carries data-idx (row index) for the current simple
-    // mapping. For robustness later, replace data-idx with the admission number
-    // (or stable student id) and match rows by that key on Apply.
-    function populate(){
-      list.innerHTML = '';
-      document.querySelectorAll('table tbody tr').forEach((tr,i)=>{
-        // Name shown in the second cell and admission in the third cell
-        const name = (tr.cells[1] && tr.cells[1].textContent.trim()) || ('Student '+(i+1));
-        const adm = tr.cells[2] ? tr.cells[2].textContent.trim() : '';
-        const label = document.createElement('label');
-        label.className = 'flex items-center gap-2 p-1';
-        // For now we attach a simple row index so Apply can map to rows.
-        // When moving search to the server, prefer embedding a stable key
-        // (e.g. data-adm) and matching rows by that value server-side.
-        label.innerHTML = `<input type="checkbox" data-idx="${i}"><span class="text-sm">${name}${adm?(' ('+adm+')'):''}</span>`;
-        list.appendChild(label);
+        if(btn) btn.addEventListener('click', open);
+        if(btnM) btnM.addEventListener('click', open);
+        if(close) close.addEventListener('click', closeModal);
+        if(cancel) cancel.addEventListener('click', closeModal);
       });
-    }
-
-    // Open modal: populate list, clear previous search, show modal and focus
-    // search so users can type immediately (improves accessibility/UX).
-    function open(){ if(modal){ populate(); search.value = ''; modal.classList.remove('hidden'); search.focus(); } }
-
-    // Close/hide the modal
-    function closeModal(){ if(modal) modal.classList.add('hidden'); }
-
-    // NOTE: Client-side real-time filtering has been removed. The search
-    // input remains in the markup for future server-side (PHP) handling.
-    // If you need a temporary local filter during development, re-add an
-    // 'input' listener that checks label.dataset.search and toggles display.
-
-    // Apply selection: determine which checkboxes are checked and then mark
-    // the corresponding table rows as Absent. All other rows become Present.
-    // Implementation detail: we currently use the row index (data-idx) to map
-    // checkboxes to table rows. If you switch to matching by admission number
-    // (recommended for robustness), update populate() to set data-adm and
-    // then look up tr based on tr.cells[2].textContent.
-    if(apply){ apply.addEventListener('click', function(){
-      // collect checked row indices
-      const checkedIdx = Array.from(list.querySelectorAll('input[type=checkbox]:checked')).map(cb=>parseInt(cb.dataset.idx,10));
-      // update radios in the table directly (keeps form structure intact)
-      document.querySelectorAll('table tbody tr').forEach((tr,i)=>{
-        const p = tr.querySelector('input[type="radio"][value="present"]');
-        const a = tr.querySelector('input[type="radio"][value="absent"]');
-        if(checkedIdx.includes(i)){ if(a) a.checked = true; } else { if(p) p.checked = true; }
-      });
-      closeModal();
-    }); }
-
-    // hookup buttons that open/close the modal
-    if(btn) btn.addEventListener('click', open);
-    if(btnM) btnM.addEventListener('click', open);
-    if(close) close.addEventListener('click', closeModal);
-    if(cancel) cancel.addEventListener('click', closeModal);
-  })();
-  
-  // ---------- All present buttons (set everyone present) ----------
-  (function(){
-    // Small helper to quickly set every student's attendance to Present.
-    // We prefer marking radios directly to keep the UI simple and server-friendly.
-    function setAllPresent(){
-      document.querySelectorAll('table tbody tr').forEach(tr=>{
-        const p = tr.querySelector('input[type="radio"][value="present"]');
-        if(p) p.checked = true;
-      });
-    }
-    const ap = document.getElementById('allPresentBtn');
-    const apm = document.getElementById('allPresentBtnMobile');
-    if(ap) ap.addEventListener('click', setAllPresent);
-    if(apm) apm.addEventListener('click', setAllPresent);
-  })();
-    });
-  </script>
+    </script>
 
 </x-Teacher-sidebar>
