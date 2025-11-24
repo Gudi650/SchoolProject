@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AssignClasses;
 use App\Http\Controllers\AssignedSubjectController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GenerateExamController;
 use App\Http\Controllers\ParentregistrationController;
@@ -118,10 +119,15 @@ Route::middleware('auth')->group(function () {
     })->name('teacher.generateexamtimetable');
 
 
-    //for registering students
-    Route::get('/teacher-registerstudents', function () {
-        return view('TeacherPanel.registerattendance');
-    })->name('teacher.registerstudents');
+    ///////////////////////////////////////////////////////////
+    //////register student attendances routes
+
+
+    //for registering students attendance view route using controller
+    Route::get('/teacher-registerstudentattendance', [AttendanceController::class, 'registerStudentAttendance'])->name('teacher.registerstudentattendance.view');
+
+
+
 
     //////////////////////////////////////////////////////////// teacher role assignment routes
 

@@ -64,12 +64,16 @@
           <form id="registerForm" class="space-y-4 form-compact">
             <div class="flex items-center gap-3 form-row">
               <div class="flex items-center gap-3 w-full md:w-auto">
+
                 <label class="text-sm w-28 md:w-32">Grade / Class</label>
                 <select id="gradeSelect" class="border px-3 py-2 rounded-sm w-40 md:w-48">
-                  <option>Grade 9</option>
-                  <option>Grade 10</option>
-                  <option>Grade 11</option>
+
+                  <option selected>
+                    {{ $className }}
+                  </option>
+
                 </select>
+
               </div>
               <div class="flex items-center gap-3 w-full md:w-auto">
                 <label class="text-sm">Date</label>
@@ -102,39 +106,78 @@
             <div class="overflow-x-auto max-w-full table-responsive">
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-indigo-50">
+
+                  
                   <tr>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">#</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">Student</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">Admission</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">Status</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">Note</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                      #
+                    </th>
+
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                      Student
+                    </th>
+
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                      Admission
+                    </th>
+
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                      Status
+                    </th>
+
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                      Note</th>
+                    </th>
+
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100">
-                  <tr class="hover:bg-gray-50 transition-colors even:bg-gray-50">
-                    <td class="px-4 py-3 font-medium">1</td>
-                    <td class="px-4 py-3 text-gray-800">John Doe <div class="text-xs text-gray-400">Grade 9</div></td>
-                    <td class="px-4 py-3 text-sm text-gray-500">12345</td>
-                    <td class="px-4 py-3">
-                      <div class="flex items-center gap-3">
-                        <label class="inline-flex items-center gap-2"><input type="radio" name="s1" value="present" checked> <span class="status-chip status-present">Present</span></label>
-                        <label class="inline-flex items-center gap-2 md:ml-3"><input type="radio" name="s1" value="absent"> <span class="status-chip status-absent">Absent</span></label>
+
+                  <!--loop through the student array-->
+                  @foreach ($students as $student)
+                    
+                    <tr class="hover:bg-gray-50 transition-colors even:bg-gray-50">
+                    <td class="px-4 py-3 font-medium">
+                      {{ $Tablenumber++ }}
+                    </td>
+
+                    <td class="px-4 py-3 text-gray-800">
+                      {{ $student->fname }}
+                      {{ $student->lname }}
+                      <div class="text-xs text-gray-400">
+                        {{ $className }}
                       </div>
                     </td>
-                    <td class="px-4 py-3"><input class="border px-2 py-1 rounded-sm w-full text-sm" placeholder="note" /></td>
-                  </tr>
-                  <tr class="hover:bg-gray-50 transition-colors even:bg-gray-50">
-                    <td class="px-4 py-3 font-medium">2</td>
-                    <td class="px-4 py-3 text-gray-800">Jane Smith <div class="text-xs text-gray-400">Grade 9</div></td>
-                    <td class="px-4 py-3 text-sm text-gray-500">12346</td>
+
+                    <td class="px-4 py-3 text-sm text-gray-500">
+                      12345
+                    </td>
+
                     <td class="px-4 py-3">
                       <div class="flex items-center gap-3">
-                        <label class="inline-flex items-center gap-2"><input type="radio" name="s2" value="present" checked> <span class="status-chip status-present">Present</span></label>
-                        <label class="inline-flex items-center gap-2 md:ml-3"><input type="radio" name="s2" value="absent"> <span class="status-chip status-absent">Absent</span></label>
+                        <label class="inline-flex items-center gap-2">
+                          <input type="radio" name= "attendance_{{ $student->id }}"  value="present" checked> 
+                          <span class="status-chip status-present">
+                            Present
+                          </span>
+                        </label>
+
+                        <label class="inline-flex items-center gap-2 md:ml-3">
+                          <input type="radio" name= "attendance_{{ $student->id }}"  value="absent">
+                           <span class="status-chip status-absent">
+                            Absent
+                          </span>
+                        </label>
+
                       </div>
+
                     </td>
                     <td class="px-4 py-3"><input class="border px-2 py-1 rounded-sm w-full text-sm" placeholder="note" /></td>
+
                   </tr>
+
+                  @endforeach
+
                 </tbody>
               </table>
             </div>
@@ -145,16 +188,28 @@
             </div>
           </form>
         </section>
+
         <!-- Static modal for "All present except" kept in HTML for simpler styling and accessibility -->
+
         <div id="exceptionsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+
           <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+
           <div class="relative w-full max-w-md bg-white rounded-md shadow-lg p-4">
+
             <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-semibold">Mark absent — search students</h3>
-              <button id="exceptionsClose" class="text-gray-600 hover:text-gray-800">✕</button>
+              <h3 class="text-lg font-semibold">
+                Mark absent — search students
+              </h3>
+              <button id="exceptionsClose" class="text-gray-600 hover:text-gray-800">
+                ✕
+              </button>
             </div>
+
             <div class="mb-3">
+
               <input id="exceptionsSearch" class="w-full border px-3 py-2 rounded-sm" placeholder="Search student name or admission" />
+
             </div>
             <!--
               exceptionsList: populated from the attendance table rows when the
@@ -163,12 +218,21 @@
               input remains in the UI for parity but it no longer performs
               live filtering in JavaScript.
             -->
+
             <div id="exceptionsList" class="max-h-56 overflow-auto space-y-1 mb-3"></div>
+            
             <div class="flex items-center justify-end gap-2">
               <!-- Cancel: subtle red hover to indicate cancelling action (keeps default look otherwise) -->
-              <button id="exceptionsCancel" class="px-3 py-2 border rounded-sm hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-100 transition-colors duration-150">Cancel</button>
-              <button id="exceptionsApply" class="px-3 py-2 btn-primary text-white rounded-sm">Apply</button>
+              <button id="exceptionsCancel" class="px-3 py-2 border rounded-sm hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-100 transition-colors duration-150">
+                Cancel
+              </button>
+
+              <button id="exceptionsApply" class="px-3 py-2 btn-primary text-white rounded-sm">
+                Apply
+              </button>
+
             </div>
+
           </div>
         </div>
       
@@ -179,73 +243,7 @@
     <script>
     // Shared JS (inlined)
     document.addEventListener('DOMContentLoaded', function () {
-      // SIDEBAR: toggles the left navigation and overlay on small screens
-      const sidebar = document.getElementById('sidebar');
-      const sidebarToggle = document.getElementById('sidebarToggle');
-      const overlay = document.getElementById('sidebarOverlay');
-      // When sidebarToggle is clicked show/hide the sidebar and backdrop
-      if (sidebarToggle) sidebarToggle.addEventListener('click', function () { if (sidebar) sidebar.classList.toggle('hidden'); if (overlay) overlay.classList.toggle('hidden'); });
-      // Clicking the overlay closes the sidebar
-      if (overlay) overlay.addEventListener('click', function () { if (sidebar) sidebar.classList.add('hidden'); overlay.classList.add('hidden'); });
 
-      // ATTENDANCE MENU: dropdown in the sidebar navigation
-      const attendanceToggle = document.getElementById('attendanceToggle');
-      const attendanceMenu = document.getElementById('attendanceMenu');
-      if (attendanceToggle && attendanceMenu) {
-        // chevron icon used for rotation when menu opens
-        const attendanceChevron = attendanceToggle.querySelector('.bi-chevron-down');
-        attendanceToggle.addEventListener('click', function (e) {
-          e.preventDefault();
-          const open = attendanceMenu.classList.toggle('hidden') === false;
-          attendanceToggle.setAttribute('aria-expanded', open);
-          if (attendanceChevron) attendanceChevron.classList.toggle('rotate-180', open);
-        });
-        // close the menu when clicking outside it
-        document.addEventListener('click', function (e) {
-          if (!attendanceToggle.contains(e.target) && !attendanceMenu.contains(e.target)) {
-            attendanceMenu.classList.add('hidden');
-            attendanceToggle.setAttribute('aria-expanded', 'false');
-            if (attendanceChevron) attendanceChevron.classList.remove('rotate-180');
-          }
-        });
-      }
-
-      // EXAMS MENU: similar dropdown behaviour for the Exams section
-      const examsToggle = document.getElementById('examsToggle');
-      const examsMenu = document.getElementById('examsMenu');
-      if (examsToggle && examsMenu) {
-        const examsChevron = examsToggle.querySelector('.bi-chevron-down');
-        examsToggle.addEventListener('click', function (e) {
-          e.preventDefault();
-          const open = examsMenu.classList.toggle('hidden') === false;
-          examsToggle.setAttribute('aria-expanded', open);
-          if (examsChevron) examsChevron.classList.toggle('rotate-180', open);
-        });
-      }
-
-      // Assign dropdown (Assign Roles + Assign Classes)
-      const assignToggle = document.getElementById('assignToggle');
-      const assignMenu = document.getElementById('assignMenu');
-      if (assignToggle && assignMenu) {
-        const assignChevron = assignToggle.querySelector('.bi-chevron-down');
-        // toggle the assign menu open/close and rotate chevron
-        assignToggle.addEventListener('click', function (e) {
-          e.preventDefault();
-          const open = assignMenu.classList.toggle('hidden') === false;
-          assignToggle.setAttribute('aria-expanded', open);
-          if (assignChevron) assignChevron.classList.toggle('rotate-180', open);
-        });
-        // click-outside handler: close the menu unless clicking a menu link
-        document.addEventListener('click', function (e) {
-          const target = e.target;
-          if (assignMenu.contains(target) && (target.closest && target.closest('a'))) return;
-          if (!assignToggle.contains(target) && !assignMenu.contains(target)) {
-            assignMenu.classList.add('hidden');
-            assignToggle.setAttribute('aria-expanded', 'false');
-            if (assignChevron) assignChevron.classList.remove('rotate-180');
-          }
-        });
-      }
 
   // ---------- All present except... (static modal + minimal JS) ----------
   // The modal provides a simple, client-side way to mark a small set of
