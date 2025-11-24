@@ -59,9 +59,111 @@
             </div>
           </header>
 
+  {{-- Flash & validation messages (insert after header, before main content) --}}
+  <style>
+    .flash-message {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      padding: .75rem 1rem;
+      border-radius: .375rem;
+      margin-bottom: .75rem;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    .flash-hidden { opacity: 0; transform: translateY(-8px); pointer-events: none; }
+    .flash-success { background:#ecfdf5; border:1px solid #bbf7d0; color:#065f46; }
+    .flash-error   { background:#fff1f2; border:1px solid #fecaca; color:#7f1d1d; }
+    .flash-info    { background:#eff6ff; border:1px solid #bfdbfe; color:#1e3a8a; }
+    .flash-close { background:transparent; border:0; font-size:1.1rem; line-height:1; cursor:pointer; color:inherit; }
+  </style>
+
+  <div id="flash-messages">
+    @if(session('success'))
+      <div class="flash-message flash-success" role="alert" data-timeout="5000">
+        <div>
+          <strong class="block">Success</strong>
+          <div class="mt-1">{{ session('success') }}</div>
+        </div>
+        <button type="button" class="flash-close" aria-label="Close">&times;</button>
+      </div>
+    @endif
+
+    @if(session('error'))
+      <div class="flash-message flash-error" role="alert" data-timeout="7000">
+        <div>
+          <strong class="block">Error</strong>
+          <div class="mt-1">{{ session('error') }}</div>
+        </div>
+        <button type="button" class="flash-close" aria-label="Close">&times;</button>
+      </div>
+    @endif
+
+    @if(session('info'))
+      <div class="flash-message flash-info" role="status" data-timeout="5000">
+        <div>
+          <strong class="block">Info</strong>
+          <div class="mt-1">{{ session('info') }}</div>
+        </div>
+        <button type="button" class="flash-close" aria-label="Close">&times;</button>
+      </div>
+    @endif
+
+    @if($errors->any())
+      <div class="flash-message flash-error" role="alert" data-timeout="9000">
+        <div>
+          <strong class="block">Please fix the following</strong>
+          <ul class="mt-1 list-disc list-inside">
+            @foreach($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+        <button type="button" class="flash-close" aria-label="Close">&times;</button>
+      </div>
+    @endif
+  </div>
+
+  <script>
+    (function(){
+      const flashes = document.querySelectorAll('#flash-messages .flash-message');
+      flashes.forEach(el => {
+        const timeout = parseInt(el.getAttribute('data-timeout') || 5000, 10);
+
+        // auto hide after timeout
+        const t = setTimeout(() => hideFlash(el), timeout);
+
+        // manual close
+        const btn = el.querySelector('.flash-close');
+        if (btn) {
+          btn.addEventListener('click', () => {
+            clearTimeout(t);
+            hideFlash(el);
+          });
+        }
+      });
+
+      function hideFlash(el) {
+        el.classList.add('flash-hidden');
+        // remove from DOM after transition
+        setTimeout(() => {
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+        }, 400);
+      }
+    })();
+  </script>
+
   <!-- CONTROLS & TABLE SECTION: grade/date controls, action buttons, attendance table -->
   <section class="bg-white p-6 rounded-md shadow-lg">
-          <form id="registerForm" class="space-y-4 form-compact">
+
+          <form id="registerForm" 
+            class="space-y-4 form-compact"
+            action = ""
+            method="POST">
+
+            @csrf
+
             <div class="flex items-center gap-3 form-row">
               <div class="flex items-center gap-3 w-full md:w-auto">
 
@@ -76,14 +178,33 @@
 
               </div>
               <div class="flex items-center gap-3 w-full md:w-auto">
-                <label class="text-sm">Date</label>
-                <input type="date" id="attDate" class="border px-3 py-2 rounded-sm" />
+                <label class="text-sm">
+                  Date
+                </label>
+
+                <input 
+                name = "date"
+                type="date" 
+                id="attDate" 
+                class="border px-3 py-2 rounded-sm"  />
+
               </div>
               <div class="ml-auto flex items-center gap-2">
                 <!-- Desktop actions -->
+
                 <div class="hidden md:flex items-center gap-2">
-                  <button id="allPresentBtn" type="button" class="px-3 py-2 btn-success text-white rounded-sm text-sm">All present</button>
-                  <button id="allPresentExceptBtn" type="button" class="px-3 py-2 btn-primary text-white rounded-sm text-sm">All present except…</button>
+
+                  <button type="submit" 
+                  formaction="{{ route('registerstudentattendance.allpresent') }}"
+                  class="px-3 py-2 btn-success text-white rounded-sm text-sm">
+                    All present
+                  </button>
+                  
+
+                  <button id="allPresentExceptBtn" type="button" class="px-3 py-2 btn-primary text-white rounded-sm text-sm">
+                    All present except…
+                  </button>
+
                 </div>
                 <!-- Mobile actions: stack full-width buttons -->
                 <div class="flex md:hidden flex-col w-full gap-2">
@@ -101,6 +222,7 @@
                 </div>
               </div>
             </div>
+          </form>
 
             <!-- ATTENDANCE TABLE: responsive table (desktop) / card grid (mobile) -->
             <div class="overflow-x-auto max-w-full table-responsive">
@@ -156,7 +278,8 @@
                     <td class="px-4 py-3">
                       <div class="flex items-center gap-3">
                         <label class="inline-flex items-center gap-2">
-                          <input type="radio" name= "attendance_{{ $student->id }}"  value="present" checked> 
+                          <input type="radio" 
+                          name= "attendance_{{ $student->id }}"  value="present" checked> 
                           <span class="status-chip status-present">
                             Present
                           </span>
@@ -186,7 +309,6 @@
               <button type="reset" class="px-4 py-2 border rounded-sm">Reset</button>
               <button type="submit" class="px-4 py-2 btn-primary text-white rounded-sm">Save Attendance</button>
             </div>
-          </form>
         </section>
 
         <!-- Static modal for "All present except" kept in HTML for simpler styling and accessibility -->
@@ -344,15 +466,6 @@
     if(apm) apm.addEventListener('click', setAllPresent);
   })();
     });
-    </script>
-    <script>
-      // Simple form handler (demo)
-      // FORM SUBMIT: demo-only handler. Replace with server integration (PHP) later.
-      document.getElementById('registerForm').addEventListener('submit', function(e){
-        e.preventDefault();
-        // In production, collect form data and POST to server here.
-        alert('Attendance saved (demo)');
-      });
-    </script>
+  </script>
 
 </x-Teacher-sidebar>

@@ -126,6 +126,9 @@ Route::middleware('auth')->group(function () {
     //for registering students attendance view route using controller
     Route::get('/teacher-registerstudentattendance', [AttendanceController::class, 'registerStudentAttendance'])->name('teacher.registerstudentattendance.view');
 
+    //handling all student present attendance 
+    Route::post('/teacher-registerstudentattendance', [AttendanceController::class, 'markAllPresent'])->name('registerstudentattendance.allpresent');
+
 
 
 
