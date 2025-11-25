@@ -359,44 +359,7 @@
               </button>
             </div>
 
-            <div class="mb-3">
-
-              <input id="exceptionsSearch" class="w-full border px-3 py-2 rounded-sm" placeholder="Search student name or admission" />
-
-            </div>
-            <!--
-              exceptionsList: populated from the attendance table rows when the
-              modal opens. Client-side real-time filtering has been removed so
-              server-side (PHP) search should be implemented later. The search
-              input remains in the UI for parity but it no longer performs
-              live filtering in JavaScript.
-            -->
-
-            <div id="exceptionsList" class="max-h-56 overflow-auto space-y-1 mb-3">
-              <form id="exceptionsForm" method="POST" 
-              action="">
-
-                @csrf
-                {{-- include date if you want to persist the chosen date --}}
-
-                <input type="hidden" 
-                name="date" 
-                value="">
-
-                @foreach($students as $student)
-
-                  <label class="flex items-center gap-2 p-1">
-                    <input type="checkbox" 
-                    name="absent_students[]" 
-                    value="{{ $student->id }}"
-                    >
-                    <span class="text-sm">{{ $student->fname }} {{ $student->lname }}{{ $student->admission ? ' ('.$student->admission.')' : '' }}</span>
-                  </label>
-
-                @endforeach
-              </form>
-
-            </div>
+            <livewire:search :students="$students" :class_id="$classId" :schoolId="$schoolId" />
             
             <div class="flex items-center justify-end gap-2">
               

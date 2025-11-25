@@ -48,7 +48,9 @@ class AttendanceController extends Controller
         return view('TeacherPanel.registerattendance',[
             'students' => $students,
             'className' => $className,
-            'Tablenumber' => $Tablenumber
+            'Tablenumber' => $Tablenumber,
+            'schoolId' => $schoolId,
+            'classId' => $classId
         ]);
     }
 
@@ -101,6 +103,12 @@ class AttendanceController extends Controller
         //redirect back with success message
         return redirect()->back()->with('success', 'All students have been marked as present for the date '.$date.'.');
 
+    }
+
+    //mark all as present except those absent
+    public function markPresentExceptAbsent(Request $request)
+    {
+        //to be implemented later
     }
 
 

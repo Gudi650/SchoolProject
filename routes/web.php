@@ -129,6 +129,9 @@ Route::middleware('auth')->group(function () {
     //handling all student present attendance 
     Route::post('/teacher-registerstudentattendance', [AttendanceController::class, 'markAllPresent'])->name('registerstudentattendance.allpresent');
 
+    //handling all student present except selected students
+    Route::post('/teacher-registerstudentattendance-exceptabsent', [AttendanceController::class, 'markPresentExceptAbsent'])->name('registerstudentattendance.presentexceptabsent');
+
 
 
 
