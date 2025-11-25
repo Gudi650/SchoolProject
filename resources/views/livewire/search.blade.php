@@ -6,19 +6,26 @@
         <input id="exceptionsSearch" 
         class="w-full border px-3 py-2 rounded-sm" 
         placeholder="Search student name or admission" 
-        wire:model.live="search"
+        wire:model.live.debounce.300ms="search"
         />
 
     </div>
+    
 
 
     <div id="exceptionsList" class="max-h-56 overflow-auto space-y-1 mb-3">
 
-        <form id="exceptionsForm" method="POST" action="">
+        <form id="exceptionsForm" method="POST" 
+        action="{{ route('registerstudentattendance.presentexceptabsent') }}" >
         @csrf
 
         {{-- bind the hidden date to the Livewire property --}}
-        <input type="hidden" name="date" wire:model="date" value="{{ old('date') }}">
+        <input type="date" 
+        class="w-full border px-3 py-2 rounded-sm" 
+        name="date" 
+        wire:model.live="date" 
+        value="{{ old('date') }}">     
+        
         
         <!--check if the students variable is set-->
         @if(isset($students) && $students->isNotEmpty() && empty($Searchedstudents))
@@ -29,7 +36,7 @@
                 <input type="checkbox" 
                 name="absent_students[]" 
                 value="{{ $student->id }}"
-
+                wire:model="absent_students"
                 >
                 <span class="text-sm">
                     {{ $student->fname }} 
@@ -48,8 +55,8 @@
             <label class="flex items-center gap-2 p-1">
                 <input type="checkbox" 
                 name="absent_students[]" 
+                wire:model="absent_students"
                 value="{{ $Searchedstudent->id }}"
-
                 >
                 <span class="text-sm">
                     {{ $Searchedstudent->fname }} 
@@ -66,5 +73,7 @@
         </form>
 
     </div>
+
+    
 
 </div>

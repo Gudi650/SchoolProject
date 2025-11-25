@@ -108,7 +108,54 @@ class AttendanceController extends Controller
     //mark all as present except those absent
     public function markPresentExceptAbsent(Request $request)
     {
-        //to be implemented later
+
+        //validate the data
+        $validatedData = $request->validate([
+            'date' => 'required|date',
+            'absent_students' => 'array', //array of student ids who are absent
+            'absent_students.*' => 'integer|exists:students,id',
+        ]);
+
+        //get the data from the centralized function
+        $data = $this->fetchreusableData();
+
+        $schoolId = $data['schoolId'];
+        $classId = $data['classId'];
+        $students = $data['students'];
+
+        //save the validated data to variables
+        $date = $validatedData['date'];
+        $absentStudents = $validatedData['absent_students'] ?? [];
+
+        //filter out all the students who are absent
+        $presentStudents = $students->whereNotIn('id', $absentStudents);
+
+        //record attendance for present students
+        foreach($presentStudents as $student){
+            Attendance::create([
+                'student_id' => $student->id,
+                'class-available_id' => $classId,
+                'school_id' => $schoolId,
+                'date' => $date,
+                'status' => '1', //1 for present
+            ]);
+        }
+
+        //mark the absent students
+        foreach($absentStudents as $studentId){
+            Attendance::create([
+                'student_id' => $studentId,
+                'class-available_id' => $classId,
+                'school_id' => $schoolId,
+                'date' => $date,
+                'status' => '0', //0 for absent
+            ]);
+        }
+
+        //redirect back with success message
+        return redirect()->back()->with('success', 'Attendance has been recorded. Present students have been marked for the date '.$date.'.');
+        
+
     }
 
 

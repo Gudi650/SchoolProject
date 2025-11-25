@@ -213,7 +213,7 @@
                 name = "date"
                 type="date" 
                 id="attDate" 
-                class="border px-3 py-2 rounded-sm"  />
+                class="border px-3 py-2 rounded-sm" />
 
               </div>
               <div class="ml-auto flex items-center gap-2">

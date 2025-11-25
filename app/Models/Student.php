@@ -51,4 +51,10 @@ class Student extends Model
         return $this->hasMany(ExamResults::class, 'student_id');
     }   
 
+    //relationship with attendance
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'student_id');
+    }
+
 }
