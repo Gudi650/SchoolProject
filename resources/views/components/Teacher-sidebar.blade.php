@@ -145,7 +145,7 @@
                 </li>
 
                 <li>
-                  <a href="./attendance_records.html" 
+                  <a href="{{ route('studentattendancereport') }}" 
                     class="group flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 pl-10">
                       <i class="bi bi-file-earmark-text text-lg text-gray-600 group-hover:text-indigo-600 transition-colors duration-150"></i>
                       <span>Records</span>

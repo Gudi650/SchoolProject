@@ -133,6 +133,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/teacher-registerstudentattendance-exceptabsent', [AttendanceController::class, 'markPresentExceptAbsent'])->name('registerstudentattendance.presentexceptabsent');
 
 
+    /////////////////////////////////////////////////////////// end of register student attendance routes
+
+    //////////////////////////////////////////////////////////////////// 
+    ////show student attendance report route
+
+    Route::get('/teacher-studentattendancereport', function () {
+        return view('TeacherPanel.studentattendance');
+    })->name('studentattendancereport');
+    
+
+
 
 
     //////////////////////////////////////////////////////////// teacher role assignment routes
