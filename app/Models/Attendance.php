@@ -15,4 +15,10 @@ class Attendance extends Model
         'date',
         'status',
     ];
+
+    //relationship with student
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'student_id');
+    }
 }

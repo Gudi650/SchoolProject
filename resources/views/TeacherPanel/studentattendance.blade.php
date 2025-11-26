@@ -33,10 +33,15 @@
         <section class="bg-white p-4 rounded-lg shadow mb-6">
           <div class="md:flex md:items-center md:gap-4 mb-4">
             <div class="flex-1 flex items-center gap-3">
+
               <div class="relative flex-1">
-                <input id="searchInput" type="search" placeholder="Search by name, adm or note..." class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
-                <i class="bi bi-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+                <!-- Moved search input here from Livewire component for better integration -->
+
+                <livewire:search-bar />
+
               </div>
+
               <div class="hidden md:block text-sm text-gray-500">Showing <span id="resultCount">2</span> records</div>
             </div>
 
@@ -61,37 +66,9 @@
           </div>
 
           <div class="overflow-x-auto max-w-full hidden sm:block">
-            <table id="recordsTable" class="records-table w-full text-left table-auto min-w-full divide-y divide-gray-100">
-              <thead class="bg-indigo-50"><tr>
-                <th class="p-3 text-xs font-semibold text-indigo-700 uppercase tracking-wider">Date</th>
-                <th class="p-3 text-xs font-semibold text-indigo-700 uppercase tracking-wider">Time</th>
-                <th class="p-3 text-xs font-semibold text-indigo-700 uppercase tracking-wider">Name</th>
-                <th class="p-3 text-xs font-semibold text-indigo-700 uppercase tracking-wider">Adm</th>
-                <th class="p-3 text-xs font-semibold text-indigo-700 uppercase tracking-wider">Status</th>
-                <th class="p-3 text-xs font-semibold text-indigo-700 uppercase tracking-wider">Note</th>
-                <th class="p-3 text-xs font-semibold text-indigo-700 uppercase tracking-wider">Actions</th>
-              </tr></thead>
-              <tbody>
-                <tr class="border-b even:bg-gray-50 hover:bg-indigo-50 transition-colors" data-status="present">
-                  <td class="p-3 align-top">2025-10-08</td>
-                  <td class="p-3 align-top">07:45</td>
-                  <td class="p-3 align-top">John Doe</td>
-                  <td class="p-3 align-top text-sm adm-muted">12345</td>
-                  <td class="p-3 align-top"><span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Present</span></td>
-                  <td class="p-3 align-top">On time</td>
-                  <td class="p-3 align-top"><button class="edit-btn inline-flex items-center gap-2 px-3 py-1 border rounded-full text-sm text-indigo-600 hover:bg-indigo-50" data-record="1"><i class="bi bi-pencil-fill"></i><span class="hidden md:inline">Edit</span></button></td>
-                </tr>
-                <tr class="border-b even:bg-gray-50 hover:bg-indigo-50 transition-colors" data-status="late">
-                  <td class="p-3 align-top">2025-10-07</td>
-                  <td class="p-3 align-top">07:58</td>
-                  <td class="p-3 align-top">Jane Smith</td>
-                  <td class="p-3 align-top text-sm adm-muted">12346</td>
-                  <td class="p-3 align-top"><span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Late</span></td>
-                  <td class="p-3 align-top">Traffic</td>
-                  <td class="p-3 align-top"><button class="edit-btn inline-flex items-center gap-2 px-3 py-1 border rounded-full text-sm text-indigo-600 hover:bg-indigo-50" data-record="2"><i class="bi bi-pencil-fill"></i><span class="hidden md:inline">Edit</span></button></td>
-                </tr>
-              </tbody>
-            </table>
+            
+            <livewire:student-attendance-table :classId="$classId" :schoolId="$schoolId" />
+
           </div>
 
           <!-- Mobile card list -->

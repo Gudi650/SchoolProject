@@ -173,7 +173,7 @@ class AttendanceController extends Controller
         $schoolId = $teacher->school_id;
 
         //get the class the teacher is assigned to as the class teacher
-        //the teacherRole used in the whereRelation is the variable teacherRole
+        //the teacherRole used in the whereRelation is the eloquent relationship teacherRole
         $assignedClass = AssignedRole::where('teacher_id', $teacher->id)
                                         ->whereRelation('teacherRole', 'name', 'Class Teacher')
                                         ->first();

@@ -8,6 +8,7 @@ use App\Http\Controllers\GenerateExamController;
 use App\Http\Controllers\ParentregistrationController;
 use App\Http\Controllers\PostExamResults;
 use App\Http\Controllers\Student;
+use App\Http\Controllers\StudentAttendanceReport;
 use App\Http\Controllers\Teacherprofile;
 use App\Http\Controllers\TeacherregistrationController;
 use App\Http\Controllers\TeacherRoleController;
@@ -137,11 +138,10 @@ Route::middleware('auth')->group(function () {
 
     //////////////////////////////////////////////////////////////////// 
     ////show student attendance report route
-
-    Route::get('/teacher-studentattendancereport', function () {
-        return view('TeacherPanel.studentattendance');
-    })->name('studentattendancereport');
     
+    //view the student Attendance report using controller
+    Route::get('/teacher-studentattendancereport', [StudentAttendanceReport::class, 'ViewStudentAttendance'])
+    ->name('studentattendancereport');
 
 
 
