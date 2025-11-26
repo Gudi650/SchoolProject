@@ -10,8 +10,18 @@ class StudentAttendanceTable extends Component
 {
     use WithPagination;
 
+    public $studentz = [];
     public $classId;
     public $schoolId;
+
+    // Tell Livewire: when 'searchResultsUpdated' is emitted, call updateResults()
+    protected $listeners = ['searchResultsUpdated' => 'updateResults'];
+
+    public function updateResults($results)
+    {
+        // Receive the data here
+        $this->studentz = $results;
+    }
 
     public function render()
     {
@@ -24,3 +34,8 @@ class StudentAttendanceTable extends Component
     }
 
 }
+
+
+
+    
+

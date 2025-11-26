@@ -38,7 +38,7 @@
 
                 <!-- Moved search input here from Livewire component for better integration -->
 
-                <livewire:search-bar />
+                <livewire:search-bar  :students="$students" :classId="$classId" :schoolId="$schoolId" :school="$schoolId" />
 
               </div>
 
