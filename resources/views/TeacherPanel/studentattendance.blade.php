@@ -43,9 +43,9 @@
               </div>
 
               <div class="hidden md:block text-sm text-gray-500">
-                Showing 
-                <span id="resultCount">2</span> 
-                records
+                <!--Showing -->
+                <span id="resultCount"><!-- 2 --> </span> 
+                <!-- records -->
               </div>
             </div>
 
