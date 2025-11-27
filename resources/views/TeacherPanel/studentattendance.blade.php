@@ -42,7 +42,11 @@
 
               </div>
 
-              <div class="hidden md:block text-sm text-gray-500">Showing <span id="resultCount">2</span> records</div>
+              <div class="hidden md:block text-sm text-gray-500">
+                Showing 
+                <span id="resultCount">2</span> 
+                records
+              </div>
             </div>
 
             <div class="mt-3 md:mt-0 flex items-center gap-2">
