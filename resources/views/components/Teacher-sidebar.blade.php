@@ -100,7 +100,7 @@
               </li>
 
               <li>
-                <a href="{{ route('teacher.generatetimetable') }}" 
+                <a href="{{ route('teacher.generatedtimetable.view') }}" 
                 class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600">
                   <i class="bi bi-table"></i> 
                   Generate Timetable

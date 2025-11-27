@@ -4,6 +4,7 @@ use App\Http\Controllers\AssignClasses;
 use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GeneratedTimetableController;
 use App\Http\Controllers\GenerateExamController;
 use App\Http\Controllers\ParentregistrationController;
 use App\Http\Controllers\PostExamResults;
@@ -97,12 +98,16 @@ Route::middleware('auth')->group(function () {
 
 
 ////////////////////////////////////////////////////////
+//////generate timetable routes
 
 
-    //for generate timetable
-    Route::get('/teacher-generatetimetable', function () {
-        return view('TeacherPanel.generatetimetable');
-    })->name('teacher.generatetimetable');
+
+    Route::get('/teacher-generatedtimetable', [GeneratedTimetableController::class, 'viewGeneratedTimetable'])
+    ->name('teacher.generatedtimetable.view');
+
+
+
+////////////////////////////////////////////////////////////////////////
 
     //for exam analysis
     Route::get('/teacher-examanalysis', function () {
@@ -146,7 +151,8 @@ Route::middleware('auth')->group(function () {
 
 
 
-    //////////////////////////////////////////////////////////// teacher role assignment routes
+    //////////////////////////////////////////////////////////// 
+    ///////////teacher role assignment routes
 
     //route to show available teacher roles using controller
     Route::get('/teacher-assignroles', [TeacherRoleController::class, 'showAssignRoles'])->name('teacher.assignroles');
@@ -158,7 +164,7 @@ Route::middleware('auth')->group(function () {
 
 
 ///////////////////////////////////////////////////////////////    
-
+//////assign subject to teachers routes
 
 
     //view assign subject route 
