@@ -11,8 +11,14 @@
                   <i class="bi bi-list"></i> 
                 </button>
                 <div>
-                  <h1 class="text-xl md:text-2xl font-bold text-indigo-800">Generate Timetable</h1>
-                  <p class="text-sm text-gray-500 mt-1">Create a subject timetable for each class, assigning teachers to subjects and periods. Preview and export your curriculum plan.</p>
+                  <h1 class="text-xl md:text-2xl font-bold text-indigo-800">
+                    Generate Timetable
+                  </h1>
+
+                  <p class="text-sm text-gray-500 mt-1">
+                    Create a subject timetable for each class, assigning teachers to subjects and periods. Preview and export your curriculum plan.
+                  </p>
+
                 </div>
               </div>
               <div class="flex-1 text-center">
@@ -24,7 +30,10 @@
             </div>
           </header>
         <section class="bg-white p-6 rounded shadow mb-8">
-          <h2 class="text-lg font-bold text-indigo-700 mb-4 flex items-center gap-2"><i class="bi bi-sliders"></i> Timetable Conditions & Preferences</h2>
+          <h2 class="text-lg font-bold text-indigo-700 mb-4 flex items-center gap-2"><i class="bi bi-sliders"></i>
+             Timetable Conditions & Preferences
+            </h2>
+            
           <form class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
             <div>
               <label for="prioritySubjects" class="block text-sm font-medium text-gray-700 mb-1">Subjects to Prioritize in the Morning</label>

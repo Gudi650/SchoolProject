@@ -10,7 +10,11 @@ class GeneratedTimetableController extends Controller
     public function viewGeneratedTimetable()
     {
 
-
         return view('TeacherPanel.generatetimetable');
     }
+
+
+    //function to auto generate timetable
+    
+
 }
