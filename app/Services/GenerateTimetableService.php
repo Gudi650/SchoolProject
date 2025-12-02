@@ -72,9 +72,23 @@ class GenerateTimetableService
                 // randomize subject order each day
                 $shuffledSubjects = $subjects->shuffle();
 
+                // build a per-day priority order by rotating the priority list
+                // this makes priority subjects appear first but in a different order each day
+                $dayIndex = array_search($day, $daysOfWeek);
+                $dayPriority = $prioritySubjects_id;
+                if (!empty($dayPriority)) {
+                    $countP = count($dayPriority);
+                    // rotate by day index (deterministic variation)
+                    $offset = $dayIndex % $countP;
+                    $dayPriority = array_merge(
+                        array_slice($dayPriority, $offset),
+                        array_slice($dayPriority, 0, $offset)
+                    );
+                }
+                
                 for ($period = 1; $period <= $periodsPerDay; $period++) {
                     $assigned = null;
-
+                   
                     // helper: find first subject satisfying conditions
                     $findAvailable = function($excludeUsed = true) use (&$shuffledSubjects, &$appearence_per_subject, $class, $max_periods_times, $used_subjects) {
                         foreach ($shuffledSubjects as $subj) {
@@ -89,12 +103,11 @@ class GenerateTimetableService
                         }
                         return null;
                     };
-
+                    
                     // if priority exists and this period is within priority count, attempt to use that priority subject
-
-                    if (!empty($prioritySubjects_id) && $period <= count($prioritySubjects_id)) {
-
-                        $priorityId = $prioritySubjects_id[$period - 1] ?? null;
+                    if (!empty($dayPriority) && $period <= count($dayPriority)) {
+                        // use the rotated per-day priority order
+                        $priorityId = $dayPriority[$period - 1] ?? null;
 
                         if ($priorityId) {
 
