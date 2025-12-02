@@ -37,7 +37,7 @@ class GenerateTimetableService
         $subjects = $data['subjects'];
 
         // maximum times a subject may appear per week (for testing)
-        $max_periods_times = 3;
+        $max_periods_times = 4;
 
         // times a subject appeared array (per class)
         $appearence_per_subject = [];
@@ -45,15 +45,20 @@ class GenerateTimetableService
         // days of the week
         $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday'];
 
-        $timetable = [];
+        //get the exceptions days from validated data
+        $exceptions_days = $validatedData['days_exceptions'] ?? [];
 
-        // duration calculation (keeps existing behaviour)
-        $totalHours = $this->calculateHours($validatedData);
-        $periodsPerDay = (int) ($validatedData['PeriodPerDay'] ?? $validatedData['periods_per_day'] ?? 0);
-        if ($periodsPerDay <= 0) {
-            throw new \InvalidArgumentException('Invalid periods per day value');
+        //get the exceptions periods per day from validated data
+        $exceptions_periods = $validatedData['periods_days_exceptions'] ?? [];
+
+        //now explode the exceptions periods into an associative array, to obtain day and number periods of exceptions
+        $exceptions_periods_assoc = [];
+        foreach($exceptions_periods as $exception){
+            [$day, $periods] = explode(':', $exception);
+            $exceptions_periods_assoc[trim($day)] = (int) trim($periods);
         }
-        $durationPerPeriod = $totalHours / $periodsPerDay;
+
+        $timetable = [];
 
         // priority subject ids (optional)
         $prioritySubjects_id = $validatedData['priority_subjects'] ?? [];
@@ -63,7 +68,18 @@ class GenerateTimetableService
             // ensure appearance tracking for this class exists
             $appearence_per_subject[$class->id] = $appearence_per_subject[$class->id] ?? [];
 
+            // loop days
             foreach ($daysOfWeek as $day) {
+
+
+                // duration calculation in normal days (keeps existing behaviour)
+                $totalHours = $this->calculateHours($validatedData);
+                $periodsPerDay = (int) ($validatedData['PeriodPerDay'] ?? $validatedData['periods_per_day'] ?? 0);
+                if ($periodsPerDay <= 0) {
+                    throw new \InvalidArgumentException('Invalid periods per day value');
+                }
+                $durationPerPeriod = $totalHours / $periodsPerDay;
+
                 $timetable[$class->id][$day] = [];
 
                 // reset per-day used subjects so priority subjects may reappear next day
@@ -80,10 +96,29 @@ class GenerateTimetableService
                     $countP = count($dayPriority);
                     // rotate by day index (deterministic variation)
                     $offset = $dayIndex % $countP;
+
+                    //re-arrange priority subjects here
                     $dayPriority = array_merge(
-                        array_slice($dayPriority, $offset),
-                        array_slice($dayPriority, 0, $offset)
+                        array_slice($dayPriority, $offset), //take the subject from offset position to end
+                        array_slice($dayPriority, 0, $offset) //take the subject from start to offset position
                     );
+                }
+
+                //check if the day is in exceptions
+                if (in_array($day, $exceptions_days)) {
+                    
+                    //get the number of periods for that day from exceptions_periods_assoc
+                    $periodsPerDay = $exceptions_periods_assoc[$day] ?? $periodsPerDay;
+
+                    //recalculate duration per period for that day
+                    $durationPerPeriod = $totalHours / $periodsPerDay;
+
+                    //ensure periodsPerDay is valid
+                    if ($periodsPerDay <= 0) {
+                        throw new \InvalidArgumentException('Invalid periods per day value for exception day: ' . $day);
+                    }
+
+
                 }
                 
                 for ($period = 1; $period <= $periodsPerDay; $period++) {

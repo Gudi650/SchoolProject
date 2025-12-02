@@ -77,7 +77,10 @@
             </div>
 
             <div>
-              <label for="classTimes" class="block text-sm font-medium text-gray-700 mb-1">Class Start & End Times</label>
+
+              <label for="classTimes" class="block text-sm font-medium text-gray-700 mb-1">
+                Class Start & End Times
+              </label>
               
               <input id="classTimes" 
               name = "class_times"
@@ -86,9 +89,14 @@
             </div>
 
             <div>
-              <label for="exceptions" class="block text-sm font-medium text-gray-700 mb-1">Day Exceptions (e.g. Friday ends early)</label>
+              <label for="exceptions" class="block text-sm font-medium text-gray-700 mb-1">
+                Day Exceptions (e.g. Friday ends early)
+              </label>
 
-              <input id="exceptions" type="text" placeholder="e.g. Friday: 09:00 - 12:00" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              <input id="exceptions" type="text" 
+              name="days_exceptions[]"
+              placeholder="e.g. Friday: 09:00 - 12:00" 
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
 
               <span class="text-xs text-gray-400">
                 Specify any day with different times or fewer periods.
@@ -111,9 +119,14 @@
 
             </div>
             <div>
-              <label for="periodsExceptions" class="block text-sm font-medium text-gray-700 mb-1">Periods Per Day Exceptions</label>
+              <label for="periodsExceptions" class="block text-sm font-medium text-gray-700 mb-1">
+                Periods Per Day Exceptions
+              </label>
 
-              <input id="periodsExceptions" type="text" placeholder="e.g. Friday: 4" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              <input id="periodsExceptions" type="text" 
+              name = "periods_days_exceptions[]"
+              placeholder="e.g. Friday: 4" 
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
               <span class="text-xs text-gray-400">
                 Specify if any day has fewer periods.
               </span>

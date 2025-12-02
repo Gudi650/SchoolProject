@@ -44,6 +44,8 @@ class GeneratedTimetableController extends Controller
             'class_times' => 'required|string',
             'priority_subjects' => 'sometimes|array',
             'break_times' => 'sometimes|string',
+            'days_exceptions' => 'sometimes|array',
+            'periods_days_exceptions' => 'sometimes|array',
 
         ]);
 
