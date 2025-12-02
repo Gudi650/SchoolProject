@@ -28,49 +28,49 @@
           <!-- scrollable nav area -->
           <nav class="flex-1 overflow-y-auto space-y-2 pr-2 no-scrollbar">
 
-              <a href="{{ route('teacher.dashboard') }}" class="flex items-center gap-3 p-2 rounded-md bg-indigo-50 text-indigo-600">
+              <a href="{{ route('teacher.dashboard') }}" class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.dashboard') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                 <i class="bi bi-house-door-fill"></i>
                 Dashboard
               </a>
 
-              <a href="{{ route('teacher.announcements') }}" class="flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+              <a href="{{ route('teacher.announcements') }}" class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.announcements') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                 <i class="bi bi-megaphone"></i>
                 Announcements
               </a>
 
-              <a href="{{ route('teacher.profile') }}" class="flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+              <a href="{{ route('teacher.profile') }}" class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.profile') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                 <i class="bi bi-person-circle"></i>
                  Profile
               </a>
 
             <div class="relative">
 
-              <button id="examsToggle" aria-expanded="false" class="w-full flex items-center justify-between gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+              <button id="examsToggle" aria-expanded="{{ request()->routeIs('teacher.postresults','teacher.generateresults','teacher.examanalysis') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.postresults','teacher.generateresults','teacher.examanalysis') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                 <span class="flex items-center gap-3">
                   <i class="bi bi-journal-text"></i>
                    Exams
                 </span>
-                <i class="bi bi-chevron-down text-sm transition-transform duration-200"></i>
+                <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.postresults','teacher.generateresults','teacher.examanalysis') ? 'rotate-180' : '' }}"></i>
 
               </button>
 
-              <ul id="examsMenu" class="hidden mt-1 space-y-1 pl-10">
+              <ul id="examsMenu" class="{{ request()->routeIs('teacher.postresults','teacher.generateresults','teacher.examanalysis') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
                 <li>
-                  <a href="{{ route('teacher.postresults') }}" class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600">
+                  <a href="{{ route('teacher.postresults') }}" class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.postresults') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
                     <i class="bi bi-journal-plus text-lg"></i>
                      Post Exam Results
                   </a>
                 </li>
 
                 <li>
-                  <a href="{{ route('teacher.generateresults') }}" class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600">
+                  <a href="{{ route('teacher.generateresults') }}" class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.generateresults') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
                     <i class="bi bi-calculator text-lg"></i>
                      Generate Exam Results
                     </a>
                 </li>
 
                 <li>
-                  <a href="{{ route('teacher.examanalysis') }}" class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600">
+                  <a href="{{ route('teacher.examanalysis') }}" class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.examanalysis') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
                     <i class="bi bi-graph-up text-lg"></i>
                      Exam Results Analysis
                     </a>
@@ -80,20 +80,20 @@
             </div>
           <div class="relative">
 
-            <button id="scheduleToggle" aria-expanded="false" class="w-full flex items-center justify-between gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+            <button id="scheduleToggle" aria-expanded="{{ request()->routeIs('teacher.schedule','teacher.generatedtimetable.view','teacher.generateexamtimetable') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.schedule','teacher.generatedtimetable.view','teacher.generateexamtimetable') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
               <span class="flex items-center gap-3">
                 <i class="bi bi-calendar3"></i>
                  Schedule
               </span>
-              <i class="bi bi-chevron-down text-sm transition-transform duration-200"></i>
+              <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.schedule','teacher.generatedtimetable.view','teacher.generateexamtimetable') ? 'rotate-180' : '' }}"></i>
             </button>
 
             <ul id="scheduleMenu" 
-            class="hidden mt-1 space-y-1 pl-10">
+            class="{{ request()->routeIs('teacher.schedule','teacher.generatedtimetable.view','teacher.generateexamtimetable') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
         
               <li>
                 <a href="{{ route('teacher.schedule') }}" 
-                class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600">
+                class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.schedule') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
                 <i class="bi bi-calendar-week"></i>
                  View Schedule
                 </a>
@@ -101,7 +101,7 @@
 
               <li>
                 <a href="{{ route('teacher.generatedtimetable.view') }}" 
-                class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600">
+                class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.generatedtimetable.view') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
                   <i class="bi bi-table"></i> 
                   Generate Timetable
                 </a>
@@ -109,7 +109,7 @@
 
               <li>
                 <a href="{{ route('teacher.generateexamtimetable') }}" 
-                class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600">
+                class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.generateexamtimetable') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
                   <i class="bi bi-calendar-event"></i> 
                   Generate Exam Timetable
                 </a>
@@ -118,7 +118,7 @@
 
           </div>
             <a href="./online_classes.html" 
-              class="flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+              class="flex items-center gap-3 p-2 rounded-md {{ request()->is('online_classes*') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
               <i class="bi bi-camera-video"></i> 
               Online Classes
             </a>
@@ -126,19 +126,19 @@
             <!-- Attendance dropdown -->
             <div class="relative">
               
-              <button id="attendanceToggle" aria-expanded="false"   class="w-full flex items-center justify-between gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+              <button id="attendanceToggle" aria-expanded="{{ request()->routeIs('teacher.registerstudentattendance.view','studentattendancereport') ? 'true' : 'false' }}"   class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.registerstudentattendance.view','studentattendancereport') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                 <span class="flex items-center gap-3">
                   <i class="bi bi-calendar-check"></i> 
                   Attendance
                 </span>
-                <i class="bi bi-chevron-down text-sm transition-transform duration-200"></i>
+                <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.registerstudentattendance.view','studentattendancereport') ? 'rotate-180' : '' }}"></i>
               </button>
 
-              <ul id="attendanceMenu" class="hidden mt-1 space-y-1">
+              <ul id="attendanceMenu" class="{{ request()->routeIs('teacher.registerstudentattendance.view','studentattendancereport') ? 'mt-1 space-y-1' : 'hidden mt-1 space-y-1' }}">
 
                 <li>
                   <a href="{{ route('teacher.registerstudentattendance.view') }}" 
-                    class="group flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 pl-10">
+                    class="group flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.registerstudentattendance.view') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }} pl-10">
                       <i class="bi bi-person-plus text-lg text-gray-600 group-hover:text-indigo-600 transition-colors duration-150"></i>
                       <span>Register</span>
                   </a>
@@ -146,7 +146,7 @@
 
                 <li>
                   <a href="{{ route('studentattendancereport') }}" 
-                    class="group flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 pl-10">
+                    class="group flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('studentattendancereport') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }} pl-10">
                       <i class="bi bi-file-earmark-text text-lg text-gray-600 group-hover:text-indigo-600 transition-colors duration-150"></i>
                       <span>Records</span>
                   </a>
@@ -155,25 +155,25 @@
             </div>
 
             <a href="./users.html" 
-              class="flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+              class="flex items-center gap-3 p-2 rounded-md {{ request()->is('users*') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                 <i class="bi bi-people"></i> 
                 Students
             </a>
 
             <div class="relative">
-              <button id="assignToggle" aria-expanded="false"     class="w-full flex items-center justify-between gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+              <button id="assignToggle" aria-expanded="{{ request()->routeIs('teacher.assignroles','teacher.assignsubjects','teacher.assignclasses') ? 'true' : 'false' }}"     class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.assignroles','teacher.assignsubjects','teacher.assignclasses') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                 <span class="flex items-center gap-3">
                   <i class="bi bi-people-fill"></i> 
                   Assign
                 </span>
-                <i class="bi bi-chevron-down text-sm transition-transform duration-200"></i>
+                <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.assignroles','teacher.assignsubjects','teacher.assignclasses') ? 'rotate-180' : '' }}"></i>
               </button>
 
-              <ul id="assignMenu" class="hidden mt-1 space-y-1">
+              <ul id="assignMenu" class="{{ request()->routeIs('teacher.assignroles','teacher.assignsubjects','teacher.assignclasses') ? 'mt-1 space-y-1' : 'hidden mt-1 space-y-1' }}">
 
                 <li>
                   <a href="{{ route('teacher.assignroles') }}" 
-                    class="group block w-full p-2 pl-0 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.assignroles') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                       <span class="pl-6 flex items-center gap-3 w-full">
                         <i class="bi bi-person-badge text-lg"></i>
                         <span>Assign Roles</span>
@@ -182,7 +182,7 @@
                 </li>
 
                 <li>
-                  <a href="{{ route('teacher.assignsubjects') }}" class="group block w-full p-2 pl-0 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+                  <a href="{{ route('teacher.assignsubjects') }}" class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.assignsubjects') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                     <span class="pl-6 flex items-center gap-3 w-full">
                       <i class="bi bi-journal-bookmark text-lg"></i>
                       <span>Assign Subjects</span>
@@ -192,7 +192,7 @@
 
                 <li>
                   <a href="{{ route('teacher.assignclasses') }}" 
-                  class="group block w-full p-2 pl-0 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+                  class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.assignclasses') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                     <span class="pl-6 flex items-center gap-3 w-full">
                       <i class="bi bi-journal-bookmark text-lg"></i>
                       <span>Assign Classes</span>
