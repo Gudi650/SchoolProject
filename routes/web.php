@@ -105,6 +105,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/teacher-generatedtimetable', [GeneratedTimetableController::class, 'viewGeneratedTimetable'])
     ->name('teacher.generatedtimetable.view');
 
+    //route to handle input 
+    Route::post('/teacher-timetableconditions', [GeneratedTimetableController::class, 'generateTimetable'])
+    ->name('teacher.timetableconditions.submit');
+
 
 
 ////////////////////////////////////////////////////////////////////////
