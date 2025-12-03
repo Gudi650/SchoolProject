@@ -38,7 +38,8 @@
                 Announcements
               </a>
 
-              <a href="{{ route('teacher.profile') }}" class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.profile') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+              <!--hide teh profile link for now-->
+              <a href="{{ route('teacher.profile') }}" class="hidden flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.profile') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                 <i class="bi bi-person-circle"></i>
                  Profile
               </a>
@@ -203,22 +204,20 @@
               </ul>
             </div>
 
-            <div class="pt-4">
-              <div class="w-full border-t border-gray-100 pt-3"></div>
-              <div class="py-3 px-0">
-                <form action="{{ route('logout') }}" method="POST">
-
-                @csrf
-
-                <button class="w-full text-red-500 flex items-center justify-center gap-2 p-2 rounded-md border border-gray-100 hover:bg-red-50 hover:text-red-700 transition-colors duration-150"><i class="bi bi-box-arrow-right"></i> Log Out</button>
-
-              </form>
-              </div>
-            </div>
-
-            
-
           </nav>
+
+          <!-- logout moved outside the scrollable nav and pinned to bottom -->
+          <div class="mt-auto pt-4 w-full border-t border-gray-100">
+            <div class="py-3 px-0">
+              <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button class="w-full text-red-500 flex items-center justify-center gap-2 p-2 rounded-md border border-gray-100 hover:bg-red-50 hover:text-red-700 transition-colors duration-150">
+                  <i class="bi bi-box-arrow-right"></i> Log Out
+                </button>
+              </form>
+            </div>
+          </div>
+
         </div>
       </aside>
 
