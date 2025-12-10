@@ -232,8 +232,7 @@
 
         // date and logout
         const dateEl = document.getElementById('date-text'); if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
-        
-        const logoutBtn = document.getElementById('logout-btn'); if (logoutBtn) logoutBtn.addEventListener('click', e=>{ e.preventDefault(); if (confirm('Log out?')) location.href='index.html'; });
+
     });
 
 </script>
