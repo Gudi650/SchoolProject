@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Fee Management — SchoolFinance</title>
+    <title>{{ $title ?? '' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     
@@ -36,17 +36,92 @@
 
       <nav class="flex-1 overflow-y-auto pt-2 px-3 min-h-0">
           <ul class="space-y-1">
-          <li><a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700"><i data-lucide="layout-dashboard" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Dashboard</span></a></li>
-          <li><a href="fee-management.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-indigo-700 bg-indigo-100/50"><i data-lucide="dollar-sign" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Fee Management</span><span class="item-badge px-2 py-0.5 text-xs font-semibold bg-red-500 text-white rounded-full">12</span></a></li>
-          <li><a href="income-management.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-indigo-100/50 hover:text-indigo-700 text-slate-700"><i data-lucide="trending-up" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Income</span></a></li>
-          <li><a href="expenses.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-indigo-100/50 hover:text-indigo-700 text-slate-700"><i data-lucide="trending-down" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Expenses</span></a></li>
-          <li><a href="payroll.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-indigo-100/50 hover:text-indigo-700 text-slate-700"><i data-lucide="users" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Payroll</span></a></li>
-          <li><a href="banking-cash.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-indigo-100/50 hover:text-indigo-700 text-slate-700"><i data-lucide="building-2" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Banking & Cash</span></a></li>
-          <li><a href="vendors.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-indigo-100/50 hover:text-indigo-700 text-slate-700"><i data-lucide="receipt" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Vendors</span></a></li>
-          <li><a href="budget.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-indigo-100/50 hover:text-indigo-700 text-slate-700"><i data-lucide="pie-chart" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Budget</span></a></li>
-          <li><a href="reports.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-indigo-100/50 hover:text-indigo-700 text-slate-700"><i data-lucide="file-text" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Reports</span></a></li>
-          <li><a href="invoicing.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-indigo-100/50 hover:text-indigo-700 text-slate-700"><i data-lucide="credit-card" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Invoicing</span></a></li>
-          <li><a href="settings.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-indigo-100/50 hover:text-indigo-700 text-slate-700"><i data-lucide="settings" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Settings</span></a></li>
+          <li>
+            <a href="{{ route('accounting.dashboard') }}" 
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.dashboard') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+              <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+              <span class="flex-1 text-left text-sm font-medium nav-label">
+                Dashboard
+              </span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="{{ route('accounting.feeManagement') }}" 
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.feeManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+              <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+              <span class="flex-1 text-left text-sm font-medium nav-label">Fee Management</span>
+              <span class="item-badge px-2 py-0.5 text-xs font-semibold bg-red-500 text-white rounded-full">12</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{ route('accounting.incomeManagement') }}" 
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.incomeManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+              <i data-lucide="trending-up" class="w-5 h-5"></i>
+              <span class="flex-1 text-left text-sm font-medium nav-label">Income</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{ route('accounting.expensesManagement') }}" 
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.expensesManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+              <i data-lucide="trending-down" class="w-5 h-5"></i>
+              <span class="flex-1 text-left text-sm font-medium nav-label">Expenses</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{ route('accounting.payrollManagement') }}" 
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.payrollManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+              <i data-lucide="users" class="w-5 h-5"></i>
+              <span class="flex-1 text-left text-sm font-medium nav-label">Payroll</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{ route('accounting.bankingCashManagement') }}" 
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.bankingCashManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+              <i data-lucide="building-2" class="w-5 h-5"></i>
+              <span class="flex-1 text-left text-sm font-medium nav-label">Banking & Cash</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{ route('accounting.vendorsManagement') }}" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.vendorsManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+              <i data-lucide="receipt" class="w-5 h-5"></i>
+              <span class="flex-1 text-left text-sm font-medium nav-label">Vendors</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{ route('accounting.budgetingManagement') }}" 
+              class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.budgetingManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+              <i data-lucide="pie-chart" class="w-5 h-5"></i>
+              <span class="flex-1 text-left text-sm font-medium nav-label">Budget</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{ route('accounting.reportsManagement') }}" 
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.reportsManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+            <i data-lucide="file-text" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Reports</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{ route('accounting.invoiceManagement') }}"
+             class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.invoiceManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+             <i data-lucide="credit-card" class="w-5 h-5"></i>
+             <span class="flex-1 text-left text-sm font-medium nav-label">Invoicing</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{ route('accounting.settings') }}" 
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.settings') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}"><i data-lucide="settings" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Settings</span>
+            </a>
+          </li>
         </ul>
       </nav>
 
@@ -119,12 +194,6 @@
         const collapseBtn = document.getElementById('collapse-btn');
         const mainWrapper = document.getElementById('main-wrapper');
 
-        // Active link
-        (function(){
-          const page = (location.pathname.split('/').pop()||'index.html');
-          document.querySelectorAll('#sidebar nav a').forEach(a=>{ const href=(a.getAttribute('href')||'').split('/').pop(); a.classList.toggle('bg-indigo-100/50', href===page || (href==='index.html'&&(page==='index.html'||page===''))); a.classList.toggle('text-indigo-700', href===page); a.classList.toggle('text-slate-700', href!==page); });
-        })();
-
         // mobile toggle
         if (mobileBtn && overlay && sidebar){
           mobileBtn.addEventListener('click', ()=>{ overlay.classList.toggle('hidden'); sidebar.classList.toggle('-translate-x-full'); mobileBtn.querySelector('.menu-icon')?.classList.toggle('hidden'); mobileBtn.querySelector('.close-icon')?.classList.toggle('hidden'); });
@@ -163,6 +232,7 @@
 
         // date and logout
         const dateEl = document.getElementById('date-text'); if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
+        
         const logoutBtn = document.getElementById('logout-btn'); if (logoutBtn) logoutBtn.addEventListener('click', e=>{ e.preventDefault(); if (confirm('Log out?')) location.href='index.html'; });
     });
 

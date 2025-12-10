@@ -235,9 +235,59 @@ Route::post('teacher-registration',[TeacherregistrationController::class, 'regis
 //////////////////////////////////////////////////////////////////////
 //route for accounting
 
+//route for dashboard
+Route::get('/accounting-dashboard', function () {
+    return view('AccountantPanel.dashboard');
+})->name('accounting.dashboard');
+
 //route for fee management
 Route::get('/fee-management', function () {
     return view('AccountantPanel.feeManagement');
 })->name('accounting.feeManagement');
 
+//route for income management
+Route::get('/income-management', function () {
+    return view('AccountantPanel.income');
+})->name('accounting.incomeManagement');
+
+//route for expenses management
+Route::get('/expenses-management', function () {
+    return view('AccountantPanel.expenses');
+})->name('accounting.expensesManagement');
+
+
+//route for payroll management
+Route::get('/payroll-management', function () {
+    return view('AccountantPanel.payroll');
+})->name('accounting.payrollManagement');
+
+//route for banking and cash management
+Route::get('/banking-cash-management', function () {
+    return view('AccountantPanel.bankingCash');
+})->name('accounting.bankingCashManagement');
+
+//route for vendors management
+Route::get('/vendors-management', function () {
+    return view('AccountantPanel.vendors');
+})->name('accounting.vendorsManagement');
+
+//route for budgeting management
+Route::get('/budgeting-management', function () {
+    return view('AccountantPanel.budget');
+})->name('accounting.budgetingManagement');
+
+//route for reports management
+Route::get('/reports-management', function () {
+    return view('AccountantPanel.report');
+})->name('accounting.reportsManagement');
+
+//route for invoice management
+Route::get('/invoice-management', function () {
+    return view('AccountantPanel.invoicing');
+})->name('accounting.invoiceManagement');
+
+//route for settings 
+Route::get('/accounting-settings', function () {
+    return view('AccountantPanel.settings');
+})->name('accounting.settings');
 

@@ -1,5 +1,5 @@
 <x-Account-sidebar>
-
+  <x-slot name="title">Fee Management</x-slot>
     <main class="p-6 bg-white">
         <!-- Page header (title + actions) -->
         <div class="mb-6">
