@@ -227,3 +227,17 @@ Route::get('teacher-registration',[TeacherregistrationController::class, 'showTe
 
 //route to handle teacher registration form submission
 Route::post('teacher-registration',[TeacherregistrationController::class, 'register'])->name('teacherregistration');
+
+
+
+//route for testing purposes
+
+//////////////////////////////////////////////////////////////////////
+//route for accounting
+
+//route for fee management
+Route::get('/fee-management', function () {
+    return view('AccountantPanel.feeManagement');
+})->name('accounting.feeManagement');
+
+
