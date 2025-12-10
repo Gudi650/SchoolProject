@@ -151,10 +151,7 @@
             <span id="date-text"></span>
           </div>
 
-          <button class="relative p-2 hover:bg-slate-100 rounded-lg transition-colors">
-            <i data-lucide="bell" class="w-5 h-5 text-slate-600"></i>
-            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-          </button>
+          
 
           <button class="flex items-center gap-3 pl-3 pr-2 py-1.5 hover:bg-slate-100 rounded-lg transition-colors">
             <div class="text-right hidden sm:block">
