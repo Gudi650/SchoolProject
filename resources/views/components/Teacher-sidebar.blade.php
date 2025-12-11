@@ -118,6 +118,7 @@
             </ul>
 
           </div>
+
             <a href="./online_classes.html" 
               class="flex items-center gap-3 p-2 rounded-md {{ request()->is('online_classes*') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
               <i class="bi bi-camera-video"></i> 
@@ -154,12 +155,6 @@
                 </li>
               </ul>
             </div>
-
-            <a href="./users.html" 
-              class="flex items-center gap-3 p-2 rounded-md {{ request()->is('users*') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                <i class="bi bi-people"></i> 
-                Students
-            </a>
 
             <div class="relative">
               <button id="assignToggle" aria-expanded="{{ request()->routeIs('teacher.assignroles','teacher.assignsubjects','teacher.assignclasses') ? 'true' : 'false' }}"     class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.assignroles','teacher.assignsubjects','teacher.assignclasses') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
@@ -202,6 +197,46 @@
                 </li>
 
               </ul>
+            </div>
+
+            <!--student enrollment dropdown-->
+            <div class="relative">
+
+              <button id="enrollmentToogle" aria-expanded="{{ request()->routeIs('teacher.studentenrollment.settings','teacher.studentenrollment.applicants') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.studentenrollment.settings','teacher.studentenrollment.applicants') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+
+                <span class="flex items-center gap-3">
+                  <i class="bi bi-person-plus-fill text-lg"></i>
+                  Student Enrollment
+                </span>
+
+                <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('hfvb') ? 'rotate-180' : '' }}"></i>
+
+              </button>
+
+              <ul id="enrollmentMenu" class="mt-1 space-y-1 hidden mt-1 space-y-1">
+
+                <li>
+                  <a href="{{ route('teacher.studentenrollment.settings') }}" 
+                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.studentenrollment.settings') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                      <span class="pl-6 flex items-center gap-3 w-full">
+                        <i class="bi bi-person-gear text-lg"></i>
+                        <span>Enrollment Settings</span>
+                      </span>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="{{ route('teacher.studentenrollment.applicants') }}" 
+                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.studentenrollment.applicants') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                      <span class="pl-6 flex items-center gap-3 w-full">
+                        <i class="bi bi-person-lines-fill text-lg"></i>
+                        <span>Applicants</span>
+                      </span>
+                  </a>
+                </li>
+
+              </ul>
+
             </div>
 
           </nav>
@@ -306,6 +341,24 @@
         });
       }
 
+      //student enrollment dropdown (teacher sidebar)
+      const enrollmentToogle = document.getElementById('enrollmentToogle');
+      const enrollmentMenu = document.getElementById('enrollmentMenu');
+      if(enrollmentToogle && enrollmentMenu) {
+
+        const enrollmentChevron = enrollmentToogle.querySelector('.bi-chevron-down');
+
+        enrollmentToogle.addEventListener('click', function (e){
+          e.preventDefault();
+          const open = enrollmentMenu.classList.toggle('hidden') === false;
+          enrollmentToogle.setAttribute('aria-expanded', open);
+
+          if (enrollmentChevron) enrollmentChevron.classList.toggle('rotate-180', open);
+
+        });
+
+      }
+
       // Assign dropdown (Assign Roles + Assign Classes)
       const assignToggle = document.getElementById('assignToggle');
       const assignMenu = document.getElementById('assignMenu');
@@ -317,6 +370,7 @@
           assignToggle.setAttribute('aria-expanded', open);
           if (assignChevron) assignChevron.classList.toggle('rotate-180', open);
         });
+
         // close when clicking outside, but do NOT close when clicking a submenu link (so navigation keeps it open)
         document.addEventListener('click', function (e) {
           const target = e.target;

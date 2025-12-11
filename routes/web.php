@@ -15,6 +15,7 @@ use App\Http\Controllers\TeacherregistrationController;
 use App\Http\Controllers\TeacherRoleController;
 use Illuminate\Support\Facades\Route;
 
+
 //create middleware to the routes that require authentication
 Route::middleware('auth')->group(function () {
 
@@ -52,7 +53,24 @@ Route::middleware('auth')->group(function () {
     })->name('teacher.announcements');
 
 
-///////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+///routes for student enrollment
+
+//route to show student enrollment settings
+Route::get('/teacher-studentenrollment',function(){
+    return view('TeacherPanel.studentenrollment.enrollmentSettings');
+})->name('teacher.studentenrollment.settings');
+
+//route to show student enrollment applicants
+Route::get('/teacher-studentenrollment-applicants',function(){
+    return view('TeacherPanel.studentenrollment.applicants');
+})->name('teacher.studentenrollment.applicants');
+
+
+
+
+
+//////////////////////////////////////////////////
 
 
     //profile route using controller
