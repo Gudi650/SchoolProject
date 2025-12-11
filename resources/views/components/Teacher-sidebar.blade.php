@@ -202,7 +202,7 @@
             <!--student enrollment dropdown-->
             <div class="relative">
 
-              <button id="enrollmentToogle" aria-expanded="{{ request()->routeIs('teacher.studentenrollment.settings','teacher.studentenrollment.applicants') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.studentenrollment.settings','teacher.studentenrollment.applicants') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+              <button id="enrollmentToogle" aria-expanded="{{ request()->routeIs('teacher.studentenrollment.settings','teacher.studentenrollment.applicants') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.studentenrollment.settings','teacher.studentenrollment.applicants','teacher.studentenrollment.analytics') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
 
                 <span class="flex items-center gap-3">
                   <i class="bi bi-person-plus-fill text-lg"></i>
@@ -214,6 +214,16 @@
               </button>
 
               <ul id="enrollmentMenu" class="mt-1 space-y-1 hidden mt-1 space-y-1">
+
+                <li>
+                  <a href="{{ route('teacher.studentenrollment.analytics') }}" 
+                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.studentenrollment.analytics') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                      <span class ="pl-6 flex items-center gap-3 w-full">
+                        <i class="bi bi-graph-up-arrow text-lg"></i>
+                        <span>Enrollment Analytics</span>
+                      </span>
+                  </a>
+                </li>
 
                 <li>
                   <a href="{{ route('teacher.studentenrollment.settings') }}" 

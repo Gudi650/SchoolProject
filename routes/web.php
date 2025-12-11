@@ -66,6 +66,11 @@ Route::get('/teacher-studentenrollment-applicants',function(){
     return view('TeacherPanel.studentenrollment.applicants');
 })->name('teacher.studentenrollment.applicants');
 
+//route for analytics 
+Route::get('/teacher-studentenrollment-analytics',function(){
+    return view('TeacherPanel.studentenrollment.analytics');
+})->name('teacher.studentenrollment.analytics');
+
 
 
 
