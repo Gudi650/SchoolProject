@@ -310,7 +310,7 @@
                 </div>
 
                 <p class="text-center text-slate-400 text-sm mt-8">
-                    &copy; 2024 School Management System. All rights reserved.
+                    &copy; {{ now()->year }} School Management System. All rights reserved.
                 </p>
             </div>
         </div>
@@ -510,7 +510,7 @@
                 </div>
 
                 <p class="text-center text-slate-400 text-sm mt-8">
-                    &copy; 2024 School Management System. All rights reserved.
+                    &copy; {{ now()->year }} School Management System. All rights reserved.
                 </p>
             </div>
         </div>
@@ -705,7 +705,7 @@
                 </div>
 
                 <p class="text-center text-slate-400 text-sm mt-8">
-                    &copy; 2024 School Management System. All rights reserved.
+                    &copy; {{ now()->year }} School Management System. All rights reserved.
                 </p>
             </div>
         </div>
@@ -916,7 +916,7 @@
                 </div>
 
                 <p class="text-center text-slate-400 text-sm mt-8">
-                    &copy; 2024 School Management System. All rights reserved.
+                    &copy; {{ now()->year }} School Management System. All rights reserved.
                 </p>
             </div>
         </div>
@@ -1235,7 +1235,7 @@
                 </div>
 
                 <p class="text-center text-slate-400 text-sm mt-8">
-                    &copy; 2024 School Management System. All rights reserved.
+                    &copy; {{ now()->year }} School Management System. All rights reserved.
                 </p>
             </div>
         </div>
@@ -1581,7 +1581,7 @@
                 </div>
 
                 <p class="text-center text-slate-400 text-sm mt-8">
-                    &copy; 2024 School Management System. All rights reserved.
+                    &copy; {{ now()->year }} School Management System. All rights reserved.
                 </p>
             </div>
         </div>
