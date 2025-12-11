@@ -293,3 +293,9 @@ Route::get('/accounting-settings', function () {
 
 ///////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////
+//route for studentEnrollment
+Route::get('/student-enrollment', function () {
+    return view('studentEnrollment');
+})->name('studentenrollment.form');
+
