@@ -291,3 +291,5 @@ Route::get('/accounting-settings', function () {
     return view('AccountantPanel.settings');
 })->name('accounting.settings');
 
+///////////////////////////////////////////////////////////////////////
+

@@ -26,7 +26,7 @@
           </div>
           <div class="brand-text">
             <h1 class="font-semibold text-sm text-indigo-700">Accountant Portal</h1>
-            <p class="text-xs text-slate-500">Admin</p>
+            <p class="text-xs text-slate-500">Accountant</p>
           </div>
         </div>
         <button id="collapse-btn" aria-label="Collapse sidebar" class="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-white border-2 border-slate-200 text-slate-600 hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-600 shadow-sm hover:shadow-md transition-all duration-200 group">
@@ -150,8 +150,6 @@
             <span class="font-medium">Today:</span>
             <span id="date-text"></span>
           </div>
-
-          
 
           <button class="flex items-center gap-3 pl-3 pr-2 py-1.5 hover:bg-slate-100 rounded-lg transition-colors">
             <div class="text-right hidden sm:block">
