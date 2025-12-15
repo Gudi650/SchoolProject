@@ -40,7 +40,8 @@
         .bg-red-100{ background-color:#FEE2E2 !important; }
         .bg-red-200{ background-color:#FECACA !important; }
         .text-red-700{ color:#B91C1C !important; }
-        </style>
+
+    </style>
 
         <!-- Main Content -->
         <main class="flex-1 w-full overflow-y-auto h-screen md:ml-64 p-6 md:p-10 min-w-0 overflow-x-auto">
@@ -50,6 +51,7 @@
                     <div class="mb-8">
                         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex items-center justify-between gap-4 border-l-4 border-university-burgundy">
 
+                            <!--toogle sidebar button-->
                             <button id="sidebarToggle" aria-label="Open sidebar" class="md:hidden p-2 bg-indigo-600 text-white rounded"> 
                             <i class="bi bi-list"></i> 
                             </button>
@@ -121,6 +123,28 @@
                             </div>
                         </div>
 
+                        <!-- Academic Calendar -->
+                        <div class="pt-6">
+                            <h2 class="text-lg font-semibold text-university-text mb-4">Academic Calendar</h2>
+
+                            <!-- Hidden JSON payload -->
+                            <input type="hidden" name="academic_calendar" id="academic-calendar-json" />
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-university-text mb-1">Academic Year</label>
+                                    <input id="academic-year" type="text" placeholder="2025-2026" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                                    <p class="mt-1 text-xs text-gray-500">Example: 2025-2026</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-university-text mb-1">Default Timezone</label>
+                                    <input id="academic-timezone" type="text" value="UTC" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                                </div>
+                            </div>
+
+                            
+                        </div>
+
                         <!-- Form Footer -->
                         <div class="pt-4 border-t border-gray-200 flex items-center justify-between">
                             <div class="flex items-center gap-3">
@@ -151,62 +175,153 @@
             </div>
         </main>
 
+<script>
+    // Simple state
+    let terms = [];
+    let events = [];
 
-    <script>
-        // Mobile menu toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebar-overlay');
-        const menuIcon = document.getElementById('menu-icon');
-        const closeIcon = document.getElementById('close-icon');
+    // Elements
+    const termsList = document.getElementById('terms-list');
+    const eventsList = document.getElementById('events-list');
+    const addTermBtn = document.getElementById('add-term-btn');
+    const addEventBtn = document.getElementById('add-event-btn');
+    const academicYearEl = document.getElementById('academic-year');
+    const academicTimezoneEl = document.getElementById('academic-timezone');
+    const calendarJsonEl = document.getElementById('academic-calendar-json');
+    const formEl = document.getElementById('settings-form');
+    const discardBtn = document.getElementById('discard');
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('-translate-x-full');
-            sidebarOverlay.classList.toggle('hidden');
-            menuIcon.classList.toggle('hidden');
-            closeIcon.classList.toggle('hidden');
+    function renderTerms() {
+        termsList.innerHTML = terms.map((t, i) => `
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end border border-gray-200 rounded-md p-3">
+                <div class="md:col-span-2">
+                    <label class="block text-xs text-gray-600 mb-1">Term Name</label>
+                    <input type="text" data-type="term" data-field="name" data-index="${i}" value="${t.name || ''}" placeholder="e.g., Fall" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600 mb-1">Start Date</label>
+                    <input type="date" data-type="term" data-field="start" data-index="${i}" value="${t.start || ''}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600 mb-1">End Date</label>
+                    <input type="date" data-type="term" data-field="end" data-index="${i}" value="${t.end || ''}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                </div>
+                <div class="flex md:justify-end">
+                    <button type="button" class="px-3 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-md text-sm" onclick="removeTerm(${i})">Remove</button>
+                </div>
+            </div>
+        `).join('') || `<div class="text-sm text-gray-500">No terms added yet.</div>`;
+    }
+
+    function renderEvents() {
+        eventsList.innerHTML = events.map((e, i) => `
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-3 items-end border border-gray-200 rounded-md p-3">
+                <div class="md:col-span-2">
+                    <label class="block text-xs text-gray-600 mb-1">Title</label>
+                    <input type="text" data-type="event" data-field="title" data-index="${i}" value="${e.title || ''}" placeholder="e.g., Winter Break" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600 mb-1">Date</label>
+                    <input type="date" data-type="event" data-field="date" data-index="${i}" value="${e.date || ''}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-600 mb-1">Type</label>
+                    <select data-type="event" data-field="type" data-index="${i}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border">
+                        <option ${e.type==='Holiday'?'selected':''}>Holiday</option>
+                        <option ${e.type==='Break'?'selected':''}>Break</option>
+                        <option ${e.type==='Exam'?'selected':''}>Exam</option>
+                        <option ${e.type==='Orientation'?'selected':''}>Orientation</option>
+                        <option ${e.type==='Other'?'selected':''}>Other</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs text-gray-600 mb-1">Notes</label>
+                    <input type="text" data-type="event" data-field="notes" data-index="${i}" value="${e.notes || ''}" placeholder="Optional details" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                </div>
+                <div class="flex md:justify-end">
+                    <button type="button" class="px-3 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-md text-sm" onclick="removeEvent(${i})">Remove</button>
+                </div>
+            </div>
+        `).join('') || `<div class="text-sm text-gray-500">No events added yet.</div>`;
+    }
+
+    // Public remove ops
+    window.removeTerm = (i) => { terms.splice(i,1); renderTerms(); };
+    window.removeEvent = (i) => { events.splice(i,1); renderEvents(); };
+
+    // Add ops
+    addTermBtn?.addEventListener('click', () => {
+        terms.push({ name: '', start: '', end: '' });
+        renderTerms();
+    });
+    addEventBtn?.addEventListener('click', () => {
+        events.push({ title: '', date: '', type: 'Holiday', notes: '' });
+        renderEvents();
+    });
+
+    // Change delegation
+    document.addEventListener('input', (e) => {
+        const el = e.target;
+        const type = el.getAttribute('data-type');
+        const field = el.getAttribute('data-field');
+        const index = parseInt(el.getAttribute('data-index'), 10);
+        if (type === 'term' && !Number.isNaN(index)) {
+            terms[index][field] = el.value;
         }
+        if (type === 'event' && !Number.isNaN(index)) {
+            events[index][field] = el.value;
+        }
+    });
 
-        mobileMenuBtn.addEventListener('click', toggleSidebar);
-        sidebarOverlay.addEventListener('click', toggleSidebar);
+    // Basic validation
+    function validateTerms() {
+        for (const t of terms) {
+            if (!t.name || !t.start || !t.end) return false;
+            if (t.end < t.start) return false;
+        }
+        return true;
+    }
 
-        // Form submission
-        const settingsForm = document.getElementById('settings-form');
-        const saveBtn = document.getElementById('save-btn');
-        const successMessage = document.getElementById('success-message');
+    // Submit: pack JSON
+    formEl?.addEventListener('submit', () => {
+        const payload = {
+            academicYear: academicYearEl?.value?.trim() || '',
+            timezone: academicTimezoneEl?.value?.trim() || 'UTC',
+            terms,
+            events
+        };
+        // optionally ensure validity; you can add blocking logic if needed
+        calendarJsonEl.value = JSON.stringify(payload);
+    });
 
-        settingsForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Show loading state
-            saveBtn.disabled = true;
-            saveBtn.innerHTML = `
-                <span class="flex items-center gap-2">
-                    <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Saving...
-                </span>
-            `;
+    // Discard: reset the calendar section
+    discardBtn?.addEventListener('click', () => {
+        academicYearEl.value = '';
+        academicTimezoneEl.value = 'UTC';
+        terms = [];
+        events = [];
+        renderTerms();
+        renderEvents();
+    });
 
-            // Simulate API call
-            setTimeout(() => {
-                // Reset button
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = `
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
-                    </svg>
-                    Save Changes
-                `;
-
-                // Show success message
-                successMessage.classList.remove('hidden');
-
-                // Hide success message after 3 seconds
-                setTimeout(() => {
-                    successMessage.classList.add('hidden');
-                }, 3000);
-            }, 1000);
-        });
-    </script>
+    // Initialize defaults
+    (function init() {
+        // If editing existing data, parse it
+        try {
+            const existing = calendarJsonEl.value ? JSON.parse(calendarJsonEl.value) : null;
+            if (existing) {
+                academicYearEl.value = existing.academicYear || '';
+                academicTimezoneEl.value = existing.timezone || 'UTC';
+                terms = Array.isArray(existing.terms) ? existing.terms : [];
+                events = Array.isArray(existing.events) ? existing.events : [];
+            }
+        } catch {}
+        // Seed with one empty row if none
+        if (!terms.length) terms = [{ name: 'Fall', start: '', end: '' }];
+        if (!events.length) events = [{ title: 'Winter Break', date: '', type: 'Break', notes: '' }];
+        renderTerms();
+        renderEvents();
+    })();
+</script>
 
 </x-Teacher-sidebar>
