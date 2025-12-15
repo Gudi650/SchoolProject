@@ -224,7 +224,7 @@
                             </div>
 
                             <!-- First and Last Name -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                         First Name
@@ -234,10 +234,17 @@
                                 </div>
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        Last Name
+                                        Mid Name
                                         <span class="text-red-500 ml-1">*</span>
                                     </label>
                                     <input type="text" placeholder="e.g. Doe" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                </div>
+                                <div class="w-full">
+                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                        Last Name
+                                        <span class="text-red-500 ml-1">*</span>
+                                    </label>
+                                    <input type="text" placeholder="e.g. john" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
                                 </div>
                             </div>
 
@@ -460,7 +467,7 @@
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                         Street Address
-                                        <span class="text-red-500 ml-1">*</span>
+                                        
                                     </label>
                                     <input type="text" placeholder="123 Education Lane" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
                                 </div>
@@ -470,24 +477,24 @@
                                     <div class="w-full">
                                         <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                             City
-                                            <span class="text-red-500 ml-1">*</span>
+                                            
                                         </label>
                                         <input type="text" placeholder="New York" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
                                     </div>
                                     <div class="w-full">
                                         <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                            State / Province
-                                            <span class="text-red-500 ml-1">*</span>
+                                            District
+                                            
                                         </label>
                                         <input type="text" placeholder="NY" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
                                     </div>
                                     <div class="w-full">
                                         <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                            Postal Code
-                                            <span class="text-red-500 ml-1">*</span>
+                                            Ward
                                         </label>
-                                        <input type="text" placeholder="10001" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                        <input type="text" placeholder="NY" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -640,13 +647,46 @@
                     <div class="p-6 md:p-10 min-h-[400px]">
                         <div class="max-w-3xl mx-auto space-y-6 animate-slide-in">
                             <!-- Guardian Name and Relationship -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        Guardian Full Name
+                                        First Name
                                         <span class="text-red-500 ml-1">*</span>
                                     </label>
                                     <input type="text" placeholder="e.g. Jane Doe" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                </div>
+                                <div class="w-full">
+                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                        Mid Name
+                                        <span class="text-red-500 ml-1">*</span>
+                                    </label>
+                                    <input type="text" placeholder="e.g. Jane Doe" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                </div>
+                                <div class="w-full">
+                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                        last Name
+                                        <span class="text-red-500 ml-1">*</span>
+                                    </label>
+                                    <input type="text" placeholder="e.g. Jane Doe" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                </div>
+                                
+                            </div>
+
+                            <!-- Guardian Phone and Email -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="w-full">
+                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                        Guardian Phone
+                                        <span class="text-red-500 ml-1">*</span>
+                                    </label>
+                                    <input type="tel" placeholder="(555) 987-6543" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                </div>
+                                <div class="w-full">
+                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                        Guardian Email
+                                        <span class="text-red-500 ml-1">*</span>
+                                    </label>
+                                    <input type="email" placeholder="guardian@example.com" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
                                 </div>
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
@@ -665,24 +705,6 @@
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Guardian Phone and Email -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="w-full">
-                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        Guardian Phone
-                                        <span class="text-red-500 ml-1">*</span>
-                                    </label>
-                                    <input type="tel" placeholder="(555) 987-6543" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
-                                </div>
-                                <div class="w-full">
-                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        Guardian Email
-                                        <span class="text-red-500 ml-1">*</span>
-                                    </label>
-                                    <input type="email" placeholder="guardian@example.com" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
                                 </div>
                             </div>
                         </div>
@@ -891,9 +913,10 @@
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                         Admission Date
-                                        <span class="text-red-500 ml-1">*</span>
+                                        
                                     </label>
                                     <input type="date" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                    <p class="mt-1.5 text-xs text-slate-500">Student's admission date in previous school</p>
                                 </div>
                             </div>
                         </div>
