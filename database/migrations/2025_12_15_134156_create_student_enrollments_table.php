@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('student_enrollments', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('student_enrollment_id')->unique();
+            $table->string('previous_school_name')->nullable();
+            $table->string('fname');
+            $table->string('mname');
+            $table->string('lname');
+            $table->string('gender');
+            $table->date('date_of_birth');
+            $table->unsignedBigInteger('school_id')->nullable();
+            $table->string('student_profile_picture')->nullable();
             $table->timestamps();
         });
     }

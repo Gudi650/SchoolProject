@@ -276,25 +276,22 @@
                                 </div>
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        Blood Group
-                                        <span class="text-red-500 ml-1">*</span>
+                                        School You want to enroll
                                     </label>
+
+                                    <!--a dropdown for user to select school-->
                                     <div class="relative">
                                         <select class="flex h-10 w-full appearance-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200">
-                                            <option value="" disabled selected>Select blood group</option>
-                                            <option value="A+">A+</option>
-                                            <option value="A-">A-</option>
-                                            <option value="B+">B+</option>
-                                            <option value="B-">B-</option>
-                                            <option value="AB+">AB+</option>
-                                            <option value="AB-">AB-</option>
-                                            <option value="O+">O+</option>
-                                            <option value="O-">O-</option>
+                                            <option value="" disabled selected>Select a school</option>
+                                            <option value="school-a">School A</option>
+                                            <option value="school-b">School B</option>
+                                            <option value="school-c">School C</option>
                                         </select>
                                         <svg class="absolute right-3 top-3 h-4 w-4 text-slate-400 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -903,13 +900,47 @@
                             </div>
 
                             <!-- Previous School and Admission Date -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                         Previous School
                                     </label>
                                     <input type="text" placeholder="Enter previous school name" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
                                 </div>
+                                
+                                <div class="w-full">
+                                    <!--
+                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                        School You want to enroll
+                                    </label> -->
+
+                                    <!--a dropdown for user to select school
+                                    <div class="relative">
+                                        <select class="flex h-10 w-full appearance-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200">
+                                            <option value="" disabled selected>Select a school</option>
+                                            <option value="school-a">School A</option>
+                                            <option value="school-b">School B</option>
+                                            <option value="school-c">School C</option>
+                                        </select>
+                                        <svg class="absolute right-3 top-3 h-4 w-4 text-slate-400 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+
+                                    </div> -->
+                                    
+                                </div>
+                            </div>
+
+                            <!-- Previous academic records -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="w-full">
+                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                        Previous Grades / Previous Division
+                                    </label>
+                                    <input type="text" placeholder="grade or division" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                    <p class="mt-1.5 text-xs text-slate-500">Input the correct data, any mismatch will automatically be disqualified</p>
+                                </div>
+
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                         Admission Date
@@ -918,7 +949,9 @@
                                     <input type="date" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
                                     <p class="mt-1.5 text-xs text-slate-500">Student's admission date in previous school</p>
                                 </div>
+
                             </div>
+
                         </div>
                     </div>
 

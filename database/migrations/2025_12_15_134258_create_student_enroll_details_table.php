@@ -13,7 +13,22 @@ return new class extends Migration
     {
         Schema::create('student_enroll_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('student_enrollment_id')->unique();
+            $table->date('admission_date')->nullable();
+            $table->string('grade_applied_for');
+            $table->string('previous_school_name');
+            $table->string('academic_records');
+            $table->string('transfer_certificate')->nullable();
+            $table->string('birth_certificate')->nullable();
+            $table->string('reports_card')->nullable();
+            $table->string('previous_grades')->nullable();
+            $table->string('status')->default('pending'); // pending, approved, rejected
             $table->timestamps();
+
+
+            //foreign key constraint
+            $table->foreign('student_enrollment_id')->references('student_enrollment_id')->on('student_enrollments')->onDelete('cascade');
+
         });
     }
 
