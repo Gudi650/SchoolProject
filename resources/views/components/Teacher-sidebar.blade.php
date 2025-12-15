@@ -6,6 +6,7 @@
     <title>Teacher Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
+    
   </head>
   <body class="bg-gray-50 text-gray-800">
     <div class="flex">
@@ -271,7 +272,6 @@
 
 
     <!-- Main content area -->
-
     {{ $slot }}
 
     </div>
