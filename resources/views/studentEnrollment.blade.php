@@ -643,6 +643,7 @@
                     <!-- Form Content -->
                     <div class="p-6 md:p-10 min-h-[400px]">
                         <div class="max-w-3xl mx-auto space-y-6 animate-slide-in">
+
                             <!-- Guardian Name and Relationship -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="w-full">
@@ -670,7 +671,7 @@
                             </div>
 
                             <!-- Guardian Phone and Email -->
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class=" pt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                         Guardian Phone
