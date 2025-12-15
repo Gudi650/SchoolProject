@@ -22,7 +22,13 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->unsignedBigInteger('school_id')->nullable();
             $table->string('student_profile_picture')->nullable();
+            $table->unsignedBigInteger('parent_enrollment_id');
             $table->timestamps();
+
+
+            //foreign key
+            $table->foreign('parent_enrollment_id')->references('id')->on('parent_enrollments')->onDelete('cascade');
+
         });
     }
 

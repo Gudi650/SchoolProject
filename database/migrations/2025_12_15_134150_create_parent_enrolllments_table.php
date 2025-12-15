@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('parent_enrolllments', function (Blueprint $table) {
+        Schema::create('parent_enrollments', function (Blueprint $table) {
             $table->id();
             $table->string('fname');
             $table->string('mname');
@@ -24,11 +24,8 @@ return new class extends Migration
             $table->string('district')->nullable();
             $table->string('ward')->nullable();
             $table->string('street')->nullable();
-            $table->unsignedBigInteger('student_enrollment_id');
             $table->timestamps();
 
-            //foreign key constraint
-            $table->foreign('student_enrollment_id')->references('student_enrollment_id')->on('student_enrollments')->onDelete('cascade');
 
         });
     }
