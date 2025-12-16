@@ -10,6 +10,7 @@ use App\Http\Controllers\ParentregistrationController;
 use App\Http\Controllers\PostExamResults;
 use App\Http\Controllers\Student;
 use App\Http\Controllers\StudentAttendanceReport;
+use App\Http\Controllers\studentEnrollment;
 use App\Http\Controllers\Teacherprofile;
 use App\Http\Controllers\TeacherregistrationController;
 use App\Http\Controllers\TeacherRoleController;
@@ -318,7 +319,8 @@ Route::get('/accounting-settings', function () {
 
 //////////////////////////////////////////////////////////////////////
 //route for studentEnrollment
-Route::get('/student-enrollment', function () {
-    return view('studentEnrollment');
-})->name('studentenrollment.form');
 
+//route for student enrollment 
+Route::get('/student-enrollment', 
+[studentEnrollment::class, 'viewStudentEnrollment'])
+->name('studentenrollment.form');

@@ -180,7 +180,7 @@
                             <div class="w-full">
                                 <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                     Student Passport Photo
-                                    <span class="text-red-500 ml-1">*</span>
+                                    
                                 </label>
                                 
                                 <div class="flex flex-col sm:flex-row gap-4 items-start">
@@ -1865,6 +1865,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             goToStep(1);
         });
+
     </script>
 </body>
 </html>
