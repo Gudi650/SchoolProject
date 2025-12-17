@@ -66,4 +66,72 @@ class StudentEnrollment extends Component
     {
         return view('livewire.student-enrollment');
     }
+
+    //protected function to validate different steps
+
+    //validate the first step here
+    protected function validatestep1()
+    {
+        $this->validate([
+            'fname' => 'required|string|max:255',
+            'mname' => 'required|string|max:255',
+            'lname' => 'required|string|max:255',
+            'dob' => 'required|date',
+            'gender' => 'required|string|in:male,female,other',
+            'school_id' => 'required|exists:schools,id',
+        ]);
+    }
+
+    //validate the second step
+    protected function validatestep2()
+    {
+        $this->validate([
+            'ward' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'district' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
+            'email' => 'required|email|max:255',
+        ]);
+
+    }
+
+    //validate the third step
+    protected function validatestep3()
+    {
+        $this->validate([
+            'firstname' => 'required|string|max:255',
+            'middlename' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'guardian_phone' => 'required|string|max:15',
+            'guardian_email' => 'required|email|max:255',
+            'relationship' => 'required|string|max:100',
+        ]);
+
+    }
+
+    //validate the fourth step
+    protected function validatestep4()
+    {
+        $this->validate([
+            'grade_applied_for' => 'required|string|max:50',
+            'previous_school_name' => 'nullable|string|max:255',
+            'previous_grades' => 'nullable|string|max:255',
+            'admission_date' => 'required|date',
+        ]);
+    }
+
+    //validate the fifth step
+    protected function validatestep5()
+    {
+
+        $this->validate([
+            'academic_records' => 'required|file|mimes:pdf,jpg,png|max:2048',
+            'reports_cards' => 'required|file|mimes:pdf,jpg,png|max:2048',
+            'transfer_certificate' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+            'birth_certificate' => 'required|file|mimes:pdf,jpg,png|max:2048',
+        ]);
+    }
+
+
 }
