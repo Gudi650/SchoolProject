@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use League\Config\Exception\ValidationException;
 use Livewire\Component;
 
 class StudentEnrollment extends Component
@@ -45,12 +46,32 @@ class StudentEnrollment extends Component
     public $transfer_certificate;
     public $birth_certificate;
 
+    //property to handle same as student info
+    public $sameAsStudent = false;
+
 
     public function nextStep()
     {
+        //validate the current step before moving to the next
+        match($this->step)
+        {
+            1 => $this->validatestep1(),
+            2 => $this->validatestep2(),
+            3 => $this->validatestep3(),
+            4 => $this->validatestep4(),
+            5 => $this->validatestep5(),
+            default => null,
+        }; 
+
+        //after validation increment the step
         if($this->step < 6){
+
+            //make the delay to simulate processing time
+            sleep(2);
+
             $this->step++;
         }
+
     }
 
     public function previousStep()
@@ -67,30 +88,46 @@ class StudentEnrollment extends Component
         return view('livewire.student-enrollment');
     }
 
+
     //protected function to validate different steps
 
     //validate the first step here
     protected function validatestep1()
     {
-        $this->validate([
+        //create a try and catch block to handle validation errors
+        try
+        {
+
+            $validated = $this->validate([
             'fname' => 'required|string|max:255',
             'mname' => 'required|string|max:255',
             'lname' => 'required|string|max:255',
             'dob' => 'required|date',
             'gender' => 'required|string|in:male,female,other',
             'school_id' => 'required|exists:schools,id',
-        ]);
+            ]);
+
+        }catch(ValidationException $e)
+        {
+            //handle the validation exception
+            $this->addError('validation', 'Please correct the errors in the form.');
+            throw $e;
+        }
+
+        
+
+        
     }
 
     //validate the second step
     protected function validatestep2()
     {
         $this->validate([
-            'ward' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'district' => 'required|string|max:255',
+            'ward' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'district' => 'nullable|string|max:255',
             'street' => 'required|string|max:255',
-            'phone' => 'required|string|max:15',
+            'phone' => ['required', 'regex:/^\+?[0-9]{7,15}$/'],
             'email' => 'required|email|max:255',
         ]);
 
@@ -131,6 +168,27 @@ class StudentEnrollment extends Component
             'transfer_certificate' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
             'birth_certificate' => 'required|file|mimes:pdf,jpg,png|max:2048',
         ]);
+    }
+
+    //function to fill in same as student info for the guardian 
+    public function updatedSameAsStudent($value)
+    {
+        if ($value) {
+            //copy the student info to guardian info
+            $this->guardian_phone = $this->phone;
+            $this->guardian_email = $this->email;
+
+            //check to dump the values for testing
+            dump($this->guardian_phone, $this->guardian_email);
+
+        } else {
+            //clear the guardian info fields
+            $this->guardian_phone = '';
+            $this->guardian_email = '';
+
+            //check to dump the values for testing
+            dump($this->guardian_phone, $this->guardian_email);
+        }
     }
 
 

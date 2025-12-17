@@ -6,6 +6,7 @@
         Step: {{ $step }}
     </div>
 
+
     @if($step === 1)
 
     <!-- Step 1: Personal Info -->
@@ -235,7 +236,7 @@
                                     </label>
                                     <div class="relative">
                                         <select wire:model="gender" class="flex h-10 w-full appearance-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200">
-                                            <option value="" disabled selected>Select gender</option>
+                                            <option value="">Select gender</option>
                                             <option value="male">Male</option>
                                             <option value="female">Female</option>
                                             <option value="other">Other</option>
@@ -260,14 +261,14 @@
                                     <div class="relative">
                                         <select wire:model="school_id" class="flex h-10 w-full appearance-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200">
 
-                                            <option value="" disabled selected>Select a school</option>
+                                            <option value="">Select a school</option>
                                             <!--check if the schools variable is available-->
                                             @if(isset($schools) && $schools->count() > 0)
                                                 @foreach($schools as $school)
                                                     <option value="{{ $school->id }}">{{ $school->name }}</option>
                                                 @endforeach
                                             @else
-                                                <option value="" disabled>No schools available</option>
+                                                <option value="">No schools available</option>
                                             @endif
 
                                         </select>
@@ -275,6 +276,11 @@
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </div>
+
+                                    <!--error message-->
+                                    @error('school_id')
+                                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                    @enderror
 
                                 </div>
                             </div>
@@ -289,12 +295,35 @@
                         </button>
 
                         <div class="flex items-center gap-4">
-                            <button wire:click="nextStep" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm">
-                                Next Step
-                                <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            <button 
+                                wire:click="nextStep"
+                                wire:loading.attr="disabled"
+                                class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm"
+                            >
+
+                                <!-- Normal button content -->
+                                <span wire:loading.remove wire:target="nextStep" class="inline-flex items-center">
+                                    Next Step
+                                    <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </span>
+
+                                <!-- Loading spinner -->
+                                <span wire:loading wire:target="nextStep" class="inline-flex items-center">
+                                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                    </svg>
+                                </span>
+
                             </button>
                         </div>
+
                     </div>
+
+
                 </div>
 
                 <p class="text-center text-slate-400 text-sm mt-8">
@@ -446,7 +475,7 @@
                                         Phone Number
                                         <span class="text-red-500 ml-1">*</span>
                                     </label>
-                                    <input type="tel" wire:model="phone" placeholder="(555) 123-4567" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                    <input type="tel" wire:model="phone" placeholder="+1234567890" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
 
                                     @error('phone')
                                         <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
@@ -462,7 +491,7 @@
                                         Street Address
                                         
                                     </label>
-                                    <input type="text" wire:model="street" placeholder="123 Education Lane" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                    <input type="text" wire:model="street" placeholder="Kinondoni" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
 
                                     @error('street')
                                         <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
@@ -476,7 +505,7 @@
                                         <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                             City
                                         </label>
-                                        <input type="text" wire:model="city" placeholder="New York" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                        <input type="text" wire:model="city" placeholder="Dar es Salaam" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
 
                                         @error('city')
                                             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
@@ -487,7 +516,7 @@
                                         <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                             District
                                         </label>
-                                        <input type="text" wire:model="district" placeholder="NY" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                        <input type="text" wire:model="district" placeholder="Kinondoni" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
 
                                         @error('district')
                                             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
@@ -498,7 +527,7 @@
                                         <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                             Ward
                                         </label>
-                                        <input type="text" wire:model="ward" placeholder="NY" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                        <input type="text" wire:model="ward" placeholder="Kibene" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
 
                                         @error('ward')
                                             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
@@ -519,9 +548,29 @@
                         </button>
 
                         <div class="flex items-center gap-4">
-                            <button wire:click="nextStep" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm">
-                                Next Step
-                                <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            <button 
+                                wire:click="nextStep"
+                                wire:loading.attr="disabled"
+                                class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm"
+                            >
+
+                                <!-- Normal button content -->
+                                <span wire:loading.remove wire:target="nextStep" class="inline-flex items-center">
+                                    Next Step
+                                    <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </span>
+
+                                <!-- Loading spinner -->
+                                <span wire:loading wire:target="nextStep" class="inline-flex items-center">
+                                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                    </svg>
+                                </span>
+
                             </button>
                         </div>
                     </div>
@@ -658,100 +707,155 @@
 
                     <!-- Form Content -->
                     <div class="p-6 md:p-10 min-h-[400px]">
-                        <div class="max-w-3xl mx-auto space-y-6 animate-slide-in">
+            <div class="max-w-3xl mx-auto space-y-6 animate-slide-in">
 
-                            <!-- Guardian wire:model and Relationship -->
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="w-full">
-                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        First name
-                                        <span class="text-red-500 ml-1">*</span>
-                                    </label>
-                                    <input type="text" wire:model="firstName" placeholder="e.g. Jane Doe" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                <!-- Guardian First, Middle, Last Name -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                                    @error('firstName')
-                                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
-                                    @enderror
-
-                                </div>
-                                <div class="w-full">
-                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        Middle name
-                                        <span class="text-red-500 ml-1">*</span>
-                                    </label>
-                                    <input type="text" wire:model="middleName" placeholder="e.g. Jane Doe" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
-
-                                    @error('middleName')
-                                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="w-full">
-                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        Last name
-                                        <span class="text-red-500 ml-1">*</span>
-                                    </label>
-                                    <input type="text" wire:model="lastName" placeholder="e.g. Jane Doe" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
-
-                                    @error('lastName')
-                                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
-                                    @enderror
-
-                                </div>
-                                
-                            </div>
-
-                            <!-- Guardian Phone and Email -->
-                            <div class=" pt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="w-full">
-                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        Guardian Phone
-                                        <span class="text-red-500 ml-1">*</span>
-                                    </label>
-                                    <input type="tel" wire:model="guardian_phone" placeholder="(555) 987-6543" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
-
-                                    @error('guardian_phone')
-                                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
-                                    @enderror
-
-                                </div>
-                                <div class="w-full">
-                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        Guardian Email
-                                        <span class="text-red-500 ml-1">*</span>
-                                    </label>
-                                    <input type="email" wire:model="guardian_email" placeholder="guardian@example.com" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
-
-                                    @error('guardian_email')
-                                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
-                                    @enderror
-
-                                </div>
-                                <div class="w-full">
-                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        Relationship
-                                        <span class="text-red-500 ml-1">*</span>
-                                    </label>
-                                    <div class="relative">
-                                        <select wire:model="relationship" class="flex h-10 w-full appearance-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200">
-                                            <option value="" disabled selected>Select an option</option>
-                                            <option value="father">Father</option>
-                                            <option value="mother">Mother</option>
-                                            <option value="guardian">Legal Guardian</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                        <svg class="absolute right-3 top-3 h-4 w-4 text-slate-400 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <polyline points="6 9 12 15 18 9"></polyline>
-                                        </svg>
-                                    </div>
-
-                                    @error('relationship')
-                                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
-                                    @enderror
-
-                                </div>
-                            </div>
-                        </div>
+                    <!-- First Name -->
+                    <div class="w-full">
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                            First name <span class="text-red-500 ml-1">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            wire:model="firstName" 
+                            placeholder="e.g. Jane"
+                            class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
+                                placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
+                                focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
+                        />
+                        @error('firstName')
+                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                        @enderror
                     </div>
+
+                    <!-- Middle Name -->
+                    <div class="w-full">
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                            Middle name <span class="text-red-500 ml-1">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            wire:model="middleName" 
+                            placeholder="e.g. Ann"
+                            class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
+                                placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
+                                focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
+                        />
+                        @error('middleName')
+                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="w-full">
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                            Last name <span class="text-red-500 ml-1">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            wire:model="lastName" 
+                            placeholder="e.g. Doe"
+                            class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
+                                placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
+                                focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
+                        />
+                        @error('lastName')
+                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                </div>
+
+                    <!-- Same as student checkbox -->
+                    <div class="flex items-center gap-2 pt-4">
+                        <input 
+                            type="checkbox" 
+                            wire:model="sameAsStudent" 
+                            id="sameAsStudent"
+                            class="h-4 w-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
+                        >
+                        <label for="sameAsStudent" class="text-sm text-slate-700">
+                            Same as student
+                        </label>
+                    </div>
+
+
+                    <!-- Guardian Phone, Email, Relationship -->
+                    <div class=" grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                        <!-- Guardian Phone -->
+                        <div class="w-full">
+                            <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                Guardian Phone <span class="text-red-500 ml-1">*</span>
+                            </label>
+                            <input 
+                                type="tel" 
+                                wire:model="guardian_phone" 
+                                placeholder="(555) 987-6543"
+                                class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
+                                    placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
+                                    focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
+                            />
+                            @error('guardian_phone')
+                                <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Guardian Email -->
+                        <div class="w-full">
+                            <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                Guardian Email <span class="text-red-500 ml-1">*</span>
+                            </label>
+                            <input 
+                                type="email" 
+                                wire:model="guardian_email" 
+                                placeholder="guardian@example.com"
+                                class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
+                                    placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
+                                    focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
+                            />
+                            @error('guardian_email')
+                                <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Relationship -->
+                        <div class="w-full">
+                            <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                                Relationship <span class="text-red-500 ml-1">*</span>
+                            </label>
+                            <div class="relative">
+                                <select 
+                                    wire:model="relationship" 
+                                    class="flex h-10 w-full appearance-none rounded-lg border border-slate-300 bg-white 
+                                        px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-0 
+                                        focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
+                                >
+                                    <option value="" disabled>Select an option</option>
+                                    <option value="father">Father</option>
+                                    <option value="mother">Mother</option>
+                                    <option value="guardian">Legal Guardian</option>
+                                    <option value="other">Other</option>
+                                </select>
+
+                                <svg class="absolute right-3 top-3 h-4 w-4 text-slate-400 pointer-events-none" 
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
+                                    stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+
+                            @error('relationship')
+                                <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                    </div>
+
+                    </div>
+                </div>
 
                     <!-- Footer Actions -->
                     <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
@@ -761,9 +865,29 @@
                         </button>
 
                         <div class="flex items-center gap-4">
-                            <button wire:click="nextStep" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm">
-                                Next Step
-                                <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            <button 
+                                wire:click="nextStep"
+                                wire:loading.attr="disabled"
+                                class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm"
+                            >
+
+                                <!-- Normal button content -->
+                                <span wire:loading.remove wire:target="nextStep" class="inline-flex items-center">
+                                    Next Step
+                                    <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </span>
+
+                                <!-- Loading spinner -->
+                                <span wire:loading wire:target="nextStep" class="inline-flex items-center">
+                                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                    </svg>
+                                </span>
+
                             </button>
                         </div>
                     </div>
@@ -1030,9 +1154,29 @@
                         </button>
 
                         <div class="flex items-center gap-4">
-                            <button wire:click="nextStep" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm">
-                                Next Step
-                                <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            <button 
+                                wire:click="nextStep"
+                                wire:loading.attr="disabled"
+                                class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm"
+                            >
+
+                                <!-- Normal button content -->
+                                <span wire:loading.remove wire:target="nextStep" class="inline-flex items-center">
+                                    Next Step
+                                    <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </span>
+
+                                <!-- Loading spinner -->
+                                <span wire:loading wire:target="nextStep" class="inline-flex items-center">
+                                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                    </svg>
+                                </span>
+
                             </button>
                         </div>
                     </div>
@@ -1371,9 +1515,29 @@
                         </button>
 
                         <div class="flex items-center gap-4">
-                            <button wire:click="nextStep" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm">
-                                Next Step
-                                <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            <button 
+                                wire:click="nextStep"
+                                wire:loading.attr="disabled"
+                                class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm"
+                            >
+
+                                <!-- Normal button content -->
+                                <span wire:loading.remove wire:target="nextStep" class="inline-flex items-center">
+                                    Next Step
+                                    <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </span>
+
+                                <!-- Loading spinner -->
+                                <span wire:loading wire:target="nextStep" class="inline-flex items-center">
+                                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                    </svg>
+                                </span>
+
                             </button>
                         </div>
                     </div>
