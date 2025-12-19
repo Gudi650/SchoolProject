@@ -489,7 +489,7 @@
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                         Street Address
-                                        
+                                        <span class="text-red-500 ml-1">*</span>
                                     </label>
                                     <input type="text" wire:model="street" placeholder="Kinondoni" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
 
@@ -719,13 +719,13 @@
                         </label>
                         <input 
                             type="text" 
-                            wire:model="firstName" 
+                            wire:model="firstname" 
                             placeholder="e.g. Jane"
                             class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
                                 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
                                 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
                         />
-                        @error('firstName')
+                        @error('firstname')
                             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
                         @enderror
                     </div>
@@ -737,13 +737,13 @@
                         </label>
                         <input 
                             type="text" 
-                            wire:model="middleName" 
+                            wire:model="middlename" 
                             placeholder="e.g. Ann"
                             class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
                                 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
                                 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
                         />
-                        @error('middleName')
+                        @error('middlename')
                             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
                         @enderror
                     </div>
@@ -755,13 +755,13 @@
                         </label>
                         <input 
                             type="text" 
-                            wire:model="lastName" 
+                            wire:model="lastname" 
                             placeholder="e.g. Doe"
                             class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
                                 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
                                 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
                         />
-                        @error('lastName')
+                        @error('lastname')
                             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
                         @enderror
                     </div>
@@ -772,7 +772,7 @@
                     <div class="flex items-center gap-2 pt-4">
                         <input 
                             type="checkbox" 
-                            wire:model="sameAsStudent" 
+                            wire:model.live="sameAsStudent" 
                             id="sameAsStudent"
                             class="h-4 w-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
                         >
@@ -794,6 +794,7 @@
                                 type="tel" 
                                 wire:model="guardian_phone" 
                                 placeholder="(555) 987-6543"
+                                wire:disabled="sameAsStudent"
                                 class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
                                     placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
                                     focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
@@ -811,6 +812,7 @@
                             <input 
                                 type="email" 
                                 wire:model="guardian_email" 
+                                wire:disabled="sameAsStudent"
                                 placeholder="guardian@example.com"
                                 class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
                                     placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
@@ -833,7 +835,7 @@
                                         px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-0 
                                         focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
                                 >
-                                    <option value="" disabled>Select an option</option>
+                                    <option value="">Select an option</option>
                                     <option value="father">Father</option>
                                     <option value="mother">Mother</option>
                                     <option value="guardian">Legal Guardian</option>

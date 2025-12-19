@@ -178,16 +178,11 @@ class StudentEnrollment extends Component
             $this->guardian_phone = $this->phone;
             $this->guardian_email = $this->email;
 
-            //check to dump the values for testing
-            dump($this->guardian_phone, $this->guardian_email);
-
         } else {
             //clear the guardian info fields
             $this->guardian_phone = '';
             $this->guardian_email = '';
 
-            //check to dump the values for testing
-            dump($this->guardian_phone, $this->guardian_email);
         }
     }
 
