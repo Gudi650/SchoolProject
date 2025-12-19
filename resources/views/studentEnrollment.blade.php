@@ -61,8 +61,6 @@
     
     <livewire:student-enrollment :schools="$schools"/>
 
-    
-
 
 </body>
 </html>

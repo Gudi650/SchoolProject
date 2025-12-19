@@ -140,11 +140,57 @@
                                     <div class="flex-shrink-0">
                                         <div class="relative w-32 h-40 rounded-lg border-2 border-slate-300 bg-slate-100 overflow-hidden">
                                             <div class="w-full h-full flex flex-col items-center justify-center text-slate-400">
-                                                <svg class="w-12 h-12 mb-2" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                    <circle cx="12" cy="7" r="4"></circle>
-                                                </svg>
-                                                <span class="text-xs font-medium">No photo</span>
+
+                                                <!--check if photo is uploaded-->
+                                                @if ($student_profile_picture)
+
+                                                    <img src="{{ $student_profile_picture->temporaryUrl() }}" 
+                                                        alt="Student Photo" 
+                                                        class="w-full h-full object-cover" 
+                                                    />
+                                                    
+                                                @else
+
+                                                    <svg class="w-12 h-12 mb-2" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                        <circle cx="12" cy="7" r="4"></circle>
+                                                    </svg>
+                                                    <span class="text-xs font-medium">No photo</span>
+
+                                                @endif
+
+                                                <!--cancel upload button-->
+                                                @if ($student_profile_picture)
+                                                    <button type="button" wire:click="$set('student_profile_picture', null)" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400">
+                                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                        </svg>
+                                                    </button>
+                                                @endif
+
+                                                <!-- Loader while uploading -->
+                                                <div wire:loading wire:target="student_profile_picture"
+                                                    class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 pt-16">
+                                                    <div class="flex items-center">
+                                                        <svg class="animate-spin h-6 w-6 text-indigo-600"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                                                            <circle class="opacity-25" cx="25" cy="25" r="20"
+                                                                    stroke="currentColor" stroke-width="5" fill="none"></circle>
+                                                            <circle class="opacity-75" cx="25" cy="25" r="20"
+                                                                    stroke="currentColor" stroke-width="5" fill="none"
+                                                                    stroke-dasharray="31.4 31.4" stroke-linecap="round"></circle>
+                                                        </svg>
+                                                        <span class="ml-2 text-sm font-medium text-blue-600">Uploading...</span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Error Message -->
+                                                @error('student_profile_picture')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+
+
                                             </div>
                                         </div>
                                     </div>
@@ -152,7 +198,7 @@
                                     <!-- Upload Area -->
                                     <div class="flex-1 w-full">
                                         <div class="relative border-2 border-dashed border-slate-300 bg-slate-50 rounded-lg hover:border-slate-400 transition-all duration-200">
-                                            <input type="file" id="photoInput" class="hidden" accept="image/jpeg,image/jpg,image/png" />
+                                            <input type="file" id="photoInput" wire:model="student_profile_picture" class="hidden" accept="image/jpeg,image/jpg,image/png" />
                                             
                                             <div class="p-6 text-center">
                                                 <svg class="mx-auto h-8 w-8 mb-3 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -768,86 +814,85 @@
 
                 </div>
 
-                    <!-- Same as student checkbox -->
-                    <div class="flex items-center gap-2 pt-4">
-                        <input 
-                            type="checkbox" 
-                            wire:model.live="sameAsStudent" 
-                            id="sameAsStudent"
-                            class="h-4 w-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
-                        >
-                        <label for="sameAsStudent" class="text-sm text-slate-700">
-                            Same as student
+                <!-- Same as student checkbox -->
+                <div class="flex items-center gap-2 pt-4">
+                    <input 
+                        type="checkbox" 
+                        wire:model.live="sameAsStudent" 
+                        id="sameAsStudent"
+                        class="h-4 w-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
+                    >
+                    <label for="sameAsStudent" class="text-sm text-slate-700">
+                        Same as student
+                    </label>
+                </div>
+
+
+                <!-- Guardian Phone, Email, Relationship -->
+                <div class=" grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                    <!-- Guardian Phone -->
+                    <div class="w-full">
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                            Guardian Phone <span class="text-red-500 ml-1">*</span>
                         </label>
+                        <input 
+                            type="tel" 
+                            wire:model="guardian_phone" 
+                            placeholder="(555) 987-6543"
+                            wire:disabled="sameAsStudent"
+                            class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
+                                placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
+                                focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
+                        />
+                        @error('guardian_phone')
+                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                        @enderror
                     </div>
 
+                    <!-- Guardian Email -->
+                    <div class="w-full">
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                            Guardian Email <span class="text-red-500 ml-1">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            wire:model="guardian_email" 
+                            wire:disabled="sameAsStudent"
+                            placeholder="guardian@example.com"
+                            class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
+                                placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
+                                focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
+                        />
+                        @error('guardian_email')
+                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                    <!-- Guardian Phone, Email, Relationship -->
-                    <div class=" grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                        <!-- Guardian Phone -->
-                        <div class="w-full">
-                            <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                Guardian Phone <span class="text-red-500 ml-1">*</span>
-                            </label>
-                            <input 
-                                type="tel" 
-                                wire:model="guardian_phone" 
-                                placeholder="(555) 987-6543"
-                                wire:disabled="sameAsStudent"
-                                class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
-                                    placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
+                    <!-- Relationship -->
+                    <div class="w-full">
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">
+                            Relationship <span class="text-red-500 ml-1">*</span>
+                        </label>
+                        <div class="relative">
+                            <select 
+                                wire:model="relationship" 
+                                class="flex h-10 w-full appearance-none rounded-lg border border-slate-300 bg-white 
+                                    px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-0 
                                     focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
-                            />
-                            @error('guardian_phone')
-                                <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
-                            @enderror
-                        </div>
+                            >
+                                <option value="">Select an option</option>
+                                <option value="father">Father</option>
+                                <option value="mother">Mother</option>
+                                <option value="guardian">Legal Guardian</option>
+                                <option value="other">Other</option>
+                            </select>
 
-                        <!-- Guardian Email -->
-                        <div class="w-full">
-                            <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                Guardian Email <span class="text-red-500 ml-1">*</span>
-                            </label>
-                            <input 
-                                type="email" 
-                                wire:model="guardian_email" 
-                                wire:disabled="sameAsStudent"
-                                placeholder="guardian@example.com"
-                                class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm 
-                                    placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 
-                                    focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
-                            />
-                            @error('guardian_email')
-                                <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Relationship -->
-                        <div class="w-full">
-                            <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                Relationship <span class="text-red-500 ml-1">*</span>
-                            </label>
-                            <div class="relative">
-                                <select 
-                                    wire:model="relationship" 
-                                    class="flex h-10 w-full appearance-none rounded-lg border border-slate-300 bg-white 
-                                        px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-0 
-                                        focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200"
-                                >
-                                    <option value="">Select an option</option>
-                                    <option value="father">Father</option>
-                                    <option value="mother">Mother</option>
-                                    <option value="guardian">Legal Guardian</option>
-                                    <option value="other">Other</option>
-                                </select>
-
-                                <svg class="absolute right-3 top-3 h-4 w-4 text-slate-400 pointer-events-none" 
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
-                                    stroke="currentColor" stroke-width="2">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </div>
+                            <svg class="absolute right-3 top-3 h-4 w-4 text-slate-400 pointer-events-none" 
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
 
                             @error('relationship')
                                 <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
@@ -855,6 +900,8 @@
                         </div>
 
                     </div>
+
+                </div>
 
                     </div>
                 </div>
@@ -991,27 +1038,27 @@
 
                                 <!-- Step 5 -->
                                 <div class="flex flex-col items-center group">
-                                    <div class="flex items-center justify-center w-8 h-8 rounded-full border-2 bg-white border-slate-300 text-slate-400 z-10">
+                                    <div class="flex items-center justify-center w-8 h-8 rounded-full border-2 bg-white border-blue-600 text-blue-600 z-10">
                                         <span class="text-sm font-semibold">5</span>
                                     </div>
                                     <div class="absolute mt-10 hidden lg:flex flex-col items-center">
-                                        <span class="text-xs font-semibold whitespace-nowrap text-slate-400">Documents</span>
+                                        <span class="text-xs font-semibold whitespace-nowrap text-blue-700">Documents</span>
                                     </div>
                                     <div class="absolute mt-10 hidden md:flex lg:hidden flex-col items-center">
-                                        <span class="text-xs font-semibold whitespace-nowrap text-slate-400">Documents</span>
+                                        <span class="text-xs font-semibold whitespace-nowrap text-blue-700">Documents</span>
                                     </div>
                                 </div>
 
                                 <!-- Step 6 -->
                                 <div class="flex flex-col items-center group">
-                                    <div class="flex items-center justify-center w-8 h-8 rounded-full border-2 bg-white border-slate-300 text-slate-400 z-10">
+                                    <div class="flex items-center justify-center w-8 h-8 rounded-full border-2 bg-white border-blue-600 text-blue-600 scale-110 ring-4 ring-blue-50 z-10">
                                         <span class="text-sm font-semibold">6</span>
                                     </div>
                                     <div class="absolute mt-10 hidden lg:flex flex-col items-center">
-                                        <span class="text-xs font-semibold whitespace-nowrap text-slate-400">Review & Submit</span>
+                                        <span class="text-xs font-semibold whitespace-nowrap text-blue-700">Review & Submit</span>
                                     </div>
                                     <div class="absolute mt-10 hidden md:flex lg:hidden flex-col items-center">
-                                        <span class="text-xs font-semibold whitespace-nowrap text-slate-400">Review</span>
+                                        <span class="text-xs font-semibold whitespace-nowrap text-blue-700">Review</span>
                                     </div>
                                 </div>
                             </div>
@@ -1052,7 +1099,7 @@
                                     </label>
                                     <div class="relative">
                                         <select wire:model="grade_applied_for" class="flex h-10 w-full appearance-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200">
-                                            <option value="" disabled selected>Select an option</option>
+                                            <option value="">Select an option</option>
                                             <option value="grade-1">Grade 1</option>
                                             <option value="grade-2">Grade 2</option>
                                             <option value="grade-3">Grade 3</option>
@@ -1082,9 +1129,12 @@
                             <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
                                 <div class="w-full">
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                                        Previous School
+                                        Previous School Name
                                     </label>
-                                    <input type="text" wire:model="previous_school_name	" placeholder="Enter previous school" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                    <input type="text" wire:model="previous_school_name" placeholder="Enter previous school" class="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-blue-500 focus:ring-blue-200 hover:border-slate-400 transition-all duration-200" />
+                                    <p class="mt-1.5 text-xs text-slate-500">For Transfer Student, This field is required.</p>
+
+
 
                                     @error('previous_school_name	')
                                         <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
@@ -1268,9 +1318,7 @@
                                 <!-- Step 4 -->
                                 <div class="flex flex-col items-center group">
                                     <div class="flex items-center justify-center w-8 h-8 rounded-full border-2 bg-white border-blue-600 text-blue-600 z-10">
-                                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path>
-                                        </svg>
+                                        <span class="text-sm font-semibold">4</span>
                                     </div>
                                     <div class="absolute mt-10 hidden lg:flex flex-col items-center">
                                         <span class="text-xs font-semibold whitespace-nowrap text-blue-700">Academic Info</span>
@@ -1299,10 +1347,10 @@
                                         <span class="text-sm font-semibold">6</span>
                                     </div>
                                     <div class="absolute mt-10 hidden lg:flex flex-col items-center">
-                                        <span class="text-xs font-semibold whitespace-nowrap text-slate-400">Review & Submit</span>
+                                        <span class="text-xs font-semibold whitespace-nowrap text-blue-700">Review & Submit</span>
                                     </div>
                                     <div class="absolute mt-10 hidden md:flex lg:hidden flex-col items-center">
-                                        <span class="text-xs font-semibold whitespace-nowrap text-slate-400">Review</span>
+                                        <span class="text-xs font-semibold whitespace-nowrap text-blue-700">Review</span>
                                     </div>
                                 </div>
                             </div>
@@ -1350,7 +1398,7 @@
                                     </label>
                                     
                                     <div class="relative border-2 border-dashed border-slate-300 bg-slate-50 rounded-lg hover:border-slate-400 transition-all duration-200">
-                                        <input type="file" wire:model="academic_records	" id="academicRecords" class="hidden" accept=".pdf,.jpg,.jpeg,.png" multiple />
+                                        <input type="file" wire:model="academic_records" id="academicRecords" class="hidden" accept=".pdf,.jpg,.jpeg,.png"/>
                                         
                                         <div class="p-6 text-center">
                                             <svg class="mx-auto h-10 w-10 mb-3 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1370,7 +1418,6 @@
                                                 Max size: 5MB per file
                                             </p>
                                         </div>
-
                                     </div>
                                     
                                     <p class="mt-1.5 text-xs text-slate-500">Upload transcripts, grade sheets, or academic certificates</p>
@@ -1382,6 +1429,61 @@
                                         <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
                                     @enderror
 
+                                    @if ($academic_records)
+                                        <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                            <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path d="M12 4v16m8-8H4" />
+                                                </svg>
+                                                Selected Files
+                                            </p>
+
+                                            <ul class="space-y-2">
+                                                @foreach ($academic_records as $file)
+                                                    <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                        <div class="flex items-center space-x-2">
+                                                            <!-- Attractive file icon -->
+                                                            <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                viewBox="0 0 20 20">
+                                                            <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                            </svg>
+                                                            <div class="flex flex-col">
+                                                                <span class="text-slate-700 font-medium">{{ $file->getClientOriginalName() }}</span>
+                                                                <span class="text-xs text-slate-500">
+                                                                    {{ number_format($file->getSize() / 1024, 2) }} KB
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" wire:click="$set('academic_records', null)"
+                                                            class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                            </svg>
+                                                        </button>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+
+                                    <!--add loader when uploading files-->
+                                    <div wire:loading wire:target="academic_records"
+                                        class="mt-2 inline-flex items-center text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2 shadow-sm">
+                                        
+                                        <!-- Spinner -->
+                                        <svg class="animate-spin h-4 w-4 mr-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                    stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                        </svg>
+
+                                        <!-- Loading text -->
+                                        <span class="font-medium">Uploading files...</span>
+                                    </div>
+                            
                                 </div>
 
                                 <!-- Previous Report Cards -->
@@ -1391,7 +1493,7 @@
                                     </label>
                                     
                                     <div class="relative border-2 border-dashed border-slate-300 bg-slate-50 rounded-lg hover:border-slate-400 transition-all duration-200">
-                                        <input type="file" wire:model="reports_cards" id="reportCards" class="hidden" accept=".pdf,.jpg,.jpeg,.png" multiple />
+                                        <input type="file" wire:model="reports_cards" id="reportCards" class="hidden" accept=".pdf,.jpg,.jpeg,.png"/>
                                         
                                         <div class="p-6 text-center">
                                             <svg class="mx-auto h-10 w-10 mb-3 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1421,6 +1523,61 @@
                                     @error('reports_cards')
                                         <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
                                     @enderror
+
+                                    @if ($reports_cards)
+                                        <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                            <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path d="M12 4v16m8-8H4" />
+                                                </svg>
+                                                Selected Files
+                                            </p>
+
+                                            <ul class="space-y-2">
+                                                @foreach ($reports_cards as $file)
+                                                    <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                        <div class="flex items-center space-x-2">
+                                                            <!-- Attractive file icon -->
+                                                            <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                viewBox="0 0 20 20">
+                                                            <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                            </svg>
+                                                            <div class="flex flex-col">
+                                                                <span class="text-slate-700 font-medium">{{ $file->getClientOriginalName() }}</span>
+                                                                <span class="text-xs text-slate-500">
+                                                                    {{ number_format($file->getSize() / 1024, 2) }} KB
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" wire:click="$set('reports_cards', null)"
+                                                            class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                            </svg>
+                                                        </button>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+
+                                    <!--add loader when uploading files-->
+                                    <div wire:loading wire:target="reports_cards"
+                                        class="mt-2 inline-flex items-center text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2 shadow-sm">
+                                        
+                                        <!-- Spinner -->
+                                        <svg class="animate-spin h-4 w-4 mr-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                    stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                        </svg>
+
+                                        <!-- Loading text -->
+                                        <span class="font-medium">Uploading files...</span>
+                                    </div>
 
                                 </div>
 
@@ -1463,6 +1620,61 @@
                                         <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
                                     @enderror
 
+                                    @if ($transfer_certificate)
+                                        <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                            <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path d="M12 4v16m8-8H4" />
+                                                </svg>
+                                                Selected Files
+                                            </p>
+
+                                            <ul class="space-y-2">
+                                                @foreach ($transfer_certificate as $file)
+                                                    <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                        <div class="flex items-center space-x-2">
+                                                            <!-- Attractive file icon -->
+                                                            <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                viewBox="0 0 20 20">
+                                                            <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                            </svg>
+                                                            <div class="flex flex-col">
+                                                                <span class="text-slate-700 font-medium">{{ $file->getClientOriginalName() }}</span>
+                                                                <span class="text-xs text-slate-500">
+                                                                    {{ number_format($file->getSize() / 1024, 2) }} KB
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" wire:click="$set('transfer_certificate', null)"
+                                                            class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                            </svg>
+                                                        </button>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+
+                                    <!--add loader when uploading files-->
+                                    <div wire:loading wire:target="transfer_certificate"
+                                        class="mt-2 inline-flex items-center text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2 shadow-sm">
+                                        
+                                        <!-- Spinner -->
+                                        <svg class="animate-spin h-4 w-4 mr-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                    stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                        </svg>
+
+                                        <!-- Loading text -->
+                                        <span class="font-medium">Uploading files...</span>
+                                    </div>
+
                                 </div>
 
                                 <!-- Birth Certificate -->
@@ -1504,6 +1716,61 @@
                                         <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
                                     @enderror
 
+                                    @if ($birth_certificate)
+                                        <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                            <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path d="M12 4v16m8-8H4" />
+                                                </svg>
+                                                Selected Files
+                                            </p>
+
+                                            <ul class="space-y-2">
+
+                                                    <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                        <div class="flex items-center space-x-2">
+                                                            <!-- Attractive file icon -->
+                                                            <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                viewBox="0 0 20 20">
+                                                            <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                            </svg>
+                                                            <div class="flex flex-col">
+                                                                <span class="text-slate-700 font-medium">{{ $birth_certificate->getClientOriginalName() }}</span>
+                                                                <span class="text-xs text-slate-500">
+                                                                    {{ number_format($birth_certificate->getSize() / 1024, 2) }} KB
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" wire:click="$set('birth_certificate', null)"
+                                                            class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                            </svg>
+                                                        </button>
+                                                    </li>
+            
+                                            </ul>
+                                        </div>
+                                    @endif
+
+                                    <!--add loader when uploading files-->
+                                    <div wire:loading wire:target="birth_certificate"
+                                        class="mt-2 inline-flex items-center text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2 shadow-sm">
+                                        
+                                        <!-- Spinner -->
+                                        <svg class="animate-spin h-4 w-4 mr-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                    stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                        </svg>
+
+                                        <!-- Loading text -->
+                                        <span class="font-medium">Uploading files...</span>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -1543,7 +1810,6 @@
                             </button>
                         </div>
                     </div>
-                    
                 </div>
 
                 <p class="text-center text-slate-400 text-sm mt-8">
@@ -1644,10 +1910,8 @@
 
                                 <!-- Step 5 -->
                                 <div class="flex flex-col items-center group">
-                                    <div class="flex items-center justify-center w-8 h-8 rounded-full border-2 bg-white border-blue-600 text-blue-600 z-10">
-                                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path>
-                                        </svg>
+                                    <div class="flex items-center justify-center w-8 h-8 rounded-full border-2 bg-white border-blue-600 text-blue-600 scale-110 ring-4 ring-blue-50 z-10">
+                                        <span class="text-sm font-semibold">5</span>
                                     </div>
                                     <div class="absolute mt-10 hidden lg:flex flex-col items-center">
                                         <span class="text-xs font-semibold whitespace-nowrap text-blue-700">Documents</span>

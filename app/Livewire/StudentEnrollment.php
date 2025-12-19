@@ -2,12 +2,16 @@
 
 namespace App\Livewire;
 
-use League\Config\Exception\ValidationException;
+use Illuminate\Validation\ValidationException as ValidationValidationException;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class StudentEnrollment extends Component
 {
-    public int $step = 1;
+    //with uploads trait
+    use WithFileUploads;
+
+    public int $step = 5;
     public $schools;
 
     //step 1: Personal Information
@@ -17,6 +21,7 @@ class StudentEnrollment extends Component
     public $dob;
     public $gender;
     public $school_id;
+    public $student_profile_picture;
 
     //step 2: Contact Information
     public $ward;
@@ -41,9 +46,9 @@ class StudentEnrollment extends Component
     public $admission_date;
 
     //step 5: Documents Upload
-    public $academic_records;
-    public $reports_cards;
-    public $transfer_certificate;
+    public $academic_records = [];
+    public $reports_cards =[];
+    public $transfer_certificate = [];
     public $birth_certificate;
 
     //property to handle same as student info
@@ -105,9 +110,15 @@ class StudentEnrollment extends Component
             'dob' => 'required|date',
             'gender' => 'required|string|in:male,female,other',
             'school_id' => 'required|exists:schools,id',
+            'student_profile_picture' => 'nullable|image|max:2048',
             ]);
 
-        }catch(ValidationException $e)
+            //save the profile picture if uploaded
+            if($this->student_profile_picture){
+                $path = $this->student_profile_picture->store('student_profiles', 'public');
+            }
+
+        }catch(ValidationValidationException $e)
         {
             //handle the validation exception
             $this->addError('validation', 'Please correct the errors in the form.');
@@ -122,52 +133,113 @@ class StudentEnrollment extends Component
     //validate the second step
     protected function validatestep2()
     {
-        $this->validate([
+
+        try
+        {
+            $this->validate([
             'ward' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'district' => 'nullable|string|max:255',
             'street' => 'required|string|max:255',
             'phone' => ['required', 'regex:/^\+?[0-9]{7,15}$/'],
             'email' => 'required|email|max:255',
-        ]);
+            ]);
+        }catch(ValidationValidationException $e)
+        {
+            //handle the validation exception
+            $this->addError('validation', 'Please correct the errors in the form.');
+            throw $e;
+        }
+        
 
     }
 
     //validate the third step
     protected function validatestep3()
     {
-        $this->validate([
+        try{
+
+            $this->validate([
             'firstname' => 'required|string|max:255',
-            'middlename' => 'required|string|max:255',
+            'middlename' => 'nullable|string|max:255',
             'lastname' => 'required|string|max:255',
-            'guardian_phone' => 'required|string|max:15',
+            'guardian_phone' => ['required', 'regex:/^\+?[0-9]{7,15}$/'],
             'guardian_email' => 'required|email|max:255',
             'relationship' => 'required|string|max:100',
-        ]);
+            ]);
+
+        }catch(ValidationValidationException $e)
+        {
+            //handle the validation exception
+            $this->addError('validation', 'Please correct the errors in the form.');
+            throw $e;
+        }
+
+        
 
     }
 
     //validate the fourth step
     protected function validatestep4()
     {
-        $this->validate([
+        try{
+
+            $this->validate([
             'grade_applied_for' => 'required|string|max:50',
             'previous_school_name' => 'nullable|string|max:255',
             'previous_grades' => 'nullable|string|max:255',
-            'admission_date' => 'required|date',
-        ]);
+            'admission_date' => 'nullable|date',
+            ]);
+        }catch(ValidationValidationException $e)
+        {
+            //handle the validation exception
+            $this->addError('validation', 'Please correct the errors in the form.');
+            throw $e;
+        }
+
+        
     }
 
     //validate the fifth step
     protected function validatestep5()
     {
+        try{
 
-        $this->validate([
-            'academic_records' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'reports_cards' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'transfer_certificate' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
-            'birth_certificate' => 'required|file|mimes:pdf,jpg,png|max:2048',
-        ]);
+            $this->validate([
+                'academic_records' => 'required|array',
+                'academic_records.*' => 'required|file|mimes:pdf,jpg,png|max:5120',
+                'reports_cards' => 'nullable|array',
+                'reports_cards.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+                'transfer_certificate' => 'nullable|array',
+                'transfer_certificate.*' => 'nullable|file|mimes:pdf,jpg,png|max:5120',
+                'birth_certificate' => 'required|file|mimes:pdf,jpg,png|max:5120',
+            ]);
+
+            //handle file uploads here
+            if ($this->academic_records) {
+                foreach ($this->academic_records as $record) {
+                    $record->store('documents/academic_records', 'public');
+                }
+            }
+            if ($this->reports_cards) {
+                foreach ($this->reports_cards as $record) {
+                    $record->store('documents/reports_cards', 'public');
+                }
+            }
+            if ($this->transfer_certificate) {
+                foreach ($this->transfer_certificate as $record) {
+                    $record->store('documents/transfer_certificates', 'public');
+                }
+            }
+            if ($this->birth_certificate) {
+                    $record->store('documents/birth_certificates', 'public');
+            }
+        }catch(ValidationValidationException $e)
+        {
+            //handle the validation exception
+            dd($e->errors());
+        }
+
     }
 
     //function to fill in same as student info for the guardian 

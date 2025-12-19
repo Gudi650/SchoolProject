@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('student_enrollment_id')->unique();
             $table->date('admission_date')->nullable();
             $table->string('grade_applied_for');
-            $table->string('previous_school_name');
-            $table->string('academic_records');
+            $table->string('previous_school_name')->nullable();
+            $table->string('academic_records')->nullable();
             $table->string('transfer_certificate')->nullable();
             $table->string('birth_certificate')->nullable();
             $table->string('reports_card')->nullable();
