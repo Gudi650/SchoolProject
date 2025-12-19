@@ -1440,7 +1440,7 @@
                                             </p>
 
                                             <ul class="space-y-2">
-                                                @foreach ($academic_records as $file)
+                                                @foreach ($academic_records as $index => $file)
                                                     <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
                                                         <div class="flex items-center space-x-2">
                                                             <!-- Attractive file icon -->
@@ -1455,13 +1455,22 @@
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <button type="button" wire:click="$set('academic_records', null)"
+                                                        <!--cancel button with loader-->
+                                                        <button type="button" wire:loading.remove wire:target="removefileUpload('academic_records', {{ $index }})"  wire:click="removefileUpload('academic_records', {{ $index }})"
                                                             class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <line x1="18" y1="6" x2="6" y2="18"></line>
                                                                 <line x1="6" y1="6" x2="18" y2="18"></line>
                                                             </svg>
                                                         </button>
+
+                                                        <!--loader for removing file-->
+                                                        <div wire:loading wire:target="removefileUpload('academic_records', {{ $index }})" class="ml-2">
+                                                            <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                            </svg>
+                                                        </div>
                                                     </li>
                                                 @endforeach
                                             </ul>
@@ -1535,7 +1544,7 @@
                                             </p>
 
                                             <ul class="space-y-2">
-                                                @foreach ($reports_cards as $file)
+                                                @foreach ($reports_cards as $index => $file)
                                                     <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
                                                         <div class="flex items-center space-x-2">
                                                             <!-- Attractive file icon -->
@@ -1550,13 +1559,22 @@
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <button type="button" wire:click="$set('reports_cards', null)"
+                                                        <!--cancel button with loader-->
+                                                        <button type="button" wire:loading.remove wire:target="removefileUpload('reports_cards', {{ $index }})"  wire:click="removefileUpload('reports_cards', {{ $index }})"
                                                             class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <line x1="18" y1="6" x2="6" y2="18"></line>
                                                                 <line x1="6" y1="6" x2="18" y2="18"></line>
                                                             </svg>
                                                         </button>
+
+                                                        <!--loader for removing file-->
+                                                        <div wire:loading wire:target="removefileUpload('reports_cards', {{ $index }})" class="ml-2">
+                                                            <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                            </svg>
+                                                        </div>
                                                     </li>
                                                 @endforeach
                                             </ul>
@@ -1631,7 +1649,7 @@
                                             </p>
 
                                             <ul class="space-y-2">
-                                                @foreach ($transfer_certificate as $file)
+                                                @foreach ($transfer_certificate as $index => $file)
                                                     <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
                                                         <div class="flex items-center space-x-2">
                                                             <!-- Attractive file icon -->
@@ -1646,13 +1664,23 @@
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <button type="button" wire:click="$set('transfer_certificate', null)"
+                                                        <button type="button" wire:loading.remove wire:target="removefileUpload('transfer_certificate', {{ $index }})"  wire:click="removefileUpload('transfer_certificate', {{ $index }})"
                                                             class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <line x1="18" y1="6" x2="6" y2="18"></line>
                                                                 <line x1="6" y1="6" x2="18" y2="18"></line>
                                                             </svg>
                                                         </button>
+
+                                                        <!--loader for removing file-->
+                                                        <div wire:loading wire:target="removefileUpload('transfer_certificate', {{ $index }})" class="ml-2">
+                                                            <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                            </svg>
+                                                        </div>
+
+
                                                     </li>
                                                 @endforeach
                                             </ul>
@@ -1742,13 +1770,22 @@
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <button type="button" wire:click="$set('birth_certificate', null)"
+                                                        <button type="button" wire:loading.remove wire:click="removeSingleFileUpload('birth_certificate')"
                                                             class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <line x1="18" y1="6" x2="6" y2="18"></line>
                                                                 <line x1="6" y1="6" x2="18" y2="18"></line>
                                                             </svg>
                                                         </button>
+
+                                                        <!--loader for removing file-->
+                                                        <div wire:loading wire:target="removeSingleFileUpload('birth_certificate')" class="ml-2">
+                                                            <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                            </svg>
+                                                        </div>
+
                                                     </li>
             
                                             </ul>
@@ -1985,17 +2022,37 @@
                                         </div>
                                         <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div class="flex flex-col">
-                                                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Full wire:model</span>
-                                                <span class="text-sm text-slate-900 font-medium">John Doe</span>
+                                                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Full Name</span>
+
+                                                <!--check if the variable exists-->
+                                                @if (!empty($fname) && !empty($mname) && !empty($lname))
+                                                    <span class="text-sm text-slate-900 font-medium">{{ $fname }} {{ $mname }} {{ $lname }}</span>
+                                                @else
+                                                    <span class="text-sm text-slate-400 italic">All Names Not Provided</span> 
+                                                @endif
+                                                
                                             </div>
                                             <div class="flex flex-col">
                                                 <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Date of Birth</span>
-                                                <span class="text-sm text-slate-900 font-medium">2010-05-15</span>
+                                                <!--check if the variable exists-->
+                                                @if (!empty($dob))
+                                                    <span class="text-sm text-slate-900 font-medium">{{ $dob }}</span>
+                                                @else
+                                                    <span class="text-sm text-slate-400 italic">Date Not Provided</span>
+                                                @endif
+                                                
                                             </div>
                                             <div class="flex flex-col">
                                                 <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Gender</span>
-                                                <span class="text-sm text-slate-900 font-medium">Male</span>
+                                                <!--check if the variable exists-->
+                                                @if (!empty($gender))
+                                                    <span class="text-sm text-slate-900 font-medium">{{ $gender }}</span>
+                                                @else
+                                                    <span class="text-sm text-slate-400 italic">Gender Not Provided</span> 
+                                                @endif
+
                                             </div>
+
                                             <div class="flex flex-col">
                                                 <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Blood Group</span>
                                                 <span class="text-sm text-slate-900 font-medium">O+</span>
@@ -2020,15 +2077,36 @@
                                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Email</span>
-                                        <span class="text-sm text-slate-900 font-medium">student@example.com</span>
+
+                                        <!--check if the email variable exists-->
+                                        @if (!empty($email))
+                                            <span class="text-sm text-slate-900 font-medium">student@example.com</span>
+                                        @else
+                                            <span class="text-sm text-slate-400 italic">Email Not Provided</span>
+                                        @endif
+                                        
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Phone</span>
-                                        <span class="text-sm text-slate-900 font-medium">(555) 123-4567</span>
+
+                                        <!--check if the phone variable exists-->
+                                        @if (!empty($phone))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $phone }}</span>
+                                        @else
+                                            <span class="text-sm text-slate-400 italic">Phone Not Provided</span>
+                                        @endif
+
                                     </div>
                                     <div class="flex flex-col col-span-2">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Address</span>
-                                        <span class="text-sm text-slate-900 font-medium">123 Education Lane, New York, NY 10001</span>
+
+                                        <!--check if the address variable exists-->
+                                        @if (!empty($address))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $address }}</span>
+                                        @else
+                                            <span class="text-sm text-slate-400 italic">Address Not Provided</span>
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -2047,20 +2125,48 @@
                                 </div>
                                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                                     <div class="flex flex-col">
-                                        <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Guardian wire:model</span>
-                                        <span class="text-sm text-slate-900 font-medium">Jane Doe</span>
+                                        <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Guardian Full Name</span>
+
+                                        <!--check if the guardian_name variable exists-->
+                                        @if (!empty($guardian_name))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $guardian_name }}</span>
+                                        @else
+                                            <span class="text-sm text-slate-400 italic">Name Not Provided</span>
+                                        @endif
+
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Relationship</span>
-                                        <span class="text-sm text-slate-900 font-medium">Mother</span>
+
+                                        <!--check if the guardian_relationship variable exists-->
+                                        @if (!empty($guardian_relationship))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $guardian_relationship }}</span>
+                                        @else
+                                            <span class="text-sm text-slate-400 italic">Relationship Not Provided</span>
+                                        @endif
+
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Phone</span>
-                                        <span class="text-sm text-slate-900 font-medium">(555) 987-6543</span>
+
+                                        <!--check if the guardian_phone variable exists-->
+                                        @if (!empty($guardian_phone))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $guardian_phone }}</span>
+                                        @else
+                                            <span class="text-sm text-slate-400 italic">Phone Not Provided</span>
+                                        @endif
+
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Email</span>
-                                        <span class="text-sm text-slate-900 font-medium">guardian@example.com</span>
+
+                                        <!--check if the guardian_email variable exists-->
+                                        @if (!empty($guardian_email))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $guardian_email }}</span>
+                                        @else
+                                            <span class="text-sm text-slate-400 italic">Email Not Provided</span>
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -2084,15 +2190,36 @@
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Grade Applied For</span>
-                                        <span class="text-sm text-slate-900 font-medium">Grade 8</span>
+
+                                        <!--check if the grade_applied variable exists-->
+                                        @if (!empty($grade_applied))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $grade_applied }}</span>
+                                        @else
+                                            <span class="text-sm text-slate-400 italic">Grade Not Provided</span>
+                                        @endif
+
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Previous School</span>
-                                        <span class="text-sm text-slate-900 font-medium">Lincoln Elementary School</span>
+
+                                        <!--check if the previous_school variable exists-->
+                                        @if (!empty($previous_school))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $previous_school }}</span>
+                                        @else
+                                            <span class="text-sm text-slate-400 italic">School Not Provided</span>
+                                        @endif
+
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Admission Date</span>
-                                        <span class="text-sm text-slate-900 font-medium">2024-09-01</span>
+
+                                        <!--check if the admission_date variable exists-->
+                                        @if (!empty($admission_date))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $admission_date }}</span>
+                                        @else
+                                            <span class="text-sm text-slate-400 italic">Date Not Provided</span>
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -2113,25 +2240,104 @@
                                     <div>
                                         <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Academic Records</p>
                                         <div id="reviewAcademicRecords" class="space-y-2">
+                                            <!--check if there are uploaded academic records-->
+                                            @if (!empty($academic_records) && is_array($academic_records))
+                                                @foreach ($academic_records as $index => $record)
+                                                    <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
+                                                        <span class="text-sm text-slate-900">{{ $record->getClientOriginalName() }}</span>
+                                                        <button wire:click="removeAcademicRecord({{ $index }})" class="text-red-500 hover:text-red-700 text-sm">
+                                                            Remove
+                                                        </button>
+                                                    </div>
+                                                @endforeach
+                                            @elseif(!empty($academic_records))
+                                                <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
+                                                    <span class="text-sm text-slate-900">{{ $academic_records->getClientOriginalName() }}</span>
+                                                    <button wire:click="removeAcademicRecord(0)" class="text-red-500 hover:text-red-700 text-sm">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            @else
                                             <span class="text-sm text-slate-400">No files uploaded</span>
+                                            @endif
                                         </div>
                                     </div>
                                     <div>
                                         <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Transfer Certificate</p>
                                         <div id="reviewTransferCert" class="space-y-2">
+
+                                            <!--check if there are uploaded transfer certificate-->
+                                            @if (!empty($transfer_certificate) && is_array($transfer_certificate))
+                                                @foreach ($transfer_certificate as $index => $cert)
+                                                    <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
+                                                        <span class="text-sm text-slate-900">{{ $cert->getClientOriginalName() }}</span>
+                                                        <button wire:click="removeTransferCertificate({{ $index }})" class="text-red-500 hover:text-red-700 text-sm">
+                                                            Remove
+                                                        </button>
+                                                    </div>
+                                                @endforeach
+                                            @elseif(!empty($transfer_certificate))
+                                                <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
+                                                    <span class="text-sm text-slate-900">{{ $transfer_certificate->getClientOriginalName() }}</span>
+                                                    <button wire:click="removeTransferCertificate(0)" class="text-red-500 hover:text-red-700 text-sm">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            @else
                                             <span class="text-sm text-slate-400">No files uploaded</span>
+                                            @endif
+
                                         </div>
                                     </div>
                                     <div>
                                         <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Birth Certificate</p>
                                         <div id="reviewBirthCert" class="space-y-2">
+
+                                            <!--check if there are uploaded birth certificate-->
+                                            @if (!empty($birth_certificate) && is_array($birth_certificate))
+                                                @foreach ($birth_certificate as $index => $birthCert)
+                                                    <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
+                                                        <span class="text-sm text-slate-900">{{ $birthCert->getClientOriginalName() }}</span>
+                                                        <button wire:click="removeBirthCertificate({{ $index }})" class="text-red-500 hover:text-red-700 text-sm">
+                                                            Remove
+                                                        </button>
+                                                    </div>
+                                                @endforeach
+                                            @elseif(!empty($birth_certificate))
+                                                <div class="flex items center justify-between bg-slate-100 rounded-md px-4 py-2">
+                                                    <span class="text-sm text-slate-900">{{ $birth_certificate->getClientOriginalName() }}</span>
+                                                    <button wire:click="removeBirthCertificate(0)" class="text-red-500 hover:text-red-700 text-sm">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            @else
                                             <span class="text-sm text-slate-400">No files uploaded</span>
+                                            @endif
                                         </div>
                                     </div>
                                     <div id="reviewReportCardsSection" class="hidden">
                                         <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Previous Report Cards</p>
                                         <div id="reviewReportCards" class="space-y-2">
+                                            <!--check if there are uploaded report cards-->
+                                            @if (!empty($report_cards) && is_array($report_cards))
+                                                @foreach ($report_cards as $index => $reportCard)
+                                                    <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
+                                                        <span class="text-sm text-slate-900">{{ $reportCard->getClientOriginalName() }}</span>
+                                                        <button wire:click="removeReportCard({{ $index }})" class="text-red-500 hover:text-red-700 text-sm">
+                                                            Remove
+                                                        </button>
+                                                    </div>
+                                                @endforeach
+                                            @elseif(!empty($report_cards))
+                                                <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
+                                                    <span class="text-sm text-slate-900">{{ $report_cards->getClientOriginalName() }}</span>
+                                                    <button wire:click="removeReportCard(0)" class="text-red-500 hover:text-red-700 text-sm">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            @else
                                             <span class="text-sm text-slate-400">No files uploaded</span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

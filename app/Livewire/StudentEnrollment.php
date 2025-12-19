@@ -11,7 +11,7 @@ class StudentEnrollment extends Component
     //with uploads trait
     use WithFileUploads;
 
-    public int $step = 5;
+    public int $step = 6;
     public $schools;
 
     //step 1: Personal Information
@@ -86,6 +86,20 @@ class StudentEnrollment extends Component
         }
     }
 
+    //function to cancel the uploads
+    public function removefileUpload($property,$index)
+    {
+        unset($this->$property[$index]);
+
+        //reindex the array to maintain proper indices
+        $this->$property = array_values($this->$property);
+    }
+
+    //function to cancel a single file upload
+    public function removeSingleFileUpload($property)
+    {
+        $this->$property = null;
+    }
 
 
     public function render()
@@ -125,9 +139,6 @@ class StudentEnrollment extends Component
             throw $e;
         }
 
-        
-
-        
     }
 
     //validate the second step
@@ -151,7 +162,6 @@ class StudentEnrollment extends Component
             throw $e;
         }
         
-
     }
 
     //validate the third step
@@ -175,8 +185,6 @@ class StudentEnrollment extends Component
             throw $e;
         }
 
-        
-
     }
 
     //validate the fourth step
@@ -197,7 +205,6 @@ class StudentEnrollment extends Component
             throw $e;
         }
 
-        
     }
 
     //validate the fifth step
@@ -237,7 +244,8 @@ class StudentEnrollment extends Component
         }catch(ValidationValidationException $e)
         {
             //handle the validation exception
-            dd($e->errors());
+            $this->addError('validation', 'Please correct the errors in the form.');
+            throw $e;
         }
 
     }
@@ -257,6 +265,5 @@ class StudentEnrollment extends Component
 
         }
     }
-
 
 }
