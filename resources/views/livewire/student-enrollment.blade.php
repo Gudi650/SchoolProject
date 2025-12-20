@@ -2271,7 +2271,8 @@
                                                         </button>
                                                         <button 
                                                             wire:click="closeModal('isPersonalOpen')" 
-                                                            class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+                                                            class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
+                                                                bg-red-50 text-red-600 border border-red-300 hover:bg-red-100 hover:text-red-700 focus:ring-red-500">
 
                                                             <!-- Normal state -->
                                                             <span wire:loading.remove wire:target="closeModal('isPersonalOpen')">
@@ -2280,7 +2281,7 @@
 
                                                             <!-- Loading state -->
                                                             <span wire:loading wire:target="closeModal('isPersonalOpen')" class="flex items-center gap-2">
-                                                                <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <svg class="animate-spin h-4 w-4 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
                                                                 </svg>
@@ -2415,7 +2416,8 @@
 
                                                 <button 
                                                     wire:click="closeModal('isContactOpen')" 
-                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
+                                                        bg-red-50 text-red-600 border border-red-300 hover:bg-red-100 hover:text-red-700 focus:ring-red-500">
 
                                                     <!-- Normal state -->
                                                     <span wire:loading.remove wire:target="closeModal('isContactOpen')">
@@ -2423,8 +2425,8 @@
                                                     </span>
 
                                                     <!-- Loading state -->
-                                                    <span wire:loading wire:target="closeModal('isContactOpen')" class="flex items-center gap-2">
-                                                        <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <span wire:loading wire:target="closeModal('isContactOpen')" class="inline-flex items-center gap-2">
+                                                        <svg class="animate-spin h-4 w-4 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
                                                         </svg>
@@ -2597,7 +2599,8 @@
                                                 </button>
                                                 <button 
                                                     wire:click="closeModal('isGuardianOpen')" 
-                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
+                                                        bg-red-50 text-red-600 border border-red-300 hover:bg-red-100 hover:text-red-700 focus:ring-red-500">
 
                                                     <!-- Normal state -->
                                                     <span wire:loading.remove wire:target="closeModal('isGuardianOpen')">
@@ -2606,7 +2609,7 @@
 
                                                     <!-- Loading state -->
                                                     <span wire:loading wire:target="closeModal('isGuardianOpen')" class="flex items-center gap-2">
-                                                        <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <svg class="animate-spin h-4 w-4 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
                                                         </svg>
@@ -2757,7 +2760,8 @@
 
                                                 <button 
                                                     wire:click="closeModal('isAcademicOpen')" 
-                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
+                                                        bg-red-50 text-red-600 border border-red-300 hover:bg-red-100 hover:text-red-700 focus:ring-red-500">
 
                                                     <!-- Normal state -->
                                                     <span wire:loading.remove wire:target="closeModal('isAcademicOpen')">
@@ -2766,7 +2770,7 @@
 
                                                     <!-- Loading state -->
                                                     <span wire:loading wire:target="closeModal('isAcademicOpen')" class="flex items-center gap-2">
-                                                        <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <svg class="animate-spin h-4 w-4 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
                                                         </svg>
@@ -3427,7 +3431,8 @@
 
                                                     <button 
                                                         wire:click="closeModal('isDocumentOpen')" 
-                                                        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+                                                        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
+                                                            bg-red-50 text-red-600 border border-red-300 hover:bg-red-100 hover:text-red-700 focus:ring-red-500">
 
                                                         <!-- Normal state -->
                                                         <span wire:loading.remove wire:target="closeModal('isDocumentOpen')">
@@ -3436,7 +3441,7 @@
 
                                                         <!-- Loading state -->
                                                         <span wire:loading wire:target="closeModal('isDocumentOpen')" class="flex items-center gap-2">
-                                                            <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <svg class="animate-spin h-4 w-4 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
                                                             </svg>
