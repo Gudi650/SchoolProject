@@ -2039,13 +2039,29 @@
                             <div class="bg-white rounded-lg border border-slate-200 overflow-hidden mb-6">
                                 <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200">
                                     <h3 class="font-semibold text-slate-800">Personal Information</h3>
-                                    <button class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
-                                        <svg class="w-3 h-3 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                        Edit
+                                    <button 
+                                        wire:click="openModal('isPersonalOpen')" 
+                                        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+
+                                        <!-- Normal state -->
+                                        <span wire:loading.remove wire:target="openModal('isPersonalOpen')" class="flex items-center gap-2">
+                                            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                            Edit
+                                        </span>
+
+                                        <!-- Loading state -->
+                                        <span wire:loading wire:target="openModal('isPersonalOpen')" class="flex items-center gap-2">
+                                            <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                            </svg>
+                                            Loading...
+                                        </span>
                                     </button>
+
                                 </div>
                                 <div class="p-6">
                                     <div class="flex items-start gap-6 mb-6">
@@ -2068,16 +2084,6 @@
                                                     </svg>
                                                     <span class="text-xs font-medium">No photo</span>
 
-                                                @endif
-
-                                                <!--cancel upload button-->
-                                                @if ($student_profile_picture)
-                                                    <button type="button" wire:click="$set('student_profile_picture', null)" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400">
-                                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                        </svg>
-                                                    </button>
                                                 @endif
 
                                                 <!-- Loader while uploading -->
@@ -2109,6 +2115,41 @@
                                                 @else
                                                     <span class="text-sm text-slate-400 italic">All Names Not Provided</span> 
                                                 @endif
+
+                                                <!--check if the modal button is clicked-->
+                                                @if ($isPersonalOpen)
+
+                                                    <!--display the input fields to edit names-->
+                                                    <div class="mt-2 space-y-2">
+                                                        <input type="text" 
+                                                            wire:model="fname"
+                                                            class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                            placeholder="First Name"
+                                                        />
+                                                        @error('fname')
+                                                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                        @enderror
+
+                                                        <input type="text" 
+                                                            wire:model="mname"
+                                                            class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                            placeholder="Middle Name"
+                                                        />
+                                                        @error('mname')
+                                                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                        @enderror
+
+                                                        <input type="text" 
+                                                            wire:model="lname"
+                                                            class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                            placeholder="Last Name"
+                                                        />
+                                                        @error('lname')
+                                                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                    
+                                                @endif
                                                 
                                             </div>
                                             <div class="flex flex-col">
@@ -2119,6 +2160,20 @@
                                                 @else
                                                     <span class="text-sm text-slate-400 italic">Date Not Provided</span>
                                                 @endif
+
+                                                <!--check if the modal button is clicked-->
+                                                @if ($isPersonalOpen)
+                                                    <!--display the input field to edit date of birth-->
+                                                    <div class="mt-2">
+                                                        <input type="date" 
+                                                            wire:model="dob"
+                                                            class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                        />
+                                                        @error('dob')
+                                                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                @endif
                                                 
                                             </div>
                                             <div class="flex flex-col">
@@ -2128,6 +2183,25 @@
                                                     <span class="text-sm text-slate-900 font-medium">{{ $gender }}</span>
                                                 @else
                                                     <span class="text-sm text-slate-400 italic">Gender Not Provided</span> 
+                                                @endif
+
+                                                <!--check if the modal button is clicked-->
+                                                @if ($isPersonalOpen)
+                                                    <!--display the select field to edit gender-->
+                                                    <div class="mt-2">
+                                                        <select
+                                                            wire:model="gender"
+                                                            class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                        >
+                                                            <option value="">Select Gender</option>
+                                                            <option value="male">Male</option>
+                                                            <option value="female">Female</option>
+                                                            <option value="other">Other</option>
+                                                        </select>
+                                                        @error('gender')
+                                                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
                                                 @endif
 
                                             </div>
@@ -2141,6 +2215,52 @@
                                                     <span class="text-sm text-slate-400 italic">School Not Selected</span> 
                                                 @endif
 
+                                                <!--check if the modal button is clicked-->
+                                                @if ($isPersonalOpen)
+                                                    <!--display the select field to edit school-->
+                                                    <div class="mt-2">
+                                                        <select
+                                                            wire:model="school_id"
+                                                            class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                        >
+                                                            <option value="">Select School</option>
+                                                            @foreach ($schools as $school)
+                                                                <option value="{{ $school->id }}">{{ $school->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('school_id')
+                                                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+
+
+                                                    <!--save and cancel buttons-->
+                                                    <div class="mt-2 flex space-x-2">
+                                                        <button wire:click="closeModal('isPersonalOpen')" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+                                                            Save
+                                                        </button>
+                                                        <button 
+                                                            wire:click="closeModal('isPersonalOpen')" 
+                                                            class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+
+                                                            <!-- Normal state -->
+                                                            <span wire:loading.remove wire:target="closeModal('isPersonalOpen')">
+                                                                Cancel
+                                                            </span>
+
+                                                            <!-- Loading state -->
+                                                            <span wire:loading wire:target="closeModal('isPersonalOpen')" class="flex items-center gap-2">
+                                                                <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                                                </svg>
+                                                                Closing...
+                                                            </span>
+                                                        </button>
+                                                        
+                                                    </div>
+                                                @endif
+
                                             </div>
                                         </div>
                                     </div>
@@ -2151,23 +2271,56 @@
                             <div class="bg-white rounded-lg border border-slate-200 overflow-hidden mb-6">
                                 <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200">
                                     <h3 class="font-semibold text-slate-800">Contact Details</h3>
-                                    <button class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
-                                        <svg class="w-3 h-3 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                        Edit
+                                    <button 
+                                        wire:click="openModal('isContactOpen')" 
+                                        class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+
+                                        <!-- Normal state -->
+                                        <span wire:loading.remove wire:target="openModal('isContactOpen')" class="flex items-center gap-2"> 
+                                            <svg class="w-3 h-3 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                            Edit
+                                        </span>
+
+                                        <!-- Loading state -->
+                                        <span wire:loading wire:target="openModal('isContactOpen')" class="flex items-center">
+                                            <svg class="animate-spin h-4 w-4 text-indigo-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                            </svg>
+                                            Loading...
+                                        </span>
                                     </button>
                                 </div>
+
                                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Email</span>
 
                                         <!--check if the email variable exists-->
                                         @if (!empty($email))
-                                            <span class="text-sm text-slate-900 font-medium">student@example.com</span>
+                                            <span class="text-sm text-slate-900 font-medium">{{ $email }}</span>
                                         @else
                                             <span class="text-sm text-slate-400 italic">Email Not Provided</span>
+                                        @endif
+
+                                        <!--check if the modal button is clicked-->
+                                        @if ($isContactOpen)
+
+                                            <!--display the input field to edit email-->
+                                            <div class="mt-2">
+                                                <input type="email" 
+                                                    wire:model="email"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    placeholder="Enter email address"
+                                                />
+                                                @error('email')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+                                            </div>  
+                                            
                                         @endif
                                         
                                     </div>
@@ -2181,6 +2334,23 @@
                                             <span class="text-sm text-slate-400 italic">Phone Not Provided</span>
                                         @endif
 
+                                        <!--check if the modal button is clicked-->
+                                        @if ($isContactOpen)
+
+                                            <!--display the input field to edit phone-->
+                                            <div class="mt-2">
+                                                <input type="text" 
+                                                    wire:model="phone"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    placeholder="Enter phone number"
+                                                />
+                                                @error('phone')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            
+                                        @endif
+
                                     </div>
                                     <div class="flex flex-col col-span-2">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Address</span>
@@ -2192,6 +2362,49 @@
                                             <span class="text-sm text-slate-400 italic">Address Not Provided</span>
                                         @endif
 
+                                        
+
+                                        <!--check if the modal button is clicked-->
+                                        @if ($isContactOpen)
+                                            <!--display the input field to edit address-->
+                                            <div class="mt-2">
+                                                <input type="text" 
+                                                    wire:model="street"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    placeholder="Enter address"
+                                                />
+                                                @error('street')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="mt-2 flex space-x-2">
+                                                
+                                                <button wire:click="saveAddress" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+                                                    Save
+                                                </button>
+
+                                                <button 
+                                                    wire:click="closeModal('isContactOpen')" 
+                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+
+                                                    <!-- Normal state -->
+                                                    <span wire:loading.remove wire:target="closeModal('isContactOpen')">
+                                                        Cancel
+                                                    </span>
+
+                                                    <!-- Loading state -->
+                                                    <span wire:loading wire:target="closeModal('isContactOpen')" class="flex items-center gap-2">
+                                                        <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                                        </svg>
+                                                        Closing...
+                                                    </span>
+                                                </button>
+
+                                            </div>
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -2200,13 +2413,30 @@
                             <div class="bg-white rounded-lg border border-slate-200 overflow-hidden mb-6">
                                 <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200">
                                     <h3 class="font-semibold text-slate-800">Guardian Information</h3>
-                                    <button class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
-                                        <svg class="w-3 h-3 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                        Edit
+
+                                    <button 
+                                        wire:click="openModal('isGuardianOpen')" 
+                                        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+
+                                        <!-- Normal state -->
+                                        <span wire:loading.remove wire:target="openModal('isGuardianOpen')" class="inline-flex items-center gap-2">
+                                            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                            Edit
+                                        </span>
+
+                                        <!-- Loading state -->
+                                        <span wire:loading wire:target="openModal('isGuardianOpen')" class="flex items-center gap-2">
+                                            <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                            </svg>
+                                            Loading...
+                                        </span>
                                     </button>
+
                                 </div>
                                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                                     <div class="flex flex-col">
@@ -2217,6 +2447,36 @@
                                             <span class="text-sm text-slate-900 font-medium">{{ $firstname }} {{ $middlename }} {{ $lastname }}</span>
                                         @else
                                             <span class="text-sm text-slate-400 italic">Name Not Provided</span>
+                                        @endif
+
+                                        <!--check if the modal button is clicked-->
+                                        @if ($isGuardianOpen)
+                                            <!--display the input fields to edit names-->
+                                            <div class="mt-2 space-y-2">
+                                                <input type="text" 
+                                                    wire:model="firstname"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    placeholder="First Name"
+                                                />
+                                                @error('firstname')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+
+                                                <input type="text" 
+                                                    wire:model="middlename"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    placeholder="Middle Name"
+                                                />
+                                                @error('middlename')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+
+                                                <input type="text" 
+                                                    wire:model="lastname"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    placeholder="Last Name"
+                                                />
+                                            </div>
                                         @endif
 
                                     </div>
@@ -2230,6 +2490,26 @@
                                             <span class="text-sm text-slate-400 italic">Relationship Not Provided</span>
                                         @endif
 
+                                        <!--check if the modal button is clicked-->
+                                        @if ($isGuardianOpen)
+                                            <!--dispay the select field to edit relationship-->
+                                            <div class="mt-2">
+                                                <select
+                                                    wire:model="relationship"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                >
+                                                    <option value="">Select Relationship</option>
+                                                    <option value="father">Father</option>
+                                                    <option value="mother">Mother</option>
+                                                    <option value="guardian">Guardian</option>
+                                                </select>
+                                                @error('relationship')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        @endif
+                                            
+
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Phone</span>
@@ -2239,6 +2519,21 @@
                                             <span class="text-sm text-slate-900 font-medium">{{ $guardian_phone }}</span>
                                         @else
                                             <span class="text-sm text-slate-400 italic">Phone Not Provided</span>
+                                        @endif
+
+                                        <!--check if the modal button is clicked-->
+                                        @if ($isGuardianOpen)
+                                            <!--display the input field to edit address-->
+                                            <div class="mt-2">
+                                                <input type="text" 
+                                                    wire:model="guardian_phone"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    placeholder="Enter phone"
+                                                />
+                                                @error('guardian_phone')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                                         @endif
 
                                     </div>
@@ -2252,6 +2547,45 @@
                                             <span class="text-sm text-slate-400 italic">Email Not Provided</span>
                                         @endif
 
+                                        <!--check if the modal button is clicked-->
+                                        @if ($isGuardianOpen)
+                                            <!--display the input field to edit address-->
+                                            <div class="mt-2">
+                                                <input type="email" 
+                                                    wire:model="guardian_email"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    placeholder="Enter email"
+                                                />
+                                                @error('guardian_email')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="mt-2 flex space-x-2">
+                                                <button wire:click="saveAddress" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+                                                    Save
+                                                </button>
+                                                <button 
+                                                    wire:click="closeModal('isGuardianOpen')" 
+                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+
+                                                    <!-- Normal state -->
+                                                    <span wire:loading.remove wire:target="closeModal('isGuardianOpen')">
+                                                        Cancel
+                                                    </span>
+
+                                                    <!-- Loading state -->
+                                                    <span wire:loading wire:target="closeModal('isGuardianOpen')" class="flex items-center gap-2">
+                                                        <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                                        </svg>
+                                                        Closing...
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -2260,13 +2594,30 @@
                             <div class="bg-white rounded-lg border border-slate-200 overflow-hidden mb-6">
                                 <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200">
                                     <h3 class="font-semibold text-slate-800">Academic Information</h3>
-                                    <button class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
-                                        <svg class="w-3 h-3 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                        Edit
+
+                                    <button 
+                                        wire:click="openModal('isAcademicOpen')" 
+                                        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+
+                                        <!-- Normal state -->
+                                        <span wire:loading.remove wire:target="openModal('isAcademicOpen')" class="inline-flex items-center gap-2">
+                                            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                            Edit
+                                        </span>
+
+                                        <!-- Loading state -->
+                                        <span wire:loading wire:target="openModal('isAcademicOpen')" class="flex items-center gap-2">
+                                            <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                            </svg>
+                                            Loading...
+                                        </span>
                                     </button>
+                                    
                                 </div>
                                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                                     <div class="flex flex-col">
@@ -2278,6 +2629,8 @@
                                         @else
                                             <span class="text-sm text-slate-400 italic">Not Set, Please Re-Apply the Form Again</span>
                                         @endif
+
+
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Grade Applied For</span>
@@ -2287,6 +2640,32 @@
                                             <span class="text-sm text-slate-900 font-medium">{{ $grade_applied_for }}</span>
                                         @else
                                             <span class="text-sm text-slate-400 italic">Grade Not Provided</span>
+                                        @endif
+
+                                        <!--check if the modal button is clicked-->
+                                        @if ($isAcademicOpen)
+                                            <!--display the select field to edit grade applied for-->
+
+                                            <div class="mt-2">
+                                                <select
+                                                    wire:model="grade_applied_for"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                >
+                                                    <option value="">Select Grade</option>
+                                                    <option value="Kindergarten">Kindergarten</option>
+                                                    <option value="1st Grade">1st Grade</option>
+                                                    <option value="2nd Grade">2nd Grade</option>
+                                                    <option value="3rd Grade">3rd Grade</option>
+                                                    <option value="4th Grade">4th Grade</option>
+                                                    <option value="5th Grade">5th Grade</option>
+                                                    <option value="6th Grade">6th Grade</option>
+                                                    <option value="7th Grade">7th Grade</option>
+
+                                                </select>
+                                                @error('grade_applied_for')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+
                                         @endif
 
                                     </div>
@@ -2300,6 +2679,21 @@
                                             <span class="text-sm text-slate-400 italic">School Not Provided</span>
                                         @endif
 
+                                        <!--check if the modal button is clicked-->
+                                        @if ($isAcademicOpen)
+                                            <!--display the input field to edit previous school-->
+                                            <div class="mt-2">
+                                                <input type="text" 
+                                                    wire:model="previous_school_name"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    placeholder="Enter previous school name"
+                                                />
+                                                @error('previous_school_name')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        @endif
+
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Admission Date</span>
@@ -2309,6 +2703,32 @@
                                             <span class="text-sm text-slate-900 font-medium">{{ $admission_date }}</span>
                                         @else
                                             <span class="text-sm text-slate-400 italic">Date Not Provided</span>
+                                        @endif
+
+                                        <!--check if the modal button is clicked-->
+                                        @if ($isAcademicOpen)
+                                            <!--display the input field to edit admission date-->
+                                            <div class="mt-2">
+                                                <input type="date" 
+                                                    wire:model="admission_date"
+                                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                />
+                                                @error('admission_date')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <!--save and cancel buttons-->
+                                            <div class="mt-2 flex space-x-2">
+                                                <button wire:click="saveAddress" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+                                                    Save
+                                                </button>
+
+                                                <button wire:click="closeModal('isAcademicOpen')" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+                                                    Cancel
+                                                </button>
+
+                                            </div>
                                         @endif
 
                                     </div>

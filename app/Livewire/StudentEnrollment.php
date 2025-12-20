@@ -13,7 +13,18 @@ class StudentEnrollment extends Component
     //with uploads trait
     use WithFileUploads;
 
+    //property for modal
+    public $isPersonalOpen = false;
+    public $isContactOpen = false;
+    public $isGuardianOpen = false;
+    public $isAcademicOpen = false;
+    public $isDocumentOpen = false;
+    public $isOpen = false;
+
+    //property for steps
     public int $step = 1;
+
+    //properties for student enrollment
     public $schools;
     public $student_enrollment_id;
     public $schoolname;
@@ -57,6 +68,60 @@ class StudentEnrollment extends Component
 
     //property to handle same as student info
     public $sameAsStudent = false;
+
+    //function to open the modal
+    function openModal($property)
+    {
+
+        if($property == 'isContactOpen')
+        {
+            $this->isContactOpen = true;
+        }
+        elseif($property == 'isGuardianOpen')
+        {
+            $this->isGuardianOpen = true;
+        }
+        elseif($property == 'isAcademicOpen')
+        {
+            $this->isAcademicOpen = true;
+        }
+        elseif($property == 'isPersonalOpen')
+        {
+            $this->isPersonalOpen = true;
+        }
+        elseif($property == 'isDocumentOpen')
+        {
+            $this->isDocumentOpen = true;
+        }
+
+    }
+
+    //function to close the modal
+    function closeModal($property)
+    {
+
+        if($property == 'isContactOpen')
+        {
+            $this->isContactOpen = false;
+        }
+        if($property == 'isGuardianOpen')
+        {
+            $this->isGuardianOpen = false;
+        }
+        elseif($property == 'isAcademicOpen')
+        {
+            $this->isAcademicOpen = false;
+        }
+        elseif($property == 'isPersonalOpen')
+        {
+            $this->isPersonalOpen = false;
+        }
+        elseif($property == 'isDocumentOpen')
+        {
+            $this->isDocumentOpen = false;
+        }
+
+    }
 
 
     public function nextStep()
