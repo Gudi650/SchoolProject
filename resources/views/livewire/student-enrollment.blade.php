@@ -2133,8 +2133,14 @@
                                             </div>
 
                                             <div class="flex flex-col">
-                                                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Blood Group</span>
-                                                <span class="text-sm text-slate-900 font-medium">O+</span>
+                                                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">School Enrolling Into</span>
+                                                <!--check if the school_id variable exists-->
+                                                @if (!empty($schoolname))
+                                                    <span class="text-sm text-slate-900 font-medium">{{ $schoolname }}</span>
+                                                @else
+                                                    <span class="text-sm text-slate-400 italic">School Not Selected</span> 
+                                                @endif
+
                                             </div>
                                         </div>
                                     </div>

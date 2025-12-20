@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\School;
 use App\Models\studentEnrollment as ModelsStudentEnrollment;
 use Illuminate\Validation\ValidationException as ValidationValidationException;
 use Livewire\Component;
@@ -15,6 +16,7 @@ class StudentEnrollment extends Component
     public int $step = 1;
     public $schools;
     public $student_enrollment_id;
+    public $schoolname;
 
     //step 1: Personal Information
     public $fname;
@@ -137,6 +139,9 @@ class StudentEnrollment extends Component
             //create a unique student enrollment id
             $this->generateNewEnrollmentId();
 
+            //get the school name
+            $this->schoolname = $this->getSchoolNameById($this->school_id);
+
         }catch(ValidationValidationException $e)
         {
             //handle the validation exception
@@ -246,6 +251,10 @@ class StudentEnrollment extends Component
             if ($this->birth_certificate) {
                     $record->store('documents/birth_certificates', 'public');
             }
+
+            //get the school name
+            $this->schoolname = $this->getSchoolNameById($this->school_id);
+
         }catch(ValidationValidationException $e)
         {
             //handle the validation exception
@@ -288,6 +297,13 @@ class StudentEnrollment extends Component
         // If unique, assign and return
         $this->student_enrollment_id = $id;
         return $this->student_enrollment_id;
+    }
+
+    //function to obtain the school name by id
+    function getSchoolNameById($school_id)
+    {
+        $school = School::where('id', $school_id)->first();
+        return $school ? $school->name : null;
     }
 
 }
