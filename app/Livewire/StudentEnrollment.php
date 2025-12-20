@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\parentEnrolllment;
 use App\Models\School;
+use App\Models\studentEnrollDetails;
 use App\Models\studentEnrollment as ModelsStudentEnrollment;
 use Illuminate\Validation\ValidationException as ValidationValidationException;
 use Livewire\Component;
@@ -53,6 +55,7 @@ class StudentEnrollment extends Component
     public $guardian_phone;
     public $guardian_email;
     public $relationship;
+    public $guardian_gender;
 
     //step 4: Academic Information
     public $grade_applied_for;
@@ -280,6 +283,20 @@ class StudentEnrollment extends Component
             'relationship' => 'required|string|max:100',
             ]);
 
+            //obtain the guardian gender
+            if($this->relationship == 'father')
+            {
+                $this->guardian_gender = 'male';
+            }
+            elseif($this->relationship == 'mother')
+            {
+                $this->guardian_gender = 'female';
+            }
+            else
+            {
+                $this->guardian_gender = 'other';
+            }
+
         }catch(ValidationValidationException $e)
         {
             //handle the validation exception
@@ -376,7 +393,7 @@ class StudentEnrollment extends Component
     public function generateNewEnrollmentId()
     {
         // Generate ID with prefix + year + random 4 digits
-        $id = 'SE' . now()->format('Y') . random_int(1000, 9999);
+        $id =  now()->format('Y') . random_int(1000, 9999);
 
         // Check if it exists in the database
         $exists = ModelsStudentEnrollment::where('student_enrollment_id', $id)->exists();
@@ -396,6 +413,103 @@ class StudentEnrollment extends Component
     {
         $school = School::where('id', $school_id)->first();
         return $school ? $school->name : null;
+    }
+
+    //function to submit the enrollment form
+    public function submitEnrollment()
+    {
+
+        //try and catch block for final validation
+
+        try{
+
+            //final validation before submission
+            $this->validatestep1();
+            $this->validatestep2();
+            $this->validatestep3();
+            $this->validatestep4();
+            $this->validatestep5();
+        }catch(ValidationValidationException $e)
+        {
+            //handle the validation exception
+            $this->addError('validation', 'Please correct the errors in the form before submission.');
+            throw $e;
+        }
+
+        //try and catch block for database operations
+
+        try{
+
+            //create a parent student enrollment record
+            $parentEnrollment = parentEnrolllment::UpdateOrcreate(
+                [
+                    'email' => $this->guardian_email,
+                ],
+                [
+                    //guardian info
+                    'fname' => $this->firstname,
+                    'mname' => $this->middlename,
+                    'lname' => $this->lastname,
+                    'relationship' => $this->relationship,
+                    'gender' => $this->guardian_gender,
+                    'phone' => $this->guardian_phone,
+                    'email' => $this->guardian_email,
+                    'city' => $this->city,
+                    'district' => $this->district,
+                    'ward' => $this->ward,
+                    'street' => $this->street,
+
+                ]
+            );
+
+            //create  the student enrollment record
+            $studentEnrollment = ModelsStudentEnrollment::UpdateOrcreate(
+                [
+                    'student_enrollment_id' => $this->student_enrollment_id,
+                ],
+                [
+                    //personal info
+                    'fname' => $this->fname,
+                    'mname' => $this->mname,
+                    'lname' => $this->lname,
+                    'gender' => $this->gender,
+                    'date_of_birth' => $this->dob,
+                    'school_id' => $this->school_id,
+                    'previous_school_name' => $this->previous_school_name,
+                    'student_enrollment_id' => $this->student_enrollment_id,
+                    'parent_enrollment_id' => $parentEnrollment->id,
+                ]
+
+            ); 
+
+            //create the student enrollment details records
+            studentEnrollDetails::UpdateOrcreate(
+                [
+                    'student_enrollment_id' => $this->student_enrollment_id,
+                ],
+                [
+                    //academic info
+                    'admission_date' => $this->admission_date,
+                    'grade_applied_for' => $this->grade_applied_for,
+                    'previous_school_name' => $this->previous_school_name,
+                    'academic_records' => json_encode(array_map(fn($file) => $file->getClientOriginalName(), $this->academic_records)),
+                    'transfer_certificate' => json_encode(array_map(fn($file) => $file->getClientOriginalName(), $this->transfer_certificate)),
+                    'birth_certificate' => $this->birth_certificate ? $this->birth_certificate->getClientOriginalName() : null,
+                    'reports_card' => json_encode(array_map(fn($file) => $file->getClientOriginalName(), $this->reports_cards)),
+                ]
+            );
+
+        }catch(\Exception $e)
+        {
+            //handle any database exceptions
+            $this->addError('database', 'An error occurred while submitting the enrollment. Please try again.');
+            throw $e;
+        }
+
+
+        //redirect to the beginning with a thank you message
+        return redirect()->to('studentenrollment.thanks')->with('success', 'Enrollment submitted successfully! Thank you.');
+
     }
 
 }

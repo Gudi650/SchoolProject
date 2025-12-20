@@ -20,4 +20,17 @@ class studentEnrollment extends Model
         'parent_enrollment_id',
         'status',
     ]; 
+
+    //relationship with parentEnrollment
+    public function parentEnrollment()
+    {
+        return $this->belongsTo(parentEnrolllment::class, 'parent_enrollment_id');
+    }
+
+    //relationship with studentEnrollDetails
+    public function studentEnrollDetails()
+    {
+        return $this->hasOne(studentEnrollDetails::class, 'student_enrollment_id');
+    }
+
 }

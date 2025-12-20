@@ -18,4 +18,12 @@ class studentEnrollDetails extends Model
         'reports_cards',
         'status',
     ];
+
+
+    //relatiosnip with studentEnrollment
+    public function studentEnrollment()
+    {
+        return $this->belongsTo(studentEnrollment::class, 'student_enrollment_id');
+    }
+
 }

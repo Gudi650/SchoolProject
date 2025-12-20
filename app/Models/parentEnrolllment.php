@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class parentEnrolllment extends Model
 {
+
+    //name of the table
+    protected $table = 'parent_enrollments';
+
     //fillable fields
     protected $fillable = [
         'fname',
@@ -20,4 +24,12 @@ class parentEnrolllment extends Model
         'ward',
         'street',
     ];
+
+
+    //relationship with studentEnrollment
+    public function studentEnrollments()
+    {
+        return $this->hasMany(studentEnrollment::class, 'parent_enrollment_id');
+    }
+
 }

@@ -7,6 +7,7 @@
     </div>
 
 
+
     @if($step === 1)
 
     <!-- Step 1: Personal Info -->
@@ -2932,9 +2933,9 @@
 
                                                                 <!-- Cancel button -->
                                                                 <button type="button"
-                                                                        wire:click="removeAcademicRecord({{ $index }})"
+                                                                        wire:click="removefileUpload('academic_records', {{ $index }})"
                                                                         wire:loading.remove
-                                                                        wire:target="removeAcademicRecord"
+                                                                        wire:target="removefileUpload('academic_records', {{ $index }})"
                                                                         class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -2944,7 +2945,7 @@
                                                                 </button>
 
                                                                 <!-- Loader -->
-                                                                <div wire:loading wire:target="removeAcademicRecord" class="ml-2">
+                                                                <div wire:loading wire:target="removefileUpload('academic_records', {{ $index }})" class="ml-2">
                                                                     <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                         viewBox="0 0 24 24">
                                                                         <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -2984,9 +2985,9 @@
                                                             </div>
 
                                                             <button type="button"
-                                                                    wire:click="removeAcademicRecord(0)"
+                                                                    wire:click="removefileUpload('academic_records', {{ $index }})"
                                                                     wire:loading.remove
-                                                                    wire:target="removeAcademicRecord"
+                                                                    wire:target="removefileUpload('academic_records', {{ $index }})"
                                                                     class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -2995,7 +2996,7 @@
                                                                 </svg>
                                                             </button>
 
-                                                            <div wire:loading wire:target="removeAcademicRecord" class="ml-2">
+                                                            <div wire:loading wire:target="removefileUpload('academic_records', {{ $index }})" class="ml-2">
                                                                 <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24">
                                                                     <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -3048,6 +3049,22 @@
                                                 @enderror
 
                                             @endif
+
+                                            <!--add loader when uploading files-->
+                                            <div wire:loading wire:target="academic_records"
+                                                class="mt-2 inline-flex items-center text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2 shadow-sm">
+                                                
+                                                <!-- Spinner -->
+                                                <svg class="animate-spin h-4 w-4 mr-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                            stroke="currentColor" stroke-width="4"></circle>
+                                                    <path class="opacity-75" fill="currentColor"
+                                                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                </svg>
+
+                                                <!-- Loading text -->
+                                                <span class="font-medium">Uploading files...</span>
+                                            </div>
                                             
                                         </div>
                                     </div>
@@ -3085,9 +3102,9 @@
 
                                                             <!-- Cancel button -->
                                                             <button type="button"
-                                                                    wire:click="removeTransferCertificate({{ $index }})"
+                                                                    wire:click="removefileUpload('transfer_certificate', {{ $index }})"
                                                                     wire:loading.remove
-                                                                    wire:target="removeTransferCertificate"
+                                                                    wire:target="removefileUpload('transfer_certificate', {{ $index }})"
                                                                     class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -3097,7 +3114,7 @@
                                                             </button>
 
                                                             <!-- Loader -->
-                                                            <div wire:loading wire:target="removeTransferCertificate" class="ml-2">
+                                                            <div wire:loading wire:target="removefileUpload('transfer_certificate', {{ $index }})" class="ml-2">
                                                                 <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24">
                                                                     <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -3137,9 +3154,9 @@
                                                             </div>
 
                                                             <button type="button"
-                                                                    wire:click="removeTransferCertificate(0)"
+                                                                    wire:click="removefileUpload('transfer_certificate', {{ $index }})"
                                                                     wire:loading.remove
-                                                                    wire:target="removeTransferCertificate"
+                                                                    wire:target="removefileUpload('transfer_certificate', {{ $index }})"
                                                                     class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -3148,7 +3165,7 @@
                                                                 </svg>
                                                             </button>
 
-                                                            <div wire:loading wire:target="removeTransferCertificate" class="ml-2">
+                                                            <div wire:loading wire:target="removefileUpload('transfer_certificate', {{ $index }})" class="ml-2">
                                                                 <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24">
                                                                     <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -3196,11 +3213,27 @@
                                                 <!-- File List Container -->
                                                 <div id="academicRecordsList" class="mt-3 space-y-2 hidden"></div>
 
-                                                @error('academic_records')
+                                                @error('transfer_certificate')
                                                     <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
                                                 @enderror
 
                                             @endif
+
+                                            <!--add loader when uploading files-->
+                                            <div wire:loading wire:target="transfer_certificate"
+                                                class="mt-2 inline-flex items-center text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2 shadow-sm">
+                                                
+                                                <!-- Spinner -->
+                                                <svg class="animate-spin h-4 w-4 mr-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                            stroke="currentColor" stroke-width="4"></circle>
+                                                    <path class="opacity-75" fill="currentColor"
+                                                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                </svg>
+
+                                                <!-- Loading text -->
+                                                <span class="font-medium">Uploading files...</span>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -3238,9 +3271,9 @@
 
                                                                 <!-- Cancel button -->
                                                                 <button type="button"
-                                                                        wire:click="removeBirthCertificate({{ $index }})"
+                                                                        wire:click="removeSingleFileUpload('birth_certificate')"
                                                                         wire:loading.remove
-                                                                        wire:target="removeBirthCertificate"
+                                                                        wire:target="removeSingleFileUpload('birth_certificate')"
                                                                         class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -3250,7 +3283,7 @@
                                                                 </button>
 
                                                                 <!-- Loader -->
-                                                                <div wire:loading wire:target="removeBirthCertificate" class="ml-2">
+                                                                <div wire:loading wire:target="removeSingleFileUpload('birth_certificate')" class="ml-2">
                                                                     <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                         viewBox="0 0 24 24">
                                                                         <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -3290,9 +3323,9 @@
                                                             </div>
 
                                                             <button type="button"
-                                                                    wire:click="removeBirthCertificate(0)"
+                                                                    wire:click="removeSingleFileUpload('birth_certificate')"
                                                                     wire:loading.remove
-                                                                    wire:target="removeBirthCertificate"
+                                                                    wire:target="removeSingleFileUpload('birth_certificate')"
                                                                     class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -3301,7 +3334,7 @@
                                                                 </svg>
                                                             </button>
 
-                                                            <div wire:loading wire:target="removeBirthCertificate" class="ml-2">
+                                                            <div wire:loading wire:target="removeSingleFileUpload('birth_certificate')" class="ml-2">
                                                                 <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24">
                                                                     <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -3349,11 +3382,27 @@
                                                 <!-- File List Container -->
                                                 <div id="academicRecordsList" class="mt-3 space-y-2 hidden"></div>
 
-                                                @error('academic_records')
+                                                @error('birth_certificate')
                                                     <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
                                                 @enderror
 
                                             @endif
+
+                                            <!--add loader when uploading files-->
+                                            <div wire:loading wire:target="birth_certificate"
+                                                class="mt-2 inline-flex items-center text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2 shadow-sm">
+                                                
+                                                <!-- Spinner -->
+                                                <svg class="animate-spin h-4 w-4 mr-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                            stroke="currentColor" stroke-width="4"></circle>
+                                                    <path class="opacity-75" fill="currentColor"
+                                                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                </svg>
+
+                                                <!-- Loading text -->
+                                                <span class="font-medium">Uploading files...</span>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -3390,9 +3439,9 @@
 
                                                                 <!-- Cancel button -->
                                                                 <button type="button"
-                                                                        wire:click="removeReportCard({{ $index }})"
+                                                                        wire:click="removefileUpload('reports_cards', {{ $index }})"
                                                                         wire:loading.remove
-                                                                        wire:target="removeReportCard"
+                                                                        wire:target="removefileUpload('reports_cards', {{ $index }})"
                                                                         class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -3402,7 +3451,7 @@
                                                                 </button>
 
                                                                 <!-- Loader -->
-                                                                <div wire:loading wire:target="removeReportCard" class="ml-2">
+                                                                <div wire:loading wire:target="removefileUpload('reports_cards', {{ $index }})" class="ml-2">
                                                                     <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                         viewBox="0 0 24 24">
                                                                         <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -3442,9 +3491,9 @@
                                                             </div>
 
                                                             <button type="button"
-                                                                    wire:click="removeReportCard(0)"
+                                                                    wire:click="removefileUpload('reports_cards', {{ $index }})"
                                                                     wire:loading.remove
-                                                                    wire:target="removeReportCard"
+                                                                    wire:target="removefileUpload('reports_cards', {{ $index }})"
                                                                     class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
                                                                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -3453,7 +3502,7 @@
                                                                 </svg>
                                                             </button>
 
-                                                            <div wire:loading wire:target="removeReportCard" class="ml-2">
+                                                            <div wire:loading wire:target="removefileUpload('reports_cards', {{ $index }})" class="ml-2">
                                                                 <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24">
                                                                     <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -3468,6 +3517,7 @@
                                             @else
                                                 <span class="text-sm text-slate-400">No files uploaded</span>
                                             @endif
+
 
                                             <!--checking if modal is open to show the input field-->
                                             @if ($isDocumentOpen)
@@ -3501,9 +3551,25 @@
                                                 <!-- File List Container -->
                                                 <div id="academicRecordsList" class="mt-3 space-y-2 hidden"></div>
 
-                                                @error('academic_records')
+                                                @error('reports_cards')
                                                     <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
                                                 @enderror
+
+                                                <!--add loader when uploading files-->
+                                                <div wire:loading wire:target="reports_cards"
+                                                    class="mt-2 inline-flex items-center text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2 shadow-sm">
+                                                    
+                                                    <!-- Spinner -->
+                                                    <svg class="animate-spin h-4 w-4 mr-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                                stroke="currentColor" stroke-width="4"></circle>
+                                                        <path class="opacity-75" fill="currentColor"
+                                                            d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                    </svg>
+
+                                                    <!-- Loading text -->
+                                                    <span class="font-medium">Uploading files...</span>
+                                                </div>
 
                                                 <!--save and cancel buttons-->
                                                 <div class="mt-2 flex space-x-2">
@@ -3531,6 +3597,7 @@
                                                     </span>
                                                 </button>
 
+                                                {{-- 
                                                     <button 
                                                         wire:click="closeModal('isDocumentOpen')" 
                                                         class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
@@ -3550,10 +3617,13 @@
                                                             Closing...
                                                         </span>
                                                     </button>
+                                                --}}
 
                                                 </div>
 
                                             @endif
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -3579,12 +3649,28 @@
                         </span>
 
                         <div class="flex items-center gap-4">
-                            <button onclick="submitEnrollment()" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm">
-                                Submit Enrollment
-                                <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <polyline points="9 11 12 14 22 4"></polyline>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                </svg>
+                            <button 
+                                wire:click="submitEnrollment" 
+                                wire:loading.attr="disabled"
+                                class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm">
+
+                                <!-- Normal text (hidden while loading) -->
+                                <span wire:loading.remove>
+                                    Submit Enrollment
+                                    <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <polyline points="9 11 12 14 22 4"></polyline>
+                                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                    </svg>
+                                </span>
+
+                                <!-- Loader (shown while loading) -->
+                                <span wire:loading.flex class="items-center">
+                                    Submitting...
+                                    <svg class="animate-spin w-4 h-4 ml-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8z"></path>
+                                    </svg>
+                                </span>
                             </button>
                         </div>
                     </div>

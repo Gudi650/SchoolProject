@@ -324,3 +324,8 @@ Route::get('/accounting-settings', function () {
 Route::get('/student-enrollment', 
 [studentEnrollment::class, 'viewStudentEnrollment'])
 ->name('studentenrollment.form');
+
+//route for thanks page after submission
+Route::get('/student-enrollment/thanks', function(){
+    return view('studentenrollmentThank');
+})->name('studentenrollment.thanks');
