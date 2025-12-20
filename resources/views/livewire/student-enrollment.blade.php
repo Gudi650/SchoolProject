@@ -2266,9 +2266,30 @@
 
                                                     <!--save and cancel buttons-->
                                                     <div class="mt-2 flex space-x-2">
-                                                        <button wire:click="closeModal('isPersonalOpen')" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
-                                                            Save
+
+                                                        <button 
+                                                            wire:click="closeModal('isPersonalOpen')" 
+                                                            class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
+                                                                bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+
+                                                            <!-- Normal state -->
+                                                            <span wire:loading.remove wire:target="closeModal('isPersonalOpen')" class="inline-flex items-center gap-2">
+                                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <path d="M5 13l4 4L19 7" />
+                                                                </svg>
+                                                                Save
+                                                            </span>
+
+                                                            <!-- Loading state -->
+                                                            <span wire:loading wire:target="closeModal('isPersonalOpen')" class="inline-flex items-center gap-2">
+                                                                <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                                                </svg>
+                                                                Saving...
+                                                            </span>
                                                         </button>
+
                                                         <button 
                                                             wire:click="closeModal('isPersonalOpen')" 
                                                             class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
@@ -2410,10 +2431,30 @@
                                             </div>
                                             <div class="mt-2 flex space-x-2">
                                                 
-                                                <button wire:click="saveAddress" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
-                                                    Save
+                                                <button 
+                                                    wire:click="closeModal('isContactOpen')" 
+                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
+                                                        bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+
+                                                    <!-- Normal state -->
+                                                    <span wire:loading.remove wire:target="closeModal('isContactOpen')" class="inline-flex items-center gap-2">
+                                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                        Save
+                                                    </span>
+
+                                                    <!-- Loading state -->
+                                                    <span wire:loading wire:target="closeModal('isContactOpen')" class="inline-flex items-center gap-2">
+                                                        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                                        </svg>
+                                                        Saving...
+                                                    </span>
                                                 </button>
 
+                                                {{-- 
                                                 <button 
                                                     wire:click="closeModal('isContactOpen')" 
                                                     class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
@@ -2432,7 +2473,8 @@
                                                         </svg>
                                                         Closing...
                                                     </span>
-                                                </button>
+                                                </button> 
+                                                 --}}
 
                                             </div>
                                         @endif
@@ -2594,10 +2636,30 @@
                                             </div>
 
                                             <div class="mt-2 flex space-x-2">
-                                                <button wire:click="saveAddress" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
-                                                    Save
+                                               <button 
+                                                    wire:click="closeModal('isGuardianOpen')" 
+                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
+                                                        bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+
+                                                    <!-- Normal state -->
+                                                    <span wire:loading.remove wire:target="closeModal('isGuardianOpen')" class="inline-flex items-center gap-2">
+                                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                        Save
+                                                    </span>
+
+                                                    <!-- Loading state -->
+                                                    <span wire:loading wire:target="closeModal('isGuardianOpen')" class="inline-flex items-center gap-2">
+                                                        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                                        </svg>
+                                                        Saving...
+                                                    </span>
                                                 </button>
-                                                <button 
+
+                                                {{--<button 
                                                     wire:click="closeModal('isGuardianOpen')" 
                                                     class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
                                                         bg-red-50 text-red-600 border border-red-300 hover:bg-red-100 hover:text-red-700 focus:ring-red-500">
@@ -2615,7 +2677,8 @@
                                                         </svg>
                                                         Closing...
                                                     </span>
-                                                </button>
+                                                </button> --}}
+
                                             </div>
                                         @endif
 
@@ -2754,10 +2817,30 @@
                                             <!--save and cancel buttons-->
                                             <div class="mt-2 flex space-x-2">
 
-                                                <button wire:click="closeModal('isPersonalOpen')" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
-                                                    Save
+                                                <button 
+                                                    wire:click="closeModal('isAcademicOpen')" 
+                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
+                                                        bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+
+                                                    <!-- Normal state -->
+                                                    <span wire:loading.remove wire:target="closeModal('isAcademicOpen')" class="inline-flex items-center gap-2">
+                                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                        Save
+                                                    </span>
+
+                                                    <!-- Loading state -->
+                                                    <span wire:loading wire:target="closeModal('isAcademicOpen')" class="inline-flex items-center gap-2">
+                                                        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                                        </svg>
+                                                        Saving...
+                                                    </span>
                                                 </button>
 
+                                                {{-- 
                                                 <button 
                                                     wire:click="closeModal('isAcademicOpen')" 
                                                     class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
@@ -2776,7 +2859,7 @@
                                                         </svg>
                                                         Closing...
                                                     </span>
-                                                </button>
+                                                </button>  --}}
 
                                             </div>
 
@@ -3425,9 +3508,28 @@
                                                 <!--save and cancel buttons-->
                                                 <div class="mt-2 flex space-x-2">
 
-                                                    <button wire:click="closeModal('isPersonalOpen')" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+                                                    <button 
+                                                    wire:click="closeModal('isDocumentOpen')" 
+                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm 
+                                                        bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+
+                                                    <!-- Normal state -->
+                                                    <span wire:loading.remove wire:target="closeModal('isDocumentOpen')" class="inline-flex items-center gap-2">
+                                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M5 13l4 4L19 7" />
+                                                        </svg>
                                                         Save
-                                                    </button>
+                                                    </span>
+
+                                                    <!-- Loading state -->
+                                                    <span wire:loading wire:target="closeModal('isDocumentOpen')" class="inline-flex items-center gap-2">
+                                                        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                                        </svg>
+                                                        Saving...
+                                                    </span>
+                                                </button>
 
                                                     <button 
                                                         wire:click="closeModal('isDocumentOpen')" 

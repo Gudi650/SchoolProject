@@ -123,6 +123,33 @@ class StudentEnrollment extends Component
 
     }
 
+    //function to save the modal changes in step 6 (preview page)
+    function saveModalChanges($property)
+    {
+        if($property == 'isContactOpen')
+        {
+            $this->isContactOpen = false;
+        }
+        if($property == 'isGuardianOpen')
+        {
+            $this->isGuardianOpen = false;
+        }
+        elseif($property == 'isAcademicOpen')
+        {
+            $this->isAcademicOpen = false;
+        }
+        elseif($property == 'isPersonalOpen')
+        {
+            $this->isPersonalOpen = false;
+        }
+        elseif($property == 'isDocumentOpen')
+        {
+            $this->isDocumentOpen = false;
+        }
+        
+    }
+
+
 
     public function nextStep()
     {
