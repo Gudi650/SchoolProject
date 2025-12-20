@@ -2102,6 +2102,36 @@
                                                     </div>
                                                 </div>
 
+                                                <!--check if the modal button is clicked-->
+                                                @if ($isPersonalOpen)
+                                                    <!--display the input field to upload photo-->
+                                                        <div class="flex flex-col sm:flex-row gap-4 items-start">
+                                                            <div class="flex-1 w-full">
+                                                                <div class="relative border-2 border-dashed border-slate-300 bg-slate-50 rounded-lg hover:border-slate-400 transition-all duration-200">
+                                                                    <input type="file" id="photoInput" wire:model="student_profile_picture" class="hidden" accept="image/jpeg,image/jpg,image/png" />
+                                                                    
+                                                                    <div class="p-6 text-center">
+                                                                        <svg class="mx-auto h-8 w-8 mb-3 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                                                            <circle cx="12" cy="13" r="4"></circle>
+                                                                        </svg>
+                                                                        <div class="mb-2">
+                                                                            <button type="button" onclick="document.getElementById('photoInput').click()" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus:ring-slate-500 shadow-sm">
+                                                                                Choose Photo
+                                                                            </button>
+                                                                        </div>
+                                                                        <p class="text-xs text-slate-500 mb-1">or drag and drop image here</p>
+                                                                        <p class="text-xs text-slate-400">Passport size photo • Max 2MB</p>
+                                                                        <p class="text-xs text-slate-400">JPG, PNG formats</p>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <p class="mt-1.5 text-xs text-slate-500">Upload a recent passport-size photograph with plain background</p>
+                                                            </div>
+                                                        </div>
+
+                                                @endif
+
                                                 </div>
                                             </div>
                                         </div>
@@ -2257,8 +2287,8 @@
                                                                 Closing...
                                                             </span>
                                                         </button>
-                                                        
                                                     </div>
+
                                                 @endif
 
                                             </div>
@@ -2720,15 +2750,32 @@
 
                                             <!--save and cancel buttons-->
                                             <div class="mt-2 flex space-x-2">
-                                                <button wire:click="saveAddress" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+
+                                                <button wire:click="closeModal('isPersonalOpen')" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
                                                     Save
                                                 </button>
 
-                                                <button wire:click="closeModal('isAcademicOpen')" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
-                                                    Cancel
+                                                <button 
+                                                    wire:click="closeModal('isAcademicOpen')" 
+                                                    class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+
+                                                    <!-- Normal state -->
+                                                    <span wire:loading.remove wire:target="closeModal('isAcademicOpen')">
+                                                        Cancel
+                                                    </span>
+
+                                                    <!-- Loading state -->
+                                                    <span wire:loading wire:target="closeModal('isAcademicOpen')" class="flex items-center gap-2">
+                                                        <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                                        </svg>
+                                                        Closing...
+                                                    </span>
                                                 </button>
 
                                             </div>
+
                                         @endif
 
                                     </div>
@@ -2739,13 +2786,30 @@
                             <div class="bg-white rounded-lg border border-slate-200 overflow-hidden mb-6">
                                 <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200">
                                     <h3 class="font-semibold text-slate-800">Uploaded Documents</h3>
-                                    <button class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
-                                        <svg class="w-3 h-3 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                        Edit
+
+                                    <button 
+                                        wire:click="openModal('isDocumentOpen')" 
+                                        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+
+                                        <!-- Normal state -->
+                                        <span wire:loading.remove wire:target="openModal('isDocumentOpen')" class="inline-flex items-center gap-2">
+                                            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                            Edit
+                                        </span>
+
+                                        <!-- Loading state -->
+                                        <span wire:loading wire:target="openModal('isDocumentOpen')" class="flex items-center gap-2">
+                                            <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                            </svg>
+                                            Loading...
+                                        </span>
                                     </button>
+
                                 </div>
                                 <div class="p-6 space-y-4">
                                     <div>
@@ -2858,6 +2922,44 @@
                                                 </div>
                                             @else
                                                 <span class="text-sm text-slate-400">No files uploaded</span>
+                                            @endif
+
+                                            <!--checking if modal is open to show the input field-->
+                                            @if ($isDocumentOpen) 
+                                                
+                                                <!--input field to upload academic records-->
+                                                <div class="relative border-2 border-dashed border-slate-300 bg-slate-50 rounded-lg hover:border-slate-400 transition-all duration-200">
+                                                    <input type="file" wire:model="academic_records" id="academicRecords" class="hidden" accept=".pdf,.jpg,.jpeg,.png"/>
+                                                    
+                                                    <div class="p-6 text-center">
+                                                        <svg class="mx-auto h-10 w-10 mb-3 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                                        </svg>
+                                                        <div class="mb-2">
+                                                            <button type="button" onclick="document.getElementById('academicRecords').click()" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus:ring-slate-500 shadow-sm">
+                                                                Choose Files
+                                                            </button>
+                                                        </div>
+                                                        <p class="text-xs text-slate-500">
+                                                            or drag and drop files here
+                                                        </p>
+                                                        <p class="text-xs text-slate-400 mt-1">
+                                                            Max size: 5MB per file
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <p class="mt-1.5 text-xs text-slate-500">Upload transcripts, grade sheets, or academic certificates</p>
+                                                
+                                                <!-- File List Container -->
+                                                <div id="academicRecordsList" class="mt-3 space-y-2 hidden"></div>
+
+                                                @error('academic_records')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+
                                             @endif
                                             
                                         </div>
@@ -2975,6 +3077,44 @@
                                                 <span class="text-sm text-slate-400">No files uploaded</span>
                                             @endif
 
+                                            <!--check for modal open to show input field-->
+                                            @if ($isDocumentOpen)
+
+                                                <!--input field to upload transfer records-->
+                                                <div class="relative border-2 border-dashed border-slate-300 bg-slate-50 rounded-lg hover:border-slate-400 transition-all duration-200">
+                                                    <input type="file" wire:model="transfer_certificate" id="transferCertificate" class="hidden" accept=".pdf,.jpg,.jpeg,.png"/>
+                                                    
+                                                    <div class="p-6 text-center">
+                                                        <svg class="mx-auto h-10 w-10 mb-3 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                                        </svg>
+                                                        <div class="mb-2">
+                                                            <button type="button" onclick="document.getElementById('transferCertificate').click()" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus:ring-slate-500 shadow-sm">
+                                                                Choose Files
+                                                            </button>
+                                                        </div>
+                                                        <p class="text-xs text-slate-500">
+                                                            or drag and drop files here
+                                                        </p>
+                                                        <p class="text-xs text-slate-400 mt-1">
+                                                            Max size: 5MB per file
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <p class="mt-1.5 text-xs text-slate-500">Upload transcripts, grade sheets, or academic certificates</p>
+                                                
+                                                <!-- File List Container -->
+                                                <div id="academicRecordsList" class="mt-3 space-y-2 hidden"></div>
+
+                                                @error('academic_records')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+
+                                            @endif
+
                                         </div>
                                     </div>
                                     <div>
@@ -3089,6 +3229,45 @@
                                             @else
                                                 <span class="text-sm text-slate-400">No files uploaded</span>
                                             @endif
+
+                                            <!--checking if modal is open to show the input field-->
+                                            @if ($isDocumentOpen)
+                                                
+                                                <!--input field to upload birth certificate-->
+                                                <div class="relative border-2 border-dashed border-slate-300 bg-slate-50 rounded-lg hover:border-slate-400 transition-all duration-200">
+                                                    <input type="file" wire:model="birth_certificate" id="birthCertificate" class="hidden" accept=".pdf,.jpg,.jpeg,.png"/>
+                                                    
+                                                    <div class="p-6 text-center">
+                                                        <svg class="mx-auto h-10 w-10 mb-3 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                                        </svg>
+                                                        <div class="mb-2">
+                                                            <button type="button" onclick="document.getElementById('birthCertificate').click()" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus:ring-slate-500 shadow-sm">
+                                                                Choose Files
+                                                            </button>
+                                                        </div>
+                                                        <p class="text-xs text-slate-500">
+                                                            or drag and drop files here
+                                                        </p>
+                                                        <p class="text-xs text-slate-400 mt-1">
+                                                            Max size: 5MB per file
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <p class="mt-1.5 text-xs text-slate-500">Upload transcripts, grade sheets, or academic certificates</p>
+                                                
+                                                <!-- File List Container -->
+                                                <div id="academicRecordsList" class="mt-3 space-y-2 hidden"></div>
+
+                                                @error('academic_records')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+
+                                            @endif
+
                                         </div>
                                     </div>
                                     <div id="reviewReportCardsSection" class="">
@@ -3203,6 +3382,71 @@
                                                 <span class="text-sm text-slate-400">No files uploaded</span>
                                             @endif
 
+                                            <!--checking if modal is open to show the input field-->
+                                            @if ($isDocumentOpen)
+
+                                                <!--input field to upload report cards-->
+                                                <div class="relative border-2 border-dashed border-slate-300 bg-slate-50 rounded-lg hover:border-slate-400 transition-all duration-200">
+                                                    <input type="file" wire:model="reports_cards" id="reportsCards" class="hidden" accept=".pdf,.jpg,.jpeg,.png"/>
+                                                    
+                                                    <div class="p-6 text-center">
+                                                        <svg class="mx-auto h-10 w-10 mb-3 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                                        </svg>
+                                                        <div class="mb-2">
+                                                            <button type="button" onclick="document.getElementById('reportsCards').click()" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-xs bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus:ring-slate-500 shadow-sm">
+                                                                Choose Files
+                                                            </button>
+                                                        </div>
+                                                        <p class="text-xs text-slate-500">
+                                                            or drag and drop files here
+                                                        </p>
+                                                        <p class="text-xs text-slate-400 mt-1">
+                                                            Max size: 5MB per file
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <p class="mt-1.5 text-xs text-slate-500">Upload transcripts, grade sheets, or academic certificates</p>
+                                                
+                                                <!-- File List Container -->
+                                                <div id="academicRecordsList" class="mt-3 space-y-2 hidden"></div>
+
+                                                @error('academic_records')
+                                                    <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                                @enderror
+
+                                                <!--save and cancel buttons-->
+                                                <div class="mt-2 flex space-x-2">
+
+                                                    <button wire:click="closeModal('isPersonalOpen')" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500">
+                                                        Save
+                                                    </button>
+
+                                                    <button 
+                                                        wire:click="closeModal('isDocumentOpen')" 
+                                                        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-8 px-3 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+
+                                                        <!-- Normal state -->
+                                                        <span wire:loading.remove wire:target="closeModal('isDocumentOpen')">
+                                                            Cancel
+                                                        </span>
+
+                                                        <!-- Loading state -->
+                                                        <span wire:loading wire:target="closeModal('isDocumentOpen')" class="flex items-center gap-2">
+                                                            <svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"></path>
+                                                            </svg>
+                                                            Closing...
+                                                        </span>
+                                                    </button>
+
+                                                </div>
+
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

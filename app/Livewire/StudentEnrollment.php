@@ -18,7 +18,7 @@ class StudentEnrollment extends Component
     public $isContactOpen = false;
     public $isGuardianOpen = false;
     public $isAcademicOpen = false;
-    public $isDocumentOpen = false;
+    public $isDocumentOpen = true;
     public $isOpen = false;
 
     //property for steps
