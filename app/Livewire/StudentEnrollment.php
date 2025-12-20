@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\studentEnrollment as ModelsStudentEnrollment;
 use Illuminate\Validation\ValidationException as ValidationValidationException;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -11,8 +12,9 @@ class StudentEnrollment extends Component
     //with uploads trait
     use WithFileUploads;
 
-    public int $step = 6;
+    public int $step = 1;
     public $schools;
+    public $student_enrollment_id;
 
     //step 1: Personal Information
     public $fname;
@@ -131,6 +133,9 @@ class StudentEnrollment extends Component
             if($this->student_profile_picture){
                 $path = $this->student_profile_picture->store('student_profiles', 'public');
             }
+
+            //create a unique student enrollment id
+            $this->generateNewEnrollmentId();
 
         }catch(ValidationValidationException $e)
         {
@@ -264,6 +269,25 @@ class StudentEnrollment extends Component
             $this->guardian_email = '';
 
         }
+    }
+
+    //function to generate a new student enrollment id
+    public function generateNewEnrollmentId()
+    {
+        // Generate ID with prefix + year + random 4 digits
+        $id = 'SE' . now()->format('Y') . random_int(1000, 9999);
+
+        // Check if it exists in the database
+        $exists = ModelsStudentEnrollment::where('student_enrollment_id', $id)->exists();
+
+        if ($exists) {
+            // If it exists, call the function again until unique
+            return $this->generateNewEnrollmentId();
+        }
+
+        // If unique, assign and return
+        $this->student_enrollment_id = $id;
+        return $this->student_enrollment_id;
     }
 
 }

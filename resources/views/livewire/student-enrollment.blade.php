@@ -335,10 +335,18 @@
 
                     <!-- Footer Actions -->
                     <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
-                        <button wire:click="previousStep" disabled class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500 invisible">
+                        <button wire:loading.remove wire:click="previousStep" disabled class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500 invisible">
                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                             Back
                         </button>
+
+                        <!-- Loading spinner -->
+                        <span wire:loading wire:target="previousStep" class="inline-flex items-center justify-center pl-4">
+                            <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                            </svg>
+                        </span>
 
                         <div class="flex items-center gap-4">
                             <button 
@@ -588,10 +596,18 @@
 
                     <!-- Footer Actions -->
                     <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
-                        <button wire:click="previousStep" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+                        <button wire:click="previousStep" wire:loading.remove class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                             Back
                         </button>
+
+                        <!-- Loading spinner -->
+                        <span wire:loading wire:target="previousStep" class="inline-flex items-center justify-center pl-4">
+                            <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                            </svg>
+                        </span>
 
                         <div class="flex items-center gap-4">
                             <button 
@@ -908,10 +924,18 @@
 
                     <!-- Footer Actions -->
                     <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
-                        <button wire:click="previousStep" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+                        <button wire:click="previousStep" wire:loading.remove class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                             Back
                         </button>
+
+                        <!-- Loading spinner -->
+                        <span wire:loading wire:target="previousStep" class="inline-flex items-center justify-center pl-4">
+                            <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                            </svg>
+                        </span>
 
                         <div class="flex items-center gap-4">
                             <button 
@@ -1089,7 +1113,7 @@
                                     <label class="block text-sm font-medium text-slate-700 mb-1.5">
                                         Student ID
                                     </label>
-                                    <input type="text" value="STU-2024-001234" disabled class="flex h-10 w-full rounded-lg border border-slate-300 bg-slate-100 text-slate-500 font-mono px-3 py-2 text-sm focus:outline-none cursor-not-allowed" />
+                                    <input type="text" wire:model="student_enrollment_id" disabled class="flex h-10 w-full rounded-lg border border-slate-300 bg-slate-100 text-slate-500 font-mono px-3 py-2 text-sm focus:outline-none cursor-not-allowed" />
                                     <p class="mt-1.5 text-xs text-slate-500">Auto-generated unique identifier</p>
                                 </div>
                                 <div class="w-full">
@@ -1200,10 +1224,18 @@
 
                     <!-- Footer Actions -->
                     <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
-                        <button wire:click="previousStep" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+                        <button wire:click="previousStep" wire:loading.remove class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                             Back
                         </button>
+
+                        <!-- Loading spinner -->
+                        <span wire:loading wire:target="previousStep" class="inline-flex items-center justify-center pl-4">
+                            <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                            </svg>
+                        </span>
 
                         <div class="flex items-center gap-4">
                             <button 
@@ -1815,10 +1847,18 @@
 
                     <!-- Footer Actions -->
                     <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
-                        <button wire:click="previousStep" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+                        <button wire:click="previousStep" wire:loading.remove class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                             Back
                         </button>
+
+                        <!-- Loading spinner -->
+                        <span wire:loading wire:target="previousStep" class="inline-flex items-center justify-center pl-4">
+                            <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                            </svg>
+                        </span>
 
                         <div class="flex items-center gap-4">
                             <button 
@@ -2012,11 +2052,50 @@
                                         <div class="flex-shrink-0">
                                             <div class="w-24 h-32 rounded-lg border-2 border-slate-200 overflow-hidden bg-slate-100">
                                                 <div class="w-full h-full flex flex-col items-center justify-center text-slate-400">
-                                                    <svg class="w-8 h-8" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <!--check if photo is uploaded-->
+                                                @if ($student_profile_picture)
+
+                                                    <img src="{{ $student_profile_picture->temporaryUrl() }}" 
+                                                        alt="Student Photo" 
+                                                        class="w-full h-full object-cover" 
+                                                    />
+                                                    
+                                                @else
+
+                                                    <svg class="w-12 h-12 mb-2" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                                         <circle cx="12" cy="7" r="4"></circle>
                                                     </svg>
-                                                    <span class="text-xs mt-1">No photo</span>
+                                                    <span class="text-xs font-medium">No photo</span>
+
+                                                @endif
+
+                                                <!--cancel upload button-->
+                                                @if ($student_profile_picture)
+                                                    <button type="button" wire:click="$set('student_profile_picture', null)" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400">
+                                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                        </svg>
+                                                    </button>
+                                                @endif
+
+                                                <!-- Loader while uploading -->
+                                                <div wire:loading wire:target="student_profile_picture"
+                                                    class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 pt-16">
+                                                    <div class="flex items-center">
+                                                        <svg class="animate-spin h-6 w-6 text-indigo-600"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                                                            <circle class="opacity-25" cx="25" cy="25" r="20"
+                                                                    stroke="currentColor" stroke-width="5" fill="none"></circle>
+                                                            <circle class="opacity-75" cx="25" cy="25" r="20"
+                                                                    stroke="currentColor" stroke-width="5" fill="none"
+                                                                    stroke-dasharray="31.4 31.4" stroke-linecap="round"></circle>
+                                                        </svg>
+                                                        <span class="ml-2 text-sm font-medium text-blue-600">Uploading...</span>
+                                                    </div>
+                                                </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -2101,8 +2180,8 @@
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Address</span>
 
                                         <!--check if the address variable exists-->
-                                        @if (!empty($address))
-                                            <span class="text-sm text-slate-900 font-medium">{{ $address }}</span>
+                                        @if (!empty($street))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $street }}</span>
                                         @else
                                             <span class="text-sm text-slate-400 italic">Address Not Provided</span>
                                         @endif
@@ -2128,8 +2207,8 @@
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Guardian Full Name</span>
 
                                         <!--check if the guardian_name variable exists-->
-                                        @if (!empty($guardian_name))
-                                            <span class="text-sm text-slate-900 font-medium">{{ $guardian_name }}</span>
+                                        @if (!empty($firstname) && !empty($middlename) && !empty($lastname))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $firstname }} {{ $middlename }} {{ $lastname }}</span>
                                         @else
                                             <span class="text-sm text-slate-400 italic">Name Not Provided</span>
                                         @endif
@@ -2139,8 +2218,8 @@
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Relationship</span>
 
                                         <!--check if the guardian_relationship variable exists-->
-                                        @if (!empty($guardian_relationship))
-                                            <span class="text-sm text-slate-900 font-medium">{{ $guardian_relationship }}</span>
+                                        @if (!empty($relationship))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $relationship }}</span>
                                         @else
                                             <span class="text-sm text-slate-400 italic">Relationship Not Provided</span>
                                         @endif
@@ -2186,14 +2265,20 @@
                                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Student ID</span>
-                                        <span class="text-sm text-slate-900 font-medium">STU-2024-001234</span>
+
+                                        <!--check if the student_id variable exists-->
+                                        @if (!empty($student_enrollment_id))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $student_enrollment_id }}</span>
+                                        @else
+                                            <span class="text-sm text-slate-400 italic">Not Set, Please Re-Apply the Form Again</span>
+                                        @endif
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Grade Applied For</span>
 
                                         <!--check if the grade_applied variable exists-->
-                                        @if (!empty($grade_applied))
-                                            <span class="text-sm text-slate-900 font-medium">{{ $grade_applied }}</span>
+                                        @if (!empty($grade_applied_for))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $grade_applied_for }}</span>
                                         @else
                                             <span class="text-sm text-slate-400 italic">Grade Not Provided</span>
                                         @endif
@@ -2203,8 +2288,8 @@
                                         <span class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Previous School</span>
 
                                         <!--check if the previous_school variable exists-->
-                                        @if (!empty($previous_school))
-                                            <span class="text-sm text-slate-900 font-medium">{{ $previous_school }}</span>
+                                        @if (!empty($previous_school_name))
+                                            <span class="text-sm text-slate-900 font-medium">{{ $previous_school_name }}</span>
                                         @else
                                             <span class="text-sm text-slate-400 italic">School Not Provided</span>
                                         @endif
@@ -2242,24 +2327,113 @@
                                         <div id="reviewAcademicRecords" class="space-y-2">
                                             <!--check if there are uploaded academic records-->
                                             @if (!empty($academic_records) && is_array($academic_records))
-                                                @foreach ($academic_records as $index => $record)
-                                                    <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
-                                                        <span class="text-sm text-slate-900">{{ $record->getClientOriginalName() }}</span>
-                                                        <button wire:click="removeAcademicRecord({{ $index }})" class="text-red-500 hover:text-red-700 text-sm">
-                                                            Remove
-                                                        </button>
-                                                    </div>
-                                                @endforeach
+                                                <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                                    <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                        <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M12 4v16m8-8H4" />
+                                                        </svg>
+                                                        Academic Record Files
+                                                    </p>
+
+                                                    <ul class="space-y-2">
+                                                        @foreach ($academic_records as $index => $record)
+                                                            <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                                <div class="flex items-center space-x-2">
+                                                                    <!-- File icon -->
+                                                                    <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                        viewBox="0 0 20 20">
+                                                                        <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                                    </svg>
+                                                                    <div class="flex flex-col">
+                                                                        <span class="text-slate-700 font-medium">{{ $record->getClientOriginalName() }}</span>
+                                                                        <span class="text-xs text-slate-500">
+                                                                            {{ number_format($record->getSize() / 1024, 2) }} KB
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Cancel button -->
+                                                                <button type="button"
+                                                                        wire:click="removeAcademicRecord({{ $index }})"
+                                                                        wire:loading.remove
+                                                                        wire:target="removeAcademicRecord"
+                                                                        class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                                    </svg>
+                                                                </button>
+
+                                                                <!-- Loader -->
+                                                                <div wire:loading wire:target="removeAcademicRecord" class="ml-2">
+                                                                    <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24">
+                                                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                                                stroke="currentColor" stroke-width="4"></circle>
+                                                                        <path class="opacity-75" fill="currentColor"
+                                                                            d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                                    </svg>
+                                                                </div>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
                                             @elseif(!empty($academic_records))
-                                                <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
-                                                    <span class="text-sm text-slate-900">{{ $academic_records->getClientOriginalName() }}</span>
-                                                    <button wire:click="removeAcademicRecord(0)" class="text-red-500 hover:text-red-700 text-sm">
-                                                        Remove
-                                                    </button>
+                                                <!-- Single file case styled the same way -->
+                                                <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                                    <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                        <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M12 4v16m8-8H4" />
+                                                        </svg>
+                                                        Academic Record File
+                                                    </p>
+
+                                                    <ul>
+                                                        <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                            <div class="flex items-center space-x-2">
+                                                                <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                    viewBox="0 0 20 20">
+                                                                    <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                                </svg>
+                                                                <div class="flex flex-col">
+                                                                    <span class="text-slate-700 font-medium">{{ $academic_records->getClientOriginalName() }}</span>
+                                                                    <span class="text-xs text-slate-500">
+                                                                        {{ number_format($academic_records->getSize() / 1024, 2) }} KB
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <button type="button"
+                                                                    wire:click="removeAcademicRecord(0)"
+                                                                    wire:loading.remove
+                                                                    wire:target="removeAcademicRecord"
+                                                                    class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                                </svg>
+                                                            </button>
+
+                                                            <div wire:loading wire:target="removeAcademicRecord" class="ml-2">
+                                                                <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24">
+                                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                                            stroke="currentColor" stroke-width="4"></circle>
+                                                                    <path class="opacity-75" fill="currentColor"
+                                                                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                                </svg>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             @else
-                                            <span class="text-sm text-slate-400">No files uploaded</span>
+                                                <span class="text-sm text-slate-400">No files uploaded</span>
                                             @endif
+                                            
                                         </div>
                                     </div>
                                     <div>
@@ -2267,24 +2441,112 @@
                                         <div id="reviewTransferCert" class="space-y-2">
 
                                             <!--check if there are uploaded transfer certificate-->
-                                            @if (!empty($transfer_certificate) && is_array($transfer_certificate))
-                                                @foreach ($transfer_certificate as $index => $cert)
-                                                    <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
-                                                        <span class="text-sm text-slate-900">{{ $cert->getClientOriginalName() }}</span>
-                                                        <button wire:click="removeTransferCertificate({{ $index }})" class="text-red-500 hover:text-red-700 text-sm">
-                                                            Remove
-                                                        </button>
-                                                    </div>
-                                                @endforeach
+                                           @if (!empty($transfer_certificate) && is_array($transfer_certificate))
+                                            <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                                <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                    <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path d="M12 4v16m8-8H4" />
+                                                    </svg>
+                                                    Selected Files
+                                                </p>
+
+                                                <ul class="space-y-2">
+                                                    @foreach ($transfer_certificate as $index => $cert)
+                                                        <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                            <div class="flex items-center space-x-2">
+                                                                <!-- File icon -->
+                                                                <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                    viewBox="0 0 20 20">
+                                                                    <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                                </svg>
+                                                                <div class="flex flex-col">
+                                                                    <span class="text-slate-700 font-medium">{{ $cert->getClientOriginalName() }}</span>
+                                                                    <span class="text-xs text-slate-500">
+                                                                        {{ number_format($cert->getSize() / 1024, 2) }} KB
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Cancel button -->
+                                                            <button type="button"
+                                                                    wire:click="removeTransferCertificate({{ $index }})"
+                                                                    wire:loading.remove
+                                                                    wire:target="removeTransferCertificate"
+                                                                    class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                                </svg>
+                                                            </button>
+
+                                                            <!-- Loader -->
+                                                            <div wire:loading wire:target="removeTransferCertificate" class="ml-2">
+                                                                <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24">
+                                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                                            stroke="currentColor" stroke-width="4"></circle>
+                                                                    <path class="opacity-75" fill="currentColor"
+                                                                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                                </svg>
+                                                            </div>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
                                             @elseif(!empty($transfer_certificate))
-                                                <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
-                                                    <span class="text-sm text-slate-900">{{ $transfer_certificate->getClientOriginalName() }}</span>
-                                                    <button wire:click="removeTransferCertificate(0)" class="text-red-500 hover:text-red-700 text-sm">
-                                                        Remove
-                                                    </button>
+                                                <!-- Single file case styled the same way -->
+                                                <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                                    <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                        <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M12 4v16m8-8H4" />
+                                                        </svg>
+                                                        Selected File
+                                                    </p>
+
+                                                    <ul>
+                                                        <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                            <div class="flex items-center space-x-2">
+                                                                <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                    viewBox="0 0 20 20">
+                                                                    <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                                </svg>
+                                                                <div class="flex flex-col">
+                                                                    <span class="text-slate-700 font-medium">{{ $transfer_certificate->getClientOriginalName() }}</span>
+                                                                    <span class="text-xs text-slate-500">
+                                                                        {{ number_format($transfer_certificate->getSize() / 1024, 2) }} KB
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <button type="button"
+                                                                    wire:click="removeTransferCertificate(0)"
+                                                                    wire:loading.remove
+                                                                    wire:target="removeTransferCertificate"
+                                                                    class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                                </svg>
+                                                            </button>
+
+                                                            <div wire:loading wire:target="removeTransferCertificate" class="ml-2">
+                                                                <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24">
+                                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                                            stroke="currentColor" stroke-width="4"></circle>
+                                                                    <path class="opacity-75" fill="currentColor"
+                                                                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                                </svg>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             @else
-                                            <span class="text-sm text-slate-400">No files uploaded</span>
+                                                <span class="text-sm text-slate-400">No files uploaded</span>
                                             @endif
 
                                         </div>
@@ -2295,49 +2557,226 @@
 
                                             <!--check if there are uploaded birth certificate-->
                                             @if (!empty($birth_certificate) && is_array($birth_certificate))
-                                                @foreach ($birth_certificate as $index => $birthCert)
-                                                    <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
-                                                        <span class="text-sm text-slate-900">{{ $birthCert->getClientOriginalName() }}</span>
-                                                        <button wire:click="removeBirthCertificate({{ $index }})" class="text-red-500 hover:text-red-700 text-sm">
-                                                            Remove
-                                                        </button>
-                                                    </div>
-                                                @endforeach
+                                                <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                                    <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                        <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M12 4v16m8-8H4" />
+                                                        </svg>
+                                                        Birth Certificate Files
+                                                    </p>
+
+                                                    <ul class="space-y-2">
+                                                        @foreach ($birth_certificate as $index => $birthCert)
+                                                            <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                                <div class="flex items-center space-x-2">
+                                                                    <!-- File icon -->
+                                                                    <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                        viewBox="0 0 20 20">
+                                                                        <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                                    </svg>
+                                                                    <div class="flex flex-col">
+                                                                        <span class="text-slate-700 font-medium">{{ $birthCert->getClientOriginalName() }}</span>
+                                                                        <span class="text-xs text-slate-500">
+                                                                            {{ number_format($birthCert->getSize() / 1024, 2) }} KB
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Cancel button -->
+                                                                <button type="button"
+                                                                        wire:click="removeBirthCertificate({{ $index }})"
+                                                                        wire:loading.remove
+                                                                        wire:target="removeBirthCertificate"
+                                                                        class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                                    </svg>
+                                                                </button>
+
+                                                                <!-- Loader -->
+                                                                <div wire:loading wire:target="removeBirthCertificate" class="ml-2">
+                                                                    <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24">
+                                                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                                                stroke="currentColor" stroke-width="4"></circle>
+                                                                        <path class="opacity-75" fill="currentColor"
+                                                                            d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                                    </svg>
+                                                                </div>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
                                             @elseif(!empty($birth_certificate))
-                                                <div class="flex items center justify-between bg-slate-100 rounded-md px-4 py-2">
-                                                    <span class="text-sm text-slate-900">{{ $birth_certificate->getClientOriginalName() }}</span>
-                                                    <button wire:click="removeBirthCertificate(0)" class="text-red-500 hover:text-red-700 text-sm">
-                                                        Remove
-                                                    </button>
+                                                <!-- Single file case styled the same way -->
+                                                <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                                    <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                        <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M12 4v16m8-8H4" />
+                                                        </svg>
+                                                        Birth Certificate File
+                                                    </p>
+
+                                                    <ul>
+                                                        <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                            <div class="flex items-center space-x-2">
+                                                                <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                    viewBox="0 0 20 20">
+                                                                    <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                                </svg>
+                                                                <div class="flex flex-col">
+                                                                    <span class="text-slate-700 font-medium">{{ $birth_certificate->getClientOriginalName() }}</span>
+                                                                    <span class="text-xs text-slate-500">
+                                                                        {{ number_format($birth_certificate->getSize() / 1024, 2) }} KB
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <button type="button"
+                                                                    wire:click="removeBirthCertificate(0)"
+                                                                    wire:loading.remove
+                                                                    wire:target="removeBirthCertificate"
+                                                                    class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                                </svg>
+                                                            </button>
+
+                                                            <div wire:loading wire:target="removeBirthCertificate" class="ml-2">
+                                                                <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24">
+                                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                                            stroke="currentColor" stroke-width="4"></circle>
+                                                                    <path class="opacity-75" fill="currentColor"
+                                                                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                                </svg>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             @else
-                                            <span class="text-sm text-slate-400">No files uploaded</span>
+                                                <span class="text-sm text-slate-400">No files uploaded</span>
                                             @endif
                                         </div>
                                     </div>
-                                    <div id="reviewReportCardsSection" class="hidden">
+                                    <div id="reviewReportCardsSection" class="">
                                         <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Previous Report Cards</p>
                                         <div id="reviewReportCards" class="space-y-2">
                                             <!--check if there are uploaded report cards-->
-                                            @if (!empty($report_cards) && is_array($report_cards))
-                                                @foreach ($report_cards as $index => $reportCard)
-                                                    <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
-                                                        <span class="text-sm text-slate-900">{{ $reportCard->getClientOriginalName() }}</span>
-                                                        <button wire:click="removeReportCard({{ $index }})" class="text-red-500 hover:text-red-700 text-sm">
-                                                            Remove
-                                                        </button>
-                                                    </div>
-                                                @endforeach
-                                            @elseif(!empty($report_cards))
-                                                <div class="flex items-center justify-between bg-slate-100 rounded-md px-4 py-2">
-                                                    <span class="text-sm text-slate-900">{{ $report_cards->getClientOriginalName() }}</span>
-                                                    <button wire:click="removeReportCard(0)" class="text-red-500 hover:text-red-700 text-sm">
-                                                        Remove
-                                                    </button>
+                                           @if (!empty($reports_cards) && is_array($reports_cards))
+                                                <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                                    <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                        <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M12 4v16m8-8H4" />
+                                                        </svg>
+                                                        Report Card Files
+                                                    </p>
+
+                                                    <ul class="space-y-2">
+                                                        @foreach ($reports_cards as $index => $reportCard)
+                                                            <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                                <div class="flex items-center space-x-2">
+                                                                    <!-- File icon -->
+                                                                    <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                        viewBox="0 0 20 20">
+                                                                        <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                                    </svg>
+                                                                    <div class="flex flex-col">
+                                                                        <span class="text-slate-700 font-medium">{{ $reportCard->getClientOriginalName() }}</span>
+                                                                        <span class="text-xs text-slate-500">
+                                                                            {{ number_format($reportCard->getSize() / 1024, 2) }} KB
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Cancel button -->
+                                                                <button type="button"
+                                                                        wire:click="removeReportCard({{ $index }})"
+                                                                        wire:loading.remove
+                                                                        wire:target="removeReportCard"
+                                                                        class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                                    </svg>
+                                                                </button>
+
+                                                                <!-- Loader -->
+                                                                <div wire:loading wire:target="removeReportCard" class="ml-2">
+                                                                    <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24">
+                                                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                                                stroke="currentColor" stroke-width="4"></circle>
+                                                                        <path class="opacity-75" fill="currentColor"
+                                                                            d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                                    </svg>
+                                                                </div>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @elseif(!empty($reports_cards))
+                                                <!-- Single file case styled the same way -->
+                                                <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-4">
+                                                    <p class="text-sm font-semibold text-blue-700 mb-3 flex items-center">
+                                                        <svg class="h-4 w-4 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path d="M12 4v16m8-8H4" />
+                                                        </svg>
+                                                        Report Card File
+                                                    </p>
+
+                                                    <ul>
+                                                        <li class="flex items-center justify-between bg-white hover:bg-slate-50 transition-colors border border-slate-200 rounded-md px-3 py-2 text-sm">
+                                                            <div class="flex items-center space-x-2">
+                                                                <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                    viewBox="0 0 20 20">
+                                                                    <path d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 009.586 1H6z"/>
+                                                                </svg>
+                                                                <div class="flex flex-col">
+                                                                    <span class="text-slate-700 font-medium">{{ $report_cards->getClientOriginalName() }}</span>
+                                                                    <span class="text-xs text-slate-500">
+                                                                        {{ number_format($report_cards->getSize() / 1024, 2) }} KB
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <button type="button"
+                                                                    wire:click="removeReportCard(0)"
+                                                                    wire:loading.remove
+                                                                    wire:target="removeReportCard"
+                                                                    class="inline-flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-7 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-200 hover:bg-orange-200 focus:ring-orange-300 shadow-sm">
+                                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                                </svg>
+                                                            </button>
+
+                                                            <div wire:loading wire:target="removeReportCard" class="ml-2">
+                                                                <svg class="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24">
+                                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                                            stroke="currentColor" stroke-width="4"></circle>
+                                                                    <path class="opacity-75" fill="currentColor"
+                                                                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                                                                </svg>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             @else
-                                            <span class="text-sm text-slate-400">No files uploaded</span>
+                                                <span class="text-sm text-slate-400">No files uploaded</span>
                                             @endif
+
                                         </div>
                                     </div>
                                 </div>
@@ -2347,10 +2786,20 @@
 
                     <!-- Footer Actions -->
                     <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
-                        <button wire:click="previousStep" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+                        <button wire:click="previousStep" wire:loading.remove class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-500">
+
                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                             Back
+
                         </button>
+
+                        <!-- Loading spinner -->
+                        <span wire:loading wire:target="previousStep" class="inline-flex items-center justify-center pl-4">
+                            <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+                            </svg>
+                        </span>
 
                         <div class="flex items-center gap-4">
                             <button onclick="submitEnrollment()" class="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 h-10 px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm">
