@@ -1,11 +1,6 @@
 <div>
     {{-- The best athlete wants his opponent at his best. --}}
 
-    <!--adding this to temporarily to the step-->
-    <div class="debug-info" >
-        Step: {{ $step }}
-    </div>
-
 
 
     @if($step === 1)
@@ -15,16 +10,8 @@
         <div class="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto">
                 <!-- Header -->
-                <div class="mb-10 text-center">
-                    <div class="inline-flex items-center justify-center p-3 bg-blue-600 rounded-xl shadow-lg mb-4">
-                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                        </svg>
-                    </div>
-                    <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Student Enrollment</h1>
-                    <p class="mt-2 text-slate-600">New student registration form for academic year 2024-2025</p>
-                </div>
+
+                @include('components.student-enrollment-header')
 
                 <!-- Main Card -->
                 <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
@@ -395,16 +382,7 @@
         <div class="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto">
                 <!-- Header -->
-                <div class="mb-10 text-center">
-                    <div class="inline-flex items-center justify-center p-3 bg-blue-600 rounded-xl shadow-lg mb-4">
-                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                        </svg>
-                    </div>
-                    <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Student Enrollment</h1>
-                    <p class="mt-2 text-slate-600">New student registration form for academic year 2024-2025</p>
-                </div>
+                @include('../components/student-enrollment-header')
 
                 <!-- Main Card -->
                 <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
@@ -653,16 +631,7 @@
         <div class="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto">
                 <!-- Header -->
-                <div class="mb-10 text-center">
-                    <div class="inline-flex items-center justify-center p-3 bg-blue-600 rounded-xl shadow-lg mb-4">
-                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                        </svg>
-                    </div>
-                    <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Student Enrollment</h1>
-                    <p class="mt-2 text-slate-600">New student registration form for academic year 2024-2025</p>
-                </div>
+                @include('../components/student-Enrollment-header');
 
                 <!-- Main Card -->
                 <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
@@ -981,16 +950,7 @@
         <div class="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto">
                 <!-- Header -->
-                <div class="mb-10 text-center">
-                    <div class="inline-flex items-center justify-center p-3 bg-blue-600 rounded-xl shadow-lg mb-4">
-                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                        </svg>
-                    </div>
-                    <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Student Enrollment</h1>
-                    <p class="mt-2 text-slate-600">New student registration form for academic year 2024-2025</p>
-                </div>
+                @include('../components/student-Enrollment-header');
 
                 <!-- Main Card -->
                 <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
@@ -1281,16 +1241,7 @@
         <div class="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto">
                 <!-- Header -->
-                <div class="mb-10 text-center">
-                    <div class="inline-flex items-center justify-center p-3 bg-blue-600 rounded-xl shadow-lg mb-4">
-                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                        </svg>
-                    </div>
-                    <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Student Enrollment</h1>
-                    <p class="mt-2 text-slate-600">New student registration form for academic year 2024-2025</p>
-                </div>
+                @include('../components/student-Enrollment-header');
 
                 <!-- Main Card -->
                 <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
@@ -1904,16 +1855,7 @@
         <div class="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto">
                 <!-- Header -->
-                <div class="mb-10 text-center">
-                    <div class="inline-flex items-center justify-center p-3 bg-blue-600 rounded-xl shadow-lg mb-4">
-                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                        </svg>
-                    </div>
-                    <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Student Enrollment</h1>
-                    <p class="mt-2 text-slate-600">New student registration form for academic year 2024-2025</p>
-                </div>
+                @include('../components/student-Enrollment-header');
 
                 <!-- Main Card -->
                 <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">

@@ -171,7 +171,7 @@ class StudentEnrollment extends Component
         if($this->step < 6){
 
             //make the delay to simulate processing time
-            sleep(2);
+            //sleep(2);
 
             $this->step++;
         }
@@ -478,6 +478,7 @@ class StudentEnrollment extends Component
                     'previous_school_name' => $this->previous_school_name,
                     'student_enrollment_id' => $this->student_enrollment_id,
                     'parent_enrollment_id' => $parentEnrollment->id,
+                    'profile_picture' => $this->student_profile_picture ? $this->student_profile_picture->getClientOriginalName() : null,
                 ]
 
             ); 
@@ -508,7 +509,7 @@ class StudentEnrollment extends Component
 
 
         //redirect to the beginning with a thank you message
-        return redirect()->to('studentenrollment.thanks')->with('success', 'Enrollment submitted successfully! Thank you.');
+        return redirect('studentenrollment.thanks')->with('success', 'Enrollment submitted successfully! Thank you.');
 
     }
 
