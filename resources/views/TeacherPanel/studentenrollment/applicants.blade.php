@@ -529,7 +529,6 @@
                         $transferCertificates = $pendingapplicants[$index]->transfer_certificate ? json_decode($pendingapplicants[$index]->transfer_certificate, true) : [];
                         $birthCertificate = $pendingapplicants[$index]->birth_certificate;
                         $reportCards = $pendingapplicants[$index]->reports_card ? json_decode($pendingapplicants[$index]->reports_card, true) : [];
-                        $encodePath = fn($path) => strtr(base64_encode($path), '+/', '-_');
                     @endphp
                     <div class="space-y-3">
                         <!-- Academic Records -->
@@ -547,8 +546,8 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <a href="{{ route('documents.view', ['path' => $encodePath($recordPath)]) }}" target="_blank" rel="noopener" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</a>
-                                <a href="{{ route('documents.download', ['path' => $encodePath($recordPath)]) }}" class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
+                                <button onclick="openDocumentViewer('{{ asset('storage/' . $recordPath) }}', '{{ basename($recordPath) }}')" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</button>
+                                <a href="{{ asset('storage/' . $recordPath) }}" download class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
                             </div>
                         </div>
                         @endforeach
@@ -568,8 +567,8 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <a href="{{ route('documents.view', ['path' => $encodePath($certificatePath)]) }}" target="_blank" rel="noopener" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</a>
-                                <a href="{{ route('documents.download', ['path' => $encodePath($certificatePath)]) }}" class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
+                                <button onclick="openDocumentViewer('{{ asset('storage/' . $certificatePath) }}', '{{ basename($certificatePath) }}')" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</button>
+                                <a href="{{ asset('storage/' . $certificatePath) }}" download class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
                             </div>
                         </div>
                         @endforeach
@@ -589,8 +588,8 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <a href="{{ route('documents.view', ['path' => $encodePath($birthCertificate)]) }}" target="_blank" rel="noopener" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</a>
-                                <a href="{{ route('documents.download', ['path' => $encodePath($birthCertificate)]) }}" class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
+                                <button onclick="openDocumentViewer('{{ asset('storage/' . $birthCertificate) }}', '{{ basename($birthCertificate) }}')" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</button>
+                                <a href="{{ asset('storage/' . $birthCertificate) }}" download class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
                             </div>
                         </div>
                         @endif
@@ -610,8 +609,8 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <a href="{{ route('documents.view', ['path' => $encodePath($reportPath)]) }}" target="_blank" rel="noopener" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</a>
-                                <a href="{{ route('documents.download', ['path' => $encodePath($reportPath)]) }}" class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
+                                <button onclick="openDocumentViewer('{{ asset('storage/' . $reportPath) }}', '{{ basename($reportPath) }}')" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</button>
+                                <a href="{{ asset('storage/' . $reportPath) }}" download class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
                             </div>
                         </div>
                         @endforeach
@@ -654,7 +653,260 @@
         </div>
     </div>
 
+    <!-- Document Viewer Modal with iframe -->
+    <div id="documentViewerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-hidden m-4">
+            <!-- Modal Header -->
+            <div class="p-4 border-b-2 border-university-burgundy flex items-center justify-between bg-gradient-to-r from-university-burgundy/5 to-transparent">
+                <div>
+                    <h2 class="text-xl font-bold text-university-burgundy">Document Viewer</h2>
+                    <p id="documentName" class="text-sm text-gray-500 mt-1"></p>
+                </div>
+                <button onclick="closeDocumentViewer()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body with document viewer -->
+            <div class="p-4 overflow-hidden relative" style="height: calc(90vh - 150px);">
+                <div id="loadingIndicator" class="absolute inset-0 flex items-center justify-center bg-white z-10">
+                    <div class="text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-university-burgundy mx-auto"></div>
+                        <p class="mt-4 text-gray-600">Loading document...</p>
+                    </div>
+                </div>
+                <div id="documentContainer" class="w-full h-full overflow-auto bg-white p-2"></div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-gray-200 flex items-center justify-between bg-gray-50">
+                <button onclick="closeDocumentViewer()" class="inline-flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-md font-medium transition-colors">
+                    Close
+                </button>
+                <a id="downloadLink" href="" download class="inline-flex items-center gap-2 px-4 py-2 bg-university-burgundy text-white hover:bg-university-burgundy/90 rounded-md font-medium transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Download
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load the main app bundle; includes pdf-setup.js -->
+    @vite('resources/js/app.js')
+
     <script>
+        // Ensure worker-less rendering during development to avoid cross-origin worker issues.
+        console.log('pdfjsLib available?', !!window.pdfjsLib);
+        if (window.pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.disableWorker = true;
+            console.log('PDF.js worker disabled for dev mode');
+        } else {
+            console.warn('PDF.js not loaded! Check if app.js is being imported correctly.');
+        }
+
+        // Render a PDF into canvases inside the container
+        async function renderPdf(url, container, loadingIndicator) {
+            console.log('renderPdf called with url:', url);
+            console.log('pdfjsLib available in renderPdf?', !!window.pdfjsLib);
+            console.log('GlobalWorkerOptions:', window.pdfjsLib?.GlobalWorkerOptions);
+            
+            if (!window.pdfjsLib) {
+                console.error('PDF.js not loaded - falling back to browser viewer');
+                showBrowserPdfViewer(url, container, loadingIndicator);
+                return;
+            }
+            
+            try {
+                // Workaround: Use XMLHttpRequest instead of fetch to avoid middleware issues
+                console.log('pdf.js: fetching PDF via XMLHttpRequest from', url);
+                
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.responseType = 'arraybuffer';
+                
+                const arrayBuffer = await new Promise((resolve, reject) => {
+                    xhr.onload = function() {
+                        console.log('XHR Response - Status:', xhr.status, 'Type:', xhr.getResponseHeader('Content-Type'), 'Size:', xhr.response.byteLength);
+                        if (xhr.status === 200) {
+                            resolve(xhr.response);
+                        } else {
+                            reject(new Error(`XHR failed with status ${xhr.status}: ${xhr.statusText}`));
+                        }
+                    };
+                    xhr.onerror = () => reject(new Error('XHR network error'));
+                    xhr.send();
+                });
+                
+                console.log('PDF ArrayBuffer size:', arrayBuffer.byteLength, 'bytes');
+                
+                if (arrayBuffer.byteLength < 1000) {
+                    const text = new TextDecoder().decode(arrayBuffer);
+                    console.warn('PDF file is suspiciously small. Content preview:', text.substring(0, 500));
+                    if (!text.startsWith('%PDF')) {
+                        throw new Error('File is not a valid PDF (size: ' + arrayBuffer.byteLength + ' bytes). Server may have returned an error: ' + text.substring(0, 200));
+                    }
+                }
+                
+                // Pass ArrayBuffer directly - this completely bypasses worker code path
+                console.log('pdf.js: loading document from ArrayBuffer...');
+                const loadingTask = pdfjsLib.getDocument({
+                    data: arrayBuffer,
+                    // These options ensure no worker is used
+                    disableStream: true,
+                    disableRange: true,
+                    useWorker: false
+                });
+                
+                console.log('pdf.js: awaiting document promise...');
+                const pdf = await loadingTask.promise;
+                console.log('pdf.js: loaded successfully, pages =', pdf.numPages);
+
+                const containerWidth = container.clientWidth || container.getBoundingClientRect().width || 800;
+                console.log('Container width:', containerWidth);
+                
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const viewport = page.getViewport({ scale: 1 });
+                    const scale = Math.min(1.5, containerWidth / viewport.width);
+                    const scaledViewport = page.getViewport({ scale });
+
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = Math.floor(scaledViewport.width);
+                    canvas.height = Math.floor(scaledViewport.height);
+                    canvas.className = 'block mx-auto mb-4';
+                    container.appendChild(canvas);
+
+                    console.log('pdf.js: rendering page', pageNum, 'size:', canvas.width, 'x', canvas.height);
+                    await page.render({ canvasContext: ctx, viewport: scaledViewport }).promise;
+                    console.log('pdf.js: rendered page', pageNum, 'successfully');
+                    if (pageNum === 1) {
+                        loadingIndicator.classList.add('hidden');
+                    }
+                }
+                
+                console.log('pdf.js: all pages rendered, total canvases:', container.querySelectorAll('canvas').length);
+                if (!container.children.length) {
+                    throw new Error('No pages rendered');
+                }
+            } catch (err) {
+                console.error('PDF render error (will try browser fallback):', err);
+                showBrowserPdfViewer(url, container, loadingIndicator);
+            }
+        }
+        
+        function showBrowserPdfViewer(url, container, loadingIndicator) {
+            console.log('Showing browser PDF viewer for:', url);
+            container.innerHTML = '';
+            const obj = document.createElement('object');
+            obj.type = 'application/pdf';
+            obj.data = url;
+            obj.className = 'w-full h-full';
+            obj.style.minHeight = '600px';
+            container.appendChild(obj);
+            loadingIndicator.classList.add('hidden');
+            console.log('Browser PDF viewer embedded');
+        }
+
+        function openDocumentViewer(documentPath, documentName) {
+            console.log('Opening document:', documentPath); // Debug log
+            
+            // Extract file extension from ORIGINAL path before converting
+            const fileExtension = documentPath.split('.').pop().split('?')[0].toLowerCase();
+            console.log('File extension detected:', fileExtension);
+            
+            // Convert storage path to our custom serve-pdf route
+            let actualPath = documentPath;
+            if (documentPath.startsWith('/storage/') || documentPath.startsWith('http')) {
+                // Extract the relative path after /storage/
+                const match = documentPath.match(/\/storage\/(.+)$/);
+                if (match) {
+                    const relativePath = match[1];
+                    const encoded = btoa(relativePath); // base64 encode
+                    actualPath = '/serve-pdf/' + encoded;
+                    console.log('Converted to serve-pdf route:', actualPath);
+                }
+            }
+            
+            const modal = document.getElementById('documentViewerModal');
+            const container = document.getElementById('documentContainer');
+            const nameElement = document.getElementById('documentName');
+            const downloadLink = document.getElementById('downloadLink');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            // Show loading indicator and clear previous content
+            loadingIndicator.classList.remove('hidden');
+            container.innerHTML = '';
+            
+            // Set document name and download link
+            nameElement.textContent = documentName;
+            downloadLink.href = documentPath;
+            
+            if (fileExtension === 'pdf') {
+                console.log('PDF file detected, pdfjsLib available?', !!window.pdfjsLib);
+                if (window.pdfjsLib) {
+                    console.log('Calling renderPdf...');
+                    renderPdf(actualPath, container, loadingIndicator);
+                    // Watchdog: if nothing rendered after 3s, use built-in browser PDF viewer
+                    setTimeout(() => {
+                        console.log('Watchdog check - canvases:', container.querySelectorAll('canvas').length, 'objects:', container.querySelectorAll('object').length);
+                        if (!container.querySelector('canvas, object, iframe, embed')) {
+                            console.warn('No content rendered after 3s, forcing browser PDF viewer');
+                            showBrowserPdfViewer(actualPath, container, loadingIndicator);
+                        }
+                    }, 3000);
+                } else {
+                    console.warn('PDF.js not available, using browser PDF viewer');
+                    showBrowserPdfViewer(actualPath, container, loadingIndicator);
+                }
+
+            } else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
+                // Use img tag for images
+                const img = document.createElement('img');
+                img.src = actualPath;
+                img.className = 'max-w-full max-h-full object-contain mx-auto';
+                img.onload = () => {
+                    loadingIndicator.classList.add('hidden');
+                };
+                img.onerror = () => {
+                    loadingIndicator.innerHTML = '<div class="text-center"><p class="text-red-600">Error loading image.</p></div>';
+                };
+                container.appendChild(img);
+                
+            } else {
+                // For other file types, use iframe
+                const iframe = document.createElement('iframe');
+                iframe.src = actualPath;
+                iframe.className = 'w-full h-full border border-gray-300 rounded-lg';
+                iframe.onload = () => {
+                    loadingIndicator.classList.add('hidden');
+                    console.log('Document loaded successfully');
+                };
+                iframe.onerror = () => {
+                    loadingIndicator.innerHTML = '<div class="text-center"><p class="text-red-600">Error loading document.</p></div>';
+                };
+                container.appendChild(iframe);
+            }
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            console.log('Document viewer opened for:', fileExtension, 'file');
+        }
+
+        function closeDocumentViewer() {
+            const modal = document.getElementById('documentViewerModal');
+            const container = document.getElementById('documentContainer');
+            
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            container.innerHTML = ''; // Clear content to stop loading
+        }
+
         function openModal(index) {
             const modal = document.getElementById('studentModal');
             modal.classList.remove('hidden');
@@ -671,6 +923,13 @@
         document.getElementById('studentModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeModal();
+            }
+        });
+
+        // Close document viewer modal when clicking outside
+        document.getElementById('documentViewerModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDocumentViewer();
             }
         });
 

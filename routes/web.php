@@ -16,7 +16,6 @@ use App\Http\Controllers\Teacherprofile;
 use App\Http\Controllers\TeacherregistrationController;
 use App\Http\Controllers\TeacherRoleController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\File;
 
 
 //create middleware to the routes that require authentication
@@ -59,49 +58,6 @@ Route::middleware('auth')->group(function () {
 /////////////////////////////////////////////////////////////////
 ///routes for student enrollment
 
-    //serve stored documents safely (inline view and download)
-    Route::get('/documents/view/{path}', function (string $path) {
-        $decoded = strtr($path, '-_', '+/');
-        $decoded .= str_repeat('=', (4 - strlen($decoded) % 4) % 4);
-        $decoded = base64_decode($decoded, true);
-        if ($decoded === false || str_contains($decoded, '..')) {
-            abort(404);
-        }
-
-        $relativePath = ltrim($decoded, '/');
-        $fullPath = storage_path('app/public/' . $relativePath);
-
-        if (! File::exists($fullPath)) {
-            abort(404);
-        }
-
-        return response()->file(
-            $fullPath,
-            [
-                'Content-Type' => File::mimeType($fullPath) ?: 'application/octet-stream',
-                'Content-Disposition' => 'inline; filename="' . basename($fullPath) . '"',
-            ]
-        );
-    })->name('documents.view');
-
-    Route::get('/documents/download/{path}', function (string $path) {
-        $decoded = strtr($path, '-_', '+/');
-        $decoded .= str_repeat('=', (4 - strlen($decoded) % 4) % 4);
-        $decoded = base64_decode($decoded, true);
-        if ($decoded === false || str_contains($decoded, '..')) {
-            abort(404);
-        }
-
-        $relativePath = ltrim($decoded, '/');
-        $fullPath = storage_path('app/public/' . $relativePath);
-
-        if (! File::exists($fullPath)) {
-            abort(404);
-        }
-
-        return response()->download($fullPath);
-    })->name('documents.download');
-
 //route to show student enrollment settings
 Route::get('/teacher-studentenrollment',function(){
     return view('TeacherPanel.studentenrollment.enrollmentSettings');
@@ -113,6 +69,23 @@ Route::get('/teacher-studentenrollment',function(){
 Route::get('/teacher-studentapplicants', 
 [StudentApplicants::class,'ViewStudentApplicants'])
 ->name('teacher.studentenrollment.applicants');
+
+// Serve PDFs directly with proper headers (bypasses storage.local route issues)
+// Added headers to prevent browser extensions like IDM from intercepting
+Route::get('/serve-pdf/{path}', function($path) {
+    $fullPath = storage_path('app/public/' . base64_decode($path));
+    
+    if (!file_exists($fullPath) || !is_file($fullPath)) {
+        abort(404, 'PDF file not found');
+    }
+    
+    return response()->file($fullPath, [
+        'Content-Type' => 'application/pdf',
+        'Content-Disposition' => 'inline; filename="document.pdf"',
+        'X-Content-Type-Options' => 'nosniff',
+        'Cache-Control' => 'public, max-age=3600',
+    ]);
+})->where('path', '.*')->name('serve.pdf');
 
 
 //route for analytics 
