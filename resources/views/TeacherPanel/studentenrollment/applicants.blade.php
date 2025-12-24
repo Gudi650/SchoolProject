@@ -35,6 +35,46 @@
         <main class="flex-1 w-full overflow-y-auto h-screen md:ml-64 p-6 md:p-10 min-w-0 overflow-x-auto">
             <div class="w-full max-w-7xl mx-auto">
                 <div class="space-y-6">
+                    <!-- Success Message Alert -->
+                    @if(session('success'))
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3 animate-pulse">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-sm font-medium text-green-800">Success</h3>
+                                <p class="text-sm text-green-700">{{ session('success') }}</p>
+                            </div>
+                            <button onclick="this.parentElement.style.display='none';" class="text-green-400 hover:text-green-600">
+                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    @endif
+
+                    <!-- Error Message Alert -->
+                    @if(session('error'))
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3 animate-pulse">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-sm font-medium text-red-800">Error</h3>
+                                <p class="text-sm text-red-700">{{ session('error') }}</p>
+                            </div>
+                            <button onclick="this.parentElement.style.display='none';" class="text-red-400 hover:text-red-600">
+                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    @endif
+
                     <!-- Page Header (styled banner from dashboard) -->
                     <div class="mb-8">
                         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex items-center justify-between gap-4 border-l-4 border-university-burgundy">
@@ -119,18 +159,24 @@
                                                         </button>
 
                                                         <!--approve button-->
-                                                        <a href="#" class="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors" title="Approve Enrollment">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                            </svg>
-                                                        </a>
+                                                        <form method="POST" style="display:inline;" action="{{ route('teacher.studentenrollment.approveapplicant', ['id' => $applicant->id]) }}">
+                                                            @csrf
+                                                            <button type="submit" class="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors" title="Approve Enrollment">
+                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                                </svg>
+                                                            </button>
+                                                        </form>
 
                                                         <!--reject button-->
-                                                        <a href="#" class="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors" title="Reject Enrollment">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                            </svg>
-                                                        </a>
+                                                        <form method="POST" style="display:inline;" action="{{ route('teacher.studentenrollment.rejectapplicant', ['id' => $applicant->id]) }}">
+                                                            @csrf
+                                                            <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors" title="Reject Enrollment">
+                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                                </svg>
+                                                            </button>
+                                                        </form>
 
                                                         <!--more options button-->
                                                         <a href="#" class="p-1.5 text-gray-400 hover:text-gray-600 rounded-md">
@@ -330,13 +376,17 @@
                                                                 </button>
                                                             </form>
 
-                                                            <!-- Approve Button (kept as non-form like original) -->
-                                                            <button class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white hover:bg-green-700 rounded-md font-semibold shadow-md transition-colors">
+                                                            <!-- Approve Button  -->
+                                                            <form method="POST">
+                                                                @csrf
+                                                            <button formaction="{{ route('teacher.studentenrollment.approveapplicant', ['id' => $applicant->id]) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white hover:bg-green-700 rounded-md font-semibold shadow-md transition-colors">
                                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                                                 </svg>
                                                                 Approve
                                                             </button>
+
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -604,7 +654,7 @@
                                             </div>
                                         </td>
                                     </tr> --}}
-                                    
+
                                 </tbody>
                             </table>
                         </div>

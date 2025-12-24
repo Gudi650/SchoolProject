@@ -75,6 +75,11 @@ Route::post('/teacher-rejectapplicant/{id}',
 [StudentApplicants::class,'RejectApplicant'])
 ->name('teacher.studentenrollment.rejectapplicant');
 
+//approve applicant route using controller pass the id of the applicant as well
+Route::post('/teacher-approveapplicant/{id}',
+[StudentApplicants::class,'ApproveApplicant'])
+->name('teacher.studentenrollment.approveapplicant');
+
 
 // Serve PDFs directly with proper headers (bypasses storage.local route issues)
 // Added headers to prevent browser extensions like IDM from intercepting

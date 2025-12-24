@@ -22,11 +22,6 @@ class StudentApplicants extends Controller
         //get the rejected applicants
         $rejectedapplicants = $this->getRejectedApplicants();
 
-        //dd($rejectedapplicants);
-
-        //dd($approvedapplicants);
-
-        //dd($pendingapplicants);
 
         //view the blade file
         return view('TeacherPanel.studentenrollment.applicants', [
@@ -63,6 +58,36 @@ class StudentApplicants extends Controller
         $applicant->save();
 
         return redirect()->back()->with('success', 'Applicant rejected successfully.');
+
+    }
+
+    //function to approve applicant
+    public function ApproveApplicant(Request $request)
+    {
+
+        //get the id of the applicant to be approved
+        //dd($request->id);
+
+        //now get the id from the request
+        $applicantId = $request->id;
+
+        //now check if the id is valid
+        if (!$applicantId) {
+            return redirect()->back()->with('error', 'Invalid applicant ID.');
+        }
+
+        //find the applicant in the studentEnrollDetails table
+        $applicant = studentEnrollDetails::find($applicantId);
+
+        if (!$applicant) {
+            return redirect()->back()->with('error', 'Applicant not found.');
+        }
+
+        // Update the status to approved
+        $applicant->status = 'approved';
+        $applicant->save();
+
+        return redirect()->back()->with('success', 'Applicant approved successfully.');
 
     }
        
