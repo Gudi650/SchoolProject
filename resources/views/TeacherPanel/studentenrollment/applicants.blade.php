@@ -424,8 +424,52 @@
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
+
                                     <!-- Approved Application 1 -->
 
+                                    <!--check if there are approved applicants-->
+                                    @if (isset($approvedapplicants) && $approvedapplicants->count() > 0)
+                                        @foreach ($approvedapplicants as $applicant)
+                                            <tr class="hover:bg-gray-50 transition-colors">
+                                                <td class="px-6 py-4">
+                                                    <div>
+                                                        <div class="font-medium text-gray-900">{{ $applicant->studentEnrollment->fname }} {{ $applicant->studentEnrollment->lname }}</div>
+                                                        <div class="text-gray-500 text-xs">{{ $applicant->studentEnrollment->parentEnrollment->email }}</div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 text-gray-600">{{ $applicant->grade_applied_for }}</td>
+                                                <td class="px-6 py-4 text-gray-600">{{ $applicant->created_at->format('Y-m-d') }}</td>
+                                                <td class="px-6 py-4">
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                        approved
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-4 text-right">
+                                                    <div class="flex items-center justify-end gap-2">
+                                                        <a href="#" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors" title="View Details">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                            </svg>
+                                                        </a>
+                                                        <a href="#" class="p-1.5 text-gray-400 hover:text-gray-600 rounded-md">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                                                            </svg>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">No approved enrollment applications.</td>
+                                        </tr>
+
+                                        
+                                    @endif
+
+                                    {{--   IGNORE ---
                                     <tr class="hover:bg-gray-50 transition-colors">
                                         <td class="px-6 py-4">
                                             <div>
@@ -455,39 +499,9 @@
                                                 </a>
                                             </div>
                                         </td>
-                                    </tr>
+                                    </tr> --}}
 
-                                    <!-- Approved Application 2 -->
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-6 py-4">
-                                            <div>
-                                                <div class="font-medium text-gray-900">David Wilson</div>
-                                                <div class="text-gray-500 text-xs">david@example.com</div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 text-gray-600">Pre-Med</td>
-                                        <td class="px-6 py-4 text-gray-600">2023-10-21</td>
-                                        <td class="px-6 py-4">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                approved
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 text-right">
-                                            <div class="flex items-center justify-end gap-2">
-                                                <a href="#" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors" title="View Details">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                                    </svg>
-                                                </a>
-                                                <a href="#" class="p-1.5 text-gray-400 hover:text-gray-600 rounded-md">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                                                    </svg>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -515,6 +529,51 @@
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
                                     <!-- Rejected Application 1 -->
+
+                                    <!--check if there are rejected applicants-->
+                                    @if (isset($rejectedapplicants) && $rejectedapplicants->count() > 0)
+
+                                        @foreach ($rejectedapplicants as $applicant)
+                                            <tr class="hover:bg-gray-50 transition-colors">
+                                                <td class="px-6 py-4">
+                                                    <div>
+                                                        <div class="font-medium text-gray-900">{{ $applicant->studentEnrollment->fname }} {{ $applicant->studentEnrollment->lname }}</div>
+                                                        <div class="text-gray-500 text-xs">{{ $applicant->studentEnrollment->parentEnrollment->email }}</div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 text-gray-600">{{ $applicant->grade_applied_for }}</td>
+                                                <td class="px-6 py-4 text-gray-600">{{ $applicant->created_at->format('Y-m-d') }}</td>
+                                                <td class="px-6 py-4">
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                        rejected
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-4 text-right">
+                                                    <div class="flex items-center justify-end gap-2">
+                                                        <a href="#" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors" title="View Details">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                            </svg>
+                                                        </a>
+                                                        <a href="#" class="p-1.5 text-gray-400 hover:text-gray-600 rounded-md">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                                                            </svg>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">No rejected enrollment applications.</td>
+                                        </tr>
+
+                                        
+                                    @endif
+
+                                    {{-- IGNORE --
                                     <tr class="hover:bg-gray-50 transition-colors">
                                         <td class="px-6 py-4">
                                             <div>
@@ -544,7 +603,8 @@
                                                 </a>
                                             </div>
                                         </td>
-                                    </tr>
+                                    </tr> --}}
+                                    
                                 </tbody>
                             </table>
                         </div>
