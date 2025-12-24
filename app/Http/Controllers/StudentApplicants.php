@@ -172,4 +172,52 @@ class StudentApplicants extends Controller
 
     }
 
+    // AJAX endpoint to return counts for pending, approved, and rejected applicants
+    public function GetApplicantsCounts(Request $request)
+    {
+        $teacherId = auth()->id();
+        $teacher = Teacher::where('user_id', $teacherId)->first();
+
+        if (!$teacher) {
+            return response()->json([
+                'pending' => 0,
+                'approved' => 0,
+                'rejected' => 0,
+            ]);
+        }
+
+        $school = School::where('id', $teacher->school_id)->first();
+        if (!$school) {
+            return response()->json([
+                'pending' => 0,
+                'approved' => 0,
+                'rejected' => 0,
+            ]);
+        }
+
+        $pending = studentEnrollDetails::whereHas('studentEnrollment', function($query) use ($school) {
+                $query->where('school_id', $school->id);
+            })
+            ->where('status', 'pending')
+            ->count();
+
+        $approved = studentEnrollDetails::whereHas('studentEnrollment', function($query) use ($school) {
+                $query->where('school_id', $school->id);
+            })
+            ->where('status', 'approved')
+            ->count();
+
+        $rejected = studentEnrollDetails::whereHas('studentEnrollment', function($query) use ($school) {
+                $query->where('school_id', $school->id);
+            })
+            ->where('status', 'rejected')
+            ->count();
+
+        return response()->json([
+            'pending' => $pending,
+            'approved' => $approved,
+            'rejected' => $rejected,
+        ]);
+    }
+
 }

@@ -500,6 +500,8 @@ class StudentEnrollment extends Component
                     'transfer_certificate' => json_encode($storedTransferCertificates),
                     'birth_certificate' => $birthCertificatePath,
                     'reports_card' => json_encode($storedReportCards),
+
+                    'previous_grades' => $this->previous_grades,
                 ]
             );
 

@@ -115,7 +115,7 @@
                                 <h3 class="text-lg font-semibold text-gray-900">Pending Enrollments</h3>
                                 <p class="text-sm text-gray-500 mt-1">New student enrollment requests awaiting approval</p>
                             </div>
-                            <span id="pending-count" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">3</span>
+                            <span id="pending-count" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">...</span>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm">
@@ -460,7 +460,7 @@
                                 <h3 class="text-lg font-semibold text-gray-900">Approved Students</h3>
                                 <p class="text-sm text-gray-500 mt-1">Successfully approved student enrollments</p>
                             </div>
-                            <span id="approved-count" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">2</span>
+                            <span id="approved-count" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">...</span>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm">
@@ -564,7 +564,7 @@
                                 <h3 class="text-lg font-semibold text-gray-900">Rejected Students</h3>
                                 <p class="text-sm text-gray-500 mt-1">Rejected student enrollment applications</p>
                             </div>
-                            <span id="rejected-count" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">1</span>
+                            <span id="rejected-count" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">...</span>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm">
@@ -951,5 +951,35 @@
                 }
             });
         }
+
+        // Fetch and update enrollment counts (pending/approved/rejected) via AJAX
+        async function fetchEnrollmentCounts() {
+            try {
+                const response = await fetch("{{ route('teacher.studentenrollment.counts') }}", {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                if (!response.ok) throw new Error('Failed to fetch counts');
+                const data = await response.json();
+
+                const pendingEl = document.getElementById('pending-count');
+                const approvedEl = document.getElementById('approved-count');
+                const rejectedEl = document.getElementById('rejected-count');
+
+                if (pendingEl) pendingEl.textContent = Number.isFinite(data.pending) ? data.pending : '0';
+                if (approvedEl) approvedEl.textContent = Number.isFinite(data.approved) ? data.approved : '0';
+                if (rejectedEl) rejectedEl.textContent = Number.isFinite(data.rejected) ? data.rejected : '0';
+            } catch (e) {
+                console.error('Error loading enrollment counts:', e);
+            }
+        }
+
+        // Load counts on page ready and refresh periodically
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchEnrollmentCounts();
+            // Optional: refresh every 60 seconds to keep badges current
+            setInterval(fetchEnrollmentCounts, 60000);
+        });
     </script>
 </x-Teacher-sidebar>

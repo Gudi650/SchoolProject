@@ -80,6 +80,11 @@ Route::post('/teacher-approveapplicant/{id}',
 [StudentApplicants::class,'ApproveApplicant'])
 ->name('teacher.studentenrollment.approveapplicant');
 
+// AJAX route to get applicants counts (pending, approved, rejected)
+Route::get('/teacher-studentenrollment-counts',
+[StudentApplicants::class,'GetApplicantsCounts'])
+->name('teacher.studentenrollment.counts');
+
 
 // Serve PDFs directly with proper headers (bypasses storage.local route issues)
 // Added headers to prevent browser extensions like IDM from intercepting
