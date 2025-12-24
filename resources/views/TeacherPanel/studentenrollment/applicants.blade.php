@@ -111,7 +111,7 @@
                                                 <td class="px-6 py-4 text-right">
                                                     <div class="flex items-center justify-end gap-2">
                                                         <!--open the modal button -->
-                                                        <button onclick="openModal({{ $index }})" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors" title="View Details">
+                                                        <button onclick="openModal('studentModal-{{ $applicant->id }}')" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors" title="View Details">
                                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -142,6 +142,205 @@
                                                     </div>
                                                 </td>
                                             </tr>
+
+                                            <!-- Modal for Viewing Student Details (per-applicant) -->
+                                            <div id="studentModal-{{ $applicant->id }}" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target===this) closeModal('studentModal-{{ $applicant->id }}')">
+                                                <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden m-4">
+                                                    <!-- Modal Header -->
+                                                    <div class="p-6 border-b-2 border-university-burgundy flex items-center justify-between bg-gradient-to-r from-university-burgundy/5 to-transparent">
+                                                        <div>
+                                                            <h2 class="text-2xl font-bold text-university-burgundy">Student Enrollment Details</h2>
+                                                            <p class="text-sm text-gray-500 mt-1">Review student information and enrollment documents</p>
+                                                        </div>
+                                                        <button onclick="closeModal('studentModal-{{ $applicant->id }}')" class="text-gray-400 hover:text-gray-600 transition-colors">
+                                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Modal Body -->
+                                                    <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+                                                        <!-- Student Information -->
+                                                        <div class="mb-8 pb-6 border-b border-gray-200">
+                                                            <h3 class="text-lg font-semibold text-university-burgundy mb-4">Student Information</h3>
+
+                                                            <!--display student details in a grid -->
+
+                                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                                <div class="bg-gray-50 p-4 rounded-lg">
+                                                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Full Name</label>
+                                                                    <p class="text-gray-900 font-semibold text-lg">{{ $applicant->studentEnrollment->fname }} {{ $applicant->studentEnrollment->mname }} {{ $applicant->studentEnrollment->lname }}</p>
+                                                                </div>
+                                                                <div class="bg-gray-50 p-4 rounded-lg">
+                                                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Email Address</label>
+                                                                    <p class="text-gray-900">{{ $applicant->studentEnrollment->parentEnrollment->email }}</p>
+                                                                </div>
+                                                                <div class="bg-gray-50 p-4 rounded-lg">
+                                                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Phone Number</label>
+                                                                    <p class="text-gray-900">{{ $applicant->studentEnrollment->parentEnrollment->phone }}</p>
+                                                                </div>
+                                                                <div class="bg-gray-50 p-4 rounded-lg">
+                                                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Program Applied</label>
+                                                                    <p class="text-gray-900 font-semibold">{{ $applicant->grade_applied_for }}</p>
+                                                                </div>
+                                                                <div class="bg-gray-50 p-4 rounded-lg">
+                                                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Application Date</label>
+                                                                    <p class="text-gray-900">{{ $applicant->created_at->format('F d, Y') }}</p>
+                                                                </div>
+                                                                <div class="bg-gray-50 p-4 rounded-lg">
+                                                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Enrollment Status</label>
+                                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800">{{ ucfirst($applicant->status) }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Previous School Information -->
+                                                        <div class="mb-8 pb-6 border-b border-gray-200">
+                                                            <h3 class="text-lg font-semibold text-university-burgundy mb-4">Previous School</h3>
+                                                            <div class="bg-gray-50 p-4 rounded-lg">
+                                                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">School Name</label>
+                                                                <p class="text-gray-900 font-semibold text-lg"> {{ $applicant->previous_school_name }} </p>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Attached Documents -->
+                                                        <div class="mb-4">
+                                                            <h3 class="text-lg font-semibold text-university-burgundy mb-4">Attached Documents</h3>
+                                                            @php
+                                                                $academicRecords = $applicant->academic_records ? json_decode($applicant->academic_records, true) : [];
+                                                                $transferCertificates = $applicant->transfer_certificate ? json_decode($applicant->transfer_certificate, true) : [];
+                                                                $birthCertificate = $applicant->birth_certificate;
+                                                                $reportCards = $applicant->reports_card ? json_decode($applicant->reports_card, true) : [];
+                                                            @endphp
+                                                            <div class="space-y-3">
+                                                                <!-- Academic Records -->
+                                                                @foreach($academicRecords as $recordPath)
+                                                                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+                                                                    <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                                                                        <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
+                                                                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                                <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
+                                                                            </svg>
+                                                                        </div>
+                                                                        <div class="min-w-0 flex-1">
+                                                                            <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Academic Records</p>
+                                                                            <p class="text-xs text-gray-500 truncate">{{ basename($recordPath) }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+                                                                        <button onclick="openDocumentViewer('{{ asset('storage/' . $recordPath) }}', '{{ basename($recordPath) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
+                                                                        <a href="{{ asset('storage/' . $recordPath) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
+                                                                    </div>
+                                                                </div>
+                                                                @endforeach
+
+                                                                <!-- Transfer Certificate -->
+                                                                @foreach($transferCertificates as $certificatePath)
+                                                                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+                                                                    <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                                                                        <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
+                                                                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                                <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
+                                                                            </svg>
+                                                                        </div>
+                                                                        <div class="min-w-0 flex-1">
+                                                                            <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Transfer Certificate</p>
+                                                                            <p class="text-xs text-gray-500 truncate">{{ basename($certificatePath) }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+                                                                        <button onclick="openDocumentViewer('{{ asset('storage/' . $certificatePath) }}', '{{ basename($certificatePath) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
+                                                                        <a href="{{ asset('storage/' . $certificatePath) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
+                                                                    </div>
+                                                                </div>
+                                                                @endforeach
+
+                                                                <!-- Birth Certificate -->
+                                                                @if($birthCertificate)
+                                                                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+                                                                    <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                                                                        <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
+                                                                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                                <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
+                                                                            </svg>
+                                                                        </div>
+                                                                        <div class="min-w-0 flex-1">
+                                                                            <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Birth Certificate</p>
+                                                                            <p class="text-xs text-gray-500 truncate">{{ basename($birthCertificate) }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+                                                                        <button onclick="openDocumentViewer('{{ asset('storage/' . $birthCertificate) }}', '{{ basename($birthCertificate) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
+                                                                        <a href="{{ asset('storage/' . $birthCertificate) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
+                                                                    </div>
+                                                                </div>
+                                                                @endif
+
+                                                                <!-- Report Cards -->
+                                                                @foreach($reportCards as $reportPath)
+                                                                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+                                                                    <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                                                                        <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
+                                                                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                                <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
+                                                                            </svg>
+                                                                        </div>
+                                                                        <div class="min-w-0 flex-1">
+                                                                            <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Report Cards</p>
+                                                                            <p class="text-xs text-gray-500 truncate">{{ basename($reportPath) }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+                                                                        <button onclick="openDocumentViewer('{{ asset('storage/' . $reportPath) }}', '{{ basename($reportPath) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
+                                                                        <a href="{{ asset('storage/' . $reportPath) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
+                                                                    </div>
+                                                                </div>
+                                                                @endforeach
+
+                                                                <!-- No Documents Message -->
+                                                                @if(empty($academicRecords) && empty($transferCertificates) && !$birthCertificate && empty($reportCards))
+
+                                                                <div class="p-6 text-center text-gray-500 bg-gray-50 rounded-lg">
+                                                                    <svg class="w-12 h-12 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                                    </svg>
+                                                                    <p>No documents uploaded yet</p>
+                                                                </div>
+
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Modal Footer -->
+                                                    <div class="p-6 border-t border-gray-200 flex items-center justify-between bg-gray-50">
+                                                        <button onclick="closeModal('studentModal-{{ $applicant->id }}')" class="inline-flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-md font-medium transition-colors">
+                                                            Close
+                                                        </button>
+                                                        <div class="flex gap-3">
+                                                            <!-- Reject Button -->
+                                                            <form method="POST">
+                                                                @csrf
+                                                                <button formaction="{{ route('teacher.studentenrollment.rejectapplicant', ['id' => $applicant->id]) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-md font-semibold transition-colors">
+                                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                                    </svg>
+                                                                    Reject
+                                                                </button>
+                                                            </form>
+
+                                                            <!-- Approve Button (kept as non-form like original) -->
+                                                            <button class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white hover:bg-green-700 rounded-md font-semibold shadow-md transition-colors">
+                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                                </svg>
+                                                                Approve
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endforeach
                                     @else
                                         <tr>
@@ -190,90 +389,7 @@
                                             </div>
                                         </td>
                                     </tr>
-
-                                    <!-- Pending Application 2 -->
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-6 py-4">
-                                            <div>
-                                                <div class="font-medium text-gray-900">Emily Davis</div>
-                                                <div class="text-gray-500 text-xs">emily@example.com</div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 text-gray-600">Liberal Arts</td>
-                                        <td class="px-6 py-4 text-gray-600">2023-10-22</td>
-                                        <td class="px-6 py-4">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                pending
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 text-right">
-                                            <div class="flex items-center justify-end gap-2">
-                                                <button onclick="openModal()" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors" title="View Details">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                                    </svg>
-                                                </button>
-                                                <a href="#" class="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors" title="Approve Enrollment">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                    </svg>
-                                                </a>
-                                                <a href="#" class="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors" title="Reject Enrollment">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                    </svg>
-                                                </a>
-                                                <a href="#" class="p-1.5 text-gray-400 hover:text-gray-600 rounded-md">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                                                    </svg>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Pending Application 3 -->
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-6 py-4">
-                                            <div>
-                                                <div class="font-medium text-gray-900">Lisa Anderson</div>
-                                                <div class="text-gray-500 text-xs">lisa@example.com</div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 text-gray-600">Communications</td>
-                                        <td class="px-6 py-4 text-gray-600">2023-10-20</td>
-                                        <td class="px-6 py-4">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                pending
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 text-right">
-                                            <div class="flex items-center justify-end gap-2">
-                                                <button onclick="openModal()" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors" title="View Details">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                                    </svg>
-                                                </button>
-                                                <a href="#" class="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors" title="Approve Enrollment">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                    </svg>
-                                                </button>
-                                                <a href="#" class="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors" title="Reject Enrollment">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                    </svg>
-                                                </a>
-                                                <a href="#" class="p-1.5 text-gray-400 hover:text-gray-600 rounded-md">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                                                    </svg>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>  --}}
+                                      --}}
                                 </tbody>
                             </table>
                         </div>
@@ -438,222 +554,7 @@
         </main>
 
     <!-- Modal for Viewing Student Details -->
-    <div id="studentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden m-4">
-            <!-- Modal Header -->
-            <div class="p-6 border-b-2 border-university-burgundy flex items-center justify-between bg-gradient-to-r from-university-burgundy/5 to-transparent">
-                <div>
-                    <h2 class="text-2xl font-bold text-university-burgundy">Student Enrollment Details</h2>
-                    <p class="text-sm text-gray-500 mt-1">Review student information and enrollment documents</p>
-                </div>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
-                <!-- Student Information -->
-                <div class="mb-8 pb-6 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-university-burgundy mb-4">Student Information</h3>
-
-                    <!--display student details in a grid -->
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Full Name</label>
-                            <p class="text-gray-900 font-semibold text-lg">{{ $pendingapplicants[$index]->studentEnrollment->fname }} {{ $pendingapplicants[$index]->studentEnrollment->mname }} {{ $pendingapplicants[$index]->studentEnrollment->lname }}</p>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Email Address</label>
-                            <p class="text-gray-900">{{ $pendingapplicants[$index]->studentEnrollment->parentEnrollment->email }}</p>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Phone Number</label>
-                            <p class="text-gray-900">{{ $pendingapplicants[$index]->studentEnrollment->parentEnrollment->phone }}</p>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Program Applied</label>
-                            <p class="text-gray-900 font-semibold">{{ $pendingapplicants[$index]->grade_applied_for }}</p>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Application Date</label>
-                            <p class="text-gray-900">{{ $pendingapplicants[$index]->created_at->format('F d, Y') }}</p>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Enrollment Status</label>
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800">{{ ucfirst($pendingapplicants[$index]->status) }}</span>
-                        </div>
-
-                        {{-- IGNORE
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">GPA</label>
-                            <p class="text-gray-900 font-semibold text-lg">3.85</p>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Test Score</label>
-                            <p class="text-gray-900 font-semibold text-lg">1520 (SAT)</p>
-                        </div>
-                         --}}
-                    </div>
-                </div>
-
-                <!-- Previous School Information -->
-                <div class="mb-8 pb-6 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-university-burgundy mb-4">Previous School</h3>
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">School Name</label>
-                        <p class="text-gray-900 font-semibold text-lg"> {{ $pendingapplicants[$index]->previous_school_name }} </p>
-                    </div>
-                </div>
-
-                {{--  
-                <!-- Statement of Purpose -->
-                <div class="mb-8 pb-6 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-university-burgundy mb-3">Statement of Purpose</h3>
-                    <div class="bg-university-cream rounded-lg p-6 border-l-4 border-university-burgundy">
-                        <p class="text-gray-700 text-sm leading-relaxed">
-                            I have always been passionate about computer science and technology. Throughout my high school years, I have developed a strong foundation in programming and mathematics, which has prepared me well for university-level coursework.<br><br>
-                            I am particularly interested in pursuing Computer Science at your institution because of its excellent faculty, cutting-edge curriculum, and strong industry connections. I believe that the comprehensive program will equip me with the knowledge and skills necessary to excel in this rapidly evolving field.<br><br>
-                            My goal is to become a software engineer and contribute to innovative projects that solve real-world problems. I am committed to academic excellence and look forward to engaging with the vibrant community at your university.
-                        </p>
-                    </div>
-                </div>
-                --}}
-
-                <!-- Attached Documents -->
-                <div class="mb-4">
-                    <h3 class="text-lg font-semibold text-university-burgundy mb-4">Attached Documents</h3>
-                    @php
-                        $academicRecords = $pendingapplicants[$index]->academic_records ? json_decode($pendingapplicants[$index]->academic_records, true) : [];
-                        $transferCertificates = $pendingapplicants[$index]->transfer_certificate ? json_decode($pendingapplicants[$index]->transfer_certificate, true) : [];
-                        $birthCertificate = $pendingapplicants[$index]->birth_certificate;
-                        $reportCards = $pendingapplicants[$index]->reports_card ? json_decode($pendingapplicants[$index]->reports_card, true) : [];
-                    @endphp
-                    <div class="space-y-3">
-                        <!-- Academic Records -->
-                        @foreach($academicRecords as $recordPath)
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
-                            <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-                                <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
-                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
-                                    </svg>
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Academic Records</p>
-                                    <p class="text-xs text-gray-500 truncate">{{ basename($recordPath) }}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
-                                <button onclick="openDocumentViewer('{{ asset('storage/' . $recordPath) }}', '{{ basename($recordPath) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
-                                <a href="{{ asset('storage/' . $recordPath) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
-                            </div>
-                        </div>
-                        @endforeach
-
-                        <!-- Transfer Certificate -->
-                        @foreach($transferCertificates as $certificatePath)
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
-                            <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-                                <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
-                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
-                                    </svg>
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Transfer Certificate</p>
-                                    <p class="text-xs text-gray-500 truncate">{{ basename($certificatePath) }}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
-                                <button onclick="openDocumentViewer('{{ asset('storage/' . $certificatePath) }}', '{{ basename($certificatePath) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
-                                <a href="{{ asset('storage/' . $certificatePath) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
-                            </div>
-                        </div>
-                        @endforeach
-
-                        <!-- Birth Certificate -->
-                        @if($birthCertificate)
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
-                            <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-                                <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
-                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
-                                    </svg>
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Birth Certificate</p>
-                                    <p class="text-xs text-gray-500 truncate">{{ basename($birthCertificate) }}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
-                                <button onclick="openDocumentViewer('{{ asset('storage/' . $birthCertificate) }}', '{{ basename($birthCertificate) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
-                                <a href="{{ asset('storage/' . $birthCertificate) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
-                            </div>
-                        </div>
-                        @endif
-
-                        <!-- Report Cards -->
-                        @foreach($reportCards as $reportPath)
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
-                            <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-                                <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
-                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
-                                    </svg>
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Report Cards</p>
-                                    <p class="text-xs text-gray-500 truncate">{{ basename($reportPath) }}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
-                                <button onclick="openDocumentViewer('{{ asset('storage/' . $reportPath) }}', '{{ basename($reportPath) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
-                                <a href="{{ asset('storage/' . $reportPath) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
-                            </div>
-                        </div>
-                        @endforeach
-
-                        <!-- No Documents Message -->
-                        @if(empty($academicRecords) && empty($transferCertificates) && !$birthCertificate && empty($reportCards))
-
-                        <div class="p-6 text-center text-gray-500 bg-gray-50 rounded-lg">
-                            <svg class="w-12 h-12 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            <p>No documents uploaded yet</p>
-                        </div>
-
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="p-6 border-t border-gray-200 flex items-center justify-between bg-gray-50">
-                <button onclick="closeModal()" class="inline-flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-md font-medium transition-colors">
-                    Close
-                </button>
-                <div class="flex gap-3">
-                    <button class="inline-flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-md font-semibold transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                        Reject
-                    </button>
-                    <button class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white hover:bg-green-700 rounded-md font-semibold shadow-md transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Approve
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- Document Viewer Modal - Fully Responsive -->
     <div id="documentViewerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-2 sm:p-4">
@@ -909,24 +810,19 @@
             container.innerHTML = ''; // Clear content to stop loading
         }
 
-        function openModal(index) {
-            const modal = document.getElementById('studentModal');
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
 
-        function closeModal() {
-            const modal = document.getElementById('studentModal');
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
-
-        // Close modal when clicking outside
-        document.getElementById('studentModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
 
         // Close document viewer modal when clicking outside
         document.getElementById('documentViewerModal').addEventListener('click', function(e) {

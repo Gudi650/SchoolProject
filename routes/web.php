@@ -70,6 +70,12 @@ Route::get('/teacher-studentapplicants',
 [StudentApplicants::class,'ViewStudentApplicants'])
 ->name('teacher.studentenrollment.applicants');
 
+//reject applicant route using controller pass the id of the applicant as well
+Route::post('/teacher-rejectapplicant/{id}',
+[StudentApplicants::class,'RejectApplicant'])
+->name('teacher.studentenrollment.rejectapplicant');
+
+
 // Serve PDFs directly with proper headers (bypasses storage.local route issues)
 // Added headers to prevent browser extensions like IDM from intercepting
 Route::get('/serve-pdf/{path}', function($path) {
