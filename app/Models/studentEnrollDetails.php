@@ -15,7 +15,7 @@ class studentEnrollDetails extends Model
         'academic_records',
         'transfer_certificate',
         'birth_certificate',
-        'reports_cards',
+        'reports_card',
         'status',
     ];
 
@@ -23,7 +23,8 @@ class studentEnrollDetails extends Model
     //relatiosnip with studentEnrollment
     public function studentEnrollment()
     {
-        return $this->belongsTo(studentEnrollment::class, 'student_enrollment_id');
+        // foreign key is student_enrollment_id referencing student_enrollment_id column on student_enrollments
+        return $this->belongsTo(studentEnrollment::class, 'student_enrollment_id', 'student_enrollment_id');
     }
 
 }

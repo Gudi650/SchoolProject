@@ -341,26 +341,6 @@ class StudentEnrollment extends Component
                 'birth_certificate' => 'required|file|mimes:pdf,jpg,png|max:5120',
             ]);
 
-            //handle file uploads here
-            if ($this->academic_records) {
-                foreach ($this->academic_records as $record) {
-                    $record->store('documents/academic_records', 'public');
-                }
-            }
-            if ($this->reports_cards) {
-                foreach ($this->reports_cards as $record) {
-                    $record->store('documents/reports_cards', 'public');
-                }
-            }
-            if ($this->transfer_certificate) {
-                foreach ($this->transfer_certificate as $record) {
-                    $record->store('documents/transfer_certificates', 'public');
-                }
-            }
-            if ($this->birth_certificate) {
-                    $record->store('documents/birth_certificates', 'public');
-            }
-
             //get the school name
             $this->schoolname = $this->getSchoolNameById($this->school_id);
 
@@ -483,6 +463,29 @@ class StudentEnrollment extends Component
 
             ); 
 
+            //store documents and keep persisted paths
+            $storedAcademicRecords = collect($this->academic_records ?? [])
+                ->filter()
+                ->map(fn($file) => $file->store('documents/academic_records', 'public'))
+                ->values()
+                ->all();
+
+            $storedReportCards = collect($this->reports_cards ?? [])
+                ->filter()
+                ->map(fn($file) => $file->store('documents/reports_cards', 'public'))
+                ->values()
+                ->all();
+
+            $storedTransferCertificates = collect($this->transfer_certificate ?? [])
+                ->filter()
+                ->map(fn($file) => $file->store('documents/transfer_certificates', 'public'))
+                ->values()
+                ->all();
+
+            $birthCertificatePath = $this->birth_certificate
+                ? $this->birth_certificate->store('documents/birth_certificates', 'public')
+                : null;
+
             //create the student enrollment details records
             studentEnrollDetails::UpdateOrcreate(
                 [
@@ -493,10 +496,10 @@ class StudentEnrollment extends Component
                     'admission_date' => $this->admission_date,
                     'grade_applied_for' => $this->grade_applied_for,
                     'previous_school_name' => $this->previous_school_name,
-                    'academic_records' => json_encode(array_map(fn($file) => $file->getClientOriginalName(), $this->academic_records)),
-                    'transfer_certificate' => json_encode(array_map(fn($file) => $file->getClientOriginalName(), $this->transfer_certificate)),
-                    'birth_certificate' => $this->birth_certificate ? $this->birth_certificate->getClientOriginalName() : null,
-                    'reports_card' => json_encode(array_map(fn($file) => $file->getClientOriginalName(), $this->reports_cards)),
+                    'academic_records' => json_encode($storedAcademicRecords),
+                    'transfer_certificate' => json_encode($storedTransferCertificates),
+                    'birth_certificate' => $birthCertificatePath,
+                    'reports_card' => json_encode($storedReportCards),
                 ]
             );
 

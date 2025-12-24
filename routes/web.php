@@ -9,12 +9,14 @@ use App\Http\Controllers\GenerateExamController;
 use App\Http\Controllers\ParentregistrationController;
 use App\Http\Controllers\PostExamResults;
 use App\Http\Controllers\Student;
+use App\Http\Controllers\StudentApplicants;
 use App\Http\Controllers\StudentAttendanceReport;
 use App\Http\Controllers\studentEnrollment;
 use App\Http\Controllers\Teacherprofile;
 use App\Http\Controllers\TeacherregistrationController;
 use App\Http\Controllers\TeacherRoleController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\File;
 
 
 //create middleware to the routes that require authentication
@@ -57,15 +59,61 @@ Route::middleware('auth')->group(function () {
 /////////////////////////////////////////////////////////////////
 ///routes for student enrollment
 
+    //serve stored documents safely (inline view and download)
+    Route::get('/documents/view/{path}', function (string $path) {
+        $decoded = strtr($path, '-_', '+/');
+        $decoded .= str_repeat('=', (4 - strlen($decoded) % 4) % 4);
+        $decoded = base64_decode($decoded, true);
+        if ($decoded === false || str_contains($decoded, '..')) {
+            abort(404);
+        }
+
+        $relativePath = ltrim($decoded, '/');
+        $fullPath = storage_path('app/public/' . $relativePath);
+
+        if (! File::exists($fullPath)) {
+            abort(404);
+        }
+
+        return response()->file(
+            $fullPath,
+            [
+                'Content-Type' => File::mimeType($fullPath) ?: 'application/octet-stream',
+                'Content-Disposition' => 'inline; filename="' . basename($fullPath) . '"',
+            ]
+        );
+    })->name('documents.view');
+
+    Route::get('/documents/download/{path}', function (string $path) {
+        $decoded = strtr($path, '-_', '+/');
+        $decoded .= str_repeat('=', (4 - strlen($decoded) % 4) % 4);
+        $decoded = base64_decode($decoded, true);
+        if ($decoded === false || str_contains($decoded, '..')) {
+            abort(404);
+        }
+
+        $relativePath = ltrim($decoded, '/');
+        $fullPath = storage_path('app/public/' . $relativePath);
+
+        if (! File::exists($fullPath)) {
+            abort(404);
+        }
+
+        return response()->download($fullPath);
+    })->name('documents.download');
+
 //route to show student enrollment settings
 Route::get('/teacher-studentenrollment',function(){
     return view('TeacherPanel.studentenrollment.enrollmentSettings');
 })->name('teacher.studentenrollment.settings');
 
-//route to show student enrollment applicants
-Route::get('/teacher-studentenrollment-applicants',function(){
-    return view('TeacherPanel.studentenrollment.applicants');
-})->name('teacher.studentenrollment.applicants');
+
+//////////////////////////////////////////////////////////////////////////////////
+///view the applicants page using contoller
+Route::get('/teacher-studentapplicants', 
+[StudentApplicants::class,'ViewStudentApplicants'])
+->name('teacher.studentenrollment.applicants');
+
 
 //route for analytics 
 Route::get('/teacher-studentenrollment-analytics',function(){

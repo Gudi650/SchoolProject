@@ -44,4 +44,10 @@ class School extends Model
         return $this->hasMany(Teacher::class, 'school_id');
     }
 
+    //relationship with studentEnrollment model (one to many)
+    public function studentEnrollments()
+    {
+        return $this->hasMany(studentEnrollment::class, 'school_id');
+    }
+
 }

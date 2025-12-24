@@ -30,7 +30,14 @@ class studentEnrollment extends Model
     //relationship with studentEnrollDetails
     public function studentEnrollDetails()
     {
-        return $this->hasOne(studentEnrollDetails::class, 'student_enrollment_id');
+        // local key is student_enrollment_id, not the primary id
+        return $this->hasOne(studentEnrollDetails::class, 'student_enrollment_id', 'student_enrollment_id');
+    }
+
+    //relationship with School
+    public function school()
+    {
+        return $this->belongsTo(School::class, 'school_id');
     }
 
 }
