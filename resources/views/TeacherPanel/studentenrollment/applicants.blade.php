@@ -118,19 +118,21 @@
                                                             </svg>
                                                         </button>
 
-
+                                                        <!--approve button-->
                                                         <a href="#" class="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors" title="Approve Enrollment">
                                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                                             </svg>
                                                         </a>
 
+                                                        <!--reject button-->
                                                         <a href="#" class="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors" title="Reject Enrollment">
                                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                                             </svg>
                                                         </a>
 
+                                                        <!--more options button-->
                                                         <a href="#" class="p-1.5 text-gray-400 hover:text-gray-600 rounded-md">
                                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
@@ -533,84 +535,84 @@
                     <div class="space-y-3">
                         <!-- Academic Records -->
                         @foreach($academicRecords as $recordPath)
-                        <div class="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 bg-red-100 rounded-lg">
-                                    <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+                            <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                                <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
                                     </svg>
                                 </div>
-                                <div>
-                                    <p class="font-semibold text-gray-900">Academic Records</p>
-                                    <p class="text-xs text-gray-500">{{ basename($recordPath) }}</p>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Academic Records</p>
+                                    <p class="text-xs text-gray-500 truncate">{{ basename($recordPath) }}</p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="openDocumentViewer('{{ asset('storage/' . $recordPath) }}', '{{ basename($recordPath) }}')" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</button>
-                                <a href="{{ asset('storage/' . $recordPath) }}" download class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
+                            <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+                                <button onclick="openDocumentViewer('{{ asset('storage/' . $recordPath) }}', '{{ basename($recordPath) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
+                                <a href="{{ asset('storage/' . $recordPath) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
                             </div>
                         </div>
                         @endforeach
 
                         <!-- Transfer Certificate -->
                         @foreach($transferCertificates as $certificatePath)
-                        <div class="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 bg-red-100 rounded-lg">
-                                    <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+                            <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                                <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
                                     </svg>
                                 </div>
-                                <div>
-                                    <p class="font-semibold text-gray-900">Transfer Certificate</p>
-                                    <p class="text-xs text-gray-500">{{ basename($certificatePath) }}</p>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Transfer Certificate</p>
+                                    <p class="text-xs text-gray-500 truncate">{{ basename($certificatePath) }}</p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="openDocumentViewer('{{ asset('storage/' . $certificatePath) }}', '{{ basename($certificatePath) }}')" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</button>
-                                <a href="{{ asset('storage/' . $certificatePath) }}" download class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
+                            <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+                                <button onclick="openDocumentViewer('{{ asset('storage/' . $certificatePath) }}', '{{ basename($certificatePath) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
+                                <a href="{{ asset('storage/' . $certificatePath) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
                             </div>
                         </div>
                         @endforeach
 
                         <!-- Birth Certificate -->
                         @if($birthCertificate)
-                        <div class="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 bg-red-100 rounded-lg">
-                                    <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+                            <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                                <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
                                     </svg>
                                 </div>
-                                <div>
-                                    <p class="font-semibold text-gray-900">Birth Certificate</p>
-                                    <p class="text-xs text-gray-500">{{ basename($birthCertificate) }}</p>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Birth Certificate</p>
+                                    <p class="text-xs text-gray-500 truncate">{{ basename($birthCertificate) }}</p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="openDocumentViewer('{{ asset('storage/' . $birthCertificate) }}', '{{ basename($birthCertificate) }}')" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</button>
-                                <a href="{{ asset('storage/' . $birthCertificate) }}" download class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
+                            <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+                                <button onclick="openDocumentViewer('{{ asset('storage/' . $birthCertificate) }}', '{{ basename($birthCertificate) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
+                                <a href="{{ asset('storage/' . $birthCertificate) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
                             </div>
                         </div>
                         @endif
 
                         <!-- Report Cards -->
                         @foreach($reportCards as $reportPath)
-                        <div class="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
-                            <div class="flex items-center gap-4">
-                                <div class="p-3 bg-red-100 rounded-lg">
-                                    <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+                            <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                                <div class="p-2 sm:p-3 bg-red-100 rounded-lg flex-shrink-0">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
                                     </svg>
                                 </div>
-                                <div>
-                                    <p class="font-semibold text-gray-900">Report Cards</p>
-                                    <p class="text-xs text-gray-500">{{ basename($reportPath) }}</p>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-semibold text-sm sm:text-base text-gray-900 truncate">Report Cards</p>
+                                    <p class="text-xs text-gray-500 truncate">{{ basename($reportPath) }}</p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="openDocumentViewer('{{ asset('storage/' . $reportPath) }}', '{{ basename($reportPath) }}')" class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors">View</button>
-                                <a href="{{ asset('storage/' . $reportPath) }}" download class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors">Download</a>
+                            <div class="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+                                <button onclick="openDocumentViewer('{{ asset('storage/' . $reportPath) }}', '{{ basename($reportPath) }}')" class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors whitespace-nowrap">View</button>
+                                <a href="{{ asset('storage/' . $reportPath) }}" download class="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors whitespace-nowrap">Download</a>
                             </div>
                         </div>
                         @endforeach
@@ -653,39 +655,39 @@
         </div>
     </div>
 
-    <!-- Document Viewer Modal with iframe -->
-    <div id="documentViewerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-hidden m-4">
+    <!-- Document Viewer Modal - Fully Responsive -->
+    <div id="documentViewerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-2 sm:p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
             <!-- Modal Header -->
-            <div class="p-4 border-b-2 border-university-burgundy flex items-center justify-between bg-gradient-to-r from-university-burgundy/5 to-transparent">
-                <div>
-                    <h2 class="text-xl font-bold text-university-burgundy">Document Viewer</h2>
-                    <p id="documentName" class="text-sm text-gray-500 mt-1"></p>
+            <div class="p-3 sm:p-4 border-b-2 border-university-burgundy flex items-center justify-between bg-gradient-to-r from-university-burgundy/5 to-transparent flex-shrink-0">
+                <div class="min-w-0 flex-1">
+                    <h2 class="text-lg sm:text-xl font-bold text-university-burgundy truncate">Document Viewer</h2>
+                    <p id="documentName" class="text-xs sm:text-sm text-gray-500 mt-1 truncate"></p>
                 </div>
-                <button onclick="closeDocumentViewer()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button onclick="closeDocumentViewer()" class="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 ml-2">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
 
-            <!-- Modal Body with document viewer -->
-            <div class="p-4 overflow-hidden relative" style="height: calc(90vh - 150px);">
+            <!-- Modal Body with document viewer - Flexible height -->
+            <div class="flex-1 overflow-hidden relative">
                 <div id="loadingIndicator" class="absolute inset-0 flex items-center justify-center bg-white z-10">
-                    <div class="text-center">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-university-burgundy mx-auto"></div>
-                        <p class="mt-4 text-gray-600">Loading document...</p>
+                    <div class="text-center p-4">
+                        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-university-burgundy mx-auto"></div>
+                        <p class="mt-4 text-sm sm:text-base text-gray-600">Loading document...</p>
                     </div>
                 </div>
-                <div id="documentContainer" class="w-full h-full overflow-auto bg-white p-2"></div>
+                <div id="documentContainer" class="w-full h-full overflow-auto bg-white p-2 sm:p-4"></div>
             </div>
 
             <!-- Modal Footer -->
-            <div class="p-4 border-t border-gray-200 flex items-center justify-between bg-gray-50">
-                <button onclick="closeDocumentViewer()" class="inline-flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-md font-medium transition-colors">
+            <div class="p-3 sm:p-4 border-t border-gray-200 flex flex-col sm:flex-row gap-2 sm:gap-4 items-center justify-center sm:justify-between bg-gray-50 flex-shrink-0">
+                <button onclick="closeDocumentViewer()" class="w-32 sm:w-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-md font-medium transition-colors">
                     Close
                 </button>
-                <a id="downloadLink" href="" download class="inline-flex items-center gap-2 px-4 py-2 bg-university-burgundy text-white hover:bg-university-burgundy/90 rounded-md font-medium transition-colors">
+                <a id="downloadLink" href="" download class="w-32 sm:w-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-sm sm:text-base bg-university-burgundy text-white hover:bg-university-burgundy/90 rounded-md font-medium transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                     </svg>
