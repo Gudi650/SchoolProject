@@ -482,8 +482,14 @@
                       <i class="bi bi-paperclip text-2xl text-gray-400"></i>
                       <div class="text-xs text-gray-500 mt-1">Click to upload or drag files here</div>
                     </div>
-                    <input type="file" name="attachment" class="hidden" />
+                    <input id="composeAttachment" type="file" name="attachment" class="hidden" />
                   </label>
+                  <div id="composeAttachmentName" class="mt-2 hidden">
+                    <div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 shadow-sm text-sm text-gray-800">
+                      <i class="bi bi-paperclip text-indigo-600"></i>
+                      <span class="file-name">No file selected</span>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="flex items-center justify-between gap-3 pt-2">
@@ -540,6 +546,9 @@
     const specificStudents = document.getElementById('specificStudents');
     const bySubject = document.getElementById('bySubject');
     const editBySubject = document.getElementById('editBySubject');
+    const composeAttachInput = document.getElementById('composeAttachment');
+    const composeAttachName = document.getElementById('composeAttachmentName');
+    const composeAttachNameText = composeAttachName?.querySelector('.file-name');
 
     // student search & class filter (UI helper only)
     const studentSearch = document.getElementById('studentSearch');
@@ -578,6 +587,7 @@
       });
     });
 
+    // Compose modal open/close
     function showModal(){
       modal.classList.remove('hidden');
       modal.classList.add('flex');
@@ -589,6 +599,7 @@
       document.body.style.overflow = '';
     }
 
+    // View modal open/close + attachment list render
     function showViewModal(title, body, date, time, audience, attachments){
       document.getElementById('viewTitle').textContent = title;
       document.getElementById('viewBody').textContent = body;
@@ -624,6 +635,7 @@
       document.body.style.overflow = '';
     }
 
+    // Edit modal open/close
     function showEditModal(){
       editModal.classList.remove('hidden');
       editModal.classList.add('flex');
@@ -635,11 +647,13 @@
       document.body.style.overflow = '';
     }
 
+    // Wire compose triggers
     openBtns.forEach(b => b.addEventListener('click', e => { e.preventDefault(); showModal(); }));
     if (closeBtn) closeBtn.addEventListener('click', hideModal);
     if (cancelBtn) cancelBtn.addEventListener('click', hideModal);
     modal.addEventListener('click', e => { if (e.target === modal) hideModal(); });
 
+    // Wire view triggers
     openViewBtns.forEach(btn => {
       btn.addEventListener('click', e => {
         e.preventDefault();
@@ -656,6 +670,7 @@
     if (closeViewModalBtn) closeViewModalBtn.addEventListener('click', hideViewModal);
     viewModal.addEventListener('click', e => { if (e.target === viewModal) hideViewModal(); });
 
+    // Wire edit triggers
     openEditBtns.forEach(btn => {
       btn.addEventListener('click', e => {
         e.preventDefault();
@@ -666,6 +681,23 @@
     if (cancelEditBtn) cancelEditBtn.addEventListener('click', hideEditModal);
     editModal.addEventListener('click', e => { if (e.target === editModal) hideEditModal(); });
 
+    // Attachment preview (compose): show selected filename
+    if (composeAttachInput) {
+      composeAttachInput.addEventListener('change', () => {
+        const file = composeAttachInput.files?.[0];
+        if (composeAttachName && composeAttachNameText) {
+          if (file) {
+            composeAttachNameText.textContent = file.name;
+            composeAttachName.classList.remove('hidden');
+          } else {
+            composeAttachNameText.textContent = '';
+            composeAttachName.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    // Audience toggles (compose)
     function updateAudience(){
       const val = Array.from(audRadios).find(r => r.checked)?.value;
       if (specificStudents) specificStudents.classList.toggle('hidden', val !== 'specific_students');
@@ -674,6 +706,7 @@
     audRadios.forEach(r => r.addEventListener('change', updateAudience));
     updateAudience();
 
+    // Audience toggles (edit modal)
     function updateEditAudience(){
       const val = Array.from(editAudRadios).find(r => r.checked)?.value;
       if (editBySubject) editBySubject.classList.toggle('hidden', val !== 'by_subject');
