@@ -37,6 +37,7 @@ class AnnouncementController extends Controller
         ]);
 
         //store the data in the database
+        
 
         //dump the validation data
         dd($data);
