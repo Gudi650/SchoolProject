@@ -481,6 +481,7 @@
                     <div class="text-center">
                       <i class="bi bi-paperclip text-2xl text-gray-400"></i>
                       <div class="text-xs text-gray-500 mt-1">Click to upload or drag files here</div>
+                      <div class="text-xs text-gray-500 mt-1">MAX 5MB</div>
                     </div>
                     <input id="composeAttachment" type="file" name="attachment" class="hidden" />
                   </label>
@@ -488,6 +489,9 @@
                     <div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 shadow-sm text-sm text-gray-800">
                       <i class="bi bi-paperclip text-indigo-600"></i>
                       <span class="file-name">No file selected</span>
+                      <button type="button" id="composeAttachmentClear" class="ml-2 px-2 py-1 text-xs rounded-md border border-red-200 text-red-700 bg-red-50 hover:bg-red-100">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -549,6 +553,7 @@
     const composeAttachInput = document.getElementById('composeAttachment');
     const composeAttachName = document.getElementById('composeAttachmentName');
     const composeAttachNameText = composeAttachName?.querySelector('.file-name');
+    const composeAttachClear = document.getElementById('composeAttachmentClear');
 
     // student search & class filter (UI helper only)
     const studentSearch = document.getElementById('studentSearch');
@@ -694,6 +699,15 @@
             composeAttachName.classList.add('hidden');
           }
         }
+      });
+    }
+
+    // Attachment preview (compose): clear selected file
+    if (composeAttachClear) {
+      composeAttachClear.addEventListener('click', () => {
+        if (composeAttachInput) composeAttachInput.value = '';
+        if (composeAttachName) composeAttachName.classList.add('hidden');
+        if (composeAttachNameText) composeAttachNameText.textContent = '';
       });
     }
 

@@ -36,6 +36,8 @@ class AnnouncementController extends Controller
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // max 5MB
         ]);
 
+        //store the data in the database
+
         //dump the validation data
         dd($data);
 
