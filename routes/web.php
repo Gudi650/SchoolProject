@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AssignClasses;
 use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AttendanceController;
@@ -49,10 +50,19 @@ Route::middleware('auth')->group(function () {
         return view('TeacherPanel.dashboard');
     })->name('teacher.dashboard');
 
+    ///////////////////////////////////////////////////////////
     //for announcements
-    Route::get('/teacher-announcements', function () {
-        return view('TeacherPanel.announcements');
-    })->name('teacher.announcements');
+
+    ////view the announcements page suing the controller
+    Route::get('/teacher-announcements', 
+    [AnnouncementController::class, 'viewAnnouncements'])
+    ->name('teacher.announcements');
+
+    //submit the announcement using controller
+    Route::post('/teacher-addannouncement',
+    [AnnouncementController::class, 'addAnnouncement']  
+    )->name('teacher.addannouncement');
+
 
 
 /////////////////////////////////////////////////////////////////

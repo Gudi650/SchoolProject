@@ -345,7 +345,8 @@
             </div>
           </div>
 
-          <!-- Compose Modal -->
+          <!-- Compose Annnouncement Modal -->
+
           <div id="modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center p-4">
             <div class="bg-white w-full max-w-2xl rounded-2xl p-6 overflow-auto max-h-[90vh] shadow-2xl ring-1 ring-black/5">
               <!-- Header -->
@@ -366,7 +367,7 @@
                 </div>
               </div>
 
-              <form id="annForm" class="space-y-4 mt-5" method="POST" action="#" enctype="multipart/form-data">
+              <form id="annForm" class="space-y-4 mt-5" method="POST" action="{{ route('teacher.addannouncement') }}" enctype="multipart/form-data">
                 @csrf
 
                 <div>
@@ -377,13 +378,18 @@
 
                 <div>
                   <label class="text-sm font-medium text-gray-700">Message</label>
-                  <textarea name="body" rows="6" required placeholder="Write your announcement..."
+                  <textarea name="content" rows="6" required placeholder="Write your announcement..."
                     class="w-full mt-2 border border-gray-200 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-y transition"></textarea>
                 </div>
 
                 <div>
                   <label class="text-sm font-medium text-gray-700">Audience</label>
                   <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
+
+                    <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
+                      <input type="checkbox" name="audience_type[]" value="all" class="aud-radio">
+                      <span class="text-sm">All School</span>
+                    </label>
 
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
                       <input type="checkbox" name="audience_type[]" value="all_students" checked class="aud-radio">
@@ -394,6 +400,7 @@
                       <input type="checkbox" name="audience_type[]" value="all_teachers" class="aud-radio">
                       <span class="text-sm">All Teachers</span>
                     </label>
+
 
                     {{-- 
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
