@@ -294,7 +294,13 @@
 
                 <div>
                   <label class="text-sm font-medium text-gray-700">Current Attachment</label>
-                  <div id="viewAttachment" class="mt-2 text-sm text-gray-500 italic">No attachment</div>
+                  <div class="mt-2 inline-flex w-full items-center gap-3 rounded-xl bg-gradient-to-r from-indigo-50 via-white to-slate-50 border border-indigo-100/70 px-4 py-3 shadow-sm">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700">
+                      <i class="bi bi-paperclip text-lg"></i>
+                    </span>
+                    <span id="viewAttachment" class="flex-1 text-sm text-gray-800 italic">No attachment</span>
+                    <span class="text-xs text-gray-400">Preview</span>
+                  </div>
                 </div>
 
               </div>
