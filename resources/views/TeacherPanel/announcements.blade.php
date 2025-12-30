@@ -43,18 +43,28 @@
 
           <!-- Controls -->
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 flex-wrap">
               <div class="relative">
                 <input id="search" name="q" type="search" placeholder="Search announcements..." class="w-72 pl-10 pr-3 py-2 rounded-md border focus:ring-indigo-200 focus:border-indigo-300">
                 <span class="absolute left-3 top-2 text-gray-400"><i class="bi bi-search"></i></span>
               </div>
 
-              <div class="hidden sm:flex items-center gap-2">
-                <!-- Filters kept as UI only; will be handled server-side -->
-                <a href="?filter=all" class="px-3 py-1 rounded-md bg-indigo-50 text-indigo-700 text-sm">All</a>
-                <a href="?filter=notice" class="px-3 py-1 rounded-md text-sm">Notices</a>
-                <a href="?filter=reminder" class="px-3 py-1 rounded-md text-sm">Reminders</a>
-                <a href="?filter=teacher" class="px-3 py-1 rounded-md text-sm">Teachers</a>
+              <div class="flex items-center gap-1 bg-white rounded-lg shadow-sm p-1">
+                <!-- Main tabs -->
+                <button class="tab-btn active px-3 py-1 rounded-md text-sm font-medium transition" data-tab="all">
+                  All
+                </button>
+                <button class="tab-btn px-3 py-1 rounded-md text-sm font-medium transition" data-tab="my-posts">
+                  My Posts
+                </button>
+                <button class="tab-btn px-3 py-1 rounded-md text-sm font-medium transition" data-tab="new">
+                  New <span class="ml-1 px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full">3</span>
+                </button>
+                <span class="w-px h-6 bg-gray-300 mx-1"></span>
+                <!-- Category filters -->
+                <button class="tab-btn px-3 py-1 rounded-md text-sm transition" data-tab="notice">Notices</button>
+                <button class="tab-btn px-3 py-1 rounded-md text-sm transition" data-tab="reminder">Reminders</button>
+                <button class="tab-btn px-3 py-1 rounded-md text-sm transition" data-tab="teacher">Teachers</button>
               </div>
             </div>
 
@@ -73,10 +83,13 @@
               <div id="annList" class="space-y-4">
   <!-- Hard-coded announcements (backend will be wired later) -->
 
-  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="notice">
+  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="notice" data-tab-type="my-posts">
     <div class="flex items-start justify-between gap-4">
       <div>
-        <h3 class="font-semibold text-indigo-800">Holiday Notice</h3>
+        <div class="flex items-center gap-2 mb-2">
+          <h3 class="font-semibold text-indigo-800">Holiday Notice</h3>
+          <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">You</span>
+        </div>
         <p class="text-sm text-gray-600 mt-1">School will be closed on Monday due to a public holiday. All classes and extracurricular activities are suspended.</p>
         <div class="text-xs text-gray-400 mt-3 flex items-center gap-3">
           <span>Sep 1, 2025</span>
@@ -94,13 +107,16 @@
     </div>
   </article>
 
-  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="reminder">
+  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="reminder" data-tab-type="new">
     <div class="flex items-start justify-between gap-4">
       <div>
 
-        <h3 class="font-semibold text-indigo-800">
-          Parent-Teacher Meeting Reminder
-        </h3>
+        <div class="flex items-center gap-2 mb-2">
+          <h3 class="font-semibold text-indigo-800">
+            Parent-Teacher Meeting Reminder
+          </h3>
+          <span class="px-2 py-0.5 bg-blue-500 text-white text-xs rounded-full font-medium animate-pulse">NEW</span>
+        </div>
 
         <p class="text-sm text-gray-600 mt-1">
           Reminder: Parent-Teacher meeting next Friday at 2:00 PM in the main hall. Teachers, please prepare student progress reports.
@@ -118,6 +134,29 @@
         <div class="flex gap-2">
           <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openViewModal" data-title="Parent-Teacher Meeting Reminder" data-body="Reminder: Parent-Teacher meeting next Friday at 2:00 PM in the main hall. Teachers, please prepare student progress reports." data-date="Aug 28, 2025" data-time="03:24 PM" data-audience="Class 7 - Math" data-attachments="meeting_agenda.pdf,student_reports.docx">View</button>
           <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openEditModal">Edit</button>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="notice" data-tab-type="new">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <h3 class="font-semibold text-indigo-800">Staff Meeting Tomorrow</h3>
+          <span class="px-2 py-0.5 bg-blue-500 text-white text-xs rounded-full font-medium animate-pulse">NEW</span>
+        </div>
+        <p class="text-sm text-gray-600 mt-1">All teaching staff are required to attend the meeting tomorrow at 10:00 AM in the conference room. Agenda: Curriculum updates.</p>
+        <div class="text-xs text-gray-400 mt-3 flex items-center gap-3">
+          <span>Dec 29, 2025</span>
+          <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded">All Teachers</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-end gap-2">
+        <div class="text-xs text-gray-400">09:15 AM</div>
+        <div class="flex gap-2">
+          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openViewModal" data-title="Staff Meeting Tomorrow" data-body="All teaching staff are required to attend the meeting tomorrow at 10:00 AM in the conference room. Agenda: Curriculum updates." data-date="Dec 29, 2025" data-time="09:15 AM" data-audience="All Teachers" data-attachments="">View</button>
         </div>
       </div>
     </div>
@@ -462,6 +501,18 @@
 
 <!-- Minimal JS: only modal open/close, audience toggles and small client-side student list helper.
      No JS for search/filters/pagination or any backend work — those will be handled in Laravel. -->
+<style>
+  .tab-btn {
+    color: #6b7280;
+  }
+  .tab-btn.active {
+    background-color: #4f46e5;
+    color: white;
+  }
+  .tab-btn:hover:not(.active) {
+    background-color: #f3f4f6;
+  }
+</style>
 <script>
   (function(){
     const modal = document.getElementById('modal');
@@ -487,6 +538,38 @@
     const studentSearch = document.getElementById('studentSearch');
     const classSelect = document.getElementById('classSelect');
     const studentItems = document.querySelectorAll('#studentList label');
+
+    // Tab functionality
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const cards = document.querySelectorAll('.card');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-tab');
+        
+        // Update active tab
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Filter cards
+        cards.forEach(card => {
+          const tabType = card.getAttribute('data-tab-type');
+          const category = card.getAttribute('data-category');
+          
+          if (tab === 'all') {
+            card.style.display = '';
+          } else if (tab === 'my-posts' && tabType === 'my-posts') {
+            card.style.display = '';
+          } else if (tab === 'new' && tabType === 'new') {
+            card.style.display = '';
+          } else if (tab === category) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
 
     function showModal(){
       modal.classList.remove('hidden');
