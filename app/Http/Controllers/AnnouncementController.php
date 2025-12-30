@@ -11,6 +11,16 @@ use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
 {
+    /*
+
+        rules for intended_audience field:
+        0 - all
+        2 - all_students
+        3 - all_teachers
+        4 - by_subject
+        5 - custom audience
+
+    */
     
     //the view function for announcements page
     public function viewAnnouncements()
@@ -21,8 +31,15 @@ class AnnouncementController extends Controller
         //get the subjects from user details
         $subjects = $userDetails['subjects'];
 
+        //get the school id
+        $schoolId = $userDetails['schoolId'];
+
+        //get the announcements for teachers
+        $announcements = $this->getTeacherAnnouncements($schoolId);
+
         return view('TeacherPanel.announcements', [
             'subjects' => $subjects,
+            'announcements' => $announcements,
         ]);
     }
 
@@ -44,6 +61,7 @@ class AnnouncementController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'audience_type' => 'required|array|min:1',
             'audience_type.*' => 'required|in:all_students,all_teachers,all,by_subject',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // max 5MB
         ]);
@@ -73,7 +91,10 @@ class AnnouncementController extends Controller
             $custom_audience = 5; //custom audience
         }
 
-        /*
+        //dump the validation data
+        //dd($all??$all_students??$all_teachers??$by_subject??$custom_audience??0);
+
+        
         //store the data in the database
         Announcement::create([
             'title' => $data['title'],
@@ -89,9 +110,8 @@ class AnnouncementController extends Controller
 
         ]);
 
-        //dump the validation data
-        //dd($data); 
-        */
+         
+        
 
         //now redirect back with success message
         return redirect()->back()->with('success', 'Announcement created successfully.');
@@ -125,27 +145,19 @@ class AnnouncementController extends Controller
 
     }
 
-    //get the class_ids of the school
-    protected function getClassIdsOfSchool($schoolId)
+
+    //get the announcements for teachers-only or everyone
+    protected function getTeacherAnnouncements($schoolId)
     {
-        //get the class ids of the school
-        $classIds = ClassAvailable::where('school_id', $schoolId)->pluck('id')->toArray();
+        //get the announcements for teachers
+        $announcements = Announcement::where('school_id', $schoolId)
+                            ->whereIn('intended_audience', [0, 3]) // 0 - all, 3 - all_teachers
+                            ->orderBy('created_at', 'desc')
+                            ->get();
 
-        //return the class ids
-        return $classIds;
+        return $announcements;
+
     }
-
-    //get the teacher-roles ids of the school
-    protected function getTeacherRoleIdsOfSchool($schoolId)
-    {
-        //get the teacher-roles ids of the school
-        $teacherRoleIds = TeacherRole::where('school_id', $schoolId)->pluck('id')->toArray();
-
-        //return the teacher-roles ids
-        return $teacherRoleIds;
-    }
-
-
 
 
 }

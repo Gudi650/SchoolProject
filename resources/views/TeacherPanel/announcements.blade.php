@@ -59,7 +59,7 @@
             </div>
             <div class="h-0.5 bg-blue-500 animate-progress"></div>
           </div>
-          @endif
+          @endif <!--end the message -->
 
           <!-- Hero -->
           <header class="relative bg-white p-4 md:p-6 rounded-lg shadow-sm mb-6">
@@ -139,88 +139,90 @@
             <div class="space-y-4">
               <!-- Announcement cards (render from controller $announcements) -->
               <div id="annList" class="space-y-4">
-  <!-- Hard-coded announcements (backend will be wired later) -->
 
-  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="notice" data-tab-type="my-posts">
-    <div class="flex items-start justify-between gap-4">
-      <div>
-        <div class="flex items-center gap-2 mb-2">
-          <h3 class="font-semibold text-indigo-800">Holiday Notice</h3>
-          <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">You</span>
-        </div>
-        <p class="text-sm text-gray-600 mt-1">School will be closed on Monday due to a public holiday. All classes and extracurricular activities are suspended.</p>
-        <div class="text-xs text-gray-400 mt-3 flex items-center gap-3">
-          <span>Sep 1, 2025</span>
-          <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded">All Students</span>
-        </div>
-      </div>
+              {{-- check if the $announcement variable is set and if so display the announcements --}}
+              @if (isset($announcements) && $announcements->count() > 0)
 
-      <div class="flex flex-col items-end gap-2">
-        <div class="text-xs text-gray-400">08:15 AM</div>
-        <div class="flex gap-2">
-          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openViewModal" data-title="Holiday Notice" data-body="School will be closed on Monday due to a public holiday. All classes and extracurricular activities are suspended." data-date="Sep 1, 2025" data-time="08:15 AM" data-audience="All Students" data-attachments="">View</button>
-          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openEditModal">Edit</button>
-        </div>
-      </div>
-    </div>
-  </article>
+                {{-- display the announcements --}}
+                @foreach ($announcements as $announcement)
+                  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="{{ $announcement->type }}" data-tab-type="{{ $announcement->created_by == auth()->user()->id ? 'my-posts' : 'all' }}">
+                    <div class="flex items-start justify-between gap-4">
+                      <div>
+                        <div class="flex items-center gap-2 mb-2">
+                          <h3 class="font-semibold text-indigo-800">{{ $announcement->title }}</h3>
+                          @if ($announcement->created_by == auth()->user()->id)
+                            <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">You</span>
+                          @endif
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">{{ $announcement->content }}</p>
+                        <div class="text-xs text-gray-400 mt-3 flex items-center gap-3">
+                          <span>{{ $announcement->created_at->format('M d, Y') }}</span>
+                          <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded">
+                            @switch($announcement->intended_audience)
+                              @case(0)
+                                All
+                                @break
+                              @case(2)
+                                All Students
+                                @break
+                              @case(3)
+                                All Teachers
+                                @break
+                              @case(4)
+                                By Subject
+                                @break
+                              @case(5)
+                                Custom Audience
+                                @break
+                              @default
+                                Unknown
+                            @endswitch
+                          </span>
+                        </div>
+                      </div>
 
-  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="reminder" data-tab-type="new">
-    <div class="flex items-start justify-between gap-4">
-      <div>
-
-        <div class="flex items-center gap-2 mb-2">
-          <h3 class="font-semibold text-indigo-800">
-            Parent-Teacher Meeting Reminder
-          </h3>
-          <span class="px-2 py-0.5 bg-blue-500 text-white text-xs rounded-full font-medium animate-pulse">NEW</span>
-        </div>
-
-        <p class="text-sm text-gray-600 mt-1">
-          Reminder: Parent-Teacher meeting next Friday at 2:00 PM in the main hall. Teachers, please prepare student progress reports.
-        </p>
-
-        <div class="text-xs text-gray-400 mt-3 flex items-center gap-3">
-          <span>Aug 28, 2025</span>
-          <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded">Class 7 - Math</span>
-        </div>
-        
-      </div>
-
-      <div class="flex flex-col items-end gap-2">
-        <div class="text-xs text-gray-400">03:24 PM</div>
-        <div class="flex gap-2">
-          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openViewModal" data-title="Parent-Teacher Meeting Reminder" data-body="Reminder: Parent-Teacher meeting next Friday at 2:00 PM in the main hall. Teachers, please prepare student progress reports." data-date="Aug 28, 2025" data-time="03:24 PM" data-audience="Class 7 - Math" data-attachments="meeting_agenda.pdf,student_reports.docx">View</button>
-          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openEditModal">Edit</button>
-        </div>
-      </div>
-    </div>
-  </article>
-
-  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="notice" data-tab-type="new">
-    <div class="flex items-start justify-between gap-4">
-      <div>
-        <div class="flex items-center gap-2 mb-2">
-          <h3 class="font-semibold text-indigo-800">Staff Meeting Tomorrow</h3>
-          <span class="px-2 py-0.5 bg-blue-500 text-white text-xs rounded-full font-medium animate-pulse">NEW</span>
-        </div>
-        <p class="text-sm text-gray-600 mt-1">All teaching staff are required to attend the meeting tomorrow at 10:00 AM in the conference room. Agenda: Curriculum updates.</p>
-        <div class="text-xs text-gray-400 mt-3 flex items-center gap-3">
-          <span>Dec 29, 2025</span>
-          <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded">All Teachers</span>
-        </div>
-      </div>
-
-      <div class="flex flex-col items-end gap-2">
-        <div class="text-xs text-gray-400">09:15 AM</div>
-        <div class="flex gap-2">
-          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openViewModal" data-title="Staff Meeting Tomorrow" data-body="All teaching staff are required to attend the meeting tomorrow at 10:00 AM in the conference room. Agenda: Curriculum updates." data-date="Dec 29, 2025" data-time="09:15 AM" data-audience="All Teachers" data-attachments="">View</button>
-        </div>
-      </div>
-    </div>
-  </article>
-
-</div>
+                      <div class="flex flex-col items-end gap-2">
+                        <div class="text-xs text-gray-400">{{ $announcement->created_at->format('h:i A') }}</div>
+                        <div class="flex gap-2">
+                          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openViewModal" 
+                          data-title="{{ $announcement->title }}" 
+                          data-body="{{ $announcement->content }}" 
+                          data-date="{{ $announcement->created_at->format('M d, Y') }}" 
+                          data-time="{{ $announcement->created_at->format('h:i A') }}" 
+                          data-audience="@switch($announcement->intended_audience)
+                              @case(0)
+                                All
+                                @break
+                              @case(2)
+                                All Students
+                                @break
+                              @case(3)
+                                All Teachers
+                                @break
+                              @case(4)
+                                By Subject
+                                @break
+                              @case(5)
+                                Custom Audience
+                                @break
+                              @default
+                                Unknown
+                            @endswitch" data-attachments="{{ $announcement->attachements }}">View</button>
+                          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openEditModal" 
+                            data-id="{{ $announcement->id }}" 
+                            data-title="{{ $announcement->title }}" 
+                            data-body="{{ $announcement->content }}" 
+                            data-audience="{{ $announcement->intended_audience }}" 
+                            data-attachments="{{ $announcement->attachements }}">Edit</button>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                @endforeach
+                
+              @endif
+              
+            </div>
 
               <!-- Pagination placeholder (server-side) -->
               <div class="flex justify-between items-center bg-white p-3 rounded-md shadow-sm">
@@ -290,10 +292,11 @@
                   <div id="viewAudience" class="mt-2 inline-block px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium"></div>
                 </div>
 
-                <div id="attachmentsSection" class="hidden">
-                  <label class="text-sm font-medium text-gray-700">Documents</label>
-                  <div id="viewAttachments" class="mt-2 space-y-2"></div>
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Current Attachment</label>
+                  <div id="viewAttachment" class="mt-2 text-sm text-gray-500 italic">No attachment</div>
                 </div>
+
               </div>
 
               <!-- Footer -->
@@ -692,7 +695,6 @@
 
     const audRadios = document.querySelectorAll('.aud-radio');
     const editAudRadios = document.querySelectorAll('.edit-aud-radio');
-    const specificStudents = document.getElementById('specificStudents');
     const bySubject = document.getElementById('bySubject');
     const editBySubject = document.getElementById('editBySubject');
     const composeAttachInput = document.getElementById('composeAttachment');
@@ -703,11 +705,6 @@
     const editAttachName = document.getElementById('editAttachmentName');
     const editAttachNameText = editAttachName?.querySelector('.file-name');
     const editAttachClear = document.getElementById('editAttachmentClear');
-
-    // student search & class filter (UI helper only)
-    const studentSearch = document.getElementById('studentSearch');
-    const classSelect = document.getElementById('classSelect');
-    const studentItems = document.querySelectorAll('#studentList label');
 
     // Tab functionality
     const tabBtns = document.querySelectorAll('.tab-btn');
@@ -753,7 +750,18 @@
       document.body.style.overflow = '';
     }
 
-    // View modal open/close + attachment list render
+    // Shared helper: display attachment
+    function displayAttachment(element, attachments){
+      if (attachments && attachments.trim() !== '' && attachments !== 'null') {
+        element.textContent = attachments;
+        element.classList.remove('italic');
+      } else {
+        element.textContent = 'No attachment';
+        element.classList.add('italic');
+      }
+    }
+
+    // View modal open/close
     function showViewModal(title, body, date, time, audience, attachments){
       document.getElementById('viewTitle').textContent = title;
       document.getElementById('viewBody').textContent = body;
@@ -761,23 +769,7 @@
       document.getElementById('viewTime').textContent = time;
       document.getElementById('viewAudience').textContent = audience;
       
-      const attachmentsSection = document.getElementById('attachmentsSection');
-      const viewAttachments = document.getElementById('viewAttachments');
-      
-      if (attachments && attachments.trim() !== '') {
-        const files = attachments.split(',').map(f => f.trim());
-        viewAttachments.innerHTML = files.map(file => `
-          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition cursor-pointer">
-            <i class="bi bi-file-earmark text-indigo-600 text-lg"></i>
-            <span class="text-sm text-gray-900 flex-1">${file}</span>
-            <i class="bi bi-download text-gray-400 text-sm"></i>
-          </div>
-        `).join('');
-        attachmentsSection.classList.remove('hidden');
-      } else {
-        attachmentsSection.classList.add('hidden');
-        viewAttachments.innerHTML = '';
-      }
+      displayAttachment(document.getElementById('viewAttachment'), attachments);
       
       viewModal.classList.remove('hidden');
       viewModal.classList.add('flex');
@@ -790,7 +782,32 @@
     }
 
     // Edit modal open/close
-    function showEditModal(){
+    function showEditModal(id, title, body, audience, attachments){
+
+      // Fill the form inputs with the data
+      const editForm = document.getElementById('editAnnForm');
+      editForm.querySelector('input[name="title"]').value = title || '';
+      editForm.querySelector('textarea[name="body"]').value = body || '';
+      
+      // Update the form action to include the announcement ID
+      //editForm.action = `/teacher/announcements/${id}/update`;
+      
+      // Select the correct audience radio button based on intended_audience value
+      /*const audienceRadios = document.querySelectorAll('.edit-aud-radio');
+      audienceRadios.forEach(radio => {
+        // Map database values to form values
+        let radioValue = '';
+        if (audience == 0) radioValue = 'all';
+        else if (audience == 2) radioValue = 'all_students';
+        else if (audience == 3) radioValue = 'all_teachers';
+        else if (audience == 4) radioValue = 'by_subject';
+        
+        radio.checked = (radio.value === radioValue);
+      }); */
+      
+      displayAttachment(editModal.querySelector('.mt-2.text-sm.text-gray-500'), attachments);
+      
+      // Show the modal
       editModal.classList.remove('hidden');
       editModal.classList.add('flex');
       document.body.style.overflow = 'hidden';
@@ -828,7 +845,14 @@
     openEditBtns.forEach(btn => {
       btn.addEventListener('click', e => {
         e.preventDefault();
-        showEditModal();
+        // Read data from button's data-* attributes
+        const id = btn.getAttribute('data-id');
+        const title = btn.getAttribute('data-title');
+        const body = btn.getAttribute('data-body');
+        const audience = btn.getAttribute('data-audience');
+        const attachments = btn.getAttribute('data-attachments');
+        // Pass data to the modal
+        showEditModal(id, title, body, audience, attachments);
       });
     });
     if (closeEditBtn) closeEditBtn.addEventListener('click', hideEditModal);
@@ -863,7 +887,6 @@
     // Audience toggles (compose)
     function updateAudience(){
       const val = Array.from(audRadios).find(r => r.checked)?.value;
-      if (specificStudents) specificStudents.classList.toggle('hidden', val !== 'specific_students');
       if (bySubject) bySubject.classList.toggle('hidden', val !== 'by_subject');
     }
     audRadios.forEach(r => r.addEventListener('change', updateAudience));
@@ -876,24 +899,6 @@
     }
     editAudRadios.forEach(r => r.addEventListener('change', updateEditAudience));
     updateEditAudience();
-
-    // Minimal client-side filter for the student checklist UI only
-    function filterStudents(){
-      if (!studentItems || studentItems.length === 0) return;
-      const q = (studentSearch?.value || '').trim().toLowerCase();
-      const cls = (classSelect?.value || '').trim();
-      studentItems.forEach(label => {
-        const text = (label.textContent || '').trim().toLowerCase();
-        const itemClass = (label.getAttribute('data-class') || '').trim();
-        const matchesQ = q ? text.includes(q) : true;
-        const matchesClass = cls ? (itemClass === cls) : true;
-        label.style.display = (matchesQ && matchesClass) ? '' : 'none';
-      });
-    }
-    if (studentSearch) studentSearch.addEventListener('input', filterStudents);
-    if (classSelect) classSelect.addEventListener('change', filterStudents);
-    // initialize UI helper (safe no-op if elements missing)
-    filterStudents();
 
   })();
 </script>

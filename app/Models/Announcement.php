@@ -16,6 +16,7 @@ class Announcement extends Model
         'teacher_roles_id',
         'subject_id',
         'attachements',
+        'intended_audience',
 
     ];
 
