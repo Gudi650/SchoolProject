@@ -87,7 +87,7 @@
       <div class="flex flex-col items-end gap-2">
         <div class="text-xs text-gray-400">08:15 AM</div>
         <div class="flex gap-2">
-          <a href="#" class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50">View</a>
+          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openViewModal" data-title="Holiday Notice" data-body="School will be closed on Monday due to a public holiday. All classes and extracurricular activities are suspended." data-date="Sep 1, 2025" data-time="08:15 AM" data-audience="All Students" data-attachments="">View</button>
           <a href="#" class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50">Edit</a>
         </div>
       </div>
@@ -116,7 +116,7 @@
       <div class="flex flex-col items-end gap-2">
         <div class="text-xs text-gray-400">03:24 PM</div>
         <div class="flex gap-2">
-          <a href="#" class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50">View</a>
+          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openViewModal" data-title="Parent-Teacher Meeting Reminder" data-body="Reminder: Parent-Teacher meeting next Friday at 2:00 PM in the main hall. Teachers, please prepare student progress reports." data-date="Aug 28, 2025" data-time="03:24 PM" data-audience="Class 7 - Math" data-attachments="meeting_agenda.pdf,student_reports.docx">View</button>
           <a href="#" class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50">Edit</a>
         </div>
       </div>
@@ -145,6 +145,66 @@
               </div>
             </div>
           </section>
+
+          <!-- View Announcement Modal -->
+          <div id="viewModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-2xl rounded-2xl p-6 overflow-auto max-h-[90vh] shadow-2xl ring-1 ring-black/5">
+              <!-- Header -->
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-center gap-3">
+                  <div class="h-12 w-12 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-sm">
+                    <i class="bi bi-eye-fill text-xl"></i>
+                  </div>
+                  <div>
+                    <h2 class="text-lg font-semibold text-indigo-900">View Announcement</h2>
+                    <p class="text-sm text-gray-500">Full announcement details</p>
+                  </div>
+                </div>
+                <button id="closeViewModal" class="text-gray-400 hover:text-gray-700 p-2 rounded-md transition-colors" aria-label="Close">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+
+              <!-- Content -->
+              <div class="mt-6 space-y-4">
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Title</label>
+                  <div id="viewTitle" class="mt-2 p-3 bg-gray-50 rounded-lg text-gray-900 text-sm"></div>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Message</label>
+                  <div id="viewBody" class="mt-2 p-3 bg-gray-50 rounded-lg text-gray-700 text-sm leading-relaxed whitespace-pre-wrap"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Date</label>
+                    <div id="viewDate" class="mt-2 p-3 bg-gray-50 rounded-lg text-gray-900 text-sm"></div>
+                  </div>
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Time</label>
+                    <div id="viewTime" class="mt-2 p-3 bg-gray-50 rounded-lg text-gray-900 text-sm"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Audience</label>
+                  <div id="viewAudience" class="mt-2 inline-block px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium"></div>
+                </div>
+
+                <div id="attachmentsSection" class="hidden">
+                  <label class="text-sm font-medium text-gray-700">Documents</label>
+                  <div id="viewAttachments" class="mt-2 space-y-2"></div>
+                </div>
+              </div>
+
+              <!-- Footer -->
+              <div class="flex items-center justify-end gap-2 pt-6 mt-6 border-t border-gray-200">
+                <button id="closeViewModalBtn" class="px-4 py-2 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm hover:bg-red-100 hover:shadow-sm">Close</button>
+              </div>
+            </div>
+          </div>
 
           <!-- Compose Modal -->
           <div id="modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center p-4">
@@ -185,20 +245,25 @@
                 <div>
                   <label class="text-sm font-medium text-gray-700">Audience</label>
                   <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
+
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
-                      <input type="radio" name="audience_type" value="all_students" checked class="aud-radio">
+                      <input type="checkbox" name="audience_type[]" value="all_students" checked class="aud-radio">
                       <span class="text-sm">All Students</span>
                     </label>
+
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
-                      <input type="radio" name="audience_type" value="all_teachers" class="aud-radio">
+                      <input type="checkbox" name="audience_type[]" value="all_teachers" class="aud-radio">
                       <span class="text-sm">All Teachers</span>
                     </label>
+
+                    {{-- 
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
                       <input type="radio" name="audience_type" value="specific_students" class="aud-radio">
                       <span class="text-sm">Specific Students</span>
-                    </label>
+                    </label>  --}}
+
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
-                      <input type="radio" name="audience_type" value="by_subject" class="aud-radio">
+                      <input type="checkbox" name="audience_type[]" value="by_subject" class="aud-radio">
                       <span class="text-sm">By Subject</span>
                     </label>
                   </div>
@@ -226,6 +291,7 @@
 
                     <!-- Checklist (replace entries with server data) -->
                     <div id="studentList" class="mt-2 max-h-40 overflow-auto border border-gray-100 rounded-lg p-2 space-y-1">
+
                       <label class="flex items-center gap-2 p-2 rounded hover:bg-gray-50" data-class="7A">
                         <input type="checkbox" name="students[]" value="1" class="h-4 w-4">
                         <span class="text-sm">John Doe (7A)</span>
@@ -299,9 +365,13 @@
 <script>
   (function(){
     const modal = document.getElementById('modal');
+    const viewModal = document.getElementById('viewModal');
     const openBtns = document.querySelectorAll('#openCompose, #openCompose2');
     const closeBtn = document.getElementById('closeModal');
     const cancelBtn = document.getElementById('cancelBtn');
+    const closeViewBtn = document.getElementById('closeViewModal');
+    const closeViewModalBtn = document.getElementById('closeViewModalBtn');
+    const openViewBtns = document.querySelectorAll('.openViewModal');
 
     const audRadios = document.querySelectorAll('.aud-radio');
     const specificStudents = document.getElementById('specificStudents');
@@ -323,10 +393,61 @@
       document.body.style.overflow = '';
     }
 
+    function showViewModal(title, body, date, time, audience, attachments){
+      document.getElementById('viewTitle').textContent = title;
+      document.getElementById('viewBody').textContent = body;
+      document.getElementById('viewDate').textContent = date;
+      document.getElementById('viewTime').textContent = time;
+      document.getElementById('viewAudience').textContent = audience;
+      
+      const attachmentsSection = document.getElementById('attachmentsSection');
+      const viewAttachments = document.getElementById('viewAttachments');
+      
+      if (attachments && attachments.trim() !== '') {
+        const files = attachments.split(',').map(f => f.trim());
+        viewAttachments.innerHTML = files.map(file => `
+          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition cursor-pointer">
+            <i class="bi bi-file-earmark text-indigo-600 text-lg"></i>
+            <span class="text-sm text-gray-900 flex-1">${file}</span>
+            <i class="bi bi-download text-gray-400 text-sm"></i>
+          </div>
+        `).join('');
+        attachmentsSection.classList.remove('hidden');
+      } else {
+        attachmentsSection.classList.add('hidden');
+        viewAttachments.innerHTML = '';
+      }
+      
+      viewModal.classList.remove('hidden');
+      viewModal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+    function hideViewModal(){
+      viewModal.classList.add('hidden');
+      viewModal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
     openBtns.forEach(b => b.addEventListener('click', e => { e.preventDefault(); showModal(); }));
     if (closeBtn) closeBtn.addEventListener('click', hideModal);
     if (cancelBtn) cancelBtn.addEventListener('click', hideModal);
     modal.addEventListener('click', e => { if (e.target === modal) hideModal(); });
+
+    openViewBtns.forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const title = btn.getAttribute('data-title');
+        const body = btn.getAttribute('data-body');
+        const date = btn.getAttribute('data-date');
+        const time = btn.getAttribute('data-time');
+        const audience = btn.getAttribute('data-audience');
+        const attachments = btn.getAttribute('data-attachments');
+        showViewModal(title, body, date, time, audience, attachments);
+      });
+    });
+    if (closeViewBtn) closeViewBtn.addEventListener('click', hideViewModal);
+    if (closeViewModalBtn) closeViewModalBtn.addEventListener('click', hideViewModal);
+    viewModal.addEventListener('click', e => { if (e.target === viewModal) hideViewModal(); });
 
     function updateAudience(){
       const val = Array.from(audRadios).find(r => r.checked)?.value;

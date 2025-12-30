@@ -220,4 +220,6 @@ class StudentApplicants extends Controller
         ]);
     }
 
+    
+
 }
