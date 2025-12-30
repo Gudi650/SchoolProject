@@ -39,12 +39,6 @@ class Announcement extends Model
         return $this->belongsTo(ClassAvailable::class, 'class-available_id');
     }
 
-    //relationship with TeacherRole
-    public function TeacherRole()
-    {
-        return $this->belongsTo(TeacherRole::class, 'teacher_roles_id');
-    }
-
     //relationship with Subject
     public function subject()
     {

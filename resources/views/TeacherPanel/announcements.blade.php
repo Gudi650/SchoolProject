@@ -397,17 +397,17 @@
 
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
                       <input type="checkbox" name="audience_type[]" value="all" class="aud-radio">
-                      <span class="text-sm">All School</span>
+                      <span class="text-sm">Everyone</span>
                     </label>
 
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
                       <input type="checkbox" name="audience_type[]" value="all_students" checked class="aud-radio">
-                      <span class="text-sm">All Students</span>
+                      <span class="text-sm">Only Students</span>
                     </label>
 
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
                       <input type="checkbox" name="audience_type[]" value="all_teachers" class="aud-radio">
-                      <span class="text-sm">All Teachers</span>
+                      <span class="text-sm">Only School Staff</span>
                     </label>
 
 
@@ -471,12 +471,22 @@
                   <!-- By Subject -->
                   <div id="bySubject" class="mt-3 hidden">
                     <label class="text-sm font-medium text-gray-700">Select Subject</label>
-                    <select name="subject_id" class="w-full mt-2 border border-gray-200 px-3 py-2 rounded-lg">
+                    <select name="subject_id[]" class="w-full mt-2 border border-gray-200 px-3 py-2 rounded-lg">
                       <option value="">-- Choose subject --</option>
                       {{-- Example placeholder; replace with actual $subjects --}}
-                      <option value="math">Mathematics</option>
-                      <option value="eng">English</option>
-                      <option value="sci">Science</option>
+
+                      {{-- check if the $subjects is available  --}}
+
+                      @if ($subjects->count() > 0)
+                        
+                        @foreach($subjects as $subject)
+                          <option value="{{ $subject->id }}">{{ $subject->subject_name }}</option>
+                        @endforeach
+                      @else
+                        <option value="">No subjects available</option>
+                      @endif
+
+                      
                     </select>
                     <div class="mt-2 flex items-center gap-3">
                       <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="notify_teachers" class="h-4 w-4"> Notify teachers</label>

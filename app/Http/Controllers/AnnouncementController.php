@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
+use App\Models\availablesubject;
+use App\Models\ClassAvailable;
 use App\Models\Teacher;
+use App\Models\TeacherRole;
 use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
@@ -11,7 +15,15 @@ class AnnouncementController extends Controller
     //the view function for announcements page
     public function viewAnnouncements()
     {
-        return view('TeacherPanel.announcements');
+        //get the user details
+        $userDetails = $this->getUserDetails();
+
+        //get the subjects from user details
+        $subjects = $userDetails['subjects'];
+
+        return view('TeacherPanel.announcements', [
+            'subjects' => $subjects,
+        ]);
     }
 
 
@@ -36,8 +48,17 @@ class AnnouncementController extends Controller
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // max 5MB
         ]);
 
+
+
         //store the data in the database
-        
+        Announcement::create([
+            'title' => $data['title'],
+            'content' => $data['content'],
+            'school_id' => $schoolId,
+            'created_by' => $teacherId,
+
+            //additional fields can be added here
+        ]);
 
         //dump the validation data
         dd($data);
@@ -58,14 +79,40 @@ class AnnouncementController extends Controller
         //get the schoolId of the user
         $schoolId = Teacher::where('user_id', $userId)->value('school_id');
 
+        //get the subjects in the school
+        $subjects = availablesubject::where('school_id', $schoolId)->get();
+
         //return the details
         return [
             'userId' => $userId,
             'teacherId' => $teacherId,
-            'schoolId' => $schoolId
+            'schoolId' => $schoolId,
+            'subjects' => $subjects,
         ];
 
     }
+
+    //get the class_ids of the school
+    protected function getClassIdsOfSchool($schoolId)
+    {
+        //get the class ids of the school
+        $classIds = ClassAvailable::where('school_id', $schoolId)->pluck('id')->toArray();
+
+        //return the class ids
+        return $classIds;
+    }
+
+    //get the teacher-roles ids of the school
+    protected function getTeacherRoleIdsOfSchool($schoolId)
+    {
+        //get the teacher-roles ids of the school
+        $teacherRoleIds = TeacherRole::where('school_id', $schoolId)->pluck('id')->toArray();
+
+        //return the teacher-roles ids
+        return $teacherRoleIds;
+    }
+
+
 
 
 }
