@@ -3,6 +3,64 @@
     <main class="flex-1 md:ml-64 p-6 md:p-10 min-w-0 overflow-x-auto">
         <div class="max-w-7xl mx-auto min-w-0">
 
+          <!-- Success/Error Messages -->
+          @if(session('success'))
+          <div id="successMessage" class="mb-4 ml-auto max-w-md w-full bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg shadow-md overflow-hidden animate-slideDown">
+            <div class="p-3 flex items-center gap-3">
+              <div class="flex-shrink-0">
+                <div class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center shadow-sm">
+                  <i class="bi bi-check-circle-fill text-white text-sm"></i>
+                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-medium text-green-900">{{ session('success') }}</p>
+              </div>
+              <button onclick="this.closest('#successMessage').remove()" class="flex-shrink-0 text-green-600 hover:text-green-800 transition-colors">
+                <i class="bi bi-x-lg text-sm"></i>
+              </button>
+            </div>
+            <div class="h-0.5 bg-green-500 animate-progress"></div>
+          </div>
+          @endif
+
+          @if(session('error'))
+          <div id="errorMessage" class="mb-4 ml-auto max-w-md w-full bg-gradient-to-r from-red-50 to-rose-50 border-l-4 border-red-500 rounded-lg shadow-md overflow-hidden animate-slideDown">
+            <div class="p-3 flex items-center gap-3">
+              <div class="flex-shrink-0">
+                <div class="h-8 w-8 rounded-full bg-red-500 flex items-center justify-center shadow-sm">
+                  <i class="bi bi-exclamation-circle-fill text-white text-sm"></i>
+                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-medium text-red-900">{{ session('error') }}</p>
+              </div>
+              <button onclick="this.closest('#errorMessage').remove()" class="flex-shrink-0 text-red-600 hover:text-red-800 transition-colors">
+                <i class="bi bi-x-lg text-sm"></i>
+              </button>
+            </div>
+            <div class="h-0.5 bg-red-500 animate-progress"></div>
+          </div>
+          @endif
+
+          @if(session('info'))
+          <div id="infoMessage" class="mb-4 ml-auto max-w-md w-full bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-lg shadow-md overflow-hidden animate-slideDown">
+            <div class="p-3 flex items-center gap-3">
+              <div class="flex-shrink-0">
+                <div class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center shadow-sm">
+                  <i class="bi bi-info-circle-fill text-white text-sm"></i>
+                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-medium text-blue-900">{{ session('info') }}</p>
+              </div>
+              <button onclick="this.closest('#infoMessage').remove()" class="flex-shrink-0 text-blue-600 hover:text-blue-800 transition-colors">
+                <i class="bi bi-x-lg text-sm"></i>
+              </button>
+            </div>
+            <div class="h-0.5 bg-blue-500 animate-progress"></div>
+          </div>
+          @endif
+
           <!-- Hero -->
           <header class="relative bg-white p-4 md:p-6 rounded-lg shadow-sm mb-6">
             <div class="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg bg-indigo-700 opacity-30"></div>
@@ -548,9 +606,77 @@
   .tab-btn:hover:not(.active) {
     background-color: #f3f4f6;
   }
+
+  /* Success/Error Message Animations */
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes progress {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+
+  .animate-slideDown {
+    animation: slideDown 0.4s ease-out;
+  }
+
+  .animate-progress {
+    animation: progress 5s linear forwards;
+  }
+
+  /* Auto-dismiss messages after 5 seconds */
+  #successMessage,
+  #errorMessage,
+  #infoMessage {
+    position: relative;
+  }
 </style>
 <script>
   (function(){
+    // Auto-dismiss success/error messages after 5 seconds
+    const successMsg = document.getElementById('successMessage');
+    const errorMsg = document.getElementById('errorMessage');
+    const infoMsg = document.getElementById('infoMessage');
+
+    if (successMsg) {
+      setTimeout(() => {
+        successMsg.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+        successMsg.style.opacity = '0';
+        successMsg.style.transform = 'translateY(-20px)';
+        setTimeout(() => successMsg.remove(), 500);
+      }, 5000);
+    }
+
+    if (errorMsg) {
+      setTimeout(() => {
+        errorMsg.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+        errorMsg.style.opacity = '0';
+        errorMsg.style.transform = 'translateY(-20px)';
+        setTimeout(() => errorMsg.remove(), 500);
+      }, 5000);
+    }
+
+    if (infoMsg) {
+      setTimeout(() => {
+        infoMsg.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+        infoMsg.style.opacity = '0';
+        infoMsg.style.transform = 'translateY(-20px)';
+        setTimeout(() => infoMsg.remove(), 500);
+      }, 5000);
+    }
+
     const modal = document.getElementById('modal');
     const viewModal = document.getElementById('viewModal');
     const editModal = document.getElementById('editModal');

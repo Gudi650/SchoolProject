@@ -48,8 +48,32 @@ class AnnouncementController extends Controller
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // max 5MB
         ]);
 
+        //now check the intended audience
+        if(in_array('all', $data['audience_type'])) {
 
+            //everyone
+            $all = 0; 
 
+        } elseif(in_array('all_students', $data['audience_type'])) {
+
+            //only students
+            $all_students = 2; 
+
+        } elseif(in_array('all_teachers', $data['audience_type'])) {
+
+            //only school staff
+            $all_teachers = 3; 
+
+        } elseif(in_array('by_subject', $data['audience_type'])) {
+            
+            //by subject
+            $by_subject = 4; 
+
+        } else {
+            $custom_audience = 5; //custom audience
+        }
+
+        /*
         //store the data in the database
         Announcement::create([
             'title' => $data['title'],
@@ -57,11 +81,20 @@ class AnnouncementController extends Controller
             'school_id' => $schoolId,
             'created_by' => $teacherId,
 
-            //additional fields can be added here
+            //now check the intended audience
+            'intended_audience' => $all ?? $all_students ?? $all_teachers ?? $by_subject ?? $custom_audience ?? 0,
+
+            //now store the document if exists
+            'attachements' => isset($data['attachment']) ? $data['attachment']->store('attachments', 'public') : null,
+
         ]);
 
         //dump the validation data
-        dd($data);
+        //dd($data); 
+        */
+
+        //now redirect back with success message
+        return redirect()->back()->with('success', 'Announcement created successfully.');
 
     }
 
