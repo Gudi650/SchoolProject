@@ -88,7 +88,7 @@
         <div class="text-xs text-gray-400">08:15 AM</div>
         <div class="flex gap-2">
           <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openViewModal" data-title="Holiday Notice" data-body="School will be closed on Monday due to a public holiday. All classes and extracurricular activities are suspended." data-date="Sep 1, 2025" data-time="08:15 AM" data-audience="All Students" data-attachments="">View</button>
-          <a href="#" class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50">Edit</a>
+          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openEditModal">Edit</button>
         </div>
       </div>
     </div>
@@ -117,7 +117,7 @@
         <div class="text-xs text-gray-400">03:24 PM</div>
         <div class="flex gap-2">
           <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openViewModal" data-title="Parent-Teacher Meeting Reminder" data-body="Reminder: Parent-Teacher meeting next Friday at 2:00 PM in the main hall. Teachers, please prepare student progress reports." data-date="Aug 28, 2025" data-time="03:24 PM" data-audience="Class 7 - Math" data-attachments="meeting_agenda.pdf,student_reports.docx">View</button>
-          <a href="#" class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50">Edit</a>
+          <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openEditModal">Edit</button>
         </div>
       </div>
     </div>
@@ -203,6 +203,106 @@
               <div class="flex items-center justify-end gap-2 pt-6 mt-6 border-t border-gray-200">
                 <button id="closeViewModalBtn" class="px-4 py-2 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm hover:bg-red-100 hover:shadow-sm">Close</button>
               </div>
+            </div>
+          </div>
+
+          <!-- Edit Announcement Modal -->
+          <div id="editModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-2xl rounded-2xl p-6 overflow-auto max-h-[90vh] shadow-2xl ring-1 ring-black/5">
+              <!-- Header -->
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-center gap-3">
+                  <div class="h-12 w-12 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-sm">
+                    <i class="bi bi-pencil-fill text-xl"></i>
+                  </div>
+                  <div>
+                    <h2 class="text-lg font-semibold text-indigo-900">Edit Announcement</h2>
+                    <p class="text-sm text-gray-500">Update your announcement details.</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button id="closeEditModal" class="text-gray-400 hover:text-gray-700 p-2 rounded-md transition-colors" aria-label="Close">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              </div>
+
+              <form id="editAnnForm" class="space-y-4 mt-5" method="POST" action="#" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Title</label>
+                  <input name="title" required placeholder="Short, clear title" value="Holiday Notice"
+                    class="w-full mt-2 border border-gray-200 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 transition" />
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Message</label>
+                  <textarea name="body" rows="6" required placeholder="Write your announcement..."
+                    class="w-full mt-2 border border-gray-200 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-y transition">School will be closed on Monday due to a public holiday. All classes and extracurricular activities are suspended.</textarea>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Audience</label>
+                  <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
+                      <input type="radio" name="edit_audience_type" value="all_students" checked class="edit-aud-radio">
+                      <span class="text-sm">All Students</span>
+                    </label>
+                    <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
+                      <input type="radio" name="edit_audience_type" value="all_teachers" class="edit-aud-radio">
+                      <span class="text-sm">All Teachers</span>
+                    </label>
+                    <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
+                      <input type="radio" name="edit_audience_type" value="by_subject" class="edit-aud-radio">
+                      <span class="text-sm">By Subject</span>
+                    </label>
+                  </div>
+
+                  <!-- By Subject -->
+                  <div id="editBySubject" class="mt-3 hidden">
+                    <label class="text-sm font-medium text-gray-700">Select Subject</label>
+                    <select name="subject_id" class="w-full mt-2 border border-gray-200 px-3 py-2 rounded-lg">
+                      <option value="">-- Choose subject --</option>
+                      <option value="math">Mathematics</option>
+                      <option value="eng">English</option>
+                      <option value="sci">Science</option>
+                    </select>
+                    <div class="mt-2 flex items-center gap-3">
+                      <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="notify_teachers" class="h-4 w-4"> Notify teachers</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Current Attachment</label>
+                  <div class="mt-2 text-sm text-gray-500 italic">No attachment</div>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Replace Attachment (optional)</label>
+                  <label class="mt-2 flex items-center justify-center px-4 py-3 border-2 border-dashed border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                    <div class="text-center">
+                      <i class="bi bi-paperclip text-2xl text-gray-400"></i>
+                      <div class="text-xs text-gray-500 mt-1">Click to upload or drag files here</div>
+                    </div>
+                    <input type="file" name="attachment" class="hidden" />
+                  </label>
+                </div>
+
+                <div class="flex items-center justify-between gap-3 pt-2">
+                  <div class="flex items-center gap-3">
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="pin" class="h-4 w-4"> Pin to top</label>
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="notify" checked class="h-4 w-4"> Send notification</label>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <button type="button" id="cancelEditBtn" class="px-4 py-2 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm hover:bg-red-100 hover:shadow-sm">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-indigo-700">Update</button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
 
@@ -366,16 +466,22 @@
   (function(){
     const modal = document.getElementById('modal');
     const viewModal = document.getElementById('viewModal');
+    const editModal = document.getElementById('editModal');
     const openBtns = document.querySelectorAll('#openCompose, #openCompose2');
     const closeBtn = document.getElementById('closeModal');
     const cancelBtn = document.getElementById('cancelBtn');
     const closeViewBtn = document.getElementById('closeViewModal');
     const closeViewModalBtn = document.getElementById('closeViewModalBtn');
+    const closeEditBtn = document.getElementById('closeEditModal');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
     const openViewBtns = document.querySelectorAll('.openViewModal');
+    const openEditBtns = document.querySelectorAll('.openEditModal');
 
     const audRadios = document.querySelectorAll('.aud-radio');
+    const editAudRadios = document.querySelectorAll('.edit-aud-radio');
     const specificStudents = document.getElementById('specificStudents');
     const bySubject = document.getElementById('bySubject');
+    const editBySubject = document.getElementById('editBySubject');
 
     // student search & class filter (UI helper only)
     const studentSearch = document.getElementById('studentSearch');
@@ -428,6 +534,17 @@
       document.body.style.overflow = '';
     }
 
+    function showEditModal(){
+      editModal.classList.remove('hidden');
+      editModal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+    function hideEditModal(){
+      editModal.classList.add('hidden');
+      editModal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
     openBtns.forEach(b => b.addEventListener('click', e => { e.preventDefault(); showModal(); }));
     if (closeBtn) closeBtn.addEventListener('click', hideModal);
     if (cancelBtn) cancelBtn.addEventListener('click', hideModal);
@@ -449,6 +566,16 @@
     if (closeViewModalBtn) closeViewModalBtn.addEventListener('click', hideViewModal);
     viewModal.addEventListener('click', e => { if (e.target === viewModal) hideViewModal(); });
 
+    openEditBtns.forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        showEditModal();
+      });
+    });
+    if (closeEditBtn) closeEditBtn.addEventListener('click', hideEditModal);
+    if (cancelEditBtn) cancelEditBtn.addEventListener('click', hideEditModal);
+    editModal.addEventListener('click', e => { if (e.target === editModal) hideEditModal(); });
+
     function updateAudience(){
       const val = Array.from(audRadios).find(r => r.checked)?.value;
       if (specificStudents) specificStudents.classList.toggle('hidden', val !== 'specific_students');
@@ -456,6 +583,13 @@
     }
     audRadios.forEach(r => r.addEventListener('change', updateAudience));
     updateAudience();
+
+    function updateEditAudience(){
+      const val = Array.from(editAudRadios).find(r => r.checked)?.value;
+      if (editBySubject) editBySubject.classList.toggle('hidden', val !== 'by_subject');
+    }
+    editAudRadios.forEach(r => r.addEventListener('change', updateEditAudience));
+    updateEditAudience();
 
     // Minimal client-side filter for the student checklist UI only
     function filterStudents(){
