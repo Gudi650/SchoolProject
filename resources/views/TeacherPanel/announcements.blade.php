@@ -326,8 +326,17 @@
                       <i class="bi bi-paperclip text-2xl text-gray-400"></i>
                       <div class="text-xs text-gray-500 mt-1">Click to upload or drag files here</div>
                     </div>
-                    <input type="file" name="attachment" class="hidden" />
+                    <input id="editAttachment" type="file" name="attachment" class="hidden" />
                   </label>
+                  <div id="editAttachmentName" class="mt-2 hidden">
+                    <div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 shadow-sm text-sm text-gray-800">
+                      <i class="bi bi-paperclip text-indigo-600"></i>
+                      <span class="file-name">No file selected</span>
+                      <button type="button" id="editAttachmentClear" class="ml-2 px-2 py-1 text-xs rounded-md border border-red-200 text-red-700 bg-red-50 hover:bg-red-100">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="flex items-center justify-between gap-3 pt-2">
@@ -554,6 +563,10 @@
     const composeAttachName = document.getElementById('composeAttachmentName');
     const composeAttachNameText = composeAttachName?.querySelector('.file-name');
     const composeAttachClear = document.getElementById('composeAttachmentClear');
+    const editAttachInput = document.getElementById('editAttachment');
+    const editAttachName = document.getElementById('editAttachmentName');
+    const editAttachNameText = editAttachName?.querySelector('.file-name');
+    const editAttachClear = document.getElementById('editAttachmentClear');
 
     // student search & class filter (UI helper only)
     const studentSearch = document.getElementById('studentSearch');
@@ -686,30 +699,30 @@
     if (cancelEditBtn) cancelEditBtn.addEventListener('click', hideEditModal);
     editModal.addEventListener('click', e => { if (e.target === editModal) hideEditModal(); });
 
-    // Attachment preview (compose): show selected filename
-    if (composeAttachInput) {
-      composeAttachInput.addEventListener('change', () => {
-        const file = composeAttachInput.files?.[0];
-        if (composeAttachName && composeAttachNameText) {
-          if (file) {
-            composeAttachNameText.textContent = file.name;
-            composeAttachName.classList.remove('hidden');
-          } else {
-            composeAttachNameText.textContent = '';
-            composeAttachName.classList.add('hidden');
-          }
+    // Shared helper: wire attachment preview + clear
+    function wireAttachmentPreview(input, wrapper, nameEl, clearBtn){
+      if (!input || !wrapper || !nameEl) return;
+      input.addEventListener('change', () => {
+        const file = input.files?.[0];
+        if (file) {
+          nameEl.textContent = file.name;
+          wrapper.classList.remove('hidden');
+        } else {
+          nameEl.textContent = '';
+          wrapper.classList.add('hidden');
         }
       });
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          input.value = '';
+          nameEl.textContent = '';
+          wrapper.classList.add('hidden');
+        });
+      }
     }
 
-    // Attachment preview (compose): clear selected file
-    if (composeAttachClear) {
-      composeAttachClear.addEventListener('click', () => {
-        if (composeAttachInput) composeAttachInput.value = '';
-        if (composeAttachName) composeAttachName.classList.add('hidden');
-        if (composeAttachNameText) composeAttachNameText.textContent = '';
-      });
-    }
+    wireAttachmentPreview(composeAttachInput, composeAttachName, composeAttachNameText, composeAttachClear);
+    wireAttachmentPreview(editAttachInput, editAttachName, editAttachNameText, editAttachClear);
 
     // Audience toggles (compose)
     function updateAudience(){
