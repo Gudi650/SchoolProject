@@ -457,9 +457,13 @@
                   <i class="bi bi-x-lg"></i>
                 </button>
               </div>
-              <!-- Iframe Container -->
-              <div class="flex-1 p-4 bg-gray-50">
+              <!-- Iframe Container for PDF -->
+              <div id="pdfContainer" class="flex-1 p-4 bg-gray-50 hidden">
                 <iframe id="previewFrame" class="w-full h-full border-0 rounded-lg bg-white shadow-sm" src=""></iframe>
+              </div>
+              <!-- Container for Word Documents -->
+              <div id="docContainer" class="flex-1 p-4 bg-gray-50 overflow-auto hidden">
+                <div id="docContent" class="bg-white p-6 rounded-lg shadow-sm max-w-4xl mx-auto"></div>
               </div>
             </div>
           </div>
@@ -695,6 +699,16 @@
     position: relative;
   }
 </style>
+
+<!-- PDF.js library for viewing PDF files -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<!-- Mammoth.js library for viewing Word documents (.docx) -->
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+
+<!-- JSZip library for extracting images from DOCX files -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
 <script>
   (function(){
     // Auto-dismiss success/error messages after 5 seconds
@@ -940,40 +954,176 @@
 
     // Preview modal
     const previewModal = document.getElementById('previewModal');
+    const pdfContainer = document.getElementById('pdfContainer');
+    const docContainer = document.getElementById('docContainer');
     const previewFrame = document.getElementById('previewFrame');
+    const docContent = document.getElementById('docContent');
     const closePreviewBtn = document.getElementById('closePreviewModal');
     
-    if (previewModal && previewFrame) {
+    // Load pdf.js library for PDF viewing
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    
+    if (previewModal) {
+      // Helper function: Display PDF using pdf.js
+      function displayPdf(filePath) {
+        pdfContainer.classList.remove('hidden');
+        docContainer.classList.add('hidden');
+        
+        // Use pdf.js to render the PDF
+        const pdf = pdfjsLib.getDocument(filePath);
+        
+        pdf.promise.then(function(pdfDoc) {
+          // Render first page of PDF
+          pdfDoc.getPage(1).then(function(page) {
+            const scale = 1.5;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            const viewport = page.getViewport({ scale: scale });
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            
+            page.render({
+              canvasContext: ctx,
+              viewport: viewport
+            }).promise.then(() => {
+              // For now, show as image. For full PDF viewer, use iframe
+              previewFrame.src = filePath;
+            });
+          });
+        }).catch(() => {
+          alert('Could not load PDF. Please try again.');
+        });
+      }
+      
+      // Helper function: Display Word document using Mammoth.js with image support
+      function displayDocx(filePath) {
+        pdfContainer.classList.add('hidden');
+        docContainer.classList.remove('hidden');
+        docContent.innerHTML = '<p class="text-gray-500">Loading document...</p>';
+        
+        // Fetch the DOCX file (which is actually a ZIP archive)
+        fetch(filePath)
+          .then(response => {
+            if (!response.ok) throw new Error('Failed to load file');
+            return response.arrayBuffer();
+          })
+          .then(arrayBuffer => {
+            // Use JSZip to extract the DOCX file contents
+            return JSZip.loadAsync(arrayBuffer).then(zip => {
+              // Create an object to store extracted images
+              const imageMap = {};
+              
+              // Extract all images from the word/media folder inside DOCX
+              const mediaPromises = [];
+              zip.folder('word/media')?.forEach((relativePath, file) => {
+                mediaPromises.push(
+                  file.async('base64').then(base64Data => {
+                    // Store the image as base64 so it can be displayed
+                    imageMap[relativePath] = base64Data;
+                  })
+                );
+              });
+              
+              // Wait for all images to be extracted
+              return Promise.all(mediaPromises).then(() => {
+                // Now convert the document with images
+                return mammoth.convertToHtml({
+                  arrayBuffer: arrayBuffer,
+                  // Tell Mammoth how to handle images
+                  convertImage: mammoth.images.imgElement(image => {
+                    // Get the image filename from the image reference
+                    const imageFileName = image.contentType === 'image/png' ? 
+                      image.relationshipId + '.png' : 
+                      image.relationshipId + '.jpeg';
+                    
+                    // Look up the extracted image data
+                    const base64 = imageMap[imageFileName] || 
+                                  Object.values(imageMap)[0]; // Fallback to first image
+                    
+                    if (base64) {
+                      // Return the image as a data URL (embedded in HTML)
+                      return {
+                        src: 'data:image/png;base64,' + base64
+                      };
+                    }
+                    return {};
+                  })
+                });
+              });
+            });
+          })
+          .then(result => {
+            // Display the HTML content with images
+            docContent.innerHTML = result.value;
+          })
+          .catch(error => {
+            docContent.innerHTML = '<p class="text-red-500">Error loading document: ' + error.message + '</p>';
+          });
+      }
+      
+      // Listen for clicks on preview buttons
       document.addEventListener('click', e => {
         const btn = e.target.closest('.openPreviewModal');
         if (btn) {
           e.preventDefault();
+          
+          // Get the file path from the button's data attribute
           const filePath = btn.getAttribute('data-file-path');
+          
+          // Check if file path exists and is not empty
           if (filePath && filePath.trim() !== '') {
-            previewFrame.src = filePath;
+            // Get the file extension (e.g., "pdf" from "file.pdf")
+            const fileExtension = filePath.split('.').pop().toLowerCase();
+            
+            // Show the preview modal
             previewModal.classList.remove('hidden');
             previewModal.classList.add('flex');
             document.body.style.overflow = 'hidden';
+            
+            // Check file type and use appropriate viewer
+            if (fileExtension === 'pdf') {
+              // Use PDF viewer
+              displayPdf(filePath);
+            } else if (fileExtension === 'docx' || fileExtension === 'doc') {
+              // Use Word document viewer (only DOCX, not DOC)
+              if (fileExtension === 'docx') {
+                displayDocx(filePath);
+              } else {
+                docContent.innerHTML = '<p class="text-red-500">DOC files are not supported. Please convert to DOCX.</p>';
+                docContainer.classList.remove('hidden');
+                pdfContainer.classList.add('hidden');
+              }
+            } else {
+              // Unsupported file type
+              docContent.innerHTML = '<p class="text-red-500">File type not supported for preview.</p>';
+              docContainer.classList.remove('hidden');
+              pdfContainer.classList.add('hidden');
+            }
           } else {
             alert('No file to preview');
           }
         }
       });
       
+      // Close button click handler
       if (closePreviewBtn) {
         closePreviewBtn.addEventListener('click', () => {
           previewModal.classList.add('hidden');
           previewModal.classList.remove('flex');
-          previewFrame.src = '';
+          previewFrame.src = ''; // Clear the iframe
+          docContent.innerHTML = ''; // Clear the content
           document.body.style.overflow = '';
         });
       }
       
+      // Close when clicking outside the modal (on the dark background)
       previewModal.addEventListener('click', e => {
         if (e.target === previewModal) {
           previewModal.classList.add('hidden');
           previewModal.classList.remove('flex');
-          previewFrame.src = '';
+          previewFrame.src = ''; // Clear the iframe
+          docContent.innerHTML = ''; // Clear the content
           document.body.style.overflow = '';
         }
       });
