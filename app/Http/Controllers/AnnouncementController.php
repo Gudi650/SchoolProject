@@ -138,6 +138,54 @@ class AnnouncementController extends Controller
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // max 5MB
         ]);
 
+        //process the intended audience
+        //now check the intended audience
+        if(in_array('all', $data['edit_audience_type'])) {
+
+            //everyone
+            $all = 0; 
+
+        } elseif(in_array('all_students', $data['edit_audience_type'])) {
+
+            //only students
+            $all_students = 2; 
+
+        } elseif(in_array('all_teachers', $data['edit_audience_type'])) {
+
+            //only school staff
+            $all_teachers = 3; 
+
+        } elseif(in_array('by_subject', $data['edit_audience_type'])) {
+            
+            //by subject
+            $by_subject = 4; 
+
+        } else {
+            $custom_audience = 5; //custom audience
+        }
+
+        //now update the announcement in the database
+        Announcement::where('id', $announcementId)->update([
+
+            'title' => $data['title'],
+
+            'content' => $data['body'],
+
+            //now check the intended audience
+            'intended_audience' => $all ?? $all_students ?? $all_teachers ?? $by_subject ?? $custom_audience ?? 0,
+
+            //now store the document if exists
+            'attachements' => isset($data['attachment']) ? $data['attachment']->store('attachments', 'public') : null,
+
+            //now store the file name 
+            'attachment_original_name' => isset($data['attachment']) ? $data['attachment']->getClientOriginalName() : null,
+
+        ]);
+
+        //now redirect back with success message
+        return redirect()->back()->with('success', 'Announcement updated successfully.');
+
+
         //test if the announcement id get to the function
         dd($data);
 

@@ -341,9 +341,17 @@
                 </div>
               </div>
 
-              <form id="editAnnForm" class="space-y-4 mt-5" method="POST" action="{{ route('teacher.updateannouncement') }}" enctype="multipart/form-data">
+              <form id="editAnnForm" class="space-y-4 mt-5 relative" method="POST" action="{{ route('teacher.updateannouncement') }}" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
+                
+                <!-- Loading overlay - shown when updating -->
+                <div id="editLoader" class="hidden absolute inset-0 bg-black bg-opacity-30 rounded-lg flex items-center justify-center z-50">
+                  <div class="bg-white rounded-lg p-6 shadow-lg flex flex-col items-center gap-3">
+                    <div class="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                    <p class="text-sm font-medium text-gray-700">Updating announcement...</p>
+                  </div>
+                </div>
                 
                 <!-- Hidden input to store announcement ID -->
                 <input type="hidden" name="announcement_id" id="announcementId" value="">
@@ -498,8 +506,16 @@
                 </div>
               </div>
 
-              <form id="annForm" class="space-y-4 mt-5" method="POST" action="{{ route('teacher.addannouncement') }}" enctype="multipart/form-data">
+              <form id="annForm" class="space-y-4 mt-5 relative" method="POST" action="{{ route('teacher.addannouncement') }}" enctype="multipart/form-data">
                 @csrf
+                
+                <!-- Loading overlay - shown when uploading -->
+                <div id="composeLoader" class="hidden absolute inset-0 bg-black bg-opacity-30 rounded-lg flex items-center justify-center z-50">
+                  <div class="bg-white rounded-lg p-6 shadow-lg flex flex-col items-center gap-3">
+                    <div class="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                    <p class="text-sm font-medium text-gray-700">Uploading announcement...</p>
+                  </div>
+                </div>
 
                 <div>
                   <label class="text-sm font-medium text-gray-700">Title</label>
@@ -690,6 +706,19 @@
     to {
       width: 0%;
     }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
   }
 
   .animate-slideDown {
@@ -955,6 +984,28 @@
 
     wireAttachmentPreview(composeAttachInput, composeAttachName, composeAttachNameText, composeAttachClear);
     wireAttachmentPreview(editAttachInput, editAttachName, editAttachNameText, editAttachClear);
+
+    // Add loading overlay to compose form submission
+    const annForm = document.getElementById('annForm');
+    const composeLoader = document.getElementById('composeLoader');
+    
+    if (annForm) {
+      annForm.addEventListener('submit', function() {
+        // Show loader when form is submitted (uploading)
+        composeLoader.classList.remove('hidden');
+      });
+    }
+
+    // Add loading overlay to edit form submission
+    const editForm = document.getElementById('editAnnForm');
+    const editLoader = document.getElementById('editLoader');
+    
+    if (editForm) {
+      editForm.addEventListener('submit', function() {
+        // Show loader when form is submitted (updating)
+        editLoader.classList.remove('hidden');
+      });
+    }
 
     // Preview modal
     const previewModal = document.getElementById('previewModal');
