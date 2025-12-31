@@ -164,6 +164,15 @@ class AnnouncementController extends Controller
             $custom_audience = 5; //custom audience
         }
 
+        
+        //now check the creator of the announcement
+        $announcement = Announcement::find($announcementId);
+
+        //check if the announcement created_by matches the current user
+        if($announcement->created_by != auth()->id()) {
+            return redirect()->back()->with('error', 'You are not authorized to update this announcement.');
+        }
+
         //now update the announcement in the database
         Announcement::where('id', $announcementId)->update([
 
