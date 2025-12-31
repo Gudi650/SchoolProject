@@ -17,6 +17,7 @@ class Announcement extends Model
         'subject_id',
         'attachements',
         'intended_audience',
+        'attachment_original_name',
 
     ];
 

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by'); // Link to teachers table to know who created the announcement
             $table->unsignedBigInteger('class_available_id')->nullable(); // Optional link to classes table
             $table->string('attachements')->nullable(); // Optional field for any attachments related to the announcement
+            $table->string('attachment_original_name')->nullable(); // Optional field to store the original name of the attachment
             $table->integer('intended_audience')->default(0); // Field to specify the intended audience 
             $table->timestamps();
 

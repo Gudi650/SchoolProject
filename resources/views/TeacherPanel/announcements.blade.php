@@ -154,7 +154,7 @@
                             <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">You</span>
                           @endif
                         </div>
-                        <p class="text-sm text-gray-600 mt-1">{{ $announcement->content }}</p>
+                        <p class="max-w-xs md:max-w-lg text-sm text-gray-600 mt-1 truncate ">{{ $announcement->content }}</p>
                         <div class="text-xs text-gray-400 mt-3 flex items-center gap-3">
                           <span>{{ $announcement->created_at->format('M d, Y') }}</span>
                           <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded">
@@ -207,13 +207,13 @@
                                 @break
                               @default
                                 Unknown
-                            @endswitch" data-attachments="{{ $announcement->attachements }}">View</button>
+                            @endswitch" data-attachments="{{ $announcement->attachment_original_name ?? '' }}">View</button>
                           <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openEditModal" 
                             data-id="{{ $announcement->id }}" 
                             data-title="{{ $announcement->title }}" 
                             data-body="{{ $announcement->content }}" 
                             data-audience="{{ $announcement->intended_audience }}" 
-                            data-attachments="{{ $announcement->attachements }}">Edit</button>
+                            data-attachments="{{ $announcement->attachment_original_name ?? '' }}">Edit</button>
                         </div>
                       </div>
                     </div>
@@ -273,7 +273,7 @@
 
                 <div>
                   <label class="text-sm font-medium text-gray-700">Message</label>
-                  <div id="viewBody" class="mt-2 p-3 bg-gray-50 rounded-lg text-gray-700 text-sm leading-relaxed whitespace-pre-wrap"></div>
+                  <div id="viewBody" class="break-all mt-2 p-3 bg-gray-50 rounded-lg text-gray-700 text-sm leading-relaxed whitespace-pre-wrap"></div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -381,9 +381,21 @@
                   </div>
                 </div>
 
+                {{-- happa ndo shida ipo sasa --}}
                 <div>
                   <label class="text-sm font-medium text-gray-700">Current Attachment</label>
                   <div class="mt-2 text-sm text-gray-500 italic">No attachment</div>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Current Attachment</label>
+                  <div class="mt-2 inline-flex w-full items-center gap-3 rounded-xl bg-gradient-to-r from-indigo-50 via-white to-slate-50 border border-indigo-100/70 px-4 py-3 shadow-sm">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700">
+                      <i class="bi bi-paperclip text-lg"></i>
+                    </span>
+                    <span id="viewAttachment" class="flex-1 text-sm text-gray-800 italic">No attachment</span>
+                    <span class="text-xs text-gray-400">Preview</span>
+                  </div>
                 </div>
 
                 <div>

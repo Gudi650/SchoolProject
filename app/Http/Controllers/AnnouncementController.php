@@ -108,6 +108,9 @@ class AnnouncementController extends Controller
             //now store the document if exists
             'attachements' => isset($data['attachment']) ? $data['attachment']->store('attachments', 'public') : null,
 
+            //now store the file name 
+            'attachment_original_name' => isset($data['attachment']) ? $data['attachment']->getClientOriginalName() : null,
+
         ]);
 
          
