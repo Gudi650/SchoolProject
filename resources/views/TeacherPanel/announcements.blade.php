@@ -215,7 +215,8 @@
                             data-title="{{ $announcement->title }}" 
                             data-body="{{ $announcement->content }}" 
                             data-audience="{{ $announcement->intended_audience }}" 
-                            data-attachments="{{ $announcement->attachment_original_name ?? '' }}">Edit</button>
+                            data-attachments="{{ $announcement->attachment_original_name ?? '' }}"
+                            data-file-path="{{ $announcement->attachements ? asset('storage/' . $announcement->attachements) : '' }}">Edit</button>
                         </div>
                       </div>
                     </div>
@@ -849,7 +850,7 @@
     }
 
     // Edit modal open/close
-    function showEditModal(id, title, body, audience, attachments){
+    function showEditModal(id, title, body, audience, attachments, filePath){
 
       // Fill the form inputs with the data
       const editForm = document.getElementById('editAnnForm');
@@ -872,7 +873,12 @@
         radio.checked = (radio.value === radioValue);
       }); */
       
-      displayAttachment(editModal.querySelector('.mt-2.text-sm.text-gray-500'), attachments);
+      // Display the attachment filename
+      displayAttachment(editModal.querySelector('#editAttachmentPreview'), attachments);
+      
+      // Set file path for preview button (reuses same preview modal)
+      const previewBtn = editModal.querySelector('.openPreviewModal');
+      if (previewBtn) previewBtn.setAttribute('data-file-path', filePath || '');
       
       // Show the modal
       editModal.classList.remove('hidden');
@@ -919,8 +925,9 @@
         const body = btn.getAttribute('data-body');
         const audience = btn.getAttribute('data-audience');
         const attachments = btn.getAttribute('data-attachments');
-        // Pass data to the modal
-        showEditModal(id, title, body, audience, attachments);
+        const filePath = btn.getAttribute('data-file-path'); // Get file path for preview
+        // Pass data to the modal (including file path)
+        showEditModal(id, title, body, audience, attachments, filePath);
       });
     });
     if (closeEditBtn) closeEditBtn.addEventListener('click', hideEditModal);
@@ -1011,53 +1018,54 @@
           .then(arrayBuffer => {
             // Use JSZip to extract the DOCX file contents
             return JSZip.loadAsync(arrayBuffer).then(zip => {
-              // Create an object to store extracted images
+              // Create an object to store all extracted images with their relationship IDs
               const imageMap = {};
               
-              // Extract all images from the word/media folder inside DOCX
-              const mediaPromises = [];
-              zip.folder('word/media')?.forEach((relativePath, file) => {
-                mediaPromises.push(
-                  file.async('base64').then(base64Data => {
-                    // Store the image as base64 so it can be displayed
-                    imageMap[relativePath] = base64Data;
-                  })
-                );
-              });
-              
-              // Wait for all images to be extracted
-              return Promise.all(mediaPromises).then(() => {
-                // Now convert the document with images
-                return mammoth.convertToHtml({
-                  arrayBuffer: arrayBuffer,
-                  // Tell Mammoth how to handle images
-                  convertImage: mammoth.images.imgElement(image => {
-                    // Get the image filename from the image reference
-                    const imageFileName = image.contentType === 'image/png' ? 
-                      image.relationshipId + '.png' : 
-                      image.relationshipId + '.jpeg';
-                    
-                    // Look up the extracted image data
-                    const base64 = imageMap[imageFileName] || 
-                                  Object.values(imageMap)[0]; // Fallback to first image
-                    
-                    if (base64) {
-                      // Return the image as a data URL (embedded in HTML)
-                      return {
-                        src: 'data:image/png;base64,' + base64
-                      };
-                    }
-                    return {};
-                  })
+              // Extract all files from word/media folder
+              const mediaFolder = zip.folder('word/media');
+              if (mediaFolder) {
+                const imagePromises = [];
+                
+                // Loop through each file in media folder
+                mediaFolder.forEach((relativePath, file) => {
+                  imagePromises.push(
+                    // Get the file as base64
+                    file.async('base64').then(base64Data => {
+                      // Store with full path as key
+                      imageMap['word/media/' + relativePath] = base64Data;
+                    })
+                  );
                 });
-              });
+                
+                // Wait for all images to be extracted
+                return Promise.all(imagePromises).then(() => {
+                  // Convert DOCX to HTML
+                  return mammoth.convertToHtml({
+                    arrayBuffer: arrayBuffer,
+                    // Tell Mammoth how to convert images
+                    convertImage: function(image) {
+                      // Get the image's file path from the relationship
+                      return image.read('base64').then(base64Data => {
+                        // Return the image as base64 data URL
+                        return {
+                          src: 'data:image/png;base64,' + base64Data
+                        };
+                      });
+                    }
+                  });
+                });
+              } else {
+                // No images in document, just convert normally
+                return mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+              }
             });
           })
           .then(result => {
-            // Display the HTML content with images
+            // Display the HTML content with images embedded
             docContent.innerHTML = result.value;
           })
           .catch(error => {
+            console.error('Error:', error);
             docContent.innerHTML = '<p class="text-red-500">Error loading document: ' + error.message + '</p>';
           });
       }
