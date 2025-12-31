@@ -207,7 +207,9 @@
                                 @break
                               @default
                                 Unknown
-                            @endswitch" data-attachments="{{ $announcement->attachment_original_name ?? '' }}">View</button>
+                            @endswitch" 
+                          data-attachments="{{ $announcement->attachment_original_name ?? '' }}"
+                          data-file-path="{{ $announcement->attachements ? asset('storage/' . $announcement->attachements) : '' }}">View</button>
                           <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openEditModal" 
                             data-id="{{ $announcement->id }}" 
                             data-title="{{ $announcement->title }}" 
@@ -292,6 +294,7 @@
                   <div id="viewAudience" class="mt-2 inline-block px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium"></div>
                 </div>
 
+                <!--preview button-->
                 <div>
                   <label class="text-sm font-medium text-gray-700">Current Attachment</label>
                   <div class="mt-2 inline-flex w-full items-center gap-3 rounded-xl bg-gradient-to-r from-indigo-50 via-white to-slate-50 border border-indigo-100/70 px-4 py-3 shadow-sm">
@@ -299,10 +302,14 @@
                       <i class="bi bi-paperclip text-lg"></i>
                     </span>
                     <span id="viewAttachment" class="flex-1 text-sm text-gray-800 italic">No attachment</span>
-                    <span class="text-xs text-gray-400">Preview</span>
+                    <button class="openPreviewModal border px-2 py-1 border-green-200 rounded-lg hover:bg-green-100 hover:shadow-sm" data-file-path="">
+                      <span class="text-xs text-green-700  border-green-200 rounded-lg ">Preview</span>
+                    </button>
+                    
                   </div>
                 </div>
 
+                
               </div>
 
               <!-- Footer -->
@@ -393,8 +400,10 @@
                     <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700">
                       <i class="bi bi-paperclip text-lg"></i>
                     </span>
-                    <span id="viewAttachment" class="flex-1 text-sm text-gray-800 italic">No attachment</span>
-                    <span class="text-xs text-gray-400">Preview</span>
+                    <span id="editAttachmentPreview" class="flex-1 text-sm text-gray-800 italic">No attachment</span>
+                    <button type="button" class="openPreviewModal border px-2 py-1 border-green-200 rounded-lg hover:bg-green-100 hover:shadow-sm" data-file-path="">
+                      <span class="text-xs text-green-700">Preview</span>
+                    </button>
                   </div>
                 </div>
 
@@ -430,6 +439,28 @@
                   </div>
                 </div>
               </form>
+            </div>
+          </div>
+
+          <!-- Preview Document Modal -->
+          <div id="previewModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-6xl h-[90vh] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-black/5 flex flex-col">
+              <!-- Header -->
+              <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                    <i class="bi bi-file-earmark-text text-xl"></i>
+                  </div>
+                  <h2 class="text-lg font-semibold text-indigo-900">Document Preview</h2>
+                </div>
+                <button id="closePreviewModal" class="text-gray-400 hover:text-gray-700 p-2 rounded-md transition-colors">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+              <!-- Iframe Container -->
+              <div class="flex-1 p-4 bg-gray-50">
+                <iframe id="previewFrame" class="w-full h-full border-0 rounded-lg bg-white shadow-sm" src=""></iframe>
+              </div>
             </div>
           </div>
 
@@ -780,7 +811,7 @@
     }
 
     // View modal open/close
-    function showViewModal(title, body, date, time, audience, attachments){
+    function showViewModal(title, body, date, time, audience, attachments, filePath){
       document.getElementById('viewTitle').textContent = title;
       document.getElementById('viewBody').textContent = body;
       document.getElementById('viewDate').textContent = date;
@@ -788,6 +819,10 @@
       document.getElementById('viewAudience').textContent = audience;
       
       displayAttachment(document.getElementById('viewAttachment'), attachments);
+      
+      // Set file path for preview button
+      const previewBtn = viewModal.querySelector('.openPreviewModal');
+      if (previewBtn) previewBtn.setAttribute('data-file-path', filePath || '');
       
       viewModal.classList.remove('hidden');
       viewModal.classList.add('flex');
@@ -852,7 +887,8 @@
         const time = btn.getAttribute('data-time');
         const audience = btn.getAttribute('data-audience');
         const attachments = btn.getAttribute('data-attachments');
-        showViewModal(title, body, date, time, audience, attachments);
+        const filePath = btn.getAttribute('data-file-path');
+        showViewModal(title, body, date, time, audience, attachments, filePath);
       });
     });
     if (closeViewBtn) closeViewBtn.addEventListener('click', hideViewModal);
@@ -901,6 +937,47 @@
 
     wireAttachmentPreview(composeAttachInput, composeAttachName, composeAttachNameText, composeAttachClear);
     wireAttachmentPreview(editAttachInput, editAttachName, editAttachNameText, editAttachClear);
+
+    // Preview modal
+    const previewModal = document.getElementById('previewModal');
+    const previewFrame = document.getElementById('previewFrame');
+    const closePreviewBtn = document.getElementById('closePreviewModal');
+    
+    if (previewModal && previewFrame) {
+      document.addEventListener('click', e => {
+        const btn = e.target.closest('.openPreviewModal');
+        if (btn) {
+          e.preventDefault();
+          const filePath = btn.getAttribute('data-file-path');
+          if (filePath && filePath.trim() !== '') {
+            previewFrame.src = filePath;
+            previewModal.classList.remove('hidden');
+            previewModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+          } else {
+            alert('No file to preview');
+          }
+        }
+      });
+      
+      if (closePreviewBtn) {
+        closePreviewBtn.addEventListener('click', () => {
+          previewModal.classList.add('hidden');
+          previewModal.classList.remove('flex');
+          previewFrame.src = '';
+          document.body.style.overflow = '';
+        });
+      }
+      
+      previewModal.addEventListener('click', e => {
+        if (e.target === previewModal) {
+          previewModal.classList.add('hidden');
+          previewModal.classList.remove('flex');
+          previewFrame.src = '';
+          document.body.style.overflow = '';
+        }
+      });
+    }
 
     // Audience toggles (compose)
     function updateAudience(){
