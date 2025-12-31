@@ -122,6 +122,28 @@ class AnnouncementController extends Controller
     }
 
 
+    //function to update the announcement
+    public function updateAnnouncement(Request $request)
+    {
+        //get the announcement id from the request
+        $announcementId = $request->announcement_id;
+
+        //validate the request
+        $data = $request->validate([
+            'announcement_id' => 'required|exists:announcements,id',
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            'edit_audience_type' => 'required|array|min:1',
+            'edit_audience_type.*' => 'required|in:all_students,all_teachers,all,by_subject',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // max 5MB
+        ]);
+
+        //test if the announcement id get to the function
+        dd($data);
+
+    }
+
+
     //get the details of the user
     protected function getUserDetails()
     {

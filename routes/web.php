@@ -63,6 +63,12 @@ Route::middleware('auth')->group(function () {
     [AnnouncementController::class, 'addAnnouncement']  
     )->name('teacher.addannouncement');
 
+    //update the announcement using controller
+    Route::post('/teacher-updateannouncement',
+    [AnnouncementController::class, 'updateAnnouncement']  
+    )->name('teacher.updateannouncement');
+
+
 
 
 /////////////////////////////////////////////////////////////////

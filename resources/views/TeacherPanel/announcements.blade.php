@@ -341,13 +341,16 @@
                 </div>
               </div>
 
-              <form id="editAnnForm" class="space-y-4 mt-5" method="POST" action="#" enctype="multipart/form-data">
+              <form id="editAnnForm" class="space-y-4 mt-5" method="POST" action="{{ route('teacher.updateannouncement') }}" enctype="multipart/form-data">
                 @csrf
-                @method('PUT')
+                @method('POST')
+                
+                <!-- Hidden input to store announcement ID -->
+                <input type="hidden" name="announcement_id" id="announcementId" value="">
 
                 <div>
                   <label class="text-sm font-medium text-gray-700">Title</label>
-                  <input name="title" required placeholder="Short, clear title" value="Holiday Notice"
+                  <input name="title" required placeholder="Short, clear title" 
                     class="w-full mt-2 border border-gray-200 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 transition" />
                 </div>
 
@@ -361,15 +364,15 @@
                   <label class="text-sm font-medium text-gray-700">Audience</label>
                   <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
-                      <input type="radio" name="edit_audience_type" value="all_students" checked class="edit-aud-radio">
+                      <input type="checkbox" name="edit_audience_type[]" value="all_students" checked class="edit-aud-radio">
                       <span class="text-sm">All Students</span>
                     </label>
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
-                      <input type="radio" name="edit_audience_type" value="all_teachers" class="edit-aud-radio">
+                      <input type="checkbox" name="edit_audience_type[]" value="all_teachers" class="edit-aud-radio">
                       <span class="text-sm">All Teachers</span>
                     </label>
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 hover:shadow-sm cursor-pointer">
-                      <input type="radio" name="edit_audience_type" value="by_subject" class="edit-aud-radio">
+                      <input type="checkbox" name="edit_audience_type[]" value="by_subject" class="edit-aud-radio">
                       <span class="text-sm">By Subject</span>
                     </label>
                   </div>
@@ -378,21 +381,25 @@
                   <div id="editBySubject" class="mt-3 hidden">
                     <label class="text-sm font-medium text-gray-700">Select Subject</label>
                     <select name="subject_id" class="w-full mt-2 border border-gray-200 px-3 py-2 rounded-lg">
+                      
                       <option value="">-- Choose subject --</option>
-                      <option value="math">Mathematics</option>
-                      <option value="eng">English</option>
-                      <option value="sci">Science</option>
+                      {{-- Example placeholder; replace with actual $subjects --}}
+                      {{-- check if the $subjects is available  --}}
+
+                      @if ($subjects->count() > 0)
+                        
+                        @foreach($subjects as $subject)
+                          <option value="{{ $subject->id }}">{{ $subject->subject_name }}</option>
+                        @endforeach
+                      @else
+                        <option value="">No subjects available</option>
+                      @endif
+
                     </select>
                     <div class="mt-2 flex items-center gap-3">
                       <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="notify_teachers" class="h-4 w-4"> Notify teachers</label>
                     </div>
                   </div>
-                </div>
-
-                {{-- happa ndo shida ipo sasa --}}
-                <div>
-                  <label class="text-sm font-medium text-gray-700">Current Attachment</label>
-                  <div class="mt-2 text-sm text-gray-500 italic">No attachment</div>
                 </div>
 
                 <div>
@@ -852,31 +859,21 @@
     // Edit modal open/close
     function showEditModal(id, title, body, audience, attachments, filePath){
 
-      // Fill the form inputs with the data
-      const editForm = document.getElementById('editAnnForm');
-      editForm.querySelector('input[name="title"]').value = title || '';
-      editForm.querySelector('textarea[name="body"]').value = body || '';
+      // Set the announcement ID in hidden input field
+      // This will be sent with the form to identify which announcement to update
+      document.getElementById('announcementId').value = id;
       
-      // Update the form action to include the announcement ID
-      //editForm.action = `/teacher/announcements/${id}/update`;
+      // Fill the title input field with the announcement title
+      document.getElementById('editAnnForm').querySelector('input[name="title"]').value = title || '';
       
-      // Select the correct audience radio button based on intended_audience value
-      /*const audienceRadios = document.querySelectorAll('.edit-aud-radio');
-      audienceRadios.forEach(radio => {
-        // Map database values to form values
-        let radioValue = '';
-        if (audience == 0) radioValue = 'all';
-        else if (audience == 2) radioValue = 'all_students';
-        else if (audience == 3) radioValue = 'all_teachers';
-        else if (audience == 4) radioValue = 'by_subject';
-        
-        radio.checked = (radio.value === radioValue);
-      }); */
+      // Fill the message textarea with the announcement content
+      document.getElementById('editAnnForm').querySelector('textarea[name="body"]').value = body || '';
       
-      // Display the attachment filename
+      // Display the attachment filename (or "No attachment" if none exists)
       displayAttachment(editModal.querySelector('#editAttachmentPreview'), attachments);
       
-      // Set file path for preview button (reuses same preview modal)
+      // Set file path for preview button so it can display the document
+      // This reuses the same preview modal functionality
       const previewBtn = editModal.querySelector('.openPreviewModal');
       if (previewBtn) previewBtn.setAttribute('data-file-path', filePath || '');
       
