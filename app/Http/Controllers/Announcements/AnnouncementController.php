@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Announcements;
 
+use App\Http\Controllers\Controller;
 use App\Models\Announcement;
 use App\Models\availablesubject;
 use App\Models\ClassAvailable;
@@ -63,6 +64,7 @@ class AnnouncementController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'audience_type' => 'required|array|min:1',
+            'important_note' => 'nullable|string',
             'audience_type.*' => 'required|in:all_students,all_teachers,all,by_subject',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120', // max 5MB
         ]);
@@ -102,6 +104,7 @@ class AnnouncementController extends Controller
             'content' => $data['content'],
             'school_id' => $schoolId,
             'created_by' => $teacherId,
+            'important_note' => $data['important_note'] ?? null,
 
             //now check the intended audience
             'intended_audience' => $all ?? $all_students ?? $all_teachers ?? $by_subject ?? $custom_audience ?? 0,

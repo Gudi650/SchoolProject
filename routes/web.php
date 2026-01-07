@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\Announcements\AnnouncementController;
+use App\Http\Controllers\Announcements\StudentController;
 use App\Http\Controllers\AssignClasses;
-use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GeneratedTimetableController;
@@ -35,7 +35,14 @@ Route::middleware('auth')->group(function () {
 
     Route::view('/student-panel/feespayment', 'StudentPanel.feespayment')->name('student.feespayment');
 
-    Route::view('/student-panel/announcements', 'StudentPanel.announcements')->name('student.announcements');
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////get the announcemnts view through a controller
+
+    Route::get('/student-panel/announcements',[StudentController::class, 'viewAnnouncements'])->name('student.announcements');
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     Route::view('/student-panel/assignments', 'StudentPanel.assignment')->name('student.assignments');
 

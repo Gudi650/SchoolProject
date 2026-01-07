@@ -489,7 +489,7 @@
             </div>
           </div>
 
-          <!-- Compose Annnouncement Modal -->
+          <!-- Add/Compose Annnouncement Modal -->
 
           <div id="modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center p-4">
             <div class="bg-white w-full max-w-2xl rounded-2xl p-6 overflow-auto max-h-[90vh] shadow-2xl ring-1 ring-black/5">
@@ -531,6 +531,12 @@
                 <div>
                   <label class="text-sm font-medium text-gray-700">Message</label>
                   <textarea name="content" rows="6" required placeholder="Write your announcement..."
+                    class="w-full mt-2 border border-gray-200 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-y transition"></textarea>
+                </div>
+
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Important Note</label>
+                  <textarea name="important_note" rows="2" required placeholder="Write your announcement important Note(N/B)..."
                     class="w-full mt-2 border border-gray-200 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-y transition"></textarea>
                 </div>
 

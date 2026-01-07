@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
+            $table->text('important_note')->nullable(); // Optional field for any important notes related to the announcement
             $table->unsignedBigInteger('school_id'); // Link to schools table to know which school the announcement belongs to
             $table->unsignedBigInteger('created_by'); // Link to teachers table to know who created the announcement
             $table->unsignedBigInteger('class_available_id')->nullable(); // Optional link to classes table
