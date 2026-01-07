@@ -145,12 +145,12 @@
 
                 {{-- display the announcements --}}
                 @foreach ($announcements as $announcement)
-                  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="{{ $announcement->type }}" data-tab-type="{{ $announcement->created_by == auth()->user()->id ? 'my-posts' : 'all' }}">
+                  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="{{ $announcement->type }}" data-tab-type="{{ $announcement->created_by == $teacherId ? 'my-posts' : 'all' }}" data-is-new="{{ $announcement->created_at->gte(now()->subDays(7)) ? '1' : '0' }}">
                     <div class="flex items-start justify-between gap-4">
                       <div>
                         <div class="flex items-center gap-2 mb-2">
                           <h3 class="font-semibold text-indigo-800">{{ $announcement->title }}</h3>
-                          @if ($announcement->created_by == auth()->user()->id)
+                          @if ($announcement->created_by == $teacherId)
                             <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">You</span>
                           @endif
                         </div>
@@ -227,24 +227,29 @@
               
             </div>
 
-              <!-- Pagination placeholder (server-side) -->
+              <!-- Pagination (server-side) -->
+              @if(isset($announcements) && method_exists($announcements, 'links'))
               <div class="flex justify-between items-center bg-white p-3 rounded-md shadow-sm">
 
                 <div class="text-sm text-gray-500">
-                  Showing 1 - 10 of 42
+                  Showing {{ $announcements->firstItem() }} - {{ $announcements->lastItem() }} of {{ $announcements->total() }}
                 </div>
 
                 <div class="flex gap-2">
+                  @if($announcements->onFirstPage())
+                    <span class="px-3 py-1 border rounded text-gray-400 hover:bg-blue-600 hover:text-white cursor-not-allowed ">Previous</span>
+                  @else
+                    <a href="{{ $announcements->previousPageUrl() }}" class="px-3 py-1 border rounded hover:bg-blue-600 hover:text-white cursor-pointer">Previous</a>
+                  @endif
 
-                  <a href="?page=prev" class="px-3 py-1 border rounded">
-                    Previous
-                  </a>
-
-                  <a href="?page=next" class="px-3 py-1 bg-indigo-600 text-white rounded">
-                    Next
-                  </a>
+                  @if($announcements->hasMorePages())
+                    <a href="{{ $announcements->nextPageUrl() }}" class="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-blue-600 hover:text-white cursor-pointer">Next</a>
+                  @else
+                    <span class="px-3 py-1 border rounded text-gray-400 hover:bg-blue-600 hover:text-white cursor-not-allowed">Next</span>
+                  @endif
                 </div>
               </div>
+              @endif
             </div>
           </section>
 
@@ -810,6 +815,15 @@
     const tabBtns = document.querySelectorAll('.tab-btn');
     const cards = document.querySelectorAll('.card');
 
+    // Update the New tab badge to the actual count of new items (last 7 days)
+    const newBadge = document.querySelector('.tab-btn[data-tab="new"] span');
+    if (newBadge) {
+      const newCount = Array.from(cards).filter(card => card.getAttribute('data-is-new') === '1').length;
+      newBadge.textContent = newCount;
+      // Hide the badge if there are no new items
+      if (newCount === 0) newBadge.style.display = 'none';
+    }
+
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const tab = btn.getAttribute('data-tab');
@@ -827,7 +841,7 @@
             card.style.display = '';
           } else if (tab === 'my-posts' && tabType === 'my-posts') {
             card.style.display = '';
-          } else if (tab === 'new' && tabType === 'new') {
+          } else if (tab === 'new' && card.getAttribute('data-is-new') === '1') {
             card.style.display = '';
           } else if (tab === category) {
             card.style.display = '';

@@ -40,6 +40,7 @@ class AnnouncementController extends Controller
         return view('TeacherPanel.announcements', [
             'subjects' => $subjects,
             'announcements' => $announcements,
+            'teacherId' => $userDetails['teacherId'],
         ]);
     }
 
@@ -233,9 +234,9 @@ class AnnouncementController extends Controller
     {
         //get the announcements for teachers
         $announcements = Announcement::where('school_id', $schoolId)
-                            ->whereIn('intended_audience', [0, 3]) // 0 - all, 3 - all_teachers
-                            ->orderBy('created_at', 'desc')
-                            ->get();
+                    ->whereIn('intended_audience', [0, 3]) // 0 - all, 3 - all_teachers
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
 
         return $announcements;
 
