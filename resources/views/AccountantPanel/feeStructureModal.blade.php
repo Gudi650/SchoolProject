@@ -62,8 +62,8 @@
 
       <!-- Buttons -->
       <div class="flex gap-3 pt-6 border-t border-slate-200">
-        <button type="submit" class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium">Save Structure</button>
-        <button type="button" id="cancelEditStructureModal" class="flex-1 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">Cancel</button>
+        <button type="submit" class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Save Structure</button>
+        <button type="button" id="cancelEditStructureModal" class="flex-1 px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors font-medium flex items-center justify-center gap-2"><i data-lucide="x" class="w-4 h-4"></i> Cancel</button>
       </div>
     </form>
   </div>
