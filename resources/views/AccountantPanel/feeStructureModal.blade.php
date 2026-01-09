@@ -1,6 +1,15 @@
 <!-- Fee Structure Modal with Currency Selection -->
+<style>
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+</style>
 <div id="feeStructureModal" class="fixed inset-0 z-50 items-center justify-center bg-black/50" style="display: none;">
-  <div class="bg-white w-full max-w-4xl mx-4 rounded-lg shadow-2xl overflow-hidden">
+  <div class="bg-white w-full max-w-4xl mx-4 rounded-lg shadow-2xl overflow-hidden flex flex-col" style="max-height: 90vh;">
     <!-- Header -->
     <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
       <h2 class="text-lg font-semibold tracking-wide flex items-center gap-2">
@@ -47,7 +56,7 @@
     </div>
 
     <!-- Body -->
-    <div class="px-4 py-4">
+    <div class="px-4 py-4 flex-1 overflow-y-auto hide-scrollbar">
       <!-- All Classes Tab Content -->
       <div id="tabAll" class="space-y-3">
         <div class="flex items-center justify-between">
@@ -154,6 +163,15 @@
             </div>
           </div>
         </div>
+        
+        <!-- Load All Classes Structure Button -->
+        <div class="flex justify-end mb-3">
+          <button type="button" id="loadAllClassesStructure" class="px-4 py-2 text-sm rounded bg-violet-100 text-violet-700 hover:bg-violet-200 flex items-center gap-2 font-medium border border-violet-300">
+            <i data-lucide="copy" class="w-4 h-4"></i> 
+            Load All Classes Structure
+          </button>
+        </div>
+
         <div class="flex items-center justify-between">
           <h3 class="font-medium text-indigo-700">Fee Components (Specific Class)</h3>
           <div class="flex gap-2">
@@ -419,6 +437,29 @@
     // Add component rows
     addAllComponent.addEventListener('click', () => allComponents.appendChild(makeRow()));
     addSpecificComponent.addEventListener('click', () => specificComponents.appendChild(makeRow()));
+
+    // Load All Classes Structure button
+    const loadAllClassesStructureBtn = document.getElementById('loadAllClassesStructure');
+    if (loadAllClassesStructureBtn) {
+      loadAllClassesStructureBtn.addEventListener('click', () => {
+        const allClassItems = collectRows(allComponents);
+        if (allClassItems.length === 0) {
+          alert('Please add fee components in "All Classes" tab first.');
+          return;
+        }
+        
+        // Clear existing specific class components
+        specificComponents.innerHTML = '';
+        
+        // Copy each component from All Classes to Specific Class
+        allClassItems.forEach(item => {
+          specificComponents.appendChild(makeRow(item.name, item.amount));
+        });
+        
+        renderIcons();
+        alert(`Loaded ${allClassItems.length} component(s) from All Classes structure. You can now edit or add adjustments.`);
+      });
+    }
 
     // Presets
     Array.from(document.querySelectorAll('.presetBtn')).forEach(btn => {
