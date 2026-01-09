@@ -47,12 +47,39 @@
           </li>
           
           <li>
-            <a href="{{ route('accounting.feeManagement') }}" 
-            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.feeManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
-              <i data-lucide="dollar-sign" class="w-5 h-5"></i>
-              <span class="flex-1 text-left text-sm font-medium nav-label">Fee Management</span>
-              <span class="item-badge px-2 py-0.5 text-xs font-semibold bg-red-500 text-white rounded-full">12</span>
-            </a>
+            <div class="relative">
+              <button id="feeToggle" aria-expanded="{{ request()->routeIs('accounting.feeManagement', 'accounting.feeAnalytics', 'accounting.feeStructure', 'accounting.feeCollection') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.feeManagement', 'accounting.feeAnalytics', 'accounting.feeStructure', 'accounting.feeCollection') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                <span class="flex items-center gap-3">
+                  <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+                  <span class="text-sm font-medium nav-label">Fee Management</span>
+                </span>
+                <i data-lucide="chevron-down" class="w-4 h-4 text-sm transition-transform duration-200 {{ request()->routeIs('accounting.feeManagement', 'accounting.feeAnalytics', 'accounting.feeStructure', 'accounting.feeCollection') ? 'rotate-180' : '' }}"></i>
+              </button>
+              
+              <ul id="feeMenu" class="{{ request()->routeIs('accounting.feeManagement', 'accounting.feeAnalytics', 'accounting.feeStructure', 'accounting.feeCollection') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+                <li>
+                  <a href="#" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.feeAnalytics') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                    Analytics
+                  </a>
+                </li>
+                <li>
+                  <a href="#" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.feeStructure') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
+                    Fee Structure
+                  </a>
+                </li>
+                <li>
+                  <a href="#" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.feeCollection') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    Fee Collection
+                  </a>
+                </li>
+              </ul>
+            </div>
           </li>
 
           <li>
@@ -188,6 +215,26 @@
         const overlay = document.getElementById('mobile-overlay');
         const collapseBtn = document.getElementById('collapse-btn');
         const mainWrapper = document.getElementById('main-wrapper');
+
+        // Fee Management dropdown toggle
+        const feeToggle = document.getElementById('feeToggle');
+        const feeMenu = document.getElementById('feeMenu');
+        if (feeToggle && feeMenu) {
+          const feeChevron = feeToggle.querySelector('i[data-lucide="chevron-down"]');
+          feeToggle.addEventListener('click', () => {
+            const open = feeMenu.classList.toggle('hidden') === false;
+            feeToggle.setAttribute('aria-expanded', open);
+            if (feeChevron) feeChevron.classList.toggle('rotate-180', open);
+          });
+          // Close dropdown when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!feeToggle.contains(e.target) && !feeMenu.contains(e.target)) {
+              feeMenu.classList.add('hidden');
+              feeToggle.setAttribute('aria-expanded', 'false');
+              if (feeChevron) feeChevron.classList.remove('rotate-180');
+            }
+          });
+        }
 
         // mobile toggle
         if (mobileBtn && overlay && sidebar){
