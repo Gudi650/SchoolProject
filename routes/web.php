@@ -330,6 +330,11 @@ Route::get('/fee-management', function () {
     return view('AccountantPanel.feeManagement');
 })->name('accounting.feeManagement');
 
+//route for fee-structure
+Route::get('/fee-structure', function () {
+    return view('AccountantPanel.fees.fee-structure');
+})->name('accounting.feeStructure');
+
 //route for income management
 Route::get('/income-management', function () {
     return view('AccountantPanel.income');

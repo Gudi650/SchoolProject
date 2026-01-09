@@ -60,21 +60,21 @@
               
               <ul id="feeMenu" class="{{ request()->routeIs('accounting.feeManagement', 'accounting.feeAnalytics', 'accounting.feeStructure', 'accounting.feeCollection') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
                 <li>
-                  <a href="{{ route('accounting.feeManagement') }}" 
+                  <a href="#" 
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.feeAnalytics') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                     <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
                     Analytics
                   </a>
                 </li>
                 <li>
-                  <a href="#" 
+                  <a href="{{ route('accounting.feeStructure') }}" 
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.feeStructure') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                     <i data-lucide="layers" class="w-4 h-4"></i>
                     Fee Structure
                   </a>
                 </li>
                 <li>
-                  <a href="#" 
+                  <a href="{{ route('accounting.feeManagement') }}" 
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.feeCollection') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                     <i data-lucide="credit-card" class="w-4 h-4"></i>
                     Fee Collection
@@ -193,7 +193,7 @@
         </div>
       </header>
 
-      <main class="p-6 bg-white">
+      <main class="p-6 bg-white min-h-[calc(100vh-4rem)]">
 
         <!--main content-->
         {{ $slot }}

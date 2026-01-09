@@ -136,58 +136,6 @@
             </div>
           </div>
 
-        <!-- Fee Structure -->
-        <div class="">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-slate-900">Fee Structure (Annual)</h2>
-            <button id="openEditStructureModal" class="px-4 py-2 text-sm font-medium text-white border border-gray-400 rounded-md bg-blue-700 hover:bg-blue-800">Edit Structure</button>
-          </div>
-          <div class="mb-4 bg-white rounded-xl border border-slate-200 overflow-x-auto relative z-0">
-              <table class="w-full text-left text-sm relative z-0">
-                <thead class="bg-slate-50">
-                  <tr>
-                    <th class="px-4 py-3 font-medium text-slate-700">Class</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Tuition</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Transport</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Hostel</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Library</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Exam</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Total</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y">
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3">Class 10</td>
-                    <td class="px-4 py-3">₹15,000</td>
-                    <td class="px-4 py-3">₹5,000</td>
-                    <td class="px-4 py-3">₹20,000</td>
-                    <td class="px-4 py-3">₹1,500</td>
-                    <td class="px-4 py-3">₹2,000</td>
-                    <td class="px-4 py-3 font-semibold">₹43,500</td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3">Class 9</td>
-                    <td class="px-4 py-3">₹14,000</td>
-                    <td class="px-4 py-3">₹5,000</td>
-                    <td class="px-4 py-3">₹20,000</td>
-                    <td class="px-4 py-3">₹1,500</td>
-                    <td class="px-4 py-3">₹2,000</td>
-                    <td class="px-4 py-3 font-semibold">₹42,500</td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3">Class 8</td>
-                    <td class="px-4 py-3">₹13,000</td>
-                    <td class="px-4 py-3">₹4,500</td>
-                    <td class="px-4 py-3">₹18,000</td>
-                    <td class="px-4 py-3">₹1,200</td>
-                    <td class="px-4 py-3">₹1,800</td>
-                    <td class="px-4 py-3 font-semibold">₹38,500</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
       </main>
       
       @include('AccountantPanel.feeStructureModal')
