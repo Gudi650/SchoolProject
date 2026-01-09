@@ -259,8 +259,41 @@
             const isExpanded = sidebar.classList.contains('w-72');
             sidebar.classList.toggle('w-72', !isExpanded); sidebar.classList.toggle('w-20', isExpanded);
             if (mainWrapper) { mainWrapper.classList.toggle('md:pl-72', !isExpanded); mainWrapper.classList.toggle('md:pl-20', isExpanded); }
-            sidebar.querySelectorAll('nav a').forEach(a=>{ a.classList.toggle('justify-center', isExpanded); a.querySelector('.nav-label')?.classList.toggle('hidden', isExpanded); a.querySelector('.item-badge')?.classList.toggle('hidden', isExpanded); });
-            sidebar.querySelector('.brand-text')?.classList.toggle('hidden', isExpanded); sidebar.querySelector('.brand-icon')?.classList.toggle('hidden', isExpanded);
+            
+            // Toggle all navigation links
+            sidebar.querySelectorAll('nav a').forEach(a=>{ 
+              a.classList.toggle('justify-center', isExpanded); 
+              a.querySelector('.nav-label')?.classList.toggle('hidden', isExpanded); 
+              a.querySelector('.item-badge')?.classList.toggle('hidden', isExpanded); 
+            });
+            
+            // Toggle fee toggle button
+            if (feeToggle) {
+              feeToggle.classList.toggle('justify-center', isExpanded);
+              feeToggle.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+            
+            // Hide fee menu chevron and dropdown when collapsed
+            if (isExpanded && feeMenu && feeToggle && feeChevron) {
+              feeMenu.classList.add('hidden');
+              feeToggle.setAttribute('aria-expanded', 'false');
+              feeChevron.classList.remove('rotate-180');
+              feeChevron.classList.add('hidden');
+            } else if (!isExpanded && feeChevron) {
+              feeChevron.classList.remove('hidden');
+            }
+            
+            // Hide fee menu labels
+            if (feeMenu) {
+              feeMenu.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+            
+            sidebar.querySelector('.brand-text')?.classList.toggle('hidden', isExpanded); 
+            sidebar.querySelector('.brand-icon')?.classList.toggle('hidden', isExpanded);
             collapseBtn.querySelector('i')?.classList.toggle('rotate-180', isExpanded);
 
             // logout compact toggle (simple class toggles)
