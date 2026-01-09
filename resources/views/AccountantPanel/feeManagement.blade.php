@@ -140,7 +140,7 @@
         <div class="">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold text-slate-900">Fee Structure (Annual)</h2>
-            <button id="openEditStructureModal" class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700">Edit Structure</button>
+            <button id="openEditStructureModal" class="px-4 py-2 text-sm font-medium text-white border border-gray-400 rounded-md bg-blue-700 hover:bg-blue-800">Edit Structure</button>
           </div>
           <div class="mb-4 bg-white rounded-xl border border-slate-200 overflow-x-auto relative z-0">
               <table class="w-full text-left text-sm relative z-0">
