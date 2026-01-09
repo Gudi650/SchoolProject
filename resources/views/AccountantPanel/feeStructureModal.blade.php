@@ -85,14 +85,73 @@
 
       <!-- Specific Class Tab Content -->
       <div id="tabSpecific" class="space-y-3 hidden">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="space-y-3">
           <div>
             <label class="block text-sm font-medium mb-1">School ID (optional)</label>
             <input id="specificSchoolId" type="text" class="border rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., SCH-001" />
           </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Class</label>
-            <input id="specificClass" type="text" class="border rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Grade 7" />
+          <div class="relative">
+            <label class="block text-sm font-medium mb-1 flex items-center gap-2">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              Select Classes (Multiple)
+            </label>
+            <div id="classDropdownBtn" class="border rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white cursor-pointer flex items-center justify-between">
+              <span id="selectedClassesDisplay" class="text-slate-500">Click to select classes...</span>
+              <i data-lucide="chevron-down" class="w-4 h-4"></i>
+            </div>
+            <div id="classDropdownMenu" class="hidden absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Nursery"> Nursery
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 1"> Grade 1
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 2"> Grade 2
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 3"> Grade 3
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 4"> Grade 4
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 5"> Grade 5
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 6"> Grade 6
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 7"> Grade 7
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 8"> Grade 8
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 9"> Grade 9
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 10"> Grade 10
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 11"> Grade 11
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 12"> Grade 12
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Form 1"> Form 1
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Form 2"> Form 2
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Form 3"> Form 3
+              </label>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Form 4"> Form 4
+              </label>
+            </div>
           </div>
         </div>
         <div class="flex items-center justify-between">
@@ -193,7 +252,12 @@
     const confirmSaveBtn = document.getElementById('confirmSaveBtn');
 
     const specificSchoolId = document.getElementById('specificSchoolId');
-    const specificClass = document.getElementById('specificClass');
+    
+    // Class dropdown elements
+    const classDropdownBtn = document.getElementById('classDropdownBtn');
+    const classDropdownMenu = document.getElementById('classDropdownMenu');
+    const selectedClassesDisplay = document.getElementById('selectedClassesDisplay');
+    const classCheckboxes = document.querySelectorAll('.class-checkbox');
 
     // Safe icon renderer for Lucide (if loaded in layout)
     function renderIcons() {
@@ -310,6 +374,34 @@
 
     function closePreview() { hide(previewPanel); }
 
+    // Class dropdown toggle
+    function updateClassDisplay() {
+      const selected = Array.from(classCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+      if (selected.length === 0) {
+        selectedClassesDisplay.textContent = 'Click to select classes...';
+        selectedClassesDisplay.className = 'text-slate-500';
+      } else {
+        selectedClassesDisplay.textContent = selected.join(', ');
+        selectedClassesDisplay.className = 'text-slate-900';
+      }
+    }
+
+    classDropdownBtn.addEventListener('click', () => {
+      classDropdownMenu.classList.toggle('hidden');
+      renderIcons();
+    });
+
+    classCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', updateClassDisplay);
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!classDropdownBtn.contains(e.target) && !classDropdownMenu.contains(e.target)) {
+        classDropdownMenu.classList.add('hidden');
+      }
+    });
+
     // Currency: show/hide custom input
     currencySelect.addEventListener('change', () => {
       customCurrencyLabel.classList.toggle('hidden', currencySelect.value !== 'OTHER');
@@ -348,8 +440,14 @@
     });
 
     previewSpecificBtn.addEventListener('click', () => {
+      const selectedClasses = Array.from(classCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+      if (selectedClasses.length === 0) {
+        alert('Please select at least one class');
+        return;
+      }
       const items = collectRows(specificComponents);
-      const meta = `${specificSchoolId.value ? 'School: ' + specificSchoolId.value + ' • ' : ''}${specificClass.value ? 'Class: ' + specificClass.value : ''}`;
+      const classesStr = selectedClasses.join(', ');
+      const meta = `${specificSchoolId.value ? 'School: ' + specificSchoolId.value + ' • ' : ''}Classes: ${classesStr}`;
       const html = renderPreview('Specific Class Fee Structure', meta, items);
       openPreview(html);
     });
@@ -365,7 +463,8 @@
       allComponents.innerHTML = '';
       specificComponents.innerHTML = '';
       specificSchoolId.value = '';
-      specificClass.value = '';
+      classCheckboxes.forEach(cb => cb.checked = false);
+      updateClassDisplay();
       currencySelect.value = 'TSH';
       customCurrencyLabel.value = '';
       customCurrencyLabel.classList.add('hidden');
@@ -454,8 +553,30 @@
 
           <!-- Class Selection -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Select Class</label>
-            <input type="text" id="specificClassName" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Class 10, 9-A, Nursery" required>
+            <label class="block text-sm font-medium text-slate-700 mb-1 flex items-center gap-2">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              Select Classes (Multiple)
+            </label>
+            <select id="specificClassNames" multiple class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white" required>
+              <option value="Nursery">Nursery</option>
+              <option value="Grade 1">Grade 1</option>
+              <option value="Grade 2">Grade 2</option>
+              <option value="Grade 3">Grade 3</option>
+              <option value="Grade 4">Grade 4</option>
+              <option value="Grade 5">Grade 5</option>
+              <option value="Grade 6">Grade 6</option>
+              <option value="Grade 7">Grade 7</option>
+              <option value="Grade 8">Grade 8</option>
+              <option value="Grade 9">Grade 9</option>
+              <option value="Grade 10">Grade 10</option>
+              <option value="Grade 11">Grade 11</option>
+              <option value="Grade 12">Grade 12</option>
+              <option value="Form 1">Form 1</option>
+              <option value="Form 2">Form 2</option>
+              <option value="Form 3">Form 3</option>
+              <option value="Form 4">Form 4</option>
+            </select>
+            <p class="text-xs text-slate-500 mt-1">Hold Ctrl/Cmd to select multiple classes</p>
           </div>
 
           <!-- Fee Components for Specific Class -->
