@@ -53,12 +53,14 @@
                   <i data-lucide="dollar-sign" class="w-5 h-5"></i>
                   <span class="text-sm font-medium nav-label">Fee Management</span>
                 </span>
-                <i data-lucide="chevron-down" class="w-4 h-4 text-sm transition-transform duration-200 {{ request()->routeIs('accounting.feeManagement', 'accounting.feeAnalytics', 'accounting.feeStructure', 'accounting.feeCollection') ? 'rotate-180' : '' }}"></i>
+                <span id="feeChevron" class="transition-transform duration-200 {{ request()->routeIs('accounting.feeManagement', 'accounting.feeAnalytics', 'accounting.feeStructure', 'accounting.feeCollection') ? 'rotate-180' : '' }}">
+                  <i data-lucide="chevron-down" class="w-4 h-4 text-sm"></i>
+                </span>
               </button>
               
               <ul id="feeMenu" class="{{ request()->routeIs('accounting.feeManagement', 'accounting.feeAnalytics', 'accounting.feeStructure', 'accounting.feeCollection') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
                 <li>
-                  <a href="#" 
+                  <a href="{{ route('accounting.feeManagement') }}" 
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.feeAnalytics') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                     <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
                     Analytics
@@ -219,19 +221,28 @@
         // Fee Management dropdown toggle
         const feeToggle = document.getElementById('feeToggle');
         const feeMenu = document.getElementById('feeMenu');
-        if (feeToggle && feeMenu) {
-          const feeChevron = feeToggle.querySelector('i[data-lucide="chevron-down"]');
+        const feeChevron = document.getElementById('feeChevron');
+        
+        if (feeToggle && feeMenu && feeChevron) {
           feeToggle.addEventListener('click', () => {
             const open = feeMenu.classList.toggle('hidden') === false;
             feeToggle.setAttribute('aria-expanded', open);
-            if (feeChevron) feeChevron.classList.toggle('rotate-180', open);
+            feeChevron.classList.toggle('rotate-180', open);
+          });
+          // keep chevron in sync when a child link is clicked (helps when navigation is prevented)
+          feeMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+              feeMenu.classList.remove('hidden');
+              feeToggle.setAttribute('aria-expanded', 'true');
+              feeChevron.classList.add('rotate-180');
+            });
           });
           // Close dropdown when clicking outside
           document.addEventListener('click', (e) => {
             if (!feeToggle.contains(e.target) && !feeMenu.contains(e.target)) {
               feeMenu.classList.add('hidden');
               feeToggle.setAttribute('aria-expanded', 'false');
-              if (feeChevron) feeChevron.classList.remove('rotate-180');
+              feeChevron.classList.remove('rotate-180');
             }
           });
         }
