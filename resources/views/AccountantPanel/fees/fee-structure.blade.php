@@ -83,7 +83,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200">
-            <tr class="hover:bg-slate-50 transition-colors">
+            <tr class="hover:bg-slate-50 transition-colors" data-class="Class 10" data-tuition="15000" data-transport="5000" data-hostel="20000" data-library="1500" data-exam="2000" data-total="43500">
               <td class="px-6 py-4 font-medium text-slate-900">Class 10</td>
               <td class="px-6 py-4 text-slate-700">₹15,000</td>
               <td class="px-6 py-4 text-slate-700">₹5,000</td>
@@ -92,12 +92,12 @@
               <td class="px-6 py-4 text-slate-700">₹2,000</td>
               <td class="px-6 py-4 font-semibold text-slate-900 text-right">₹43,500</td>
               <td class="px-6 py-4 text-center">
-                <button class="text-indigo-600 hover:text-indigo-700 font-medium text-sm inline-flex items-center gap-1 p-1 rounded hover:bg-indigo-50">
+                <button class="edit-fee-btn text-indigo-600 hover:text-indigo-700 font-medium text-sm inline-flex items-center gap-1 p-1 rounded hover:bg-indigo-50 transition-colors">
                   <i data-lucide="edit-2" class="w-4 h-4"></i>
                 </button>
               </td>
             </tr>
-            <tr class="hover:bg-slate-50 transition-colors">
+            <tr class="hover:bg-slate-50 transition-colors" data-class="Class 9" data-tuition="14000" data-transport="5000" data-hostel="20000" data-library="1500" data-exam="2000" data-total="42500">
               <td class="px-6 py-4 font-medium text-slate-900">Class 9</td>
               <td class="px-6 py-4 text-slate-700">₹14,000</td>
               <td class="px-6 py-4 text-slate-700">₹5,000</td>
@@ -106,12 +106,12 @@
               <td class="px-6 py-4 text-slate-700">₹2,000</td>
               <td class="px-6 py-4 font-semibold text-slate-900 text-right">₹42,500</td>
               <td class="px-6 py-4 text-center">
-                <button class="text-indigo-600 hover:text-indigo-700 font-medium text-sm inline-flex items-center gap-1 p-1 rounded hover:bg-indigo-50">
+                <button class="edit-fee-btn text-indigo-600 hover:text-indigo-700 font-medium text-sm inline-flex items-center gap-1 p-1 rounded hover:bg-indigo-50 transition-colors">
                   <i data-lucide="edit-2" class="w-4 h-4"></i>
                 </button>
               </td>
             </tr>
-            <tr class="hover:bg-slate-50 transition-colors">
+            <tr class="hover:bg-slate-50 transition-colors" data-class="Class 8" data-tuition="13000" data-transport="4500" data-hostel="18000" data-library="1200" data-exam="1800" data-total="38500">
               <td class="px-6 py-4 font-medium text-slate-900">Class 8</td>
               <td class="px-6 py-4 text-slate-700">₹13,000</td>
               <td class="px-6 py-4 text-slate-700">₹4,500</td>
@@ -120,7 +120,7 @@
               <td class="px-6 py-4 text-slate-700">₹1,800</td>
               <td class="px-6 py-4 font-semibold text-slate-900 text-right">₹38,500</td>
               <td class="px-6 py-4 text-center">
-                <button class="text-indigo-600 hover:text-indigo-700 font-medium text-sm inline-flex items-center gap-1 p-1 rounded hover:bg-indigo-50">
+                <button class="edit-fee-btn text-indigo-600 hover:text-indigo-700 font-medium text-sm inline-flex items-center gap-1 p-1 rounded hover:bg-indigo-50 transition-colors">
                   <i data-lucide="edit-2" class="w-4 h-4"></i>
                 </button>
               </td>
@@ -132,5 +132,186 @@
   </main>
 
 </x-Account-sidebar>
+
+<!-- Edit Class Fee Modal -->
+<div id="editClassFeeModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 overflow-y-auto hidden">
+  <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto" style="max-height: 90vh;">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+          <i data-lucide="edit-3" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold">Edit Fee Structure</h2>
+          <p class="text-sm text-white/80" id="editModalClassName">Class Name</p>
+        </div>
+      </div>
+      <button id="closeEditClassModal" type="button" class="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="px-6 py-6 flex-1 overflow-y-auto">
+      <form id="editClassFeeForm" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="editTuition" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+              <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-600"></i>
+              Tuition Fee
+            </label>
+            <input type="number" id="editTuition" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0">
+          </div>
+
+          <div>
+            <label for="editTransport" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+              <i data-lucide="bus" class="w-4 h-4 text-sky-600"></i>
+              Transport Fee
+            </label>
+            <input type="number" id="editTransport" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0">
+          </div>
+
+          <div>
+            <label for="editHostel" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+              <i data-lucide="home" class="w-4 h-4 text-amber-600"></i>
+              Hostel Fee
+            </label>
+            <input type="number" id="editHostel" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0">
+          </div>
+
+          <div>
+            <label for="editLibrary" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+              <i data-lucide="library" class="w-4 h-4 text-emerald-600"></i>
+              Library Fee
+            </label>
+            <input type="number" id="editLibrary" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0">
+          </div>
+
+          <div>
+            <label for="editExam" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+              <i data-lucide="file-check" class="w-4 h-4 text-rose-600"></i>
+              Exam Fee
+            </label>
+            <input type="number" id="editExam" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0">
+          </div>
+
+          <div class="flex items-end">
+            <div class="w-full">
+              <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                <i data-lucide="calculator" class="w-4 h-4 text-slate-600"></i>
+                Total Fee
+              </label>
+              <div class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-2.5 text-lg font-bold text-slate-900" id="editTotalDisplay">₹0</div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-4 border-t border-slate-200 flex justify-end gap-3 bg-slate-50">
+      <button id="cancelEditClassModal" type="button" class="px-5 py-2.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 font-medium transition-colors flex items-center gap-2">
+        <i data-lucide="x" class="w-4 h-4"></i>
+        Cancel
+      </button>
+      <button id="saveEditClassFee" type="button" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+        <i data-lucide="check" class="w-4 h-4"></i>
+        Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.lucide) lucide.createIcons();
+
+    const editClassModal = document.getElementById('editClassFeeModal');
+    const closeEditBtns = document.querySelectorAll('#closeEditClassModal, #cancelEditClassModal');
+    const editButtons = document.querySelectorAll('.edit-fee-btn');
+    let currentRow = null;
+
+    // Open edit modal
+    editButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        currentRow = this.closest('tr');
+        const className = currentRow.dataset.class;
+        const tuition = currentRow.dataset.tuition;
+        const transport = currentRow.dataset.transport;
+        const hostel = currentRow.dataset.hostel;
+        const library = currentRow.dataset.library;
+        const exam = currentRow.dataset.exam;
+
+        // Populate modal
+        document.getElementById('editModalClassName').textContent = className;
+        document.getElementById('editTuition').value = tuition;
+        document.getElementById('editTransport').value = transport;
+        document.getElementById('editHostel').value = hostel;
+        document.getElementById('editLibrary').value = library;
+        document.getElementById('editExam').value = exam;
+
+        calculateTotal();
+        editClassModal.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      });
+    });
+
+    // Close modal
+    closeEditBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        editClassModal.classList.add('hidden');
+        currentRow = null;
+      });
+    });
+
+    // Calculate total
+    function calculateTotal() {
+      const tuition = parseInt(document.getElementById('editTuition').value) || 0;
+      const transport = parseInt(document.getElementById('editTransport').value) || 0;
+      const hostel = parseInt(document.getElementById('editHostel').value) || 0;
+      const library = parseInt(document.getElementById('editLibrary').value) || 0;
+      const exam = parseInt(document.getElementById('editExam').value) || 0;
+      const total = tuition + transport + hostel + library + exam;
+      
+      document.getElementById('editTotalDisplay').textContent = '₹' + total.toLocaleString('en-IN');
+    }
+
+    // Add event listeners for auto-calculation
+    ['editTuition', 'editTransport', 'editHostel', 'editLibrary', 'editExam'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calculateTotal);
+    });
+
+    // Save changes
+    document.getElementById('saveEditClassFee').addEventListener('click', function() {
+      if (!currentRow) return;
+
+      // TODO: Submit form data to Laravel backend
+      // For now, just close the modal
+      // The actual save will be handled by Laravel
+      
+      console.log('Form data ready for Laravel:', {
+        class: currentRow.dataset.class,
+        tuition: document.getElementById('editTuition').value,
+        transport: document.getElementById('editTransport').value,
+        hostel: document.getElementById('editHostel').value,
+        library: document.getElementById('editLibrary').value,
+        exam: document.getElementById('editExam').value
+      });
+
+      // Close modal
+      editClassModal.classList.add('hidden');
+      currentRow = null;
+    });
+
+    // Close modal on outside click
+    editClassModal.addEventListener('click', function(e) {
+      if (e.target === editClassModal) {
+        editClassModal.classList.add('hidden');
+        currentRow = null;
+      }
+    });
+  });
+</script>
 
 @include('AccountantPanel.feeStructureModal')
