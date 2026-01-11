@@ -224,18 +224,35 @@
 </div>
 
 <script>
+  // Wait for the page to fully load before running JavaScript
   document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Lucide icons (convert icon tags to SVG)
     if (window.lucide) lucide.createIcons();
 
+    // ===== GET DOM ELEMENTS =====
+    // Modal element that shows the edit form
     const editClassModal = document.getElementById('editClassFeeModal');
-    const closeEditBtns = document.querySelectorAll('#closeEditClassModal, #cancelEditClassModal');
+    
+    // All buttons that can close the modal (X button and Cancel button)
+    const closeModalButtons = document.querySelectorAll('#closeEditClassModal, #cancelEditClassModal');
+    
+    // All edit buttons in the table (one for each class row)
     const editButtons = document.querySelectorAll('.edit-fee-btn');
+    
+    // Save button to submit changes
+    const saveButton = document.getElementById('saveEditClassFee');
+    
+    // Keep track of which table row is being edited
     let currentRow = null;
 
-    // Open edit modal
+    // ===== OPEN EDIT MODAL =====
+    // Add click event to each edit button in the table
     editButtons.forEach(btn => {
       btn.addEventListener('click', function() {
+        // Find the table row that contains this button
         currentRow = this.closest('tr');
+        
+        // Get all fee data from the row's data attributes
         const className = currentRow.dataset.class;
         const tuition = currentRow.dataset.tuition;
         const transport = currentRow.dataset.transport;
@@ -243,7 +260,7 @@
         const library = currentRow.dataset.library;
         const exam = currentRow.dataset.exam;
 
-        // Populate modal
+        // Fill the modal form with the current fee values
         document.getElementById('editModalClassName').textContent = className;
         document.getElementById('editTuition').value = tuition;
         document.getElementById('editTransport').value = transport;
@@ -251,45 +268,69 @@
         document.getElementById('editLibrary').value = library;
         document.getElementById('editExam').value = exam;
 
+        // Calculate and display the total fee
         calculateTotal();
+        
+        // Show the modal by removing the 'hidden' class
         editClassModal.classList.remove('hidden');
+        
+        // Re-initialize icons for newly visible modal
         if (window.lucide) lucide.createIcons();
       });
     });
 
-    // Close modal
-    closeEditBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
+    // ===== CLOSE MODAL =====
+    // Add click event to all close buttons (X and Cancel)
+    closeModalButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Hide the modal
         editClassModal.classList.add('hidden');
+        // Reset the current row tracker
         currentRow = null;
       });
     });
 
-    // Calculate total
+    // Close modal when clicking outside of it (on the dark overlay)
+    editClassModal.addEventListener('click', function(e) {
+      if (e.target === editClassModal) {
+        editClassModal.classList.add('hidden');
+        currentRow = null;
+      }
+    });
+
+    // ===== CALCULATE TOTAL FEE =====
     function calculateTotal() {
+      // Get values from all fee input fields
+      // parseInt() converts text to number, || 0 makes empty fields count as 0
       const tuition = parseInt(document.getElementById('editTuition').value) || 0;
       const transport = parseInt(document.getElementById('editTransport').value) || 0;
       const hostel = parseInt(document.getElementById('editHostel').value) || 0;
       const library = parseInt(document.getElementById('editLibrary').value) || 0;
       const exam = parseInt(document.getElementById('editExam').value) || 0;
+      
+      // Add all fees together
       const total = tuition + transport + hostel + library + exam;
       
+      // Display the total with Indian currency format (₹43,500)
       document.getElementById('editTotalDisplay').textContent = '₹' + total.toLocaleString('en-IN');
     }
 
-    // Add event listeners for auto-calculation
-    ['editTuition', 'editTransport', 'editHostel', 'editLibrary', 'editExam'].forEach(id => {
+    // ===== AUTO-CALCULATE ON INPUT CHANGE =====
+    // List of all fee input field IDs
+    const feeInputIds = ['editTuition', 'editTransport', 'editHostel', 'editLibrary', 'editExam'];
+    
+    // Add 'input' event listener to each field to recalculate total when user types
+    feeInputIds.forEach(id => {
       document.getElementById(id).addEventListener('input', calculateTotal);
     });
 
-    // Save changes
-    document.getElementById('saveEditClassFee').addEventListener('click', function() {
+    // ===== SAVE CHANGES =====
+    saveButton.addEventListener('click', function() {
+      // Safety check: make sure we have a row selected
       if (!currentRow) return;
 
-      // TODO: Submit form data to Laravel backend
-      // For now, just close the modal
-      // The actual save will be handled by Laravel
-      
+      // TODO: This will be connected to Laravel backend to save to database
+      // For now, we just log the data to console for debugging
       console.log('Form data ready for Laravel:', {
         class: currentRow.dataset.class,
         tuition: document.getElementById('editTuition').value,
@@ -299,17 +340,9 @@
         exam: document.getElementById('editExam').value
       });
 
-      // Close modal
+      // Close the modal after saving
       editClassModal.classList.add('hidden');
       currentRow = null;
-    });
-
-    // Close modal on outside click
-    editClassModal.addEventListener('click', function(e) {
-      if (e.target === editClassModal) {
-        editClassModal.classList.add('hidden');
-        currentRow = null;
-      }
     });
   });
 </script>

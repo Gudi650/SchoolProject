@@ -68,73 +68,100 @@
           </div>
         </div>
 
-        <!-- Fee Collection Table -->
+        <!-- Completed Fees Table -->
         <div class="mb-6">
-          <h2 class="text-lg font-semibold text-slate-900 mb-4">Recent Fee Collections</h2>
+          <h2 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-5 h-5 text-green-600"></i>
+            Completed Fees
+          </h2>
           <div class="bg-white rounded-xl border border-slate-200 overflow-x-auto relative z-0">
-              <table class="w-full text-left text-sm relative z-0">
-                <thead class="bg-slate-50">
-                  <tr>
-                    <th class="px-4 py-3 font-medium text-slate-700">Fee ID</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Student</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Class</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Fee Type</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Amount</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Paid</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Pending</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Status</th>
-                    <th class="px-4 py-3 font-medium text-slate-700">Date</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y">
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3">FEE001</td>
-                    <td class="px-4 py-3">Rahul Sharma</td>
-                    <td class="px-4 py-3">10-A</td>
-                    <td class="px-4 py-3">Tuition</td>
-                    <td class="px-4 py-3">₹15,000</td>
-                    <td class="px-4 py-3 text-green-600 font-medium">₹15,000</td>
-                    <td class="px-4 py-3">-</td>
-                    <td class="px-4 py-3"><span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Paid</span></td>
-                    <td class="px-4 py-3">2024-01-15</td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3">FEE002</td>
-                    <td class="px-4 py-3">Priya Patel</td>
-                    <td class="px-4 py-3">9-B</td>
-                    <td class="px-4 py-3">Tuition + Transport</td>
-                    <td class="px-4 py-3">₹20,000</td>
-                    <td class="px-4 py-3 text-green-600 font-medium">₹10,000</td>
-                    <td class="px-4 py-3 text-red-600 font-medium">₹10,000</td>
-                    <td class="px-4 py-3"><span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full">Partial</span></td>
-                    <td class="px-4 py-3">2024-01-14</td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3">FEE003</td>
-                    <td class="px-4 py-3">Amit Kumar</td>
-                    <td class="px-4 py-3">10-A</td>
-                    <td class="px-4 py-3">Tuition</td>
-                    <td class="px-4 py-3">₹15,000</td>
-                    <td class="px-4 py-3">₹0</td>
-                    <td class="px-4 py-3 text-red-600 font-medium">₹15,000</td>
-                    <td class="px-4 py-3"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs rounded-full">Pending</span></td>
-                    <td class="px-4 py-3">2024-01-10</td>
-                  </tr>
-                  <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3">FEE004</td>
-                    <td class="px-4 py-3">Sneha Reddy</td>
-                    <td class="px-4 py-3">8-C</td>
-                    <td class="px-4 py-3">Hostel + Tuition</td>
-                    <td class="px-4 py-3">₹35,000</td>
-                    <td class="px-4 py-3 text-green-600 font-medium">₹35,000</td>
-                    <td class="px-4 py-3">-</td>
-                    <td class="px-4 py-3"><span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Paid</span></td>
-                    <td class="px-4 py-3">2024-01-12</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <table class="w-full text-left text-sm relative z-0">
+              <thead class="bg-slate-50">
+                <tr>
+                  <th class="px-4 py-3 font-medium text-slate-700">Fee ID</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Student</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Class</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Fee Type</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Amount</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Paid</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Status</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Date</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y">
+                <tr class="hover:bg-slate-50">
+                  <td class="px-4 py-3">FEE001</td>
+                  <td class="px-4 py-3">Rahul Sharma</td>
+                  <td class="px-4 py-3">10-A</td>
+                  <td class="px-4 py-3">Tuition</td>
+                  <td class="px-4 py-3">₹15,000</td>
+                  <td class="px-4 py-3 text-green-600 font-medium">₹15,000</td>
+                  <td class="px-4 py-3"><span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Paid</span></td>
+                  <td class="px-4 py-3">2024-01-15</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-4 py-3">FEE004</td>
+                  <td class="px-4 py-3">Sneha Reddy</td>
+                  <td class="px-4 py-3">8-C</td>
+                  <td class="px-4 py-3">Hostel + Tuition</td>
+                  <td class="px-4 py-3">₹35,000</td>
+                  <td class="px-4 py-3 text-green-600 font-medium">₹35,000</td>
+                  <td class="px-4 py-3"><span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Paid</span></td>
+                  <td class="px-4 py-3">2024-01-12</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+        </div>
+
+        <!-- Incomplete Fees Table -->
+        <div class="mb-6">
+          <h2 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <i data-lucide="alert-circle" class="w-5 h-5 text-amber-600"></i>
+            Incomplete Fees
+          </h2>
+          <div class="bg-white rounded-xl border border-slate-200 overflow-x-auto relative z-0">
+            <table class="w-full text-left text-sm relative z-0">
+              <thead class="bg-slate-50">
+                <tr>
+                  <th class="px-4 py-3 font-medium text-slate-700">Fee ID</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Student</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Class</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Fee Type</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Amount</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Paid</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Pending</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Status</th>
+                  <th class="px-4 py-3 font-medium text-slate-700">Date</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y">
+                <tr class="hover:bg-slate-50">
+                  <td class="px-4 py-3">FEE002</td>
+                  <td class="px-4 py-3">Priya Patel</td>
+                  <td class="px-4 py-3">9-B</td>
+                  <td class="px-4 py-3">Tuition + Transport</td>
+                  <td class="px-4 py-3">₹20,000</td>
+                  <td class="px-4 py-3 text-green-600 font-medium">₹10,000</td>
+                  <td class="px-4 py-3 text-red-600 font-medium">₹10,000</td>
+                  <td class="px-4 py-3"><span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full">Partial</span></td>
+                  <td class="px-4 py-3">2024-01-14</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-4 py-3">FEE003</td>
+                  <td class="px-4 py-3">Amit Kumar</td>
+                  <td class="px-4 py-3">10-A</td>
+                  <td class="px-4 py-3">Tuition</td>
+                  <td class="px-4 py-3">₹15,000</td>
+                  <td class="px-4 py-3">₹0</td>
+                  <td class="px-4 py-3 text-red-600 font-medium">₹15,000</td>
+                  <td class="px-4 py-3"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs rounded-full">Pending</span></td>
+                  <td class="px-4 py-3">2024-01-10</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
       </main>
       
