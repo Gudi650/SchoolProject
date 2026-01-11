@@ -91,9 +91,9 @@
                 </div>
               </div>
             </div>
-!-- Notifications Section -->
-            <div id="notifications" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6
-            <div class="bg-white rounded-xl p-6 border border-slate-200">
+
+            <!-- Notifications Section -->
+            <div id="notifications" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6">
               <h3 class="text-lg font-semibold text-slate-900 mb-4">Notification Preferences</h3>
               <div class="space-y-3">
                 <label class="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg cursor-pointer">
@@ -118,9 +118,9 @@
                 </label>
               </div>
             </div>
-!-- Security Section -->
-            <div id="security" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6
-            <div class="bg-white rounded-xl p-6 border border-slate-200">
+            
+            <!-- Security Section -->
+            <div id="security" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6">
               <h3 class="text-lg font-semibold text-slate-900 mb-4">Security</h3>
               <div class="space-y-4">
                 <button class="w-full px-4 py-3 text-left border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
@@ -143,6 +143,7 @@
                   </div>
                 </button>
               </div>
+            </div>
 
             <!-- Data & Backup Section -->
             <div id="data-backup" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6">
