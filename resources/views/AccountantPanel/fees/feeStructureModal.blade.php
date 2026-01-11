@@ -11,7 +11,10 @@
 </style>
 
 <div id="feeStructureModal" class="fixed inset-0 z-50 items-center justify-center bg-black/50" style="display: none;">
-  <div class="bg-white w-full max-w-4xl mx-4 rounded-lg shadow-2xl overflow-hidden flex flex-col" style="max-height: 90vh;">
+  <form id="feeStructureForm" 
+    method="POST" 
+    action="" class="bg-white w-full max-w-4xl mx-4 rounded-lg shadow-2xl overflow-hidden flex flex-col" style="max-height: 90vh;">
+    @csrf
     <!-- Header -->
     <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
       <h2 class="text-lg font-semibold tracking-wide flex items-center gap-2">
@@ -30,7 +33,7 @@
         Currency
       </label>
       <div class="flex gap-3 items-center">
-        <select id="currencySelect" class="border rounded px-3 py-2 w-56 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+        <select id="currencySelect" name="currency" class="border rounded px-3 py-2 w-56 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
           <option value="TSH" selected>TSh (TZS)</option>
           <option value="USD">USD ($)</option>
           <option value="KSH">KSh (KES)</option>
@@ -39,7 +42,7 @@
           <option value="ZMW">ZMW (K)</option>
           <option value="OTHER">Other…</option>
         </select>
-        <input id="customCurrencyLabel" type="text" class="border rounded px-3 py-2 w-40 hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Symbol or code" />
+        <input id="customCurrencyLabel" name="currency_custom_label" type="text" class="border rounded px-3 py-2 w-40 hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Symbol or code" />
       </div>
     </div>
 
@@ -55,6 +58,7 @@
           For Specific Class
         </button>
       </div>
+      <input type="hidden" name="scope" id="scopeInput" value="all" />
     </div>
 
     <!-- Body -->
@@ -81,6 +85,72 @@
             </button>
           </div>
         </div>
+        <!-- Hardcoded preset forms (All Classes) -->
+        <div id="allPresetForms" class="space-y-2 mt-2">
+          <div id="preset-all-tuition" class="border rounded p-2 hidden">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium">Tuition</span>
+              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="all" data-name="Tuition"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+            </div>
+            <div class="grid grid-cols-12 gap-2 mt-2">
+              <input name="all_component_names[]" value="Tuition" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
+              <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
+              <div class="col-span-1"></div>
+            </div>
+          </div>
+          <div id="preset-all-transport" class="border rounded p-2 hidden">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium">Transport</span>
+              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="all" data-name="Transport"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+            </div>
+            <div class="grid grid-cols-12 gap-2 mt-2">
+              <input name="all_component_names[]" value="Transport" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
+              <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
+              <div class="col-span-1"></div>
+            </div>
+          </div>
+          <div id="preset-all-hostel" class="border rounded p-2 hidden">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium">Hostel</span>
+              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="all" data-name="Hostel"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+            </div>
+            <div class="grid grid-cols-12 gap-2 mt-2">
+              <input name="all_component_names[]" value="Hostel" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
+              <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
+              <div class="col-span-1"></div>
+            </div>
+          </div>
+          <div id="preset-all-library" class="border rounded p-2 hidden">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium">Library</span>
+              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="all" data-name="Library"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+            </div>
+            <div class="grid grid-cols-12 gap-2 mt-2">
+              <input name="all_component_names[]" value="Library" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
+              <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
+              <div class="col-span-1"></div>
+            </div>
+          </div>
+          <div id="preset-all-exam" class="border rounded p-2 hidden">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium">Exam</span>
+              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="all" data-name="Exam"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+            </div>
+            <div class="grid grid-cols-12 gap-2 mt-2">
+              <input name="all_component_names[]" value="Exam" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
+              <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
+              <div class="col-span-1"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Custom component template (All Classes) -->
+        <div id="allCustomTemplate" class="hidden border rounded p-2">
+          <div class="grid grid-cols-12 gap-2">
+            <input name="all_component_names[]" type="text" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Component name" />
+            <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+            <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-custom"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          </div>
+        </div>
         <div id="allComponents" class="space-y-2"></div>
         <div class="flex items-center gap-2">
           <button id="addAllComponent" type="button" class="px-3 py-2 rounded text-sm border-2 border-dashed border-slate-300 hover:border-indigo-400 text-slate-700 hover:text-indigo-700 bg-white flex items-center gap-2">
@@ -99,7 +169,7 @@
         <div class="space-y-3">
           <div>
             <label class="block text-sm font-medium mb-1">School ID (optional)</label>
-            <input id="specificSchoolId" type="text" class="border rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., SCH-001" />
+            <input id="specificSchoolId" name="school_id" type="text" class="border rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., SCH-001" />
           </div>
           <div class="relative">
             <label class="block text-sm font-medium mb-1 flex items-center gap-2">
@@ -112,55 +182,55 @@
             </div>
             <div id="classDropdownMenu" class="hidden absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Nursery"> Nursery
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Nursery"> Nursery
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 1"> Grade 1
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 1"> Grade 1
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 2"> Grade 2
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 2"> Grade 2
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 3"> Grade 3
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 3"> Grade 3
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 4"> Grade 4
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 4"> Grade 4
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 5"> Grade 5
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 5"> Grade 5
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 6"> Grade 6
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 6"> Grade 6
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 7"> Grade 7
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 7"> Grade 7
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 8"> Grade 8
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 8"> Grade 8
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 9"> Grade 9
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 9"> Grade 9
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 10"> Grade 10
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 10"> Grade 10
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 11"> Grade 11
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 11"> Grade 11
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Grade 12"> Grade 12
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 12"> Grade 12
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Form 1"> Form 1
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Form 1"> Form 1
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Form 2"> Form 2
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Form 2"> Form 2
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Form 3"> Form 3
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Form 3"> Form 3
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" class="class-checkbox mr-2 rounded" value="Form 4"> Form 4
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Form 4"> Form 4
               </label>
             </div>
           </div>
@@ -194,6 +264,72 @@
             </button>
           </div>
         </div>
+        <!-- Hardcoded preset forms (Specific Class) -->
+        <div id="specificPresetForms" class="space-y-2 mt-2">
+          <div id="preset-specific-tuition" class="border rounded p-2 hidden">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium">Tuition</span>
+              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="specific" data-name="Tuition"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+            </div>
+            <div class="grid grid-cols-12 gap-2 mt-2">
+              <input name="specific_component_names[]" value="Tuition" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
+              <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
+              <div class="col-span-1"></div>
+            </div>
+          </div>
+          <div id="preset-specific-transport" class="border rounded p-2 hidden">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium">Transport</span>
+              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="specific" data-name="Transport"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+            </div>
+            <div class="grid grid-cols-12 gap-2 mt-2">
+              <input name="specific_component_names[]" value="Transport" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
+              <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
+              <div class="col-span-1"></div>
+            </div>
+          </div>
+          <div id="preset-specific-hostel" class="border rounded p-2 hidden">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium">Hostel</span>
+              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="specific" data-name="Hostel"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+            </div>
+            <div class="grid grid-cols-12 gap-2 mt-2">
+              <input name="specific_component_names[]" value="Hostel" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
+              <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
+              <div class="col-span-1"></div>
+            </div>
+          </div>
+          <div id="preset-specific-library" class="border rounded p-2 hidden">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium">Library</span>
+              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="specific" data-name="Library"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+            </div>
+            <div class="grid grid-cols-12 gap-2 mt-2">
+              <input name="specific_component_names[]" value="Library" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
+              <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
+              <div class="col-span-1"></div>
+            </div>
+          </div>
+          <div id="preset-specific-exam" class="border rounded p-2 hidden">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium">Exam</span>
+              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="specific" data-name="Exam"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+            </div>
+            <div class="grid grid-cols-12 gap-2 mt-2">
+              <input name="specific_component_names[]" value="Exam" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
+              <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
+              <div class="col-span-1"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Custom component template (Specific Class) -->
+        <div id="specificCustomTemplate" class="hidden border rounded p-2">
+          <div class="grid grid-cols-12 gap-2">
+            <input name="specific_component_names[]" type="text" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Component name" />
+            <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+            <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-custom"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          </div>
+        </div>
         <div id="specificComponents" class="space-y-2"></div>
         <div class="flex items-center gap-2">
           <button id="addSpecificComponent" type="button" class="px-3 py-2 rounded text-sm border-2 border-dashed border-slate-300 hover:border-indigo-400 text-slate-700 hover:text-indigo-700 bg-white flex items-center gap-2">
@@ -215,7 +351,7 @@
         Close
       </button>
     </div>
-  </div>
+  </form>
 
   <!-- Full-screen Preview Overlay -->
   <div id="feePreviewPanel" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60">
@@ -235,7 +371,7 @@
           <i data-lucide="arrow-left" class="w-4 h-4"></i>
           Back to Edit
         </button>
-        <button id="confirmSaveBtn" class="px-4 py-2 rounded bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow flex items-center gap-2">
+        <button id="confirmSaveBtn" type="submit" form="feeStructureForm" class="px-4 py-2 rounded bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow flex items-center gap-2">
           <i data-lucide="check-circle" class="w-4 h-4"></i>
           Confirm & Save
         </button>
@@ -258,6 +394,7 @@
 
     const currencySelect = document.getElementById('currencySelect');
     const customCurrencyLabel = document.getElementById('customCurrencyLabel');
+    const scopeInput = document.getElementById('scopeInput');
 
     const allComponents = document.getElementById('allComponents');
     const specificComponents = document.getElementById('specificComponents');
@@ -281,6 +418,37 @@
     const classCheckboxes = document.querySelectorAll('.class-checkbox');
 
     // --- Helpers ---
+        function slugify(name) {
+          return String(name || '').toLowerCase().replace(/\s+/g, '-');
+        }
+
+        function presetId(scope, name) {
+          return `preset-${scope}-${slugify(name)}`;
+        }
+
+        function showPreset(scope, name, amount) {
+          const id = presetId(scope, name);
+          const block = document.getElementById(id);
+          if (!block) return;
+          block.classList.remove('hidden');
+          const inputs = block.querySelectorAll('input');
+          inputs.forEach(inp => inp.disabled = false);
+          const amt = block.querySelector('input[type="number"]');
+          if (amt && amount !== undefined) {
+            const val = parseFloat(String(amount));
+            if (!isNaN(val)) amt.value = val;
+          }
+          renderIcons();
+        }
+
+        function hidePreset(scope, name) {
+          const id = presetId(scope, name);
+          const block = document.getElementById(id);
+          if (!block) return;
+          block.classList.add('hidden');
+          const inputs = block.querySelectorAll('input');
+          inputs.forEach(inp => inp.disabled = true);
+        }
     // Safe icon renderer for Lucide (if loaded in layout)
     function renderIcons() {
       try {
@@ -314,6 +482,43 @@
     function show(el) { el.style.display = 'flex'; }
     function hide(el) { el.style.display = 'none'; }
 
+    function addRowFromTemplate(scope, defaultName = '', defaultAmount = '') {
+      const templateId = scope === 'specific' ? 'specificCustomTemplate' : 'allCustomTemplate';
+      const container = scope === 'specific' ? specificComponents : allComponents;
+      const tpl = document.getElementById(templateId);
+      if (!tpl) return;
+      const clone = tpl.cloneNode(true);
+      clone.id = '';
+      clone.classList.remove('hidden');
+      const inputs = clone.querySelectorAll('input');
+      const nameInput = inputs[0];
+      const amountInput = inputs[1];
+      if (nameInput && defaultName) nameInput.value = defaultName;
+      if (amountInput && defaultAmount !== '') {
+        const val = parseFloat(String(defaultAmount));
+        if (!isNaN(val)) amountInput.value = val;
+      }
+      const removeBtn = clone.querySelector('.remove-custom');
+      if (removeBtn) removeBtn.addEventListener('click', () => clone.remove());
+      container.appendChild(clone);
+      renderIcons();
+    }
+
+    function collectEnabledItems(scope) {
+      const nameSel = scope === 'specific' ? 'input[name="specific_component_names[]"]:not(:disabled)' : 'input[name="all_component_names[]"]:not(:disabled)';
+      const amtSel = scope === 'specific' ? 'input[name="specific_component_amounts[]"]:not(:disabled)' : 'input[name="all_component_amounts[]"]:not(:disabled)';
+      const names = Array.from(document.querySelectorAll(nameSel));
+      const amts = Array.from(document.querySelectorAll(amtSel));
+      const len = Math.max(names.length, amts.length);
+      const items = [];
+      for (let i = 0; i < len; i++) {
+        const name = (names[i]?.value || '').trim();
+        const amount = parseFloat(amts[i]?.value || '0') || 0;
+        if (name) items.push({ name, amount });
+      }
+      return items;
+    }
+
     // Toggle the active tab
     function switchTab(tab) {
       if (tab === 'all') {
@@ -321,21 +526,25 @@
         tabSpecific.classList.add('hidden');
         tabAllBtn.className = 'px-3 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white shadow';
         tabSpecificBtn.className = 'px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-white';
+        if (scopeInput) scopeInput.value = 'all';
       } else {
         tabAll.classList.add('hidden');
         tabSpecific.classList.remove('hidden');
         tabSpecificBtn.className = 'px-3 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white shadow';
         tabAllBtn.className = 'px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-white';
+        if (scopeInput) scopeInput.value = 'specific';
       }
     }
 
     // Create a new fee component row
-    function makeRow(defaultName = '', defaultAmount = '') {
+    function makeRow(type, defaultName = '', defaultAmount = '') {
       const row = document.createElement('div');
       row.className = 'grid grid-cols-12 gap-2';
+      const nameField = type === 'specific' ? 'specific_component_names[]' : 'all_component_names[]';
+      const amountField = type === 'specific' ? 'specific_component_amounts[]' : 'all_component_amounts[]';
       row.innerHTML = `
-        <input type="text" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Component name" value="${defaultName}" />
-        <input type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" value="${defaultAmount}" />
+        <input name="${nameField}" type="text" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Component name" value="${defaultName}" />
+        <input name="${amountField}" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" value="${defaultAmount}" />
         <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
       `;
       const removeBtn = row.querySelector('button');
@@ -446,21 +655,21 @@
     tabSpecificBtn.addEventListener('click', () => switchTab('specific'));
 
     // --- Add component rows ---
-    addAllComponent.addEventListener('click', () => allComponents.appendChild(makeRow()));
-    addSpecificComponent.addEventListener('click', () => specificComponents.appendChild(makeRow()));
+    addAllComponent.addEventListener('click', () => addRowFromTemplate('all'));
+    addSpecificComponent.addEventListener('click', () => addRowFromTemplate('specific'));
 
     // --- Copy "All Classes" rows into "Specific Class" ---
     const loadAllClassesStructureBtn = document.getElementById('loadAllClassesStructure');
     if (loadAllClassesStructureBtn) {
       loadAllClassesStructureBtn.addEventListener('click', () => {
-        const allClassItems = collectRows(allComponents);
+        const allClassItems = collectEnabledItems('all');
         if (allClassItems.length === 0) {
           alert('Please add fee components in "All Classes" tab first.');
           return;
         }
         specificComponents.innerHTML = '';
         allClassItems.forEach(item => {
-          specificComponents.appendChild(makeRow(item.name, item.amount));
+          addRowFromTemplate('specific', item.name, item.amount);
         });
         renderIcons();
         alert(`Loaded ${allClassItems.length} component(s) from All Classes structure. You can now edit or add adjustments.`);
@@ -470,18 +679,24 @@
     // --- Preset buttons: drop in a ready-made row ---
     Array.from(document.querySelectorAll('.presetBtn')).forEach(btn => {
       btn.addEventListener('click', () => {
-        allComponents.appendChild(makeRow(btn.dataset.name || '', btn.dataset.amount || ''));
+        showPreset('all', btn.dataset.name || '', btn.dataset.amount || undefined);
       });
     });
     Array.from(document.querySelectorAll('.presetSpecificBtn')).forEach(btn => {
       btn.addEventListener('click', () => {
-        specificComponents.appendChild(makeRow(btn.dataset.name || '', btn.dataset.amount || ''));
+        showPreset('specific', btn.dataset.name || '', btn.dataset.amount || undefined);
+      });
+    });
+
+    Array.from(document.querySelectorAll('.remove-preset')).forEach(btn => {
+      btn.addEventListener('click', () => {
+        hidePreset(btn.dataset.scope, btn.dataset.name);
       });
     });
 
     // --- Preview buttons ---
     previewAllBtn.addEventListener('click', () => {
-      const items = collectRows(allComponents);
+      const items = collectEnabledItems('all');
       const html = renderPreview('All Classes Fee Structure', '', items);
       openPreview(html);
     });
@@ -492,7 +707,7 @@
         alert('Please select at least one class');
         return;
       }
-      const items = collectRows(specificComponents);
+      const items = collectEnabledItems('specific');
       const classesStr = selectedClasses.join(', ');
       const meta = `${specificSchoolId.value ? 'School: ' + specificSchoolId.value + ' • ' : ''}Classes: ${classesStr}`;
       const html = renderPreview('Specific Class Fee Structure', meta, items);
@@ -502,20 +717,7 @@
     // --- Preview panel controls ---
     [closePreviewPanel, backToEditBtn].forEach(btn => btn && btn.addEventListener('click', closePreview));
 
-    // Demo save/reset
-    confirmSaveBtn.addEventListener('click', () => {
-      alert('Fee structure saved (demo). Wire to backend to persist.');
-      closePreview();
-      hide(modal);
-      allComponents.innerHTML = '';
-      specificComponents.innerHTML = '';
-      specificSchoolId.value = '';
-      classCheckboxes.forEach(cb => cb.checked = false);
-      updateClassDisplay();
-      currencySelect.value = 'TSH';
-      customCurrencyLabel.value = '';
-      customCurrencyLabel.classList.add('hidden');
-    });
+    // Saving is now handled by regular form submission via the Confirm & Save button.
 
     // Initial icon render
     renderIcons();

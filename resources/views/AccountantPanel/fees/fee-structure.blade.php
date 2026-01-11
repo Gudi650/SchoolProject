@@ -347,4 +347,4 @@
   });
 </script>
 
-@include('AccountantPanel.feeStructureModal')
+@include('AccountantPanel.fees.feeStructureModal')
