@@ -123,7 +123,7 @@
             <div id="security" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6">
               <h3 class="text-lg font-semibold text-slate-900 mb-4">Security</h3>
               <div class="space-y-4">
-                <button class="w-full px-4 py-3 text-left border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+                <button id="togglePasswordForm" class="w-full px-4 py-3 text-left border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
                   <div class="flex items-center justify-between">
                     <div>
                       <p class="font-medium text-slate-900">Change Password</p>
@@ -132,6 +132,35 @@
                     <i data-lucide="lock" class="w-5 h-5 text-slate-400"></i>
                   </div>
                 </button>
+
+                <!-- Change Password Form (Initially Hidden) -->
+                <div id="passwordChangeForm" class="hidden p-4 border border-indigo-200 rounded-lg bg-indigo-50/30">
+                  <h4 class="font-semibold text-slate-900 mb-4">Change Your Password</h4>
+                  <form class="space-y-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-2">Current Password</label>
+                      <input type="password" placeholder="Enter current password" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-2">New Password</label>
+                      <input type="password" placeholder="Enter new password" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                      <p class="text-xs text-slate-500 mt-1">Must be at least 8 characters with uppercase, lowercase, and numbers</p>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-2">Confirm New Password</label>
+                      <input type="password" placeholder="Re-enter new password" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                      <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                        <i data-lucide="check" class="w-4 h-4"></i>
+                        Update Password
+                      </button>
+                      <button type="button" id="cancelPasswordChange" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition-colors">
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
 
                 <button class="w-full px-4 py-3 text-left border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
                   <div class="flex items-center justify-between">
@@ -340,6 +369,27 @@
         if (window.lucide) lucide.createIcons();
       });
     });
+
+    // ===== PASSWORD CHANGE FORM TOGGLE =====
+    const togglePasswordBtn = document.getElementById('togglePasswordForm');
+    const passwordForm = document.getElementById('passwordChangeForm');
+    const cancelPasswordBtn = document.getElementById('cancelPasswordChange');
+
+    // Show password form when clicking "Change Password" button
+    if (togglePasswordBtn && passwordForm) {
+      togglePasswordBtn.addEventListener('click', function() {
+        passwordForm.classList.toggle('hidden');
+        // Re-initialize icons after showing form
+        if (window.lucide) lucide.createIcons();
+      });
+    }
+
+    // Hide password form when clicking "Cancel" button
+    if (cancelPasswordBtn && passwordForm) {
+      cancelPasswordBtn.addEventListener('click', function() {
+        passwordForm.classList.add('hidden');
+      });
+    }
   });
 </script>
 
