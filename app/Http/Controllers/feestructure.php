@@ -19,6 +19,9 @@ class feestructure extends Controller
     public function savefeestructure()
     {
 
+        //dump
+        dd('I am in save fee structure');
+
         return back()->with('success', 'Fee Structure saved successfully');
 
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\AssignClasses;
 use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\feestructure;
 use App\Http\Controllers\GeneratedTimetableController;
 use App\Http\Controllers\GenerateExamController;
 use App\Http\Controllers\ParentregistrationController;
@@ -330,10 +331,23 @@ Route::get('/fee-management', function () {
     return view('AccountantPanel.feeManagement');
 })->name('accounting.feeManagement');
 
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+
 //route for fee-structure
-Route::get('/fee-structure', function () {
-    return view('AccountantPanel.fees.fee-structure');
-})->name('accounting.feeStructure');
+
+Route::get('/fee-structure' , 
+[feestructure::class, 'viewFeeStructure'])
+->name('accounting.feeStructure');
+
+//route to save fee structure
+Route::post('/fee-structure-save' , 
+[feestructure::class, 'savefeestructure'])
+->name('accounting.feeStructure.save');
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
 //route for income management
 Route::get('/income-management', function () {

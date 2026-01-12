@@ -13,7 +13,8 @@
 <div id="feeStructureModal" class="fixed inset-0 z-50 items-center justify-center bg-black/50" style="display: none;">
   <form id="feeStructureForm" 
     method="POST" 
-    action="" class="bg-white w-full max-w-4xl mx-4 rounded-lg shadow-2xl overflow-hidden flex flex-col" style="max-height: 90vh;">
+    action="{{ route('accounting.feeStructure.save') }}" 
+    class="bg-white w-full max-w-4xl mx-4 rounded-lg shadow-2xl overflow-hidden flex flex-col" style="max-height: 90vh;">
     @csrf
     <!-- Header -->
     <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
@@ -85,70 +86,47 @@
             </button>
           </div>
         </div>
-        <!-- Hardcoded preset forms (All Classes) -->
-        <div id="allPresetForms" class="space-y-2 mt-2">
-          <div id="preset-all-tuition" class="border rounded p-2 hidden">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium">Tuition</span>
-              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="all" data-name="Tuition"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
-            </div>
-            <div class="grid grid-cols-12 gap-2 mt-2">
-              <input name="all_component_names[]" value="Tuition" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
-              <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
-              <div class="col-span-1"></div>
+        <!-- Preset Forms (All Classes) -->
+        <div id="allPresetForms" class="space-y-2">
+          <!-- Tuition -->
+          <div id="preset-all-tuition" class="preset-form hidden">
+            <div class="grid grid-cols-12 gap-2">
+              <input data-name-field="all_component_names[]" type="text" value="Tuition" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input data-name-field="all_component_amounts[]" type="number" min="0" step="0.01" name="tuition_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-all-tuition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
-          <div id="preset-all-transport" class="border rounded p-2 hidden">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium">Transport</span>
-              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="all" data-name="Transport"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
-            </div>
-            <div class="grid grid-cols-12 gap-2 mt-2">
-              <input name="all_component_names[]" value="Transport" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
-              <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
-              <div class="col-span-1"></div>
+          <!-- Transport -->
+          <div id="preset-all-transport" class="preset-form hidden">
+            <div class="grid grid-cols-12 gap-2">
+              <input data-name-field="all_component_names[]" type="text" value="Transport" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input data-name-field="all_component_amounts[]" type="number" min="0" step="0.01" name="transport_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-all-transport"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
-          <div id="preset-all-hostel" class="border rounded p-2 hidden">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium">Hostel</span>
-              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="all" data-name="Hostel"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
-            </div>
-            <div class="grid grid-cols-12 gap-2 mt-2">
-              <input name="all_component_names[]" value="Hostel" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
-              <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
-              <div class="col-span-1"></div>
+          <!-- Hostel -->
+          <div id="preset-all-hostel" class="preset-form hidden">
+            <div class="grid grid-cols-12 gap-2">
+              <input data-name-field="all_component_names[]" type="text" value="Hostel" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input data-name-field="all_component_amounts[]" type="number" min="0" step="0.01" name="hostel_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-all-hostel"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
-          <div id="preset-all-library" class="border rounded p-2 hidden">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium">Library</span>
-              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="all" data-name="Library"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
-            </div>
-            <div class="grid grid-cols-12 gap-2 mt-2">
-              <input name="all_component_names[]" value="Library" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
-              <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
-              <div class="col-span-1"></div>
+          <!-- Library -->
+          <div id="preset-all-library" class="preset-form hidden">
+            <div class="grid grid-cols-12 gap-2">
+              <input data-name-field="all_component_names[]" type="text" value="Library" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input data-name-field="all_component_amounts[]" type="number" min="0" step="0.01" name="library_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-all-library"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
-          <div id="preset-all-exam" class="border rounded p-2 hidden">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium">Exam</span>
-              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="all" data-name="Exam"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+          <!-- Exam -->
+          <div id="preset-all-exam" class="preset-form hidden">
+            <div class="grid grid-cols-12 gap-2">
+              <input data-name-field="all_component_names[]" type="text" value="Exam" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input data-name-field="all_component_amounts[]" type="number" min="0" step="0.01" name = "exam_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-all-exam"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
-            <div class="grid grid-cols-12 gap-2 mt-2">
-              <input name="all_component_names[]" value="Exam" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
-              <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
-              <div class="col-span-1"></div>
-            </div>
-          </div>
-        </div>
-        <!-- Custom component template (All Classes) -->
-        <div id="allCustomTemplate" class="hidden border rounded p-2">
-          <div class="grid grid-cols-12 gap-2">
-            <input name="all_component_names[]" type="text" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Component name" />
-            <input name="all_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
-            <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-custom"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
           </div>
         </div>
         <div id="allComponents" class="space-y-2"></div>
@@ -264,70 +242,47 @@
             </button>
           </div>
         </div>
-        <!-- Hardcoded preset forms (Specific Class) -->
-        <div id="specificPresetForms" class="space-y-2 mt-2">
-          <div id="preset-specific-tuition" class="border rounded p-2 hidden">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium">Tuition</span>
-              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="specific" data-name="Tuition"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
-            </div>
-            <div class="grid grid-cols-12 gap-2 mt-2">
-              <input name="specific_component_names[]" value="Tuition" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
-              <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
-              <div class="col-span-1"></div>
+        <!-- Preset Forms (Specific Class) -->
+        <div id="specificPresetForms" class="space-y-2">
+          <!-- Tuition -->
+          <div id="preset-specific-tuition" class="preset-form hidden">
+            <div class="grid grid-cols-12 gap-2">
+              <input data-name-field="specific_component_names[]" type="text" value="Tuition" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input data-name-field="specific_component_amounts[]" type="number" min="0" step="0.01" name= "tuition_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-specific-tuition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
-          <div id="preset-specific-transport" class="border rounded p-2 hidden">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium">Transport</span>
-              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="specific" data-name="Transport"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
-            </div>
-            <div class="grid grid-cols-12 gap-2 mt-2">
-              <input name="specific_component_names[]" value="Transport" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
-              <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
-              <div class="col-span-1"></div>
+          <!-- Transport -->
+          <div id="preset-specific-transport" class="preset-form hidden">
+            <div class="grid grid-cols-12 gap-2">
+              <input data-name-field="specific_component_names[]" type="text" value="Transport" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input data-name-field="specific_component_amounts[]" type="number" min="0" step="0.01" name= "transport_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-specific-transport"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
-          <div id="preset-specific-hostel" class="border rounded p-2 hidden">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium">Hostel</span>
-              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="specific" data-name="Hostel"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
-            </div>
-            <div class="grid grid-cols-12 gap-2 mt-2">
-              <input name="specific_component_names[]" value="Hostel" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
-              <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
-              <div class="col-span-1"></div>
+          <!-- Hostel -->
+          <div id="preset-specific-hostel" class="preset-form hidden">
+            <div class="grid grid-cols-12 gap-2">
+              <input data-name-field="specific_component_names[]" type="text" value="Hostel" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input data-name-field="specific_component_amounts[]" type="number" min="0" step="0.01" name="hostel_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-specific-hostel"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
-          <div id="preset-specific-library" class="border rounded p-2 hidden">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium">Library</span>
-              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="specific" data-name="Library"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
-            </div>
-            <div class="grid grid-cols-12 gap-2 mt-2">
-              <input name="specific_component_names[]" value="Library" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
-              <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
-              <div class="col-span-1"></div>
+          <!-- Library -->
+          <div id="preset-specific-library" class="preset-form hidden">
+            <div class="grid grid-cols-12 gap-2">
+              <input data-name-field="specific_component_names[]" type="text" value="Library" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input data-name-field="specific_component_amounts[]" type="number" min="0" step="0.01" name = "library_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-specific-library"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
-          <div id="preset-specific-exam" class="border rounded p-2 hidden">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-medium">Exam</span>
-              <button type="button" class="ml-auto text-rose-700 hover:text-rose-800 remove-preset" data-scope="specific" data-name="Exam"><i data-lucide="trash-2" class="w-4 h-4"></i> Remove</button>
+          <!-- Exam -->
+          <div id="preset-specific-exam" class="preset-form hidden">
+            <div class="grid grid-cols-12 gap-2">
+              <input data-name-field="specific_component_names[]" type="text" value="Exam" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input data-name-field="specific_component_amounts[]" type="number" min="0" step="0.01" name="exam_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-specific-exam"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
-            <div class="grid grid-cols-12 gap-2 mt-2">
-              <input name="specific_component_names[]" value="Exam" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly disabled />
-              <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" disabled />
-              <div class="col-span-1"></div>
-            </div>
-          </div>
-        </div>
-        <!-- Custom component template (Specific Class) -->
-        <div id="specificCustomTemplate" class="hidden border rounded p-2">
-          <div class="grid grid-cols-12 gap-2">
-            <input name="specific_component_names[]" type="text" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Component name" />
-            <input name="specific_component_amounts[]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
-            <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-custom"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
           </div>
         </div>
         <div id="specificComponents" class="space-y-2"></div>
@@ -382,7 +337,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    // --- Grab all DOM elements we'll interact with ---
+    // Elements: modal, tabs, form areas, and preview
     const modal = document.getElementById('feeStructureModal');
     const openBtn = document.getElementById('openEditStructureModal');
     const closeTop = document.getElementById('closeFeeStructureModal');
@@ -417,39 +372,7 @@
     const selectedClassesDisplay = document.getElementById('selectedClassesDisplay');
     const classCheckboxes = document.querySelectorAll('.class-checkbox');
 
-    // --- Helpers ---
-        function slugify(name) {
-          return String(name || '').toLowerCase().replace(/\s+/g, '-');
-        }
-
-        function presetId(scope, name) {
-          return `preset-${scope}-${slugify(name)}`;
-        }
-
-        function showPreset(scope, name, amount) {
-          const id = presetId(scope, name);
-          const block = document.getElementById(id);
-          if (!block) return;
-          block.classList.remove('hidden');
-          const inputs = block.querySelectorAll('input');
-          inputs.forEach(inp => inp.disabled = false);
-          const amt = block.querySelector('input[type="number"]');
-          if (amt && amount !== undefined) {
-            const val = parseFloat(String(amount));
-            if (!isNaN(val)) amt.value = val;
-          }
-          renderIcons();
-        }
-
-        function hidePreset(scope, name) {
-          const id = presetId(scope, name);
-          const block = document.getElementById(id);
-          if (!block) return;
-          block.classList.add('hidden');
-          const inputs = block.querySelectorAll('input');
-          inputs.forEach(inp => inp.disabled = true);
-        }
-    // Safe icon renderer for Lucide (if loaded in layout)
+    // Utilities: icon render, preset helpers
     function renderIcons() {
       try {
         if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -458,7 +381,37 @@
       } catch (_) {}
     }
 
-    // Common currencies we show in the dropdown
+    function slugify(name) {
+      return (name || '').toLowerCase().replace(/\s+/g, '-');
+    }
+
+    function presetId(tab, slug) {
+      return `preset-${tab}-${slug}`;
+    }
+
+    // Show/hide preset block and toggle input names (so hidden blocks don't submit)
+    function setPresetVisible(containerId, visible, defaultAmount) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      el.classList.toggle('hidden', !visible);
+      const inputs = el.querySelectorAll('input');
+      inputs.forEach(input => {
+        const targetName = input.getAttribute('data-name-field');
+        if (visible) {
+          if (targetName) input.name = targetName;
+        } else {
+          input.removeAttribute('name');
+        }
+      });
+      if (visible) {
+        const amountInput = el.querySelector('input[type="number"]');
+        if (amountInput && typeof defaultAmount !== 'undefined') {
+          amountInput.value = defaultAmount;
+        }
+      }
+      renderIcons();
+    }
+    // Currency display for preview
     const currencyMap = {
       'TSH': { label: 'TSh', symbol: 'TSh' },
       'USD': { label: 'USD', symbol: '$' },
@@ -478,48 +431,11 @@
       return currencyMap[val] || currencyMap['TSH'];
     }
 
-    // Simple show/hide helpers for flex layouts
+    // Simple show/hide helpers for overlays
     function show(el) { el.style.display = 'flex'; }
     function hide(el) { el.style.display = 'none'; }
 
-    function addRowFromTemplate(scope, defaultName = '', defaultAmount = '') {
-      const templateId = scope === 'specific' ? 'specificCustomTemplate' : 'allCustomTemplate';
-      const container = scope === 'specific' ? specificComponents : allComponents;
-      const tpl = document.getElementById(templateId);
-      if (!tpl) return;
-      const clone = tpl.cloneNode(true);
-      clone.id = '';
-      clone.classList.remove('hidden');
-      const inputs = clone.querySelectorAll('input');
-      const nameInput = inputs[0];
-      const amountInput = inputs[1];
-      if (nameInput && defaultName) nameInput.value = defaultName;
-      if (amountInput && defaultAmount !== '') {
-        const val = parseFloat(String(defaultAmount));
-        if (!isNaN(val)) amountInput.value = val;
-      }
-      const removeBtn = clone.querySelector('.remove-custom');
-      if (removeBtn) removeBtn.addEventListener('click', () => clone.remove());
-      container.appendChild(clone);
-      renderIcons();
-    }
-
-    function collectEnabledItems(scope) {
-      const nameSel = scope === 'specific' ? 'input[name="specific_component_names[]"]:not(:disabled)' : 'input[name="all_component_names[]"]:not(:disabled)';
-      const amtSel = scope === 'specific' ? 'input[name="specific_component_amounts[]"]:not(:disabled)' : 'input[name="all_component_amounts[]"]:not(:disabled)';
-      const names = Array.from(document.querySelectorAll(nameSel));
-      const amts = Array.from(document.querySelectorAll(amtSel));
-      const len = Math.max(names.length, amts.length);
-      const items = [];
-      for (let i = 0; i < len; i++) {
-        const name = (names[i]?.value || '').trim();
-        const amount = parseFloat(amts[i]?.value || '0') || 0;
-        if (name) items.push({ name, amount });
-      }
-      return items;
-    }
-
-    // Toggle the active tab
+    // Tabs: switch between All vs Specific
     function switchTab(tab) {
       if (tab === 'all') {
         tabAll.classList.remove('hidden');
@@ -536,7 +452,7 @@
       }
     }
 
-    // Create a new fee component row
+    // Dynamic rows: add arbitrary components
     function makeRow(type, defaultName = '', defaultAmount = '') {
       const row = document.createElement('div');
       row.className = 'grid grid-cols-12 gap-2';
@@ -553,7 +469,7 @@
       return row;
     }
 
-    // Turn all rows in a container into an array of {name, amount}
+    // Collect dynamic rows into [{name, amount}]
     function collectRows(container) {
       const rows = Array.from(container.children);
       const items = [];
@@ -564,6 +480,21 @@
         if (name) items.push({ name, amount });
       });
       return items;
+    }
+
+    // Collect visible preset blocks within a container id
+    function collectPresetRows(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return [];
+      const blocks = Array.from(container.querySelectorAll('.preset-form'))
+        .filter(b => !b.classList.contains('hidden'));
+      return blocks.map(b => {
+        const nameEl = b.querySelector('input[type="text"]');
+        const amountEl = b.querySelector('input[type="number"]');
+        const name = (nameEl?.value || '').trim();
+        const amount = parseFloat(amountEl?.value || '0') || 0;
+        return name ? { name, amount } : null;
+      }).filter(Boolean);
     }
 
     // Build the HTML snippet for the preview panel
@@ -603,7 +534,7 @@
       `;
     }
 
-    // Show preview overlay with provided HTML
+    // Preview overlay
     function openPreview(contentHtml) {
       feePreviewContent.innerHTML = contentHtml;
       show(previewPanel);
@@ -612,7 +543,7 @@
 
     function closePreview() { hide(previewPanel); }
 
-    // --- Class dropdown toggle ---
+    // Class dropdown: open/close and selection display
     function updateClassDisplay() {
       const selected = Array.from(classCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
       if (selected.length === 0) {
@@ -640,7 +571,7 @@
       }
     });
 
-    // Currency: show/hide custom input
+    // Currency: show/hide custom label for OTHER
     currencySelect.addEventListener('change', () => {
       customCurrencyLabel.classList.toggle('hidden', currencySelect.value !== 'OTHER');
     });
@@ -650,53 +581,75 @@
     [closeTop, closeBottom].forEach(btn => btn && btn.addEventListener('click', () => hide(modal)));
     modal.addEventListener('click', (e) => { if (e.target === modal) hide(modal); });
 
-    // --- Tabs ---
+    // Tabs events
     tabAllBtn.addEventListener('click', () => switchTab('all'));
     tabSpecificBtn.addEventListener('click', () => switchTab('specific'));
 
-    // --- Add component rows ---
-    addAllComponent.addEventListener('click', () => addRowFromTemplate('all'));
-    addSpecificComponent.addEventListener('click', () => addRowFromTemplate('specific'));
+    // Add dynamic component rows
+    addAllComponent.addEventListener('click', () => allComponents.appendChild(makeRow('all')));
+    addSpecificComponent.addEventListener('click', () => specificComponents.appendChild(makeRow('specific')));
 
     // --- Copy "All Classes" rows into "Specific Class" ---
     const loadAllClassesStructureBtn = document.getElementById('loadAllClassesStructure');
     if (loadAllClassesStructureBtn) {
       loadAllClassesStructureBtn.addEventListener('click', () => {
-        const allClassItems = collectEnabledItems('all');
+        const allClassItems = collectRows(allComponents);
         if (allClassItems.length === 0) {
           alert('Please add fee components in "All Classes" tab first.');
           return;
         }
         specificComponents.innerHTML = '';
         allClassItems.forEach(item => {
-          addRowFromTemplate('specific', item.name, item.amount);
+          specificComponents.appendChild(makeRow('specific', item.name, item.amount));
         });
         renderIcons();
         alert(`Loaded ${allClassItems.length} component(s) from All Classes structure. You can now edit or add adjustments.`);
       });
     }
 
-    // --- Preset buttons: drop in a ready-made row ---
+    // Preset buttons: reveal hardcoded blocks and set amount
     Array.from(document.querySelectorAll('.presetBtn')).forEach(btn => {
       btn.addEventListener('click', () => {
-        showPreset('all', btn.dataset.name || '', btn.dataset.amount || undefined);
+        const name = btn.dataset.name || '';
+        const amount = btn.dataset.amount || '';
+        const id = presetId('all', slugify(name));
+        setPresetVisible(id, true, amount);
+        const el = document.getElementById(id);
+        const nameInput = el?.querySelector('input[type="text"]');
+        if (nameInput) nameInput.value = name;
       });
     });
     Array.from(document.querySelectorAll('.presetSpecificBtn')).forEach(btn => {
       btn.addEventListener('click', () => {
-        showPreset('specific', btn.dataset.name || '', btn.dataset.amount || undefined);
+        const name = btn.dataset.name || '';
+        const amount = btn.dataset.amount || '';
+        const id = presetId('specific', slugify(name));
+        setPresetVisible(id, true, amount);
+        const el = document.getElementById(id);
+        const nameInput = el?.querySelector('input[type="text"]');
+        if (nameInput) nameInput.value = name;
       });
     });
 
+    // Remove preset block: hide and clear amount
     Array.from(document.querySelectorAll('.remove-preset')).forEach(btn => {
       btn.addEventListener('click', () => {
-        hidePreset(btn.dataset.scope, btn.dataset.name);
+        const targetId = btn.getAttribute('data-target');
+        setPresetVisible(targetId, false);
+        const el = document.getElementById(targetId);
+        if (el) {
+          const amountInput = el.querySelector('input[type="number"]');
+          if (amountInput) amountInput.value = '';
+        }
       });
     });
 
-    // --- Preview buttons ---
+    // Preview buttons: include both dynamic rows and visible preset blocks
     previewAllBtn.addEventListener('click', () => {
-      const items = collectEnabledItems('all');
+      const items = [
+        ...collectRows(allComponents),
+        ...collectPresetRows('allPresetForms')
+      ];
       const html = renderPreview('All Classes Fee Structure', '', items);
       openPreview(html);
     });
@@ -707,7 +660,10 @@
         alert('Please select at least one class');
         return;
       }
-      const items = collectEnabledItems('specific');
+      const items = [
+        ...collectRows(specificComponents),
+        ...collectPresetRows('specificPresetForms')
+      ];
       const classesStr = selectedClasses.join(', ');
       const meta = `${specificSchoolId.value ? 'School: ' + specificSchoolId.value + ' • ' : ''}Classes: ${classesStr}`;
       const html = renderPreview('Specific Class Fee Structure', meta, items);
@@ -717,7 +673,7 @@
     // --- Preview panel controls ---
     [closePreviewPanel, backToEditBtn].forEach(btn => btn && btn.addEventListener('click', closePreview));
 
-    // Saving is now handled by regular form submission via the Confirm & Save button.
+    // Saving: handled by regular form submission via the Confirm & Save button.
 
     // Initial icon render
     renderIcons();

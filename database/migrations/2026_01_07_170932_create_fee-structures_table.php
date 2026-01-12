@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('school_id');//link with the school
             $table->decimal('tuition_fee', 12,3);
+            $table->decimal('library_fee', 12,3)->nullable();
+            $table->decimal('transport_fee', 12,3)->nullable();
+            $table->decimal('hostel_fee', 12,3)->nullable();
+            $table->decimal('exam_fee', 12,3)->nullable();
 
             //dynamic attributes comes below in the column
             $table->json('dynamic_attributes')->nullable();

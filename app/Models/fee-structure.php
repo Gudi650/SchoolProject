@@ -11,6 +11,10 @@ class feestructure extends Model
     protected $fillable = [
         'school_id',
         'tuition_fee',
+        'transport_fee',
+        'hostel_fee',
+        'library_fee',
+        'exam_fee',
         'dynamic_attributes',
     ];
 
