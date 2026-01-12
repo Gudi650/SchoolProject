@@ -50,11 +50,11 @@
     <!-- Tabs -->
     <div class="px-4 pt-4">
       <div class="inline-flex bg-slate-100 p-1 rounded-lg shadow-inner">
-        <button id="tabAllBtn" class="px-3 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white shadow flex items-center gap-2">
+        <button type="button" id="tabAllBtn" class="px-3 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white shadow flex items-center gap-2">
           <i data-lucide="users" class="w-4 h-4"></i>
           For All Classes
         </button>
-        <button id="tabSpecificBtn" class="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-white flex items-center gap-2">
+        <button type="button" id="tabSpecificBtn" class="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-white flex items-center gap-2">
           <i data-lucide="book" class="w-4 h-4"></i>
           For Specific Class
         </button>
