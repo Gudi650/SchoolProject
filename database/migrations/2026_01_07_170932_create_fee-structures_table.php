@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('transport_fee', 12,3)->nullable();
             $table->decimal('hostel_fee', 12,3)->nullable();
             $table->decimal('exam_fee', 12,3)->nullable();
+            $table->string('currency', 10)->default('TSH');
 
             //dynamic attributes comes below in the column
             $table->json('dynamic_attributes')->nullable();

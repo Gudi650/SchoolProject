@@ -11,10 +11,12 @@
 </style>
 
 <div id="feeStructureModal" class="fixed inset-0 z-50 items-center justify-center bg-black/50" style="display: none;">
+
   <form id="feeStructureForm" 
     method="POST" 
     action="{{ route('accounting.feeStructure.save') }}" 
     class="bg-white w-full max-w-4xl mx-4 rounded-lg shadow-2xl overflow-hidden flex flex-col" style="max-height: 90vh;">
+
     @csrf
     <!-- Header -->
     <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
@@ -86,45 +88,46 @@
             </button>
           </div>
         </div>
+        
         <!-- Preset Forms (All Classes) -->
         <div id="allPresetForms" class="space-y-2">
           <!-- Tuition -->
           <div id="preset-all-tuition" class="preset-form hidden">
             <div class="grid grid-cols-12 gap-2">
-              <input data-name-field="all_component_names[]" type="text" value="Tuition" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
-              <input data-name-field="all_component_amounts[]" type="number" min="0" step="0.01" name="tuition_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <input name="all_component_names[]" type="text" value="Tuition" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input name="tuition_fee" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
               <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-all-tuition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
           <!-- Transport -->
           <div id="preset-all-transport" class="preset-form hidden">
             <div class="grid grid-cols-12 gap-2">
-              <input data-name-field="all_component_names[]" type="text" value="Transport" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
-              <input data-name-field="all_component_amounts[]" type="number" min="0" step="0.01" name="transport_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <input name="all_component_names[]" type="text" value="Transport" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input name="transport_fee" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
               <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-all-transport"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
           <!-- Hostel -->
           <div id="preset-all-hostel" class="preset-form hidden">
             <div class="grid grid-cols-12 gap-2">
-              <input data-name-field="all_component_names[]" type="text" value="Hostel" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
-              <input data-name-field="all_component_amounts[]" type="number" min="0" step="0.01" name="hostel_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <input name="all_component_names[]" type="text" value="Hostel" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input name="hostel_fee" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
               <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-all-hostel"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
           <!-- Library -->
           <div id="preset-all-library" class="preset-form hidden">
             <div class="grid grid-cols-12 gap-2">
-              <input data-name-field="all_component_names[]" type="text" value="Library" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
-              <input data-name-field="all_component_amounts[]" type="number" min="0" step="0.01" name="library_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <input name="all_component_names[]" type="text" value="Library" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input name="library_fee" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
               <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-all-library"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
           <!-- Exam -->
           <div id="preset-all-exam" class="preset-form hidden">
             <div class="grid grid-cols-12 gap-2">
-              <input data-name-field="all_component_names[]" type="text" value="Exam" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
-              <input data-name-field="all_component_amounts[]" type="number" min="0" step="0.01" name = "exam_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <input name="all_component_names[]" type="text" value="Exam" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input name="exam_fee" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
               <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-all-exam"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
@@ -247,40 +250,40 @@
           <!-- Tuition -->
           <div id="preset-specific-tuition" class="preset-form hidden">
             <div class="grid grid-cols-12 gap-2">
-              <input data-name-field="specific_component_names[]" type="text" value="Tuition" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
-              <input data-name-field="specific_component_amounts[]" type="number" min="0" step="0.01" name= "tuition_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <input name="specific_component_names[]" type="text" value="Tuition" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input name="tuition_fee" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
               <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-specific-tuition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
           <!-- Transport -->
           <div id="preset-specific-transport" class="preset-form hidden">
             <div class="grid grid-cols-12 gap-2">
-              <input data-name-field="specific_component_names[]" type="text" value="Transport" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
-              <input data-name-field="specific_component_amounts[]" type="number" min="0" step="0.01" name= "transport_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <input name="specific_component_names[]" type="text" value="Transport" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input name="transport_fee" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
               <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-specific-transport"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
           <!-- Hostel -->
           <div id="preset-specific-hostel" class="preset-form hidden">
             <div class="grid grid-cols-12 gap-2">
-              <input data-name-field="specific_component_names[]" type="text" value="Hostel" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
-              <input data-name-field="specific_component_amounts[]" type="number" min="0" step="0.01" name="hostel_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <input name="specific_component_names[]" type="text" value="Hostel" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input name="hostel_fee" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
               <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-specific-hostel"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
           <!-- Library -->
           <div id="preset-specific-library" class="preset-form hidden">
             <div class="grid grid-cols-12 gap-2">
-              <input data-name-field="specific_component_names[]" type="text" value="Library" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
-              <input data-name-field="specific_component_amounts[]" type="number" min="0" step="0.01" name = "library_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <input name="specific_component_names[]" type="text" value="Library" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input name="library_fee" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
               <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-specific-library"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
           <!-- Exam -->
           <div id="preset-specific-exam" class="preset-form hidden">
             <div class="grid grid-cols-12 gap-2">
-              <input data-name-field="specific_component_names[]" type="text" value="Exam" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
-              <input data-name-field="specific_component_amounts[]" type="number" min="0" step="0.01" name="exam_fee" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
+              <input name="specific_component_names[]" type="text" value="Exam" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" readonly />
+              <input name="exam_fee" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" />
               <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center remove-preset" data-target="preset-specific-exam"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           </div>
@@ -389,20 +392,11 @@
       return `preset-${tab}-${slug}`;
     }
 
-    // Show/hide preset block and toggle input names (so hidden blocks don't submit)
+    // Show/hide preset block and set a default amount when revealing
     function setPresetVisible(containerId, visible, defaultAmount) {
       const el = document.getElementById(containerId);
       if (!el) return;
       el.classList.toggle('hidden', !visible);
-      const inputs = el.querySelectorAll('input');
-      inputs.forEach(input => {
-        const targetName = input.getAttribute('data-name-field');
-        if (visible) {
-          if (targetName) input.name = targetName;
-        } else {
-          input.removeAttribute('name');
-        }
-      });
       if (visible) {
         const amountInput = el.querySelector('input[type="number"]');
         if (amountInput && typeof defaultAmount !== 'undefined') {
@@ -410,6 +404,26 @@
         }
       }
       renderIcons();
+    }
+
+    // Preserve original names so we can strip/restore when toggling tabs
+    function stripNames(container) {
+      if (!container) return;
+      container.querySelectorAll('input[name]').forEach(input => {
+        if (!input.dataset.originalName) {
+          input.dataset.originalName = input.name;
+        }
+        input.removeAttribute('name');
+      });
+    }
+
+    function restoreNames(container) {
+      if (!container) return;
+      container.querySelectorAll('input').forEach(input => {
+        if (input.dataset.originalName) {
+          input.name = input.dataset.originalName;
+        }
+      });
     }
     // Currency display for preview
     const currencyMap = {
@@ -435,7 +449,7 @@
     function show(el) { el.style.display = 'flex'; }
     function hide(el) { el.style.display = 'none'; }
 
-    // Tabs: switch between All vs Specific
+    // Tabs: switch between All vs Specific; restore names only on the active tab to avoid duplicate submissions
     function switchTab(tab) {
       if (tab === 'all') {
         tabAll.classList.remove('hidden');
@@ -443,12 +457,18 @@
         tabAllBtn.className = 'px-3 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white shadow';
         tabSpecificBtn.className = 'px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-white';
         if (scopeInput) scopeInput.value = 'all';
+        restoreNames(tabAll);
+        stripNames(tabSpecific);
+        setPresetVisible('preset-all-tuition', true, 0);
       } else {
         tabAll.classList.add('hidden');
         tabSpecific.classList.remove('hidden');
         tabSpecificBtn.className = 'px-3 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white shadow';
         tabAllBtn.className = 'px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-white';
         if (scopeInput) scopeInput.value = 'specific';
+        restoreNames(tabSpecific);
+        stripNames(tabAll);
+        setPresetVisible('preset-specific-tuition', true, 0);
       }
     }
 
@@ -577,7 +597,10 @@
     });
 
     // --- Open/close modal ---
-    if (openBtn) openBtn.addEventListener('click', () => show(modal));
+    if (openBtn) openBtn.addEventListener('click', () => {
+      show(modal);
+      switchTab('all'); // default to All tab and ensure tuition is available
+    });
     [closeTop, closeBottom].forEach(btn => btn && btn.addEventListener('click', () => hide(modal)));
     modal.addEventListener('click', (e) => { if (e.target === modal) hide(modal); });
 

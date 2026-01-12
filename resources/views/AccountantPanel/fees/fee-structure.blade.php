@@ -25,6 +25,49 @@
       </div>
     </div>
 
+    {{-- Flash messages --}}
+    <div class="space-y-3 mb-6">
+      @if(session('success'))
+        <div class="flex items-start gap-3 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900 shadow-sm">
+          <div class="mt-0.5 text-emerald-600">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1">
+            <p class="font-semibold">Success</p>
+            <p class="text-sm">{{ session('success') }}</p>
+          </div>
+        </div>
+      @endif
+
+      @if(session('error'))
+        <div class="flex items-start gap-3 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-rose-900 shadow-sm">
+          <div class="mt-0.5 text-rose-600">
+            <i data-lucide="alert-octagon" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1">
+            <p class="font-semibold">Error</p>
+            <p class="text-sm">{{ session('error') }}</p>
+          </div>
+        </div>
+      @endif
+
+      @if ($errors->any())
+        <div class="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900 shadow-sm">
+          <div class="mt-0.5 text-amber-600">
+            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1 space-y-1">
+            <p class="font-semibold">Please check the following:</p>
+            <ul class="list-disc list-inside text-sm space-y-0.5">
+              @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+        </div>
+      @endif
+    </div>
+
     <!-- Info Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
       <div class="bg-white rounded-xl p-6 border border-slate-200">

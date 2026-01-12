@@ -15,6 +15,7 @@ class feestructure extends Model
         'hostel_fee',
         'library_fee',
         'exam_fee',
+        'currency',
         'dynamic_attributes',
     ];
 
