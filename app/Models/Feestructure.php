@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class FeeStructure extends Model
 {
+    //protected table name
+    protected $table = 'fee-structures';
+
     //fillable fields
     protected $fillable = [
         'school_id',
@@ -19,7 +22,7 @@ class FeeStructure extends Model
     ];
 
     //make json an array
-    protected $casts = [
+    protected $casts =[
         'dynamic_attributes' => 'array',
     ];
 

@@ -153,7 +153,7 @@
         <div class="space-y-3">
           <div>
             <label class="block text-sm font-medium mb-1">School ID (optional)</label>
-            <input id="specificSchoolId" name="school_id" type="text" class="border rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., SCH-001" />
+            <input id="specificSchoolId" value="12244" name="school_id" type="text" class="border rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., SCH-001" />
           </div>
           <div class="relative">
             <label class="block text-sm font-medium mb-1 flex items-center gap-2">

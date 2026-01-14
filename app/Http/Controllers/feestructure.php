@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FeeStructure as ModelsFeeStructure;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 
@@ -42,20 +43,60 @@ class feestructure extends Controller
                 'transport_fee' => 'nullable|numeric|min:0',
                 'hostel_fee' => 'nullable|numeric|min:0',
                 'library_fee' => 'nullable|numeric|min:0',
-                'exam_fee' => 'nullable|numeric|min:0'
+                'exam_fee' => 'nullable|numeric|min:0',
+
+                //custom fee components can be added here as an array
+                'all_components' => 'nullable|array',
+                'all_components.*.name' => 'required_with:all_components|string|max:100',
+                'all_components.*.amount' => 'required_with:all_components|numeric|min:0',
+                
+                'specific_components' => 'nullable|array',
+                'specific_components.*.name' => 'required_with:specific_components|string|max:100',
+                'specific_components.*.amount' => 'required_with:specific_components|numeric|min:0',
+            
+                //for specific scope
+                'school_id' => 'nullable|string|max:50',
+                'class_id' => 'nullable|integer',
+
+
             ]);
 
+            //add a default school id if not provided
+            if (empty($validated['school_id']))
+            {
+                $validated['school_id'] = '1';
+            }
+
             //dump the validated data
-            dd($validated);
+            //dd($validated);
 
             //process the validated data
             //For example, save to database (not implemented here)
+
+            try{
+
+                //create and save validated data to the database
+                ModelsFeeStructure::create(array_merge(
+                    $validated,
+                    [
+                        'dynamic_attributes' => [
+                            'all_components' => $validated['all_components'] ?? [],
+                            'specific_components' => $validated['specific_components'] ?? []
+                        ]
+                    ]
+                ));
+
+            }catch(\Exception $e)
+            {
+                return back()->withErrors(['error' => 'Database error: ' . $e->getMessage()]);
+            }
+            
+
 
         }
         catch (\Exception $e)
         {
             return back()->withErrors(['error' => 'An error occurred while saving the fee structure: ' . $e->getMessage()]);
-
         }
         
         return back()->with('success', 'Fee Structure saved successfully');
