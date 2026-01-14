@@ -108,160 +108,238 @@
     <!-- Fee Structure -->
     <div class="bg-white rounded-xl border border-slate-200">
       <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
-        <h2 class="text-lg font-semibold text-slate-900">Annual Fee Structure</h2>
-        <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-full">6 Components</span>
+        <div>
+          <h2 class="text-lg font-semibold text-slate-900">General Fee Structure</h2>
+          <p class="text-sm text-slate-600">Applies to all classes</p>
+        </div>
+        <button id="editGeneralStructureBtn" class="px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2">
+          <i data-lucide="edit-2" class="w-4 h-4"></i>
+          <span>Edit</span>
+        </button>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm">
           <thead class="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th class="px-6 py-3 font-semibold text-slate-700">Class</th>
-              <th class="px-6 py-3 font-semibold text-slate-700">Tuition</th>
-              <th class="px-6 py-3 font-semibold text-slate-700">Transport</th>
-              <th class="px-6 py-3 font-semibold text-slate-700">Hostel</th>
-              <th class="px-6 py-3 font-semibold text-slate-700">Library</th>
-              <th class="px-6 py-3 font-semibold text-slate-700">Exam</th>
-              <th class="px-6 py-3 font-semibold text-slate-700 text-right">Total</th>
-              <th class="px-6 py-3 font-semibold text-slate-700 text-center">Actions</th>
+              <th class="px-6 py-3 font-semibold text-slate-700">Fee Component</th>
+              <th class="px-6 py-3 font-semibold text-slate-700 text-right">Amount</th>
+              <th class="px-6 py-3 font-semibold text-slate-700">Currency</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200">
-            <tr class="hover:bg-slate-50 transition-colors" data-class="Class 10" data-tuition="15000" data-transport="5000" data-hostel="20000" data-library="1500" data-exam="2000" data-total="43500">
-              <td class="px-6 py-4 font-medium text-slate-900">Class 10</td>
-              <td class="px-6 py-4 text-slate-700">₹15,000</td>
-              <td class="px-6 py-4 text-slate-700">₹5,000</td>
-              <td class="px-6 py-4 text-slate-700">₹20,000</td>
-              <td class="px-6 py-4 text-slate-700">₹1,500</td>
-              <td class="px-6 py-4 text-slate-700">₹2,000</td>
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-6 py-4 font-medium text-slate-900">Tuition Fee</td>
+              <td class="px-6 py-4 text-slate-700 text-right">₹15,000</td>
+              <td class="px-6 py-4 text-slate-700">TSH</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-6 py-4 font-medium text-slate-900">Transport Fee</td>
+              <td class="px-6 py-4 text-slate-700 text-right">₹5,000</td>
+              <td class="px-6 py-4 text-slate-700">TSH</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-6 py-4 font-medium text-slate-900">Hostel Fee</td>
+              <td class="px-6 py-4 text-slate-700 text-right">₹20,000</td>
+              <td class="px-6 py-4 text-slate-700">TSH</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-6 py-4 font-medium text-slate-900">Library Fee</td>
+              <td class="px-6 py-4 text-slate-700 text-right">₹1,500</td>
+              <td class="px-6 py-4 text-slate-700">TSH</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-6 py-4 font-medium text-slate-900">Exam Fee</td>
+              <td class="px-6 py-4 text-slate-700 text-right">₹2,000</td>
+              <td class="px-6 py-4 text-slate-700">TSH</td>
+            </tr>
+            <tr class="bg-slate-50">
+              <td class="px-6 py-4 font-semibold text-slate-900">Total</td>
               <td class="px-6 py-4 font-semibold text-slate-900 text-right">₹43,500</td>
-              <td class="px-6 py-4 text-center">
-                <button class="edit-fee-btn text-indigo-600 hover:text-indigo-700 font-medium text-sm inline-flex items-center gap-1 p-1 rounded hover:bg-indigo-50 transition-colors">
-                  <i data-lucide="edit-2" class="w-4 h-4"></i>
-                </button>
-              </td>
-            </tr>
-            <tr class="hover:bg-slate-50 transition-colors" data-class="Class 9" data-tuition="14000" data-transport="5000" data-hostel="20000" data-library="1500" data-exam="2000" data-total="42500">
-              <td class="px-6 py-4 font-medium text-slate-900">Class 9</td>
-              <td class="px-6 py-4 text-slate-700">₹14,000</td>
-              <td class="px-6 py-4 text-slate-700">₹5,000</td>
-              <td class="px-6 py-4 text-slate-700">₹20,000</td>
-              <td class="px-6 py-4 text-slate-700">₹1,500</td>
-              <td class="px-6 py-4 text-slate-700">₹2,000</td>
-              <td class="px-6 py-4 font-semibold text-slate-900 text-right">₹42,500</td>
-              <td class="px-6 py-4 text-center">
-                <button class="edit-fee-btn text-indigo-600 hover:text-indigo-700 font-medium text-sm inline-flex items-center gap-1 p-1 rounded hover:bg-indigo-50 transition-colors">
-                  <i data-lucide="edit-2" class="w-4 h-4"></i>
-                </button>
-              </td>
-            </tr>
-            <tr class="hover:bg-slate-50 transition-colors" data-class="Class 8" data-tuition="13000" data-transport="4500" data-hostel="18000" data-library="1200" data-exam="1800" data-total="38500">
-              <td class="px-6 py-4 font-medium text-slate-900">Class 8</td>
-              <td class="px-6 py-4 text-slate-700">₹13,000</td>
-              <td class="px-6 py-4 text-slate-700">₹4,500</td>
-              <td class="px-6 py-4 text-slate-700">₹18,000</td>
-              <td class="px-6 py-4 text-slate-700">₹1,200</td>
-              <td class="px-6 py-4 text-slate-700">₹1,800</td>
-              <td class="px-6 py-4 font-semibold text-slate-900 text-right">₹38,500</td>
-              <td class="px-6 py-4 text-center">
-                <button class="edit-fee-btn text-indigo-600 hover:text-indigo-700 font-medium text-sm inline-flex items-center gap-1 p-1 rounded hover:bg-indigo-50 transition-colors">
-                  <i data-lucide="edit-2" class="w-4 h-4"></i>
-                </button>
-              </td>
+              <td class="px-6 py-4"></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Custom Fee Components (Static Preview) -->
-    <div class="mt-8 bg-white rounded-xl border border-slate-200 shadow-sm">
-      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
-        <h2 class="text-lg font-semibold text-slate-900">Custom Fee Components</h2>
-        <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-full">Preview</span>
+    <!-- Fee Structure by Class -->
+    <div class="mt-8">
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-slate-900">Fee Structure by Class</h2>
+        <p class="text-sm text-slate-600 mt-1">Each class can have different fee components applied</p>
       </div>
-      <div class="grid grid-cols-1 gap-6 p-6">
-        <!-- All Components (Global) -->
-        <div class="rounded-xl border border-slate-200 overflow-hidden bg-white">
-          <div class="px-4 py-3 border-b border-slate-200 bg-slate-50">
-            <h3 class="font-semibold text-slate-800">All Components (Global)</h3>
-            <p class="text-xs text-slate-500">Applied to every class</p>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-              <thead class="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th class="px-4 py-2 font-semibold text-slate-700">Component</th>
-                  <th class="px-4 py-2 font-semibold text-slate-700 text-right">Amount</th>
-                  <th class="px-4 py-2 font-semibold text-slate-700">Currency</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-200">
-                <tr class="hover:bg-slate-50">
-                  <td class="px-4 py-2 text-slate-800">Development Fund</td>
-                  <td class="px-4 py-2 text-slate-700 text-right">10,000</td>
-                  <td class="px-4 py-2 text-slate-700">TSH</td>
-                </tr>
-                <tr class="hover:bg-slate-50">
-                  <td class="px-4 py-2 text-slate-800">Activities Fee</td>
-                  <td class="px-4 py-2 text-slate-700 text-right">5,000</td>
-                  <td class="px-4 py-2 text-slate-700">TSH</td>
-                </tr>
-                <tr class="hover:bg-slate-50">
-                  <td class="px-4 py-2 text-slate-800">Maintenance</td>
-                  <td class="px-4 py-2 text-slate-700 text-right">2,500</td>
-                  <td class="px-4 py-2 text-slate-700">TSH</td>
-                </tr>
-                <tr class="bg-slate-50">
-                  <td class="px-4 py-2 font-semibold text-slate-900">Total</td>
-                  <td class="px-4 py-2 font-semibold text-slate-900 text-right">17,500</td>
-                  <td class="px-4 py-2"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
 
-        <!-- Specific Components (Scoped) -->
-        <div class="rounded-xl border border-slate-200 overflow-hidden bg-white">
-          <div class="px-4 py-3 border-b border-slate-200 bg-slate-50">
-            <h3 class="font-semibold text-slate-800">Specific Components (Scoped)</h3>
-            <p class="text-xs text-slate-500">Applied to selected class</p>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-              <thead class="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th class="px-4 py-2 font-semibold text-slate-700">Component</th>
-                  <th class="px-4 py-2 font-semibold text-slate-700">Class</th>
-                  <th class="px-4 py-2 font-semibold text-slate-700 text-right">Amount</th>
-                  <th class="px-4 py-2 font-semibold text-slate-700">Currency</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-200">
-                <tr class="hover:bg-slate-50">
-                  <td class="px-4 py-2 text-slate-800">Lab Fee</td>
-                  <td class="px-4 py-2 text-slate-700">Class 10</td>
-                  <td class="px-4 py-2 text-slate-700 text-right">7,500</td>
-                  <td class="px-4 py-2 text-slate-700">TSH</td>
-                </tr>
-                <tr class="hover:bg-slate-50">
-                  <td class="px-4 py-2 text-slate-800">Field Trip</td>
-                  <td class="px-4 py-2 text-slate-700">Class 8</td>
-                  <td class="px-4 py-2 text-slate-700 text-right">4,000</td>
-                  <td class="px-4 py-2 text-slate-700">TSH</td>
-                </tr>
-                <tr class="bg-slate-50">
-                  <td class="px-4 py-2 font-semibold text-slate-900">Total</td>
-                  <td class="px-4 py-2"></td>
-                  <td class="px-4 py-2 font-semibold text-slate-900 text-right">11,500</td>
-                  <td class="px-4 py-2"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+      <!-- Class 10 Card -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6">
+        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+          <h3 class="font-semibold text-slate-800">Class 10</h3>
+          <button class="edit-class-btn px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2" data-class="Class 10">
+            <i data-lucide="edit-2" class="w-4 h-4"></i>
+            <span>Edit</span>
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th class="px-6 py-3 font-semibold text-slate-700">Fee Component</th>
+                <th class="px-6 py-3 font-semibold text-slate-700 text-right">Amount</th>
+                <th class="px-6 py-3 font-semibold text-slate-700">Currency</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Tuition Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹15,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Transport Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹5,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Hostel Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹20,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Library Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹1,500</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Exam Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹2,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50 bg-blue-50">
+                <td class="px-6 py-3 text-slate-800 font-medium">Lab Fee <span class="text-xs text-blue-600">(Custom)</span></td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹7,500</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="px-6 py-3 font-semibold text-slate-900">Total</td>
+                <td class="px-6 py-3 font-semibold text-slate-900 text-right">₹51,000</td>
+                <td class="px-6 py-3"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="px-6 pb-6 text-xs text-slate-500">This preview is static. Backend rendering will replace it later.</div>
+
+      <!-- Class 9 Card -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6">
+        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+          <h3 class="font-semibold text-slate-800">Class 9</h3>
+          <button class="edit-class-btn px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2" data-class="Class 9">
+            <i data-lucide="edit-2" class="w-4 h-4"></i>
+            <span>Edit</span>
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th class="px-6 py-3 font-semibold text-slate-700">Fee Component</th>
+                <th class="px-6 py-3 font-semibold text-slate-700 text-right">Amount</th>
+                <th class="px-6 py-3 font-semibold text-slate-700">Currency</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Tuition Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹15,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Transport Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹5,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Hostel Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹20,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Library Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹1,500</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Exam Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹2,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="px-6 py-3 font-semibold text-slate-900">Total</td>
+                <td class="px-6 py-3 font-semibold text-slate-900 text-right">₹43,500</td>
+                <td class="px-6 py-3"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Class 8 Card -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6">
+        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+          <h3 class="font-semibold text-slate-800">Class 8</h3>
+          <button class="edit-class-btn px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2" data-class="Class 8">
+            <i data-lucide="edit-2" class="w-4 h-4"></i>
+            <span>Edit</span>
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th class="px-6 py-3 font-semibold text-slate-700">Fee Component</th>
+                <th class="px-6 py-3 font-semibold text-slate-700 text-right">Amount</th>
+                <th class="px-6 py-3 font-semibold text-slate-700">Currency</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Tuition Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹15,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Transport Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹5,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Hostel Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹20,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Library Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹1,500</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-3 text-slate-800">Exam Fee</td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹2,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="hover:bg-slate-50 bg-amber-50">
+                <td class="px-6 py-3 text-slate-800 font-medium">Field Trip <span class="text-xs text-amber-600">(Custom)</span></td>
+                <td class="px-6 py-3 text-slate-700 text-right">₹4,000</td>
+                <td class="px-6 py-3 text-slate-700">TSH</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="px-6 py-3 font-semibold text-slate-900">Total</td>
+                <td class="px-6 py-3 font-semibold text-slate-900 text-right">₹47,500</td>
+                <td class="px-6 py-3"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -289,55 +367,74 @@
 
     <!-- Body -->
     <div class="px-6 py-6 flex-1 overflow-y-auto">
-      <form id="editClassFeeForm" class="space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="editTuition" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-              <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-600"></i>
-              Tuition Fee
-            </label>
-            <input type="number" id="editTuition" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0">
-          </div>
+      <form id="editClassFeeForm" class="space-y-6">
+        <!-- Currency Selection -->
+        <div>
+          <label for="editCurrency" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+            <i data-lucide="coins" class="w-4 h-4 text-indigo-600"></i>
+            Currency
+          </label>
+          <select id="editCurrency" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <option value="TSH">TSH (Tanzanian Shilling)</option>
+            <option value="USD">USD (US Dollar)</option>
+            <option value="EUR">EUR (Euro)</option>
+            <option value="INR">INR (Indian Rupee)</option>
+            <option value="KES">KES (Kenyan Shilling)</option>
+          </select>
+        </div>
 
-          <div>
-            <label for="editTransport" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-              <i data-lucide="bus" class="w-4 h-4 text-sky-600"></i>
-              Transport Fee
-            </label>
-            <input type="number" id="editTransport" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0">
-          </div>
-
-          <div>
-            <label for="editHostel" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-              <i data-lucide="home" class="w-4 h-4 text-amber-600"></i>
-              Hostel Fee
-            </label>
-            <input type="number" id="editHostel" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0">
-          </div>
-
-          <div>
-            <label for="editLibrary" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-              <i data-lucide="library" class="w-4 h-4 text-emerald-600"></i>
-              Library Fee
-            </label>
-            <input type="number" id="editLibrary" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0">
-          </div>
-
-          <div>
-            <label for="editExam" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-              <i data-lucide="file-check" class="w-4 h-4 text-rose-600"></i>
-              Exam Fee
-            </label>
-            <input type="number" id="editExam" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0">
-          </div>
-
-          <div class="flex items-end">
-            <div class="w-full">
-              <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                <i data-lucide="calculator" class="w-4 h-4 text-slate-600"></i>
-                Total Fee
+        <!-- Fee Fields -->
+        <div class="space-y-4">
+          <p class="text-sm font-semibold text-slate-700">Fee Components</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="editTuition" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-600"></i>
+                Tuition Fee
               </label>
-              <div class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-2.5 text-lg font-bold text-slate-900" id="editTotalDisplay">₹0</div>
+              <input type="number" id="editTuition" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0" step="0.01">
+            </div>
+
+            <div>
+              <label for="editTransport" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                <i data-lucide="bus" class="w-4 h-4 text-sky-600"></i>
+                Transport Fee
+              </label>
+              <input type="number" id="editTransport" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0" step="0.01">
+            </div>
+
+            <div>
+              <label for="editHostel" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                <i data-lucide="home" class="w-4 h-4 text-amber-600"></i>
+                Hostel Fee
+              </label>
+              <input type="number" id="editHostel" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0" step="0.01">
+            </div>
+
+            <div>
+              <label for="editLibrary" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                <i data-lucide="library" class="w-4 h-4 text-emerald-600"></i>
+                Library Fee
+              </label>
+              <input type="number" id="editLibrary" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0" step="0.01">
+            </div>
+
+            <div>
+              <label for="editExam" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                <i data-lucide="file-check" class="w-4 h-4 text-rose-600"></i>
+                Exam Fee
+              </label>
+              <input type="number" id="editExam" class="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0" min="0" step="0.01">
+            </div>
+
+            <div class="flex items-end">
+              <div class="w-full">
+                <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                  <i data-lucide="calculator" class="w-4 h-4 text-slate-600"></i>
+                  Total Fee
+                </label>
+                <div class="w-full bg-indigo-50 border border-indigo-300 rounded-lg px-4 py-2.5 text-lg font-bold text-indigo-900" id="editTotalDisplay">₹0</div>
+              </div>
             </div>
           </div>
         </div>
@@ -439,6 +536,26 @@
         if (e.target === feeStructureModal) feeStructureModal.style.display = 'none';
       });
     }
+
+    // Edit class fee structure
+    document.querySelectorAll('.edit-class-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const className = this.dataset.class;
+        document.getElementById('editModalClassName').textContent = className;
+        
+        // In a real application, fetch the fees for this class and populate the form
+        // For now, just open the modal
+        editClassModal.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      });
+    });
+
+    // Edit general fee structure
+    document.getElementById('editGeneralStructureBtn').addEventListener('click', function() {
+      document.getElementById('editModalClassName').textContent = 'General Fee Structure';
+      editClassModal.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    });
   });
 </script>
 
