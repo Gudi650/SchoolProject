@@ -37,7 +37,8 @@
       </label>
       <div class="flex gap-3 items-center">
         <select id="currencySelect" name="currency" class="border rounded px-3 py-2 w-56 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-          <option value="TSH" selected>TSh (TZS)</option>
+          <option value="" selected>Choose the currency</option>
+          <option value="TSH">TSh (TZS)</option>
           <option value="USD">USD ($)</option>
           <option value="KSH">KSh (KES)</option>
           <option value="EUR">EUR (€)</option>
@@ -132,6 +133,13 @@
             </div>
           </div>
         </div>
+        
+        <!-- Dynamic Custom Component Container (All Classes) -->
+        <div class="space-y-2 border-t pt-4 hidden" id="allCustomComponentsContainer">
+          <h4 class="text-sm font-medium text-slate-700">Custom Components</h4>
+          <div id="allCustomComponentsList" class="space-y-2"></div>
+        </div>
+        
         <div id="allComponents" class="space-y-2"></div>
         <div class="flex items-center gap-2">
           <button id="addAllComponent" type="button" class="px-3 py-2 rounded text-sm border-2 border-dashed border-slate-300 hover:border-indigo-400 text-slate-700 hover:text-indigo-700 bg-white flex items-center gap-2">
@@ -288,6 +296,13 @@
             </div>
           </div>
         </div>
+        
+        <!-- Dynamic Custom Component Container (Specific Class) -->
+        <div class="space-y-2 border-t pt-4 hidden" id="specificCustomComponentsContainer">
+          <h4 class="text-sm font-medium text-slate-700">Custom Components</h4>
+          <div id="specificCustomComponentsList" class="space-y-2"></div>
+        </div>
+        
         <div id="specificComponents" class="space-y-2"></div>
         <div class="flex items-center gap-2">
           <button id="addSpecificComponent" type="button" class="px-3 py-2 rounded text-sm border-2 border-dashed border-slate-300 hover:border-indigo-400 text-slate-700 hover:text-indigo-700 bg-white flex items-center gap-2">
@@ -472,15 +487,22 @@
       }
     }
 
-    // Dynamic rows: add arbitrary components
+    // Dynamic rows: add arbitrary components with nested array syntax for Laravel
     function makeRow(type, defaultName = '', defaultAmount = '') {
       const row = document.createElement('div');
       row.className = 'grid grid-cols-12 gap-2';
-      const nameField = type === 'specific' ? 'specific_component_names[]' : 'all_component_names[]';
-      const amountField = type === 'specific' ? 'specific_component_amounts[]' : 'all_component_amounts[]';
+      
+      // Get container and count existing rows to auto-increment index
+      const containerSelector = type === 'specific' ? '#specificCustomComponentsList' : '#allCustomComponentsList';
+      const container = document.querySelector(containerSelector);
+      const index = container.querySelectorAll('.grid').length;
+      
+      // Use nested array syntax: all_components[0][name], all_components[0][amount], etc.
+      const prefix = type === 'specific' ? 'specific_components' : 'all_components';
+      
       row.innerHTML = `
-        <input name="${nameField}" type="text" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Component name" value="${defaultName}" />
-        <input name="${amountField}" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" value="${defaultAmount}" />
+        <input name="${prefix}[${index}][name]" type="text" class="col-span-7 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Component name" value="${defaultName}" />
+        <input name="${prefix}[${index}][amount]" type="number" min="0" step="0.01" class="col-span-4 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Amount" value="${defaultAmount}" />
         <button type="button" class="col-span-1 rounded bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
       `;
       const removeBtn = row.querySelector('button');
@@ -609,8 +631,19 @@
     tabSpecificBtn.addEventListener('click', () => switchTab('specific'));
 
     // Add dynamic component rows
-    addAllComponent.addEventListener('click', () => allComponents.appendChild(makeRow('all')));
-    addSpecificComponent.addEventListener('click', () => specificComponents.appendChild(makeRow('specific')));
+    addAllComponent.addEventListener('click', () => {
+      const container = document.getElementById('allCustomComponentsContainer');
+      const listContainer = document.getElementById('allCustomComponentsList');
+      container.classList.remove('hidden');
+      listContainer.appendChild(makeRow('all'));
+    });
+    
+    addSpecificComponent.addEventListener('click', () => {
+      const container = document.getElementById('specificCustomComponentsContainer');
+      const listContainer = document.getElementById('specificCustomComponentsList');
+      container.classList.remove('hidden');
+      listContainer.appendChild(makeRow('specific'));
+    });
 
     // --- Copy "All Classes" rows into "Specific Class" ---
     const loadAllClassesStructureBtn = document.getElementById('loadAllClassesStructure');
@@ -697,6 +730,85 @@
     [closePreviewPanel, backToEditBtn].forEach(btn => btn && btn.addEventListener('click', closePreview));
 
     // Saving: handled by regular form submission via the Confirm & Save button.
+    
+    // ===== FORM VALIDATION =====
+    const feeStructureForm = document.getElementById('feeStructureForm');
+    
+    feeStructureForm.addEventListener('submit', function(e) {
+      // Check if currency is selected
+      const currencyValue = currencySelect.value.trim();
+      
+      if (!currencyValue) {
+        e.preventDefault(); // Stop form submission
+        
+        // Scroll to currency field
+        currencySelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Add error styling to currency select
+        currencySelect.classList.add('border-red-500', 'ring-2', 'ring-red-500');
+        
+        // Create error message element
+        const existingError = document.getElementById('currency-error');
+        if (existingError) existingError.remove();
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.id = 'currency-error';
+        errorDiv.className = 'mt-2 flex items-center gap-2 text-red-600 text-sm font-medium';
+        errorDiv.innerHTML = '<i data-lucide="alert-circle" class="w-4 h-4"></i> Please select a currency before saving';
+        
+        currencySelect.parentElement.appendChild(errorDiv);
+        renderIcons();
+        
+        // Remove error styling and message after user selects currency
+        const removeError = () => {
+          currencySelect.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
+          const errEl = document.getElementById('currency-error');
+          if (errEl) errEl.remove();
+          currencySelect.removeEventListener('change', removeError);
+        };
+        
+        currencySelect.addEventListener('change', removeError);
+        
+        // Close preview panel to show the error
+        closePreview();
+        
+        return false;
+      }
+      
+      // If currency is "OTHER", check if custom label is provided
+      if (currencyValue === 'OTHER') {
+        const customValue = customCurrencyLabel.value.trim();
+        if (!customValue) {
+          e.preventDefault();
+          
+          customCurrencyLabel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          customCurrencyLabel.classList.add('border-red-500', 'ring-2', 'ring-red-500');
+          
+          const existingError = document.getElementById('custom-currency-error');
+          if (existingError) existingError.remove();
+          
+          const errorDiv = document.createElement('div');
+          errorDiv.id = 'custom-currency-error';
+          errorDiv.className = 'mt-2 flex items-center gap-2 text-red-600 text-sm font-medium';
+          errorDiv.innerHTML = '<i data-lucide="alert-circle" class="w-4 h-4"></i> Please enter a custom currency symbol or code';
+          
+          customCurrencyLabel.parentElement.appendChild(errorDiv);
+          renderIcons();
+          
+          const removeError = () => {
+            customCurrencyLabel.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
+            const errEl = document.getElementById('custom-currency-error');
+            if (errEl) errEl.remove();
+            customCurrencyLabel.removeEventListener('input', removeError);
+          };
+          
+          customCurrencyLabel.addEventListener('input', removeError);
+          
+          closePreview();
+          return false;
+        }
+      }
+    });
 
     // Initial icon render
     renderIcons();

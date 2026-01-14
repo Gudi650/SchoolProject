@@ -272,6 +272,24 @@
     // Initialize Lucide icons (convert icon tags to SVG)
     if (window.lucide) lucide.createIcons();
 
+    // ===== AUTO-DISMISS FLASH MESSAGES =====
+    // Select all flash message elements
+    const flashMessages = document.querySelectorAll('.space-y-3.mb-6 > div');
+    
+    // Auto-dismiss each message after 5 seconds
+    flashMessages.forEach(message => {
+      setTimeout(() => {
+        // Add fade-out transition
+        message.style.transition = 'opacity 0.5s ease-out';
+        message.style.opacity = '0';
+        
+        // Remove from DOM after fade-out completes
+        setTimeout(() => {
+          message.remove();
+        }, 500);
+      }, 5000); // 5000ms = 5 seconds
+    });
+
     // ===== GET DOM ELEMENTS =====
     // Modal element that shows the edit form
     const editClassModal = document.getElementById('editClassFeeModal');

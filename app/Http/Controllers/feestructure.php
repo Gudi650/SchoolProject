@@ -37,7 +37,7 @@ class feestructure extends Controller
         {
             //validate the request
             $validated = $request->validate([
-                //'currency' => 'required|string|max:3',
+                'currency' => 'required|string|max:3',
                 'tuition_fee' => 'required|numeric|min:0',
                 'transport_fee' => 'nullable|numeric|min:0',
                 'hostel_fee' => 'nullable|numeric|min:0',
