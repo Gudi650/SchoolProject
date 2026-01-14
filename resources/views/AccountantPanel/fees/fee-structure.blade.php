@@ -172,6 +172,98 @@
         </table>
       </div>
     </div>
+
+    <!-- Custom Fee Components (Static Preview) -->
+    <div class="mt-8 bg-white rounded-xl border border-slate-200 shadow-sm">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-slate-900">Custom Fee Components</h2>
+        <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-full">Preview</span>
+      </div>
+      <div class="grid grid-cols-1 gap-6 p-6">
+        <!-- All Components (Global) -->
+        <div class="rounded-xl border border-slate-200 overflow-hidden bg-white">
+          <div class="px-4 py-3 border-b border-slate-200 bg-slate-50">
+            <h3 class="font-semibold text-slate-800">All Components (Global)</h3>
+            <p class="text-xs text-slate-500">Applied to every class</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th class="px-4 py-2 font-semibold text-slate-700">Component</th>
+                  <th class="px-4 py-2 font-semibold text-slate-700 text-right">Amount</th>
+                  <th class="px-4 py-2 font-semibold text-slate-700">Currency</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr class="hover:bg-slate-50">
+                  <td class="px-4 py-2 text-slate-800">Development Fund</td>
+                  <td class="px-4 py-2 text-slate-700 text-right">10,000</td>
+                  <td class="px-4 py-2 text-slate-700">TSH</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-4 py-2 text-slate-800">Activities Fee</td>
+                  <td class="px-4 py-2 text-slate-700 text-right">5,000</td>
+                  <td class="px-4 py-2 text-slate-700">TSH</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-4 py-2 text-slate-800">Maintenance</td>
+                  <td class="px-4 py-2 text-slate-700 text-right">2,500</td>
+                  <td class="px-4 py-2 text-slate-700">TSH</td>
+                </tr>
+                <tr class="bg-slate-50">
+                  <td class="px-4 py-2 font-semibold text-slate-900">Total</td>
+                  <td class="px-4 py-2 font-semibold text-slate-900 text-right">17,500</td>
+                  <td class="px-4 py-2"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Specific Components (Scoped) -->
+        <div class="rounded-xl border border-slate-200 overflow-hidden bg-white">
+          <div class="px-4 py-3 border-b border-slate-200 bg-slate-50">
+            <h3 class="font-semibold text-slate-800">Specific Components (Scoped)</h3>
+            <p class="text-xs text-slate-500">Applied to selected class</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th class="px-4 py-2 font-semibold text-slate-700">Component</th>
+                  <th class="px-4 py-2 font-semibold text-slate-700">Class</th>
+                  <th class="px-4 py-2 font-semibold text-slate-700 text-right">Amount</th>
+                  <th class="px-4 py-2 font-semibold text-slate-700">Currency</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr class="hover:bg-slate-50">
+                  <td class="px-4 py-2 text-slate-800">Lab Fee</td>
+                  <td class="px-4 py-2 text-slate-700">Class 10</td>
+                  <td class="px-4 py-2 text-slate-700 text-right">7,500</td>
+                  <td class="px-4 py-2 text-slate-700">TSH</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-4 py-2 text-slate-800">Field Trip</td>
+                  <td class="px-4 py-2 text-slate-700">Class 8</td>
+                  <td class="px-4 py-2 text-slate-700 text-right">4,000</td>
+                  <td class="px-4 py-2 text-slate-700">TSH</td>
+                </tr>
+                <tr class="bg-slate-50">
+                  <td class="px-4 py-2 font-semibold text-slate-900">Total</td>
+                  <td class="px-4 py-2"></td>
+                  <td class="px-4 py-2 font-semibold text-slate-900 text-right">11,500</td>
+                  <td class="px-4 py-2"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="px-6 pb-6 text-xs text-slate-500">This preview is static. Backend rendering will replace it later.</div>
+    </div>
+
   </main>
 
 </x-Account-sidebar>
@@ -351,3 +443,5 @@
 </script>
 
 @include('AccountantPanel.fees.feeStructureModal')
+
+
