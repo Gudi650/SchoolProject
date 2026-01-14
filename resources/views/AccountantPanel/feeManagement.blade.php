@@ -165,6 +165,6 @@
 
       </main>
       
-      @include('AccountantPanel.feeStructureModal')
+      @include('AccountantPanel.fees.feeStructureModal')
 
 </x-Account-sidebar>
