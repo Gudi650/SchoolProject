@@ -26,8 +26,22 @@ class feestructure extends Controller
         //get the fee structures of the school
         //$feeStructures = $this->getFeeStructures($details['school']->id);
 
+        //get the custom fee structures for specific classes
+        //$customFeeStructures = $this->getCustomFeeStructures($details['school']->id);
+
+
+        /*
+            THIS HAS TO BE CHANGED LATER TO DYNAMIC SCHOOL ID
+            AS THIS IS NOT VALID LATER ON WHEN MULTI SCHOOL IS IMPLEMENTED
+
+        */
+
+
         //temporarily require the data
         $feeStructures = $this->getFeeStructures(1); 
+        $customFeeStructures = $this->getCustomFeeStructures(1);
+
+
 
         //create variable to add the total of the fees
         $totalFees = 0;
@@ -37,7 +51,7 @@ class feestructure extends Controller
         return view('AccountantPanel.fees.fee-structure' , [
             //'classes' => $classes,
             'feeStructures' => $feeStructures,
-            //'customFeeStructures' => $customFeeStructures,
+            'customFeeStructures' => $customFeeStructures,
             'totalFees' => $totalFees,
         ]);
     }
@@ -196,6 +210,20 @@ class feestructure extends Controller
 
         //return the fee structures
         return $feeStructures;
+
+    }
+
+    //get the fee structures for specific classes
+    protected function getCustomFeeStructures($schoolId)
+    {
+
+        //get the fee structures of the school
+        $customFeeStructures = ModelsFeeStructure::where('school_id', $schoolId)
+                            ->where('for', 'specific')
+                            ->get();
+
+        //return the fee structures
+        return $customFeeStructures;
 
     }
 

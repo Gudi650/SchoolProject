@@ -237,177 +237,121 @@
         <p class="text-sm text-slate-600 mt-1">Each class can have different fee components applied</p>
       </div>
 
-      <!-- Class 10 Card -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6">
-        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-          <h3 class="font-semibold text-slate-800">Class 10</h3>
-          <button class="edit-class-btn px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2" data-class="Class 10">
-            <i data-lucide="edit-2" class="w-4 h-4"></i>
-            <span>Edit</span>
-          </button>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th class="px-6 py-3 font-semibold text-slate-700">Fee Component</th>
-                <th class="px-6 py-3 font-semibold text-slate-700 text-right">Amount</th>
-                <th class="px-6 py-3 font-semibold text-slate-700">Currency</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200">
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Tuition Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹15,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Transport Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹5,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Hostel Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹20,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Library Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹1,500</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Exam Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹2,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50 bg-blue-50">
-                <td class="px-6 py-3 text-slate-800 font-medium">Lab Fee <span class="text-xs text-blue-600">(Custom)</span></td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹7,500</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="bg-slate-50">
-                <td class="px-6 py-3 font-semibold text-slate-900">Total</td>
-                <td class="px-6 py-3 font-semibold text-slate-900 text-right">₹51,000</td>
-                <td class="px-6 py-3"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      
 
-      <!-- Class 9 Card -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6">
-        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-          <h3 class="font-semibold text-slate-800">Class 9</h3>
-          <button class="edit-class-btn px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2" data-class="Class 9">
-            <i data-lucide="edit-2" class="w-4 h-4"></i>
-            <span>Edit</span>
-          </button>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th class="px-6 py-3 font-semibold text-slate-700">Fee Component</th>
-                <th class="px-6 py-3 font-semibold text-slate-700 text-right">Amount</th>
-                <th class="px-6 py-3 font-semibold text-slate-700">Currency</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200">
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Tuition Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹15,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Transport Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹5,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Hostel Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹20,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Library Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹1,500</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Exam Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹2,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="bg-slate-50">
-                <td class="px-6 py-3 font-semibold text-slate-900">Total</td>
-                <td class="px-6 py-3 font-semibold text-slate-900 text-right">₹43,500</td>
-                <td class="px-6 py-3"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
 
-      <!-- Class 8 Card -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6">
-        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-          <h3 class="font-semibold text-slate-800">Class 8</h3>
-          <button class="edit-class-btn px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2" data-class="Class 8">
-            <i data-lucide="edit-2" class="w-4 h-4"></i>
-            <span>Edit</span>
-          </button>
+          {{-- check if the customfeestructure is given
+                then display the custom fee structure for classes in it
+          --}}
+
+          {{-- checking it here so as every specific to have its own table --}}
+
+          @if ($customFeeStructures && $customFeeStructures->isNotEmpty())
+
+            {{-- loop through the custom fee structures --}}
+
+            @foreach ( $customFeeStructures as $customStructure )
+
+            {{-- reset variable in every new iteration --}}
+            @php
+              $totalFees = 0;
+            @endphp
+
+            <!-- Class 10 Card -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6">
+              <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                <h3 class="font-semibold text-slate-800">{{ $customStructure->class_id}}</h3>
+                <button class="edit-class-btn px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2" data-class="Class 10">
+                  <i data-lucide="edit-2" class="w-4 h-4"></i>
+                  <span>Edit</span>
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+              
+
+              <table class="w-full text-left text-sm">
+                <thead class="bg-slate-50 border-b border-slate-200">
+                  <tr>
+                    <th class="px-6 py-3 font-semibold text-slate-700">Fee Component</th>
+                    <th class="px-6 py-3 font-semibold text-slate-700 text-right">Amount</th>
+                    <th class="px-6 py-3 font-semibold text-slate-700">Currency</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+
+                  <tr class="hover:bg-slate-50">
+                    <td class="px-6 py-3 text-slate-800">Tuition Fee</td>
+                    <td class="px-6 py-3 text-slate-700 text-right">{{ number_format($customStructure->tuition_fee , 3, '.', ',') }}</td>
+                    <td class="px-6 py-3 text-slate-700">TSH</td>
+
+                    {{-- add the total number of the fees --}}
+
+                    @php
+                      $totalFees += $customStructure->tuition_fee;
+                    @endphp
+
+                  </tr>
+
+                  {{-- now check for other table columns if they exists and display their contents --}}
+                  @foreach (['transport_fee' => 'Transport Fee', 'library_fee' => 'Library Fee', 'exam_fee' => 'Exam Fee', 'hostel_fee' => 'Hostel Fee'] as $field => $label)
+                    @if ($customStructure->$field)
+                      <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-slate-900">{{ $label }}</td>
+                        <td class="px-6 py-4 text-slate-700 text-right">{{ number_format($customStructure->$field, 3, '.', ',') }}</td>
+                        <td class="px-6 py-4 text-slate-700">{{ $customStructure->currency }}</td>
+                        {{-- add the total number of the fees --}}
+
+                        @php
+                          $totalFees += $customStructure->$field;
+                        @endphp
+
+                      </tr>
+                    @endif
+
+                  @endforeach
+
+                  {{-- now check for the json file to display --}}
+                  @if (!empty($customStructure->dynamic_attributes['all_components']))
+                    @foreach ($customStructure->dynamic_attributes['all_components'] as $component)
+                      <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-slate-900">
+                          {{ $component['name'] }}
+                          <span class="text-xs text-blue-600">(Custom)</span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-700 text-right">{{ number_format($component['amount'], 3, '.', ',') }}</td>
+                        <td class="px-6 py-4 text-slate-700">{{ $customStructure->currency }}</td>
+
+                        {{-- add the total number of the fees --}}
+                        @php
+                          $totalFees += $component['amount'];
+                        @endphp
+
+                      </tr>
+                    @endforeach
+                  @endif
+
+                  {{-- finally display the total --}}
+                  <tr class="bg-slate-50">
+                    <td class="px-6 py-4 font-semibold text-slate-900">Total</td>
+                    <td class="px-6 py-4 font-semibold text-slate-900 text-right">{{ number_format($totalFees, 3, '.', ',') }}</td>
+                    <td class="px-6 py-4">{{ $customStructure->currency }} </td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+              
+            @endforeach
+          @else
+            <div class="p-6 text-center text-slate-500">
+              No custom fee structure defined for Class 10.
+            </div>
+          @endif
+
+          
+          </div>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th class="px-6 py-3 font-semibold text-slate-700">Fee Component</th>
-                <th class="px-6 py-3 font-semibold text-slate-700 text-right">Amount</th>
-                <th class="px-6 py-3 font-semibold text-slate-700">Currency</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200">
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Tuition Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹15,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Transport Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹5,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Hostel Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹20,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Library Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹1,500</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50">
-                <td class="px-6 py-3 text-slate-800">Exam Fee</td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹2,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="hover:bg-slate-50 bg-amber-50">
-                <td class="px-6 py-3 text-slate-800 font-medium">Field Trip <span class="text-xs text-amber-600">(Custom)</span></td>
-                <td class="px-6 py-3 text-slate-700 text-right">₹4,000</td>
-                <td class="px-6 py-3 text-slate-700">TSH</td>
-              </tr>
-              <tr class="bg-slate-50">
-                <td class="px-6 py-3 font-semibold text-slate-900">Total</td>
-                <td class="px-6 py-3 font-semibold text-slate-900 text-right">₹47,500</td>
-                <td class="px-6 py-3"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+
+
     </div>
 
   </main>
