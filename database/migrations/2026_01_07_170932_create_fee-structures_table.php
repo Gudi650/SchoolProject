@@ -20,9 +20,12 @@ return new class extends Migration
             $table->decimal('hostel_fee', 12,3)->nullable();
             $table->decimal('exam_fee', 12,3)->nullable();
             $table->string('currency', 10)->default('TSH');
-
+            $table->unsignedBigInteger('class_id')->nullable();
+             
             //dynamic attributes comes below in the column
             $table->json('dynamic_attributes')->nullable();
+
+            $table->enum('for',['general','specific'])->nullable();
 
             $table->timestamps();
 
@@ -30,6 +33,9 @@ return new class extends Migration
             //foreign key definition
             //school_id foreign key definition
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+
+            //class_id foreign key definition
+            $table->foreign('class_id')->references('id')->on('class-availables')->onDelete('cascade');
 
         });
     }

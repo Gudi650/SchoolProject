@@ -18,6 +18,8 @@ class FeeStructure extends Model
         'library_fee',
         'exam_fee',
         'currency',
+        'for',
+        'class_id',
         'dynamic_attributes',
     ];
 

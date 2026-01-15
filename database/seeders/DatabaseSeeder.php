@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\School;
+use App\Models\Availablesubject;
+use App\Models\ClassAvailable;
+use App\Models\TeacherRole;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,10 +17,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create 3 schools
+        School::factory(3)->create();
 
+        // Create 6 available subjects
+        Availablesubject::factory(6)->create();
+
+        // Create 6 class levels
+        ClassAvailable::factory(6)->create();
+
+        // Create 6 teacher roles
+        TeacherRole::factory(6)->create();
+
+        // Create test user
         User::factory()->create([
-            'name' => 'Test User',
+            'fname' => 'Test',
+            'lname' => 'User',
             'email' => 'test@example.com',
         ]);
     }

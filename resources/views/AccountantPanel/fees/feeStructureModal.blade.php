@@ -166,55 +166,55 @@
             </div>
             <div id="classDropdownMenu" class="hidden absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Nursery"> Nursery
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="0"> Nursery
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 1"> Grade 1
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="1"> Grade 1
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 2"> Grade 2
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="2"> Grade 2
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 3"> Grade 3
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 3"> Grade 3
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 4"> Grade 4
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 4"> Grade 4
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 5"> Grade 5
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 5"> Grade 5
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 6"> Grade 6
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 6"> Grade 6
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 7"> Grade 7
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 7"> Grade 7
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 8"> Grade 8
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 8"> Grade 8
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 9"> Grade 9
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 9"> Grade 9
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 10"> Grade 10
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 10"> Grade 10
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 11"> Grade 11
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 11"> Grade 11
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Grade 12"> Grade 12
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 12"> Grade 12
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Form 1"> Form 1
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 11"> Form 1
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Form 2"> Form 2
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 12"> Form 2
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Form 3"> Form 3
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 13"> Form 3
               </label>
               <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value="Form 4"> Form 4
+                <input type="checkbox" name="classes[]" class="class-checkbox mr-2 rounded" value=" 14"> Form 4
               </label>
             </div>
           </div>

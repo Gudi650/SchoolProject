@@ -18,7 +18,7 @@
           <div class="w-full sm:w-auto">
             <button id="openEditStructureModal" class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center">
               <i data-lucide="edit-3" class="w-4 h-4"></i>
-              <span>Edit Structure</span>
+              <span>Create Structure</span>
             </button>
           </div>
         </div>
@@ -127,36 +127,104 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200">
-            <tr class="hover:bg-slate-50 transition-colors">
-              <td class="px-6 py-4 font-medium text-slate-900">Tuition Fee</td>
-              <td class="px-6 py-4 text-slate-700 text-right">₹15,000</td>
-              <td class="px-6 py-4 text-slate-700">TSH</td>
-            </tr>
-            <tr class="hover:bg-slate-50 transition-colors">
-              <td class="px-6 py-4 font-medium text-slate-900">Transport Fee</td>
-              <td class="px-6 py-4 text-slate-700 text-right">₹5,000</td>
-              <td class="px-6 py-4 text-slate-700">TSH</td>
-            </tr>
-            <tr class="hover:bg-slate-50 transition-colors">
-              <td class="px-6 py-4 font-medium text-slate-900">Hostel Fee</td>
-              <td class="px-6 py-4 text-slate-700 text-right">₹20,000</td>
-              <td class="px-6 py-4 text-slate-700">TSH</td>
-            </tr>
-            <tr class="hover:bg-slate-50 transition-colors">
-              <td class="px-6 py-4 font-medium text-slate-900">Library Fee</td>
-              <td class="px-6 py-4 text-slate-700 text-right">₹1,500</td>
-              <td class="px-6 py-4 text-slate-700">TSH</td>
-            </tr>
-            <tr class="hover:bg-slate-50 transition-colors">
-              <td class="px-6 py-4 font-medium text-slate-900">Exam Fee</td>
-              <td class="px-6 py-4 text-slate-700 text-right">₹2,000</td>
-              <td class="px-6 py-4 text-slate-700">TSH</td>
-            </tr>
-            <tr class="bg-slate-50">
-              <td class="px-6 py-4 font-semibold text-slate-900">Total</td>
-              <td class="px-6 py-4 font-semibold text-slate-900 text-right">₹43,500</td>
-              <td class="px-6 py-4"></td>
-            </tr>
+
+            {{-- 
+                this is where we will loop through the fee structure values from the database
+            --}}
+
+            {{-- check if the feeStructure variable is not empty
+                then display the fee structure values
+            --}}
+
+            @if ($feeStructures && $feeStructures->isNotEmpty())
+
+              {{-- loop through the fee structures --}}
+              @foreach ($feeStructures as $structure)
+
+                {{-- empty the total after every iteation --}}
+
+                @php
+                  $totalFees = 0;
+                @endphp
+
+                {{-- display the tuition fee first --}}
+
+                <tr class="hover:bg-slate-50 transition-colors">
+                  <td class="px-6 py-4 font-medium text-slate-900">Tuition Fee</td>
+                  <td class="px-6 py-4 text-slate-700 text-right">{{ number_format($structure->tuition_fee, 3, '.', ',') }}</td>
+                  <td class="px-6 py-4 text-slate-700">{{ $structure->currency }}</td>
+
+                  {{-- add the total number of the fees --}}
+                  @php
+                    $totalFees += $structure->tuition_fee;
+                  @endphp
+
+                </tr>
+
+                {{-- now check for other table columns if they exists and display their contents --}}
+                @foreach (['transport_fee' => 'Transport Fee', 'library_fee' => 'Library Fee', 'exam_fee' => 'Exam Fee', 'hostel_fee' => 'Hostel Fee'] as $field => $label)
+
+                  @if ($structure->$field)
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="px-6 py-4 font-medium text-slate-900">{{ $label }}</td>
+                      <td class="px-6 py-4 text-slate-700 text-right">{{ number_format($structure->$field, 3, '.', ',') }}</td>
+                      <td class="px-6 py-4 text-slate-700">{{ $structure->currency }}</td>
+
+                      {{-- add the total number of the fees --}}
+                      @php
+                        $totalFees += $structure->$field;
+                      @endphp
+
+                    </tr>
+                  @endif
+
+                @endforeach
+
+
+                {{-- now check for the json file to display --}}
+                @if (!empty($structure->dynamic_attributes['all_components']))
+                  @foreach ($structure->dynamic_attributes['all_components'] as $component)
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="px-6 py-4 font-medium text-slate-900">
+                        {{ $component['name'] }}
+                        <span class="text-xs text-blue-600">(Custom)</span>
+                      </td>
+                      <td class="px-6 py-4 text-slate-700 text-right">{{ number_format($component['amount'], 3, '.', ',') }}</td>
+                      <td class="px-6 py-4 text-slate-700">{{ $structure->currency }}</td>
+
+                      {{-- add the total number of the fees --}}
+                      @php
+                        $totalFees += $component['amount'];
+                      @endphp
+
+                    </tr>
+                  @endforeach
+                @endif
+
+                {{-- finally display the total --}}
+
+                <tr class="bg-slate-50">
+                  <td class="px-6 py-4 font-semibold text-slate-900">Total</td>
+                  <td class="px-6 py-4 font-semibold text-slate-900 text-right">{{ number_format($totalFees, 3, '.', ',') }}</td>
+                  <td class="px-6 py-4">{{ $structure->currency }} </td>
+                </tr>
+              
+              @endforeach
+
+            {{-- if there is no data yet --}}
+            @else
+              <tr>
+                <td colspan="3" class="px-6 py-4 text-center text-slate-500">
+                  No fee structure defined yet.
+                </td>
+              </tr>
+
+
+            @endif
+
+            
+            
+
           </tbody>
         </table>
       </div>

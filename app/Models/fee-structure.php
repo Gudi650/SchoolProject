@@ -16,6 +16,7 @@ class FeeStructure extends Model
         'exam_fee',
         'currency',
         'dynamic_attributes',
+        'for',
     ];
 
     //make json an array

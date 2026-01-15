@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class TeacherRoleFactory extends Factory
 {
+    // Static counter to track which sample to return
+    protected static int $index = 0;
+
     /**
      * Define the model's default state.
      *
@@ -17,7 +20,6 @@ class TeacherRoleFactory extends Factory
     public function definition(): array
     {
         //redefining the job titles to use in tinker
-
         $jobTitles = [
             'Head Teacher',
             'Discipline Teacher',
@@ -27,9 +29,15 @@ class TeacherRoleFactory extends Factory
             'Librarian',
         ];
 
+        $count = count($jobTitles);
+        $i = $count ? self::$index % $count : 0;
+        $role = $jobTitles[$i];
+        
+        // Advance index safely (keeps cycling)
+        self::$index = ($i + 1) % max($count, 1);
 
         return [
-            'name' => $this->faker->randomElement($jobTitles),
+            'name' => $role,
         ];
     }
 }

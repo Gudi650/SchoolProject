@@ -15,7 +15,7 @@ class feestructure extends Controller
     {
 
         //get the details of the logged in user
-        //$details = $this->getDetails();
+        //$details = $this->getUserDetails();
 
         //get the classes from the details
         //$classes = $details['classes'];
@@ -23,9 +23,22 @@ class feestructure extends Controller
         //dump
         //dd($details);
 
+        //get the fee structures of the school
+        //$feeStructures = $this->getFeeStructures($details['school']->id);
+
+        //temporarily require the data
+        $feeStructures = $this->getFeeStructures(1); 
+
+        //create variable to add the total of the fees
+        $totalFees = 0;
+
+
         //return and pass values to the view
         return view('AccountantPanel.fees.fee-structure' , [
             //'classes' => $classes,
+            'feeStructures' => $feeStructures,
+            //'customFeeStructures' => $customFeeStructures,
+            'totalFees' => $totalFees,
         ]);
     }
     
@@ -44,6 +57,8 @@ class feestructure extends Controller
                 'hostel_fee' => 'nullable|numeric|min:0',
                 'library_fee' => 'nullable|numeric|min:0',
                 'exam_fee' => 'nullable|numeric|min:0',
+                'classes' => 'nullable|array',
+                'classes.*' => 'integer|max:50',
 
                 //custom fee components can be added here as an array
                 'all_components' => 'nullable|array',
@@ -55,11 +70,16 @@ class feestructure extends Controller
                 'specific_components.*.amount' => 'required_with:specific_components|numeric|min:0',
             
                 //for specific scope
-                'school_id' => 'nullable|string|max:50',
-                'class_id' => 'nullable|integer',
+                'school_id' => 'nullable|integer|exists:schools,id',
 
 
             ]);
+
+            $classes = $request->input('classes');
+            $validated['class_id'] = (!empty($classes) && is_array($classes)) ? implode(',', $classes) : null;
+            $validated['all_components'] = $request->input('all_components'); // null when missing
+            $validated['specific_components'] = $request->input('specific_components'); // null when missing
+            $validated['for'] = $validated['class_id'] !== null ? 'specific' : 'general';
 
             //add a default school id if not provided
             if (empty($validated['school_id']))
@@ -76,19 +96,51 @@ class feestructure extends Controller
             try{
 
                 //create and save validated data to the database
+
+                //now check if there are custom components to be added
+                //if so then do the below create operation and if not then create without dynamic attributes
+
+                if (empty($validated['all_components']) && empty($validated['specific_components']) )
+                {
+                    //create without dynamic attributes
+                    ModelsFeeStructure::create($validated);
+
+                    return back()->with('success', 'Fee Structure saved successfully');
+                }
+                elseif($validated['all_components'] && empty($validated['specific_components']))
+                {
+
+                    //create with dynamic attributes
+                    ModelsFeeStructure::create(array_merge(
+                        $validated,
+                        [
+                            'dynamic_attributes' => [
+                                'all_components' => $validated['all_components'],
+                            ],
+                        ]
+                    ));
+                }elseif(empty($validated['all_components']) && $validated['specific_components'])
+                {
+                    //create with dynamic attributes
                 ModelsFeeStructure::create(array_merge(
                     $validated,
                     [
                         'dynamic_attributes' => [
-                            'all_components' => $validated['all_components'] ?? [],
-                            'specific_components' => $validated['specific_components'] ?? []
-                        ]
+                            'all_components' => $validated['all_components'],
+                            'specific_components' => $validated['specific_components'],
+                        ],
                     ]
                 ));
+                }
 
             }catch(\Exception $e)
             {
-                return back()->withErrors(['error' => 'Database error: ' . $e->getMessage()]);
+               return back()->withErrors(['error' => 'Database error: ' . $e->getMessage()]);
+                
+                /*
+                throw $e;
+                dd($e->getMessage()); 
+                */
             }
             
 
@@ -96,7 +148,12 @@ class feestructure extends Controller
         }
         catch (\Exception $e)
         {
-            return back()->withErrors(['error' => 'An error occurred while saving the fee structure: ' . $e->getMessage()]);
+           return back()->withErrors(['error' => 'An error occurred while saving the fee structure: ' . $e->getMessage()]);
+            
+            /*
+            throw $e;
+            dd($e->getMessage()); 
+            */
         }
         
         return back()->with('success', 'Fee Structure saved successfully');
@@ -104,7 +161,7 @@ class feestructure extends Controller
     }
 
     //obtain the personal and school details of the logged in user
-    protected function getDetails()
+    protected function getUserDetails()
     {
         //get the user id 
         $userId = auth()->id();
@@ -125,6 +182,20 @@ class feestructure extends Controller
             'school' => $school,
             'classes' => $classes,
         ];
+
+    }
+
+    //get the fee structures of a school
+    protected function getFeeStructures($schoolId)
+    {
+
+        //get the fee structures of the school
+        $feeStructures = ModelsFeeStructure::where('school_id', $schoolId)
+                            ->where('for', 'general')
+                            ->get();
+
+        //return the fee structures
+        return $feeStructures;
 
     }
 

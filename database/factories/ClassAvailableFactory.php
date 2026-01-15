@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class ClassAvailableFactory extends Factory
 {
     // Static counter to track which sample to return
-    protected static int $index = 1;
+    protected static int $index = 0;
 
     public function definition(): array
     {
@@ -23,11 +23,12 @@ class ClassAvailableFactory extends Factory
             ['name' => 'Grade 6', 'school_id' => 1],
         ];
 
-        // Get the current sample and increment the index
-        $sample = $classAvailableSamples[self::$index];
-
-        // Prevent overflow
-        self::$index++;
+        $count = count($classAvailableSamples);
+        $i = $count ? self::$index % $count : 0;
+        $sample = $classAvailableSamples[$i];
+        
+        // Advance index safely (keeps cycling)
+        self::$index = ($i + 1) % max($count, 1);
 
         return $sample;
     }
