@@ -42,6 +42,18 @@ class ClassAvailable extends Model
         return $this->hasMany(ExamResults::class, 'class_id');  
     }
 
+    //relationship with FeeStructure model (one-to-many)
+    public function feeStructures()
+    {
+        return $this->hasMany(FeeStructure::class, 'class_id');
+    }
+
+    //relationship with ClassFeePivot model (one-to-many)
+    public function classFeePivots()
+    {
+        return $this->hasMany(ClassFeePivot::class, 'class_id');
+    }
+
 
 
 }

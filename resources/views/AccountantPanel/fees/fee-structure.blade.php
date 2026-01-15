@@ -15,6 +15,11 @@
             <span>Export</span>
           </button>
 
+          <button class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-2 justify-center">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+            <span>Settings</span>
+          </button>
+
           <div class="w-full sm:w-auto">
             <button id="openEditStructureModal" class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center">
               <i data-lucide="edit-3" class="w-4 h-4"></i>
@@ -260,7 +265,7 @@
             <!-- Class 10 Card -->
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6">
               <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-                <h3 class="font-semibold text-slate-800">{{ $customStructure->class_id}}</h3>
+                <h3 class="font-semibold text-slate-800">{{ $customStructure->classes->pluck('name')->join(', ') ?: 'No classes' }}</h3>
                 <button class="edit-class-btn px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2" data-class="Class 10">
                   <i data-lucide="edit-2" class="w-4 h-4"></i>
                   <span>Edit</span>
@@ -340,16 +345,21 @@
                 </tbody>
               </table>
               
+                </div>
+              </div>
+
             @endforeach
           @else
             <div class="p-6 text-center text-slate-500">
               No custom fee structure defined for Class 10.
             </div>
+
+              </div>
+        </div>
           @endif
 
           
-          </div>
-        </div>
+        
 
 
     </div>

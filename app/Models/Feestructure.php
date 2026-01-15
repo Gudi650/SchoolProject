@@ -19,7 +19,6 @@ class FeeStructure extends Model
         'exam_fee',
         'currency',
         'for',
-        'class_id',
         'dynamic_attributes',
     ];
 
@@ -27,5 +26,17 @@ class FeeStructure extends Model
     protected $casts =[
         'dynamic_attributes' => 'array',
     ];
+
+    //relationship with School model
+    public function school()
+    {
+        return $this->belongsTo(School::class , 'school_id');
+    }
+
+    //many-to-many relationship with ClassAvailable model through pivot table
+    public function classes()
+    {
+        return $this->belongsToMany(ClassAvailable::class, 'class_fee_pivots', 'fee_structure_id', 'class_id');
+    }
 
 }

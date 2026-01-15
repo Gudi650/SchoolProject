@@ -90,10 +90,9 @@ class feestructure extends Controller
             ]);
 
             $classes = $request->input('classes');
-            $validated['class_id'] = (!empty($classes) && is_array($classes)) ? implode(',', $classes) : null;
             $validated['all_components'] = $request->input('all_components'); // null when missing
             $validated['specific_components'] = $request->input('specific_components'); // null when missing
-            $validated['for'] = $validated['class_id'] !== null ? 'specific' : 'general';
+            $validated['for'] = (!empty($classes) && is_array($classes)) ? 'specific' : 'general';
 
             //add a default school id if not provided
             if (empty($validated['school_id']))
@@ -117,7 +116,12 @@ class feestructure extends Controller
                 if (empty($validated['all_components']) && empty($validated['specific_components']) )
                 {
                     //create without dynamic attributes
-                    ModelsFeeStructure::create($validated);
+                    $feeStructure = ModelsFeeStructure::create($validated);
+                    
+                    //attach classes via pivot table if provided
+                    if (!empty($classes) && is_array($classes)) {
+                        $feeStructure->classes()->attach($classes);
+                    }
 
                     return back()->with('success', 'Fee Structure saved successfully');
                 }
@@ -125,7 +129,7 @@ class feestructure extends Controller
                 {
 
                     //create with dynamic attributes
-                    ModelsFeeStructure::create(array_merge(
+                    $feeStructure = ModelsFeeStructure::create(array_merge(
                         $validated,
                         [
                             'dynamic_attributes' => [
@@ -133,28 +137,38 @@ class feestructure extends Controller
                             ],
                         ]
                     ));
+                    
+                    //attach classes via pivot table if provided
+                    if (!empty($classes) && is_array($classes)) {
+                        $feeStructure->classes()->attach($classes);
+                    }
                 }elseif(empty($validated['all_components']) && $validated['specific_components'])
                 {
                     //create with dynamic attributes
-                ModelsFeeStructure::create(array_merge(
-                    $validated,
-                    [
-                        'dynamic_attributes' => [
-                            'all_components' => $validated['all_components'],
-                            'specific_components' => $validated['specific_components'],
-                        ],
-                    ]
-                ));
+                    $feeStructure = ModelsFeeStructure::create(array_merge(
+                        $validated,
+                        [
+                            'dynamic_attributes' => [
+                                'all_components' => $validated['all_components'],
+                                'specific_components' => $validated['specific_components'],
+                            ],
+                        ]
+                    ));
+                    
+                    //attach classes via pivot table if provided
+                    if (!empty($classes) && is_array($classes)) {
+                        $feeStructure->classes()->attach($classes);
+                    }
                 }
 
             }catch(\Exception $e)
             {
-               return back()->withErrors(['error' => 'Database error: ' . $e->getMessage()]);
+               //return back()->withErrors(['error' => 'Database error: ' . $e->getMessage()]);
                 
-                /*
+                
                 throw $e;
                 dd($e->getMessage()); 
-                */
+                
             }
             
 
@@ -162,12 +176,12 @@ class feestructure extends Controller
         }
         catch (\Exception $e)
         {
-           return back()->withErrors(['error' => 'An error occurred while saving the fee structure: ' . $e->getMessage()]);
+           //return back()->withErrors(['error' => 'An error occurred while saving the fee structure: ' . $e->getMessage()]);
             
-            /*
+            
             throw $e;
             dd($e->getMessage()); 
-            */
+            
         }
         
         return back()->with('success', 'Fee Structure saved successfully');
@@ -217,9 +231,10 @@ class feestructure extends Controller
     protected function getCustomFeeStructures($schoolId)
     {
 
-        //get the fee structures of the school
+        //get the fee structures of the school with related classes
         $customFeeStructures = ModelsFeeStructure::where('school_id', $schoolId)
                             ->where('for', 'specific')
+                            ->with('classes')
                             ->get();
 
         //return the fee structures
