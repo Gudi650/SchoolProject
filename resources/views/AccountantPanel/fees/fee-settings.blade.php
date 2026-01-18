@@ -163,12 +163,16 @@
 
                                 {{-- check if the fee structure is in the core components --}}
                                 @if($structure->$field)
+                                    {{-- Check if this field is "required" in saved settings --}}
+                                    @php
+                                        $isRequired = isset($savedGeneralSettings[$field]) && $savedGeneralSettings[$field] === 'required';
+                                    @endphp
                                     <div class="flex items-center justify-between bg-slate-50 rounded-lg px-4 py-3">
                                         <div class="text-slate-800 font-medium">{{ $label }}</div>
                                         <div class="flex items center gap-3">
                                             <input type="hidden" name="{{ $field }}" value="optional">
                                             <label class="relative inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" name="{{ $field }}" value="required" class="sr-only toggle-checkbox" {{ $structure->is_required ? 'checked' : '' }}>
+                                                <input type="checkbox" name="{{ $field }}" value="required" class="sr-only toggle-checkbox" {{ $isRequired ? 'checked' : '' }}>
                                                 <div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
                                                 <span class="ml-3 text-sm text-slate-700">Required</span>
                                             </label>
@@ -183,12 +187,16 @@
 					@if (!empty($structure->dynamic_attributes['all_components']))
 
 						@foreach ($structure->dynamic_attributes['all_components'] as $component)
+                            @php
+                                $componentSlug = \Illuminate\Support\Str::slug($component['name']);
+                                $isRequired = isset($savedGeneralSettings["custom_{$componentSlug}"]) && $savedGeneralSettings["custom_{$componentSlug}"] === 'required';
+                            @endphp
 							<div class="flex items center justify-between bg-slate-50 rounded-lg px-4 py-3">
 								<div class="text-slate-800 font-medium">{{ $component['name'] }}</div>
 								<div class="flex items center gap-3">
-									<input type="hidden" name="custom_{{ \Illuminate\Support\Str::slug($component['name']) }}" value="optional">
+									<input type="hidden" name="custom_{{ $componentSlug }}" value="optional">
 									<label class="relative inline-flex items-center cursor-pointer">
-										<input type="checkbox" name="custom_{{ \Illuminate\Support\Str::slug($component['name']) }}" value="required" class="sr-only toggle-checkbox" {{ !empty($component['amount']) ? 'checked' : '' }}>
+										<input type="checkbox" name="custom_{{ $componentSlug }}" value="required" class="sr-only toggle-checkbox" {{ $isRequired ? 'checked' : '' }}>
 										<div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
 										<span class="ml-3 text-sm text-slate-700">Required</span>
 									</label>
@@ -235,12 +243,16 @@
                                  {{-- now check for other table columns if they exists and display their contents --}}
                                  @foreach (['tuition_fee'=>'Tuition Fee','transport_fee' => 'Transport Fee', 'library_fee' => 'Library Fee', 'exam_fee' => 'Exam Fee', 'hostel_fee' => 'Hostel Fee'] as $field => $label)
                                     @if($customStructure->$field)
+                                        {{-- Check if this field is "required" in saved class-specific settings --}}
+                                        @php
+                                            $isRequired = isset($savedClassSettings[$customStructure->id][$field]) && $savedClassSettings[$customStructure->id][$field] === 'required';
+                                        @endphp
                                         <div class="flex items-center justify-between bg-slate-50 rounded-lg px-4 py-3 mt-3">
                                             <div class="text-slate-800 font-medium">{{ $label }}</div>
                                             <div>
                                                 <input type="hidden" name="class_{{ $customStructure->id }}_{{ $field }}" value="optional">
                                                 <label class="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" name="class_{{ $customStructure->id }}_{{ $field }}" value="required" class="sr-only toggle-checkbox" {{ $customStructure->is_required ? 'checked' : '' }}>
+                                                    <input type="checkbox" name="class_{{ $customStructure->id }}_{{ $field }}" value="required" class="sr-only toggle-checkbox" {{ $isRequired ? 'checked' : '' }}>
                                                     <div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
                                                 </label>
                                             </div>
@@ -278,14 +290,18 @@
 
 								</div>    --}}
 
-								@if(!empty($custom->dynamic_attributes['all_components']))
-									@foreach($custom->dynamic_attributes['all_components'] as $component)
+								@if(!empty($customStructure->dynamic_attributes['all_components']))
+									@foreach($customStructure->dynamic_attributes['all_components'] as $component)
+                                        @php
+                                            $componentSlug = \Illuminate\Support\Str::slug($component['name']);
+                                            $isRequired = isset($savedClassSettings[$customStructure->id]['custom_components'][$componentSlug]) && $savedClassSettings[$customStructure->id]['custom_components'][$componentSlug] === 'required';
+                                        @endphp
 										<div class="flex items-center justify-between bg-white rounded-lg border border-slate-200 px-4 py-3 mt-3">
 											<div class="text-slate-800 font-medium">{{ $component['name'] }}</div>
 											<div>
-												<input type="hidden" name="class_{{ $custom->id }}_custom_{{ \Illuminate\Support\Str::slug($component['name']) }}" value="optional">
+												<input type="hidden" name="class_{{ $customStructure->id }}_custom_{{ $componentSlug }}" value="optional">
 												<label class="relative inline-flex items-center cursor-pointer">
-													<input type="checkbox" name="class_{{ $custom->id }}_custom_{{ \Illuminate\Support\Str::slug($component['name']) }}" value="required" class="sr-only toggle-checkbox" {{ !empty($component['amount']) ? 'checked' : '' }}>
+													<input type="checkbox" name="class_{{ $customStructure->id }}_custom_{{ $componentSlug }}" value="required" class="sr-only toggle-checkbox" {{ $isRequired ? 'checked' : '' }}>
 													<div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
 												</label>
 											</div>

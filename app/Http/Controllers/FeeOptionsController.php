@@ -38,16 +38,26 @@ class FeeOptionsController extends Controller
 
 
         //return the fee settings view
-        // Also fetch the current saved data for display
+        // Fetch saved settings using the dedicated function
         $currentSchoolId = 1; // TODO: Use auth()->user()->school_id
-        $feeOptions = FeeOptions::where('school_id', $currentSchoolId)->first();
-        $classLinked = ClassFeeOptions::where('fee_options_id', $feeOptions?->id)->get() ?? collect();
+        $savedSettings = $this->getSavedFeeSettings($currentSchoolId);
+
+        $feeOptions = $savedSettings['feeOptions'];
+        $classLinked = $savedSettings['classLinked'];
+        $savedGeneralSettings = $savedSettings['general'];
+        $savedClassSettings = $savedSettings['classSpecific'];
         
         return view('AccountantPanel.fees.fee-settings', [
             'feeStructures' => $feeStructures,
             'customFeeStructures' => $customFeeStructures,
+            'feeOptions' => $savedSettings['feeOptions'],
+            'classLinked' => $savedSettings['classLinked'],
+            'savedGeneralSettings' => $savedSettings['general'],
+            'savedClassSettings' => $savedSettings['classSpecific'],
             'feeOptions' => $feeOptions,
             'classLinked' => $classLinked,
+            'savedGeneralSettings' => $savedGeneralSettings,
+            'savedClassSettings' => $savedClassSettings,
         ]);
 
     }
@@ -251,6 +261,39 @@ class FeeOptionsController extends Controller
         //return the fee structures
         return $customFeeStructures;
 
+    }
+
+    // Function to fetch saved fee settings from database
+    public function getSavedFeeSettings($schoolId)
+    {
+        // Get the fee_options record for this school
+        $feeOptions = FeeOptions::where('school_id', $schoolId)->first();
+        
+        // Get all class links for this fee_options record
+        $classLinked = collect();
+        if ($feeOptions) {
+            $classLinked = ClassFeeOptions::where('fee_options_id', $feeOptions->id)->get();
+        }
+        
+        // Extract general settings from JSON
+        $generalSettings = [];
+        if ($feeOptions && isset($feeOptions->dynamic_attributes['general_components'])) {
+            $generalSettings = $feeOptions->dynamic_attributes['general_components'];
+        }
+        
+        // Extract class-specific settings from JSON
+        $classSpecificSettings = [];
+        if ($feeOptions && isset($feeOptions->dynamic_attributes['class_settings'])) {
+            $classSpecificSettings = $feeOptions->dynamic_attributes['class_settings'];
+        }
+        
+        // Return all settings in a structured array
+        return [
+            'feeOptions' => $feeOptions,
+            'classLinked' => $classLinked,
+            'general' => $generalSettings,
+            'classSpecific' => $classSpecificSettings,
+        ];
     }
 
 
