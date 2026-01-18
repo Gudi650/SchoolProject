@@ -353,7 +353,9 @@ Route::get('/fee-settings' ,
 ->name('accounting.feeSettings');
 
 //route to save the settings 
-
+Route::post('/fee-settings' ,
+[FeeOptionsController::class, 'saveFeeSettings'])
+->name('accounting.feeSettings.save');
 
 
 

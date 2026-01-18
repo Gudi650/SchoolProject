@@ -36,7 +36,7 @@
 	<!-- Info cards removed per request -->
 
 	<div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-		<form method="POST" action="">
+		<form method="POST" action="{{ route('accounting.feeSettings.save') }}">
 			@csrf
 
 			<!-- General settings container -->
@@ -90,22 +90,22 @@
                     @endif
 
                     {{-- now check for the json file to display dynamic components --}}
-                    @if (!empty($structure->dynamic_attributes['all_components']))
+					@if (!empty($structure->dynamic_attributes['all_components']))
 
-                        @foreach ($structure->dynamic_attributes['all_components'] as $component)
-                            <div class="flex items center justify-between bg-slate-50 rounded-lg px-4 py-3">
-                                <div class="text-slate-800 font-medium">{{ $component['name'] }}</div>
-                                <div class="flex items center gap-3">
-                                    <input type="hidden" name="{{ $field }}" value="optional">
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" name="custom_{{ \Illuminate\Support\Str::slug($component['name']) }}" value="required" class="sr-only toggle-checkbox" {{ !empty($component['amount']) ? 'checked' : '' }}>
-                                        <div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
-                                        <span class="ml-3 text-sm text-slate-700">Required</span>
-                                    </label>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
+						@foreach ($structure->dynamic_attributes['all_components'] as $component)
+							<div class="flex items center justify-between bg-slate-50 rounded-lg px-4 py-3">
+								<div class="text-slate-800 font-medium">{{ $component['name'] }}</div>
+								<div class="flex items center gap-3">
+									<input type="hidden" name="custom_{{ \Illuminate\Support\Str::slug($component['name']) }}" value="optional">
+									<label class="relative inline-flex items-center cursor-pointer">
+										<input type="checkbox" name="custom_{{ \Illuminate\Support\Str::slug($component['name']) }}" value="required" class="sr-only toggle-checkbox" {{ !empty($component['amount']) ? 'checked' : '' }}>
+										<div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
+										<span class="ml-3 text-sm text-slate-700">Required</span>
+									</label>
+								</div>
+							</div>
+						@endforeach
+					@endif
 
 				</div>
 			</div>

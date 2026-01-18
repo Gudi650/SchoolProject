@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FeeStructure;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FeeOptionsController extends Controller
 {
@@ -39,6 +40,31 @@ class FeeOptionsController extends Controller
             'feeStructures' => $feeStructures,
             'customFeeStructures' => $customFeeStructures,
         ]);
+
+    }
+
+    //function to save the fee settings
+    public function saveFeeSettings(Request $request)
+    {
+
+
+        // Validate that every submitted field is either 'required' or 'optional'
+        $input = $request->except(['_token']);
+
+        // Build validation rules dynamically: every input must be present and one of the allowed values
+        $rules = [];
+        foreach (array_keys($input) as $key) {
+            $rules[$key] = ['required', 'in:required,optional'];
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Dump the validated data so the developer can observe it in the browser.
+        dd($validator->validated());
 
     }
 
