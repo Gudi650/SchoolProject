@@ -6,6 +6,7 @@ use App\Http\Controllers\AssignClasses;
 use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FeeOptionsController;
 use App\Http\Controllers\feestructure;
 use App\Http\Controllers\GeneratedTimetableController;
 use App\Http\Controllers\GenerateExamController;
@@ -346,9 +347,11 @@ Route::post('/fee-structure-save' ,
 ->name('accounting.feeStructure.save');
 
 //route for fee settings page
-Route::get('/fee-settings', function () {
-    return view('AccountantPanel.fees.fee-settings');
-})->name('accounting.feeSettings');
+
+Route::get('/fee-settings' ,
+[FeeOptionsController::class, 'viewFeeSettings'])
+->name('accounting.feeSettings');
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
