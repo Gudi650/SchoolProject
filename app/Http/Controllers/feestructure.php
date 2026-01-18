@@ -100,12 +100,6 @@ class feestructure extends Controller
                 $validated['school_id'] = '1';
             }
 
-            //dump the validated data
-            //dd($validated);
-
-            //process the validated data
-            //For example, save to database (not implemented here)
-
             try{
 
                 //create and save validated data to the database
