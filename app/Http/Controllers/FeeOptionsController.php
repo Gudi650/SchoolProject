@@ -48,20 +48,22 @@ class FeeOptionsController extends Controller
     {
 
 
-        // Validate that every submitted field is either 'required' or 'optional'
-        $input = $request->except(['_token']);
+        // Get all the form data except the CSRF token
+        $input = $request->except('_token');
 
-        // Build validation rules dynamically: every input must be present and one of the allowed values
+        // Create an empty array to hold our rules
         $rules = [];
-        foreach (array_keys($input) as $key) {
-            $rules[$key] = ['required', 'in:required,optional'];
+
+        // Go through each field in the form
+        foreach ($input as $fieldName => $value) {
+            // For each field, say:
+            // 1. It must be present (required)
+            // 2. Its value must be either "required" or "optional"
+            $rules[$fieldName] = 'required|in:required,optional';
         }
 
+        // Now validate the request using the rules we built
         $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
 
         // Dump the validated data so the developer can observe it in the browser.
         dd($validator->validated());
