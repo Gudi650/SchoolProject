@@ -345,6 +345,11 @@ Route::post('/fee-structure-save' ,
 [feestructure::class, 'savefeestructure'])
 ->name('accounting.feeStructure.save');
 
+//route for fee settings page
+Route::get('/fee-settings', function () {
+    return view('AccountantPanel.fees.fee-settings');
+})->name('accounting.feeSettings');
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

@@ -15,10 +15,10 @@
             <span>Export</span>
           </button>
 
-          <button id="openSettingsModal" class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-2 justify-center">
+          <a href="{{ route('accounting.feeSettings')}}" class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-2 justify-center">
             <i data-lucide="settings" class="w-4 h-4"></i>
             <span>Settings</span>
-          </button>
+          </a>
 
           <div class="w-full sm:w-auto">
             <button id="openEditStructureModal" class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center">
@@ -368,104 +368,10 @@
 
 </x-Account-sidebar>
 
+
+<!-- Settings moved to a full page: see fee-settings.blade.php -->
+
 <!-- Edit Class Fee Modal -->
-<!-- Settings Modal -->
-<style>
-  /* Toggle switch styles */
-  .toggle-track{ position: relative; transition: background-color .18s ease; }
-  .toggle-track::after{
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 4px;
-    width: 18px;
-    height: 18px;
-    background: #fff;
-    border-radius: 9999px;
-    transform: translateY(-50%);
-    transition: transform .18s cubic-bezier(.4,0,.2,1), box-shadow .18s;
-    box-shadow: 0 1px 2px rgba(2,6,23,0.08);
-  }
-  .toggle-checkbox:focus + .toggle-track{ box-shadow: 0 0 0 6px rgba(99,102,241,0.08); }
-  .toggle-checkbox:checked + .toggle-track{ background-color: #6366f1; }
-  .toggle-checkbox:checked + .toggle-track::after{ transform: translateY(-50%) translateX(18px); }
-  /* ensure the hidden input stays visually hidden but keyboard accessible */
-  .sr-only{ position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-</style>
-<div id="settingsModal" class="fixed inset-0 z-[9998] flex items-center justify-center bg-black/50 p-4 overflow-y-auto hidden">
-  <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto" style="max-height: 90vh;">
-    <div class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-          <i data-lucide="settings" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h2 class="text-lg font-bold">Fee Components Settings</h2>
-          <p class="text-sm text-white/80">Choose which components are required for all students</p>
-        </div>
-      </div>
-      <button id="closeSettingsModal" type="button" class="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors">
-        <i data-lucide="x" class="w-6 h-6"></i>
-      </button>
-    </div>
-
-    <div class="px-6 py-6 flex-1 overflow-y-auto">
-      <form id="settingsForm" class="space-y-6">
-        <p class="text-sm font-semibold text-slate-700">Core Components</p>
-        <div class="grid grid-cols-1 gap-3">
-          @php $core = ['tuition_fee' => 'Tuition Fee', 'transport_fee' => 'Transport Fee', 'library_fee' => 'Library Fee', 'exam_fee' => 'Exam Fee', 'hostel_fee' => 'Hostel Fee']; @endphp
-          @foreach($core as $key => $label)
-            <div class="flex items-center justify-between bg-slate-50 rounded-lg px-4 py-3">
-              <div class="text-slate-800 font-medium">{{ $label }}</div>
-              <div class="flex items-center gap-3">
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" name="{{ $key }}" class="sr-only toggle-checkbox" checked>
-                  <div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
-                  <span class="ml-3 text-sm text-slate-700">Required</span>
-                </label>
-              </div>
-            </div>
-          @endforeach
-        </div>
-
-        <div>
-          <p class="text-sm font-semibold text-slate-700 mt-4">Custom Components</p>
-          <p class="text-xs text-slate-500 mb-2">These are custom components added to fee structures</p>
-          <div class="space-y-2">
-            @if (!empty($feeStructures) && $feeStructures->isNotEmpty() && !empty($feeStructures->first()->dynamic_attributes['all_components']))
-              @foreach ($feeStructures->first()->dynamic_attributes['all_components'] as $component)
-                <div class="flex items-center justify-between bg-white rounded-lg border border-slate-200 px-4 py-3">
-                  <div class="text-slate-800 font-medium">{{ $component['name'] }}</div>
-                  <div class="flex items-center gap-3">
-                    <label class="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" name="custom_{{ Str::slug($component['name']) }}" class="sr-only toggle-checkbox">
-                      <div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
-                      <span class="ml-3 text-sm text-slate-700">Required</span>
-                    </label>
-                  </div>
-                </div>
-              @endforeach
-            @else
-              <div class="text-sm text-slate-500">No custom components found.</div>
-            @endif
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <div class="px-6 py-4 border-t border-slate-200 flex justify-end gap-3 bg-slate-50">
-      <button id="cancelSettingsModal" type="button" class="px-5 py-2.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 font-medium transition-colors flex items-center gap-2">
-        <i data-lucide="x" class="w-4 h-4"></i>
-        <span>Cancel</span>
-      </button>
-      <button id="saveSettingsBtn" type="button" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium flex items-center gap-2">
-        <i data-lucide="check" class="w-4 h-4"></i>
-        <span>Save Settings</span>
-      </button>
-    </div>
-  </div>
-</div>
-
 <div id="editClassFeeModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 overflow-y-auto hidden">
   <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto" style="max-height: 90vh;">
     <!-- Header -->
@@ -676,30 +582,7 @@
       if (window.lucide) lucide.createIcons();
     });
 
-    // Settings modal controls
-    const openSettingsBtn = document.getElementById('openSettingsModal');
-    const settingsModal = document.getElementById('settingsModal');
-    if (openSettingsBtn) {
-      openSettingsBtn.addEventListener('click', () => {
-        if (settingsModal) settingsModal.classList.remove('hidden');
-        if (window.lucide) lucide.createIcons();
-      });
-    }
-
-    ['closeSettingsModal', 'cancelSettingsModal'].forEach(id => {
-      const btn = document.getElementById(id);
-      if (btn) btn.addEventListener('click', () => settingsModal && settingsModal.classList.add('hidden'));
-    });
-
-    if (settingsModal) {
-      settingsModal.addEventListener('click', e => { if (e.target === settingsModal) settingsModal.classList.add('hidden'); });
-      const saveBtn = document.getElementById('saveSettingsBtn');
-      if (saveBtn) saveBtn.addEventListener('click', function() {
-        // Backend persistence will be handled by Laravel (controller).
-        // For now simply close the modal when user clicks Save.
-        settingsModal.classList.add('hidden');
-      });
-    }
+    // Settings moved to dedicated page (`fee-settings.blade.php`) — modal handlers removed.
   });
 </script>
 
