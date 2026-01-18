@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClassFeeOptions;
 use App\Models\FeeOptions;
 use App\Models\FeeStructure;
 use App\Models\Teacher;
@@ -37,9 +38,16 @@ class FeeOptionsController extends Controller
 
 
         //return the fee settings view
+        // Also fetch the current saved data for display
+        $currentSchoolId = 1; // TODO: Use auth()->user()->school_id
+        $feeOptions = FeeOptions::where('school_id', $currentSchoolId)->first();
+        $classLinked = ClassFeeOptions::where('fee_options_id', $feeOptions?->id)->get() ?? collect();
+        
         return view('AccountantPanel.fees.fee-settings', [
             'feeStructures' => $feeStructures,
             'customFeeStructures' => $customFeeStructures,
+            'feeOptions' => $feeOptions,
+            'classLinked' => $classLinked,
         ]);
 
     }
@@ -47,10 +55,10 @@ class FeeOptionsController extends Controller
     //function to save the fee settings
     public function saveFeeSettings(Request $request)
     {
-        // STEP 1: Get all form data (except the security token)
+        // Get all form data (except the security token)
         $formData = $request->except('_token');
 
-        // STEP 2: Build validation rules
+        // Build validation rules
         // We need to check that every field has a value of either "required" or "optional"
         $validationRules = [];
         
@@ -59,7 +67,7 @@ class FeeOptionsController extends Controller
             $validationRules[$inputName] = 'required|in:required,optional';
         }
 
-        // STEP 3: Validate the form data
+        // Validate the form data
         $validator = Validator::make($request->all(), $validationRules);
 
         // If validation fails, send user back with error messages
@@ -67,7 +75,7 @@ class FeeOptionsController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // STEP 4: Save the settings to database
+        // Save the settings to database
         try {
             // Get the current school ID (hardcoded for now, will use auth later)
             $currentSchoolId = 1; // TODO: Change to auth()->user()->school_id
@@ -84,13 +92,29 @@ class FeeOptionsController extends Controller
                 'hostel_fee'
             ];
 
-            // STEP 5: Loop through each setting and save it
-            foreach ($validatedSettings as $settingName => $settingValue) {
-                // Convert "required"/"optional" text to true/false
-                $isThisRequired = ($settingValue === 'required');
+            // Find or create ONE fee_options record for this school
+            $feeOptionRecord = FeeOptions::firstOrCreate(
+                ['school_id' => $currentSchoolId],
+                ['dynamic_attributes' => []]
+            );
 
-                // STEP 6: Determine if this is a general or class-specific setting
-                // Check if the setting name starts with "class_"
+            // Get existing settings from database (or empty array if none)
+            $currentAttributes = $feeOptionRecord->dynamic_attributes ?? [];
+
+            // Make sure the sections exist
+            if (!isset($currentAttributes['general_components'])) {
+                $currentAttributes['general_components'] = [];
+            }
+            if (!isset($currentAttributes['class_settings'])) {
+                $currentAttributes['class_settings'] = [];
+            }
+
+            // Keep track of which classes we've seen (so we can add them to pivot table)
+            $classIdsToLink = [];
+
+            // Loop through each setting and save it
+            foreach ($validatedSettings as $settingName => $settingValue) {
+                // Determine if this is a general or class-specific setting
                 $isClassSpecific = (strpos($settingName, 'class_') === 0);
 
                 if ($isClassSpecific) {
@@ -104,71 +128,64 @@ class FeeOptionsController extends Controller
                     $classIdFromName = $nameParts[1];  // Gets "5"
                     $componentName = $nameParts[2];     // Gets "tuition_fee"
 
-                    // Find existing fee option for this class, or create a new one
-                    $feeOptionRecord = FeeOptions::firstOrCreate(
-                        // Search conditions: find by school and class
-                        [
-                            'school_id' => $currentSchoolId,
-                            'class_id' => $classIdFromName,
-                        ],
-                        // If not found, create with these default values
-                        [
-                            'currency' => 'TSH',
-                            'tuition_fee' => 0,
-                        ]
-                    );
+                    // Track this class so we can add it to pivot table later
+                    if (!in_array($classIdFromName, $classIdsToLink)) {
+                        $classIdsToLink[] = $classIdFromName;
+                    }
 
-                    // Get existing settings from database (or empty array if none)
-                    $currentAttributes = $feeOptionRecord->dynamic_attributes ?? [];
+                    // Create a section for this specific class if it doesn't exist
+                    if (!isset($currentAttributes['class_settings'][$classIdFromName])) {
+                        $currentAttributes['class_settings'][$classIdFromName] = [];
+                    }
 
                     // Check if this is a core component or custom component
                     if (in_array($componentName, $coreComponentsList)) {
-                        // It's a core component (tuition, transport, etc.)
-                        // Store it in the "components" section
-                        $currentAttributes['components'][$componentName] = $settingValue;
+                        // It's a core component - store in class settings
+                        $currentAttributes['class_settings'][$classIdFromName][$componentName] = $settingValue;
                     } else {
-                        // It's a custom component (school added this themselves)
-                        // Make sure the custom_components section exists
-                        if (!isset($currentAttributes['custom_components'])) {
-                            $currentAttributes['custom_components'] = [];
+                        // It's a custom component
+                        if (!isset($currentAttributes['class_settings'][$classIdFromName]['custom_components'])) {
+                            $currentAttributes['class_settings'][$classIdFromName]['custom_components'] = [];
                         }
-                        // Store it in the "custom_components" section
-                        $currentAttributes['custom_components'][$componentName] = $settingValue;
+                        $currentAttributes['class_settings'][$classIdFromName]['custom_components'][$componentName] = $settingValue;
                     }
-
-                    // Save the updated settings back to database
-                    $feeOptionRecord->dynamic_attributes = $currentAttributes;
-                    $feeOptionRecord->save();
 
                 } else {
                     // ===== GENERAL SETTING (applies to all classes) =====
                     // Example: "tuition_fee" or "transport_fee"
                     
-                    // Find existing general fee option, or create a new one
-                    // class_id = NULL means it applies to all classes
-                    $generalFeeOption = FeeOptions::firstOrCreate(
-                        // Search conditions
-                        [
-                            'school_id' => $currentSchoolId,
-                            'class_id' => null,  // NULL = general setting
-                        ],
-                        // Default values if creating new record
-                        [
-                            'currency' => 'TSH',
-                            'tuition_fee' => 0,
-                        ]
-                    );
-
-                    // Get existing settings
-                    $generalAttributes = $generalFeeOption->dynamic_attributes ?? [];
+                    // Store in general_components section
+                    $currentAttributes['general_components'][$settingName] = $settingValue;
                     
-                    // Store this component's setting
-                    $generalAttributes['components'][$settingName] = $settingValue;
-                    
-                    // Save back to database
-                    $generalFeeOption->dynamic_attributes = $generalAttributes;
-                    $generalFeeOption->save();
+                    // ALSO update the actual column if it's a core component
+                    if (in_array($settingName, $coreComponentsList)) {
+                        // Update the column value (store the setting: "required" or "optional")
+                        $feeOptionRecord->$settingName = $settingValue;
+                    }
                 }
+            }
+
+            // Save the updated JSON attributes
+            $feeOptionRecord->dynamic_attributes = $currentAttributes;
+            
+            // Save everything to database
+            $feeOptionRecord->save();
+
+            //  Link classes to this fee_options record in the pivot table
+            // This creates the relationship between classes and fee options
+            foreach ($classIdsToLink as $classId) {
+                // Insert into class_fee_options pivot table if it doesn't already exist
+                // This links this class to this fee_options record
+                ClassFeeOptions::updateOrCreate(
+                    [
+                        'class_id' => $classId,
+                        'fee_options_id' => $feeOptionRecord->id,
+                    ],
+                    [
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                );
             }
 
             // Success! Redirect back with success message

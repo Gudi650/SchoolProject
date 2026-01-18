@@ -21,9 +21,99 @@
 		.toggle-checkbox:checked + .toggle-track{ background-color: #6366f1; }
 		.toggle-checkbox:checked + .toggle-track::after{ transform: translateY(-50%) translateX(18px); }
 		.sr-only{ position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+		
+		/* Notification animations */
+		@keyframes slideIn {
+			from {
+				transform: translateX(400px);
+				opacity: 0;
+			}
+			to {
+				transform: translateX(0);
+				opacity: 1;
+			}
+		}
+		
+		@keyframes slideOut {
+			from {
+				transform: translateX(0);
+				opacity: 1;
+			}
+			to {
+				transform: translateX(400px);
+				opacity: 0;
+			}
+		}
+		
+		.animate-slideIn {
+			animation: slideIn 0.3s ease-out forwards;
+		}
+		
+		.animate-slideOut {
+			animation: slideOut 0.3s ease-in forwards;
+		}
 	</style>
 
 	<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+		
+		{{-- Success and Error Messages --}}
+		@if(session('success'))
+			<div id="successNotification" class="fixed top-4 right-4 z-50 max-w-md animate-slideIn">
+				<div class="bg-green-50 border-l-4 border-green-500 rounded-lg shadow-lg p-4 flex items-start gap-3">
+					<div class="flex-shrink-0">
+						<i data-lucide="check-circle" class="w-5 h-5 text-green-500"></i>
+					</div>
+					<div class="flex-1">
+						<h3 class="text-sm font-semibold text-green-800">Success!</h3>
+						<p class="text-sm text-green-700 mt-1">{{ session('success') }}</p>
+					</div>
+					<button onclick="closeNotification('successNotification')" class="flex-shrink-0 text-green-500 hover:text-green-700 transition-colors">
+						<i data-lucide="x" class="w-4 h-4"></i>
+					</button>
+				</div>
+			</div>
+		@endif
+
+		@if(session('error'))
+			<div id="errorNotification" class="fixed top-4 right-4 z-50 max-w-md animate-slideIn">
+				<div class="bg-red-50 border-l-4 border-red-500 rounded-lg shadow-lg p-4 flex items-start gap-3">
+					<div class="flex-shrink-0">
+						<i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i>
+					</div>
+					<div class="flex-1">
+						<h3 class="text-sm font-semibold text-red-800">Error!</h3>
+						<p class="text-sm text-red-700 mt-1">{{ session('error') }}</p>
+					</div>
+					<button onclick="closeNotification('errorNotification')" class="flex-shrink-0 text-red-500 hover:text-red-700 transition-colors">
+						<i data-lucide="x" class="w-4 h-4"></i>
+					</button>
+				</div>
+			</div>
+		@endif
+
+		@if($errors->any())
+			<div id="validationErrors" class="fixed top-4 right-4 z-50 max-w-md animate-slideIn">
+				<div class="bg-red-50 border-l-4 border-red-500 rounded-lg shadow-lg p-4">
+					<div class="flex items-start gap-3">
+						<div class="flex-shrink-0">
+							<i data-lucide="alert-triangle" class="w-5 h-5 text-red-500"></i>
+						</div>
+						<div class="flex-1">
+							<h3 class="text-sm font-semibold text-red-800">Validation Errors</h3>
+							<ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+								@foreach($errors->all() as $error)
+									<li>{{ $error }}</li>
+								@endforeach
+							</ul>
+						</div>
+						<button onclick="closeNotification('validationErrors')" class="flex-shrink-0 text-red-500 hover:text-red-700 transition-colors">
+							<i data-lucide="x" class="w-4 h-4"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		@endif
+
 		<div class="mb-6">
 		<div class="flex items-start justify-between gap-4">
 			<div>
@@ -221,5 +311,57 @@
 		</form>
 		</div>
 	</div>
+
+    
+
+	{{-- JavaScript for notifications --}}
+	<script>
+		// Auto-dismiss notifications after 5 seconds
+		document.addEventListener('DOMContentLoaded', function() {
+			// Initialize Lucide icons for notifications
+			if (typeof lucide !== 'undefined') {
+				lucide.createIcons();
+			}
+
+			// Auto-dismiss success notification
+			const successNotification = document.getElementById('successNotification');
+			if (successNotification) {
+				setTimeout(() => {
+					closeNotification('successNotification');
+				}, 5000); // 5 seconds
+			}
+
+			// Auto-dismiss error notification
+			const errorNotification = document.getElementById('errorNotification');
+			if (errorNotification) {
+				setTimeout(() => {
+					closeNotification('errorNotification');
+				}, 7000); // 7 seconds (longer for errors)
+			}
+
+			// Auto-dismiss validation errors
+			const validationErrors = document.getElementById('validationErrors');
+			if (validationErrors) {
+				setTimeout(() => {
+					closeNotification('validationErrors');
+				}, 10000); // 10 seconds (longer for multiple errors)
+			}
+		});
+
+		// Function to close notification with animation
+		function closeNotification(notificationId) {
+			const notification = document.getElementById(notificationId);
+			if (notification) {
+				// Add slide-out animation
+				notification.classList.remove('animate-slideIn');
+				notification.classList.add('animate-slideOut');
+				
+				// Remove from DOM after animation completes
+				setTimeout(() => {
+					notification.remove();
+				}, 300); // Match animation duration
+			}
+		}
+	</script>
 
 </x-Account-sidebar>

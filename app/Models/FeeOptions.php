@@ -11,7 +11,7 @@ class FeeOptions extends Model
         'school_id',
         'tuition_fee',
         'library_fee',
-        'transport_fee ',
+        'transport_fee',
         'hostel_fee',
         'exam_fee',
         'dynamic_attributes',
