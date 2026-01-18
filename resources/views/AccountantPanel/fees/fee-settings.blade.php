@@ -36,7 +36,7 @@
 	<!-- Info cards removed per request -->
 
 	<div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-		<form method="POST" action="{{ url('accountant/fees/settings') }}">
+		<form method="POST" action="">
 			@csrf
 
 			<!-- General settings container -->
@@ -53,30 +53,60 @@
 						</button>
 					</div>
 				</div>
-				@php
-					$core = $core ?? [
-						'tuition_fee' => 'Tuition Fee',
-						'transport_fee' => 'Transport Fee',
-						'library_fee' => 'Library Fee',
-						'exam_fee' => 'Exam Fee',
-						'hostel_fee' => 'Hostel Fee',
-					];
-				@endphp
+				
 				<p class="text-sm font-semibold text-slate-700">Core Components</p>
 				<div class="grid grid-cols-1 gap-3 mt-3">
-					@foreach($core as $key => $label)
-						<div class="flex items-center justify-between bg-slate-50 rounded-lg px-4 py-3">
-							<div class="text-slate-800 font-medium">{{ $label }}</div>
-							<div class="flex items-center gap-3">
-								<input type="hidden" name="{{ $key }}" value="optional">
-								<label class="relative inline-flex items-center cursor-pointer">
-									<input type="checkbox" name="{{ $key }}" value="required" class="sr-only toggle-checkbox" checked>
-									<div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
-									<span class="ml-3 text-sm text-slate-700">Required</span>
-								</label>
-							</div>
-						</div>
-					@endforeach
+                    {{-- 
+
+                        check if the feeStructure variable is not empty
+                        then display the fee structure values
+
+                    --}}
+
+                    @if($feeStructures && $feeStructures->isNotEmpty())
+
+                        {{-- loop through the fee structure --}}
+                        @foreach ($feeStructures as $structure)
+
+                            {{-- now check for other table columns if they exists and display their contents --}}
+                            @foreach (['tuition_fee' => 'Tution Fee', 'transport_fee' => 'Transport Fee', 'library_fee' => 'Library Fee', 'exam_fee' => 'Exam Fee', 'hostel_fee' => 'Hostel Fee'] as $field => $label)
+
+                                {{-- check if the fee structure is in the core components --}}
+                                @if($structure->$field)
+                                    <div class="flex items-center justify-between bg-slate-50 rounded-lg px-4 py-3">
+                                        <div class="text-slate-800 font-medium">{{ $label }}</div>
+                                        <div class="flex items center gap-3">
+                                            <input type="hidden" name="{{ $field }}" value="optional">
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" name="{{ $field }}" value="required" class="sr-only toggle-checkbox" {{ $structure->is_required ? 'checked' : '' }}>
+                                                <div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
+                                                <span class="ml-3 text-sm text-slate-700">Required</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        @endforeach
+                    @endif
+
+                    {{-- now check for the json file to display dynamic components --}}
+                    @if (!empty($structure->dynamic_attributes['all_components']))
+
+                        @foreach ($structure->dynamic_attributes['all_components'] as $component)
+                            <div class="flex items center justify-between bg-slate-50 rounded-lg px-4 py-3">
+                                <div class="text-slate-800 font-medium">{{ $component['name'] }}</div>
+                                <div class="flex items center gap-3">
+                                    <input type="hidden" name="{{ $field }}" value="optional">
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="custom_{{ \Illuminate\Support\Str::slug($component['name']) }}" value="required" class="sr-only toggle-checkbox" {{ !empty($component['amount']) ? 'checked' : '' }}>
+                                        <div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
+                                        <span class="ml-3 text-sm text-slate-700">Required</span>
+                                    </label>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+
 				</div>
 			</div>
 
@@ -96,18 +126,39 @@
 				</div>
 				<div class="space-y-4">
 					@if(isset($customFeeStructures) && $customFeeStructures->isNotEmpty())
-						@foreach($customFeeStructures as $custom)
-							@php $totalFees = 0; @endphp
+
+                        {{-- loop through the custom fee structure --}}
+						@foreach($customFeeStructures as $customStructure)
+
+
 							<div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
 								<div class="flex items-center justify-between mb-3">
-									<h3 class="font-semibold text-slate-800">{{ $custom->classes->pluck('name')->join(', ') ?: 'No classes' }}</h3>
+									<h3 class="font-semibold text-slate-800">{{ $customStructure->classes->pluck('name')->join(', ') ?: 'No classes' }}</h3>
 									<div class="flex items-center gap-3">
 										<span class="text-sm text-slate-600">Class settings</span>
-										<button type="button" class="px-2 py-1 rounded-md bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors flex items-center" data-class-id="{{ $custom->id }}">
+										<button type="button" class="px-2 py-1 rounded-md bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors flex items-center" data-class-id="{{ $customStructure->id }}">
 											<i data-lucide="edit-2" class="w-4 h-4"></i>
 										</button>
 									</div>
 								</div>
+
+                                 {{-- now check for other table columns if they exists and display their contents --}}
+                                 @foreach (['tuition_fee'=>'Tuition Fee','transport_fee' => 'Transport Fee', 'library_fee' => 'Library Fee', 'exam_fee' => 'Exam Fee', 'hostel_fee' => 'Hostel Fee'] as $field => $label)
+                                    @if($customStructure->$field)
+                                        <div class="flex items-center justify-between bg-slate-50 rounded-lg px-4 py-3 mt-3">
+                                            <div class="text-slate-800 font-medium">{{ $label }}</div>
+                                            <div>
+                                                <input type="hidden" name="class_{{ $customStructure->id }}_{{ $field }}" value="optional">
+                                                <label class="relative inline-flex items-center cursor-pointer">
+                                                    <input type="checkbox" name="class_{{ $customStructure->id }}_{{ $field }}" value="required" class="sr-only toggle-checkbox" {{ $customStructure->is_required ? 'checked' : '' }}>
+                                                    <div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+
+                                {{-- 
 								<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 									<div class="bg-slate-50 rounded-lg p-3">
 										<div class="flex items-center justify-between">
@@ -121,6 +172,7 @@
 											</div>
 										</div>
 									</div>
+
 									<div class="bg-slate-50 rounded-lg p-3">
 										<div class="flex items-center justify-between">
 											<div class="font-medium">Transport Fee</div>
@@ -133,7 +185,8 @@
 											</div>
 										</div>
 									</div>
-								</div>
+
+								</div>    --}}
 
 								@if(!empty($custom->dynamic_attributes['all_components']))
 									@foreach($custom->dynamic_attributes['all_components'] as $component)
