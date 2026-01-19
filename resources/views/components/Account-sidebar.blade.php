@@ -58,7 +58,7 @@
                 </span>
               </button>
               
-              <ul id="feeMenu" class="{{ request()->routeIs('accounting.feeManagement', 'accounting.feeAnalytics', 'accounting.feeStructure', 'accounting.feeCollection') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+              <ul id="feeMenu" class="{{ request()->routeIs('accounting.feeManagement', 'accounting.feeAnalytics', 'accounting.feeStructure', 'accounting.feeCollection','accounting.feeSettings') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
                 <li>
                   <a href="#" 
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.feeAnalytics') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
@@ -78,6 +78,12 @@
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.feeManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                     <i data-lucide="credit-card" class="w-4 h-4"></i>
                     Fee Collection
+                  </a>
+                  <li>
+                  <a href="{{ route('accounting.feeSettings') }}" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.feeSettings') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    Fee Settings
                   </a>
                 </li>
               </ul>

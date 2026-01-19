@@ -372,11 +372,24 @@ Route::get('/expenses-management', function () {
     return view('AccountantPanel.expenses');
 })->name('accounting.expensesManagement');
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 //route for payroll management
 Route::get('/payroll-management', function () {
     return view('AccountantPanel.payroll');
 })->name('accounting.payrollManagement');
+
+
+//route for payroll settings
+Route::get('/payroll-settings', function () {
+    return view('AccountantPanel.payrollsetting');
+})->name('accounting.payrollSettings');
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 //route for banking and cash management
 Route::get('/banking-cash-management', function () {

@@ -123,8 +123,9 @@
 		</div>
 	</div>
 
-	<!-- Info cards removed per request -->
+	
 
+	<!-- Fee Settings Configuration Section -->
 	<div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
 		<form method="POST" action="{{ route('accounting.feeSettings.save') }}">
 			@csrf
@@ -260,35 +261,7 @@
                                     @endif
                                 @endforeach
 
-                                {{-- 
-								<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-									<div class="bg-slate-50 rounded-lg p-3">
-										<div class="flex items-center justify-between">
-											<div class="font-medium">Tuition Fee</div>
-											<div>
-												<input type="hidden" name="class_{{ $custom->id }}_tuition_fee" value="optional">
-												<label class="relative inline-flex items-center cursor-pointer">
-													<input type="checkbox" name="class_{{ $custom->id }}_tuition_fee" value="required" class="sr-only toggle-checkbox" {{ $custom->tuition_fee ? 'checked' : '' }}>
-													<div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
-												</label>
-											</div>
-										</div>
-									</div>
-
-									<div class="bg-slate-50 rounded-lg p-3">
-										<div class="flex items-center justify-between">
-											<div class="font-medium">Transport Fee</div>
-											<div>
-												<input type="hidden" name="class_{{ $custom->id }}_transport_fee" value="optional">
-												<label class="relative inline-flex items-center cursor-pointer">
-													<input type="checkbox" name="class_{{ $custom->id }}_transport_fee" value="required" class="sr-only toggle-checkbox" {{ $custom->transport_fee ? 'checked' : '' }}>
-													<div class="w-11 h-6 bg-slate-300 rounded-full shadow-inner transition-colors duration-200 toggle-track"></div>
-												</label>
-											</div>
-										</div>
-									</div>
-
-								</div>    --}}
+                                {{-- now check for the json file to display dynamic components --}}
 
 								@if(!empty($customStructure->dynamic_attributes['all_components']))
 									@foreach($customStructure->dynamic_attributes['all_components'] as $component)
@@ -361,6 +334,17 @@
 				setTimeout(() => {
 					closeNotification('validationErrors');
 				}, 10000); // 10 seconds (longer for multiple errors)
+			}
+
+			// Handle payment terms count changes
+			const paymentTermsInput = document.querySelector('input[name="payment_terms_count"]');
+			const paymentScheduleContainer = document.getElementById('paymentScheduleContainer');
+			
+			if (paymentTermsInput && paymentScheduleContainer) {
+				paymentTermsInput.addEventListener('change', function() {
+					const termsCount = parseInt(this.value) || 4;
+					updatePaymentScheduleFields(termsCount);
+				});
 			}
 		});
 
