@@ -282,8 +282,9 @@
                                 <input type="text" id="name" name="name" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                             </div>
                             <div>
-                                <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email Address <span class="text-red-600">*</span></label>
+                                <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
                                 <input type="email" id="email" name="email" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <p class="mt-1 text-xs text-slate-500">Optional</p>
                             </div>
                             <div>
                                 <label for="phone" class="block text-sm font-semibold text-slate-700 mb-2">Phone Number <span class="text-red-600">*</span></label>
@@ -301,14 +302,6 @@
                             <div>
                                 <label for="position" class="block text-sm font-semibold text-slate-700 mb-2">Position/Designation <span class="text-red-600">*</span></label>
                                 <input type="text" id="position" name="position" placeholder="e.g., Mathematics Teacher" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
-                            </div>
-                            <div>
-                                <label for="department" class="block text-sm font-semibold text-slate-700 mb-2">Department</label>
-                                <input type="text" id="department" name="department" placeholder="e.g., Science Department" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
-                            </div>
-                            <div>
-                                <label for="join_date" class="block text-sm font-semibold text-slate-700 mb-2">Joining Date <span class="text-red-600">*</span></label>
-                                <input type="date" id="join_date" name="join_date" required class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                             </div>
                         </div>
                     </div>
@@ -372,6 +365,13 @@
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
                                     <input type="number" id="medical_allowance" name="medical_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="extra_time_allowance" class="block text-sm font-medium text-slate-700 mb-1">Extra Time Allowance</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
+                                    <input type="number" id="extra_time_allowance" name="extra_time_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
@@ -549,6 +549,9 @@
             document.getElementById('payrollModal').classList.remove('hidden');
             document.getElementById('payrollForm').reset();
             document.getElementById('modalTitle').innerHTML = '<i data-lucide="user-plus" class="w-5 h-5 inline mr-2"></i>Add New Employee to Payroll';
+            document.getElementById('personalInfoSection').classList.add('hidden');
+            document.getElementById('selectedTeacherInfo').classList.add('hidden');
+            document.getElementById('bankDetailsSection').classList.add('hidden');
             initLucideIcons();
         }
 
@@ -563,7 +566,7 @@
             // Allowances
             const allowances = [
                 'housing_allowance', 'transport_allowance', 'meal_allowance',
-                'medical_allowance', 'other_allowance'
+                'medical_allowance', 'extra_time_allowance', 'other_allowance'
             ].reduce((sum, id) => sum + getNumericValue(id), 0);
             
             // Deductions
@@ -651,7 +654,7 @@
             // Salary calculation inputs
             const salaryInputs = [
                 'base_salary', 'housing_allowance', 'transport_allowance', 'meal_allowance',
-                'medical_allowance', 'other_allowance', 'tax_deduction', 'insurance_deduction',
+                'medical_allowance', 'extra_time_allowance', 'other_allowance', 'tax_deduction', 'insurance_deduction',
                 'provident_fund', 'loan_deduction', 'other_deduction'
             ];
             
@@ -710,7 +713,7 @@
                     
                     // Validate personal info if creating new employee
                     if (createNewEmployee || (!selectedTeacherId && !createNewEmployee)) {
-                        const requiredFields = ['employee_id', 'name', 'email', 'phone', 'type', 'position'];
+                        const requiredFields = ['employee_id', 'name', 'phone', 'type', 'position'];
                         let isValid = true;
                         
                         requiredFields.forEach(fieldId => {
