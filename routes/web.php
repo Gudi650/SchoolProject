@@ -383,7 +383,7 @@ Route::get('/payroll-management', function () {
 
 //route for payroll settings
 Route::get('/payroll-settings', function () {
-    return view('AccountantPanel.payrollsetting');
+    return view('AccountantPanel.payrolls.payrollsetting');
 })->name('accounting.payrollSettings');
 
 

@@ -196,49 +196,102 @@
     </main>
 
     <!-- Add/Edit Payroll Modal -->
-    <div id="payrollModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 sm:p-4">
-        <div class="w-full max-w-5xl h-[90vh] bg-white shadow-2xl rounded-lg flex flex-col">
-            <div class="flex justify-between items-center px-6 py-4 border-b bg-white rounded-t-lg flex-shrink-0">
-                <h3 class="text-lg sm:text-xl font-semibold text-slate-900" id="modalTitle">
+    <div id="payrollModal" class="hidden fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4" style="margin-left: 280px !important; left: 0;">
+        <div class="w-full max-w-3xl max-h-[95vh] bg-white shadow-2xl rounded-xl flex flex-col overflow-hidden">
+            <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-white flex-shrink-0">
+                <h3 class="text-xl font-bold text-slate-900" id="modalTitle">
                     <i data-lucide="user-plus" class="w-5 h-5 inline mr-2"></i>
                     Add New Employee to Payroll
                 </h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 flex-shrink-0">
-                    <i data-lucide="x" class="w-6 h-6"></i>
+                <button onclick="closeModal()" type="button" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-2 rounded-lg transition-colors flex-shrink-0">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             
-            <form id="payrollForm" method="POST" action="" class="flex flex-col flex-grow overflow-hidden">
+            <form id="payrollForm" method="POST" action="" class="flex flex-col h-full overflow-hidden">
                 @csrf
-                <div class="flex-grow overflow-y-auto px-6 py-4">
+                <div class="flex-1 overflow-y-auto px-6 py-5">
                     
-                    <!-- Personal Information -->
-                    <div class="mb-6">
-                        <h6 class="text-indigo-700 font-semibold mb-4 pb-2 border-b border-slate-200">
+                    <!-- Teacher Search Section -->
+                    <div class="mb-8 pb-6 border-b-2 border-slate-200">
+                        <h6 class="text-indigo-600 font-bold text-base mb-4">
+                            <i data-lucide="search" class="w-4 h-4 inline mr-2"></i>
+                            Find Teacher or Staff Member
+                        </h6>
+                        <div class="space-y-3">
+                            <div>
+                                <label for="teacher_select" class="block text-sm font-semibold text-slate-700 mb-2">Select by Name or ID</label>
+                                <select id="teacher_select" name="teacher_select" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <option value="">Select a teacher...</option>
+                                    @forelse($teachers ?? [] as $teacher)
+                                        <option 
+                                            value="{{ $teacher->id }}" 
+                                            data-name="{{ $teacher->name }}" 
+                                            data-idnumber="{{ $teacher->employee_id ?? ($teacher->id_number ?? '') }}" 
+                                            data-position="{{ $teacher->position ?? '' }}">
+                                            {{ $teacher->name }}
+                                            @if(!empty($teacher->employee_id ?? ($teacher->id_number ?? ''))) ({{ $teacher->employee_id ?? $teacher->id_number }}) @endif
+                                        </option>
+                                    @empty
+                                        <option value="" disabled>No teachers available</option>
+                                    @endforelse
+                                </select>
+                                <p class="mt-1 text-xs text-slate-500">This list will be populated by Laravel.</p>
+                            </div>
+                            
+                            <!-- Selected Teacher Info (Hidden by default) -->
+                            <div id="selectedTeacherInfo" class="hidden p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="text-sm text-slate-600 mb-1">Selected Teacher:</p>
+                                        <p id="selectedTeacherName" class="text-lg font-bold text-indigo-600"></p>
+                                        <p id="selectedTeacherId" class="text-sm text-slate-500 mt-1"></p>
+                                        <p id="selectedTeacherPosition" class="text-sm text-slate-500"></p>
+                                    </div>
+                                    <button type="button" onclick="clearSelectedTeacher()" class="text-indigo-600 hover:text-indigo-700 p-1 hover:bg-indigo-100 rounded">
+                                        <i data-lucide="x" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="selected_teacher_id" name="teacher_id">
+                            </div>
+                            
+                            <!-- Toggle for New Employee -->
+                            <div class="flex items-center gap-2 pt-2">
+                                <input type="checkbox" id="createNewEmployee" name="create_new_employee" class="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                                <label for="createNewEmployee" class="text-sm font-medium text-slate-700 cursor-pointer">
+                                    Create new employee record (if not found above)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Personal Information (Hidden by default, shown when creating new or toggle is checked) -->
+                    <div id="personalInfoSection" class="mb-8 hidden">
+                        <h6 class="text-indigo-600 font-bold text-base mb-4 pb-2 border-b-2 border-indigo-200">
                             <i data-lucide="user" class="w-4 h-4 inline mr-2"></i>
                             Personal Information
                         </h6>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="employee_id" class="block text-sm font-medium text-slate-700 mb-1">Employee ID <span class="text-red-600">*</span></label>
-                                <input type="text" id="employee_id" name="employee_id" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <label for="employee_id" class="block text-sm font-semibold text-slate-700 mb-2">Employee ID <span class="text-red-600">*</span></label>
+                                <input type="text" id="employee_id" name="employee_id" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 <p class="mt-1 text-xs text-slate-500">Unique identifier for the employee</p>
                             </div>
                             <div>
-                                <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Full Name <span class="text-red-600">*</span></label>
-                                <input type="text" id="name" name="name" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <label for="name" class="block text-sm font-semibold text-slate-700 mb-2">Full Name <span class="text-red-600">*</span></label>
+                                <input type="text" id="name" name="name" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                             </div>
                             <div>
-                                <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email Address <span class="text-red-600">*</span></label>
-                                <input type="email" id="email" name="email" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email Address <span class="text-red-600">*</span></label>
+                                <input type="email" id="email" name="email" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                             </div>
                             <div>
-                                <label for="phone" class="block text-sm font-medium text-slate-700 mb-1">Phone Number <span class="text-red-600">*</span></label>
-                                <input type="tel" id="phone" name="phone" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <label for="phone" class="block text-sm font-semibold text-slate-700 mb-2">Phone Number <span class="text-red-600">*</span></label>
+                                <input type="tel" id="phone" name="phone" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                             </div>
                             <div>
-                                <label for="type" class="block text-sm font-medium text-slate-700 mb-1">Employee Type <span class="text-red-600">*</span></label>
-                                <select id="type" name="type" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <label for="type" class="block text-sm font-semibold text-slate-700 mb-2">Employee Type <span class="text-red-600">*</span></label>
+                                <select id="type" name="type" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                     <option value="">Select Type</option>
                                     <option value="teacher">Teacher</option>
                                     <option value="staff">Staff</option>
@@ -246,23 +299,23 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="position" class="block text-sm font-medium text-slate-700 mb-1">Position/Designation <span class="text-red-600">*</span></label>
-                                <input type="text" id="position" name="position" placeholder="e.g., Mathematics Teacher" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <label for="position" class="block text-sm font-semibold text-slate-700 mb-2">Position/Designation <span class="text-red-600">*</span></label>
+                                <input type="text" id="position" name="position" placeholder="e.g., Mathematics Teacher" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                             </div>
                             <div>
-                                <label for="department" class="block text-sm font-medium text-slate-700 mb-1">Department</label>
-                                <input type="text" id="department" name="department" placeholder="e.g., Science Department" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <label for="department" class="block text-sm font-semibold text-slate-700 mb-2">Department</label>
+                                <input type="text" id="department" name="department" placeholder="e.g., Science Department" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                             </div>
                             <div>
-                                <label for="join_date" class="block text-sm font-medium text-slate-700 mb-1">Joining Date <span class="text-red-600">*</span></label>
-                                <input type="date" id="join_date" name="join_date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <label for="join_date" class="block text-sm font-semibold text-slate-700 mb-2">Joining Date <span class="text-red-600">*</span></label>
+                                <input type="date" id="join_date" name="join_date" required class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                             </div>
                         </div>
                     </div>
 
                     <!-- Salary Information -->
-                    <div class="mb-6">
-                        <h6 class="text-indigo-700 font-semibold mb-4 pb-2 border-b border-slate-200">
+                    <div class="mb-8">
+                        <h6 class="text-indigo-600 font-bold text-base mb-4 pb-2 border-b-2 border-indigo-200">
                             <i data-lucide="dollar-sign" class="w-4 h-4 inline mr-2"></i>
                             Salary Information
                         </h6>
@@ -464,13 +517,13 @@
 
                 </div>
 
-                <div class="flex justify-end gap-3 px-6 py-4 border-t bg-white rounded-b-lg flex-shrink-0">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors text-sm sm:text-base">
-                        <i data-lucide="x" class="w-4 h-4 inline mr-1"></i>
+                <div class="flex flex-col sm:flex-row justify-end gap-3 px-6 py-4 border-t border-slate-200 bg-slate-50 flex-shrink-0">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors border border-red-700 text-sm">
+                        <i data-lucide="x" class="w-4 h-4 inline mr-2"></i>
                         Cancel
                     </button>
-                    <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors text-sm sm:text-base">
-                        <i data-lucide="save" class="w-4 h-4 inline mr-1"></i>
+                    <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors shadow-md text-sm">
+                        <i data-lucide="save" class="w-4 h-4 inline mr-2"></i>
                         Save Employee
                     </button>
                 </div>
@@ -479,9 +532,16 @@
     </div>
 
     <script>
-        // Initialize Lucide icons
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
+        // Utility: Initialize Lucide icons
+        function initLucideIcons() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        // Utility: Get element value or fallback
+        function getNumericValue(elementId) {
+            return parseFloat(document.getElementById(elementId)?.value) || 0;
         }
 
         // Modal functions
@@ -489,9 +549,7 @@
             document.getElementById('payrollModal').classList.remove('hidden');
             document.getElementById('payrollForm').reset();
             document.getElementById('modalTitle').innerHTML = '<i data-lucide="user-plus" class="w-5 h-5 inline mr-2"></i>Add New Employee to Payroll';
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
+            initLucideIcons();
         }
 
         function closeModal() {
@@ -500,39 +558,97 @@
 
         // Calculate Net Salary in real-time
         function calculateNetSalary() {
-            const baseSalary = parseFloat(document.getElementById('base_salary').value) || 0;
+            const baseSalary = getNumericValue('base_salary');
             
-            const housingAllowance = parseFloat(document.getElementById('housing_allowance').value) || 0;
-            const transportAllowance = parseFloat(document.getElementById('transport_allowance').value) || 0;
-            const mealAllowance = parseFloat(document.getElementById('meal_allowance').value) || 0;
-            const medicalAllowance = parseFloat(document.getElementById('medical_allowance').value) || 0;
-            const otherAllowance = parseFloat(document.getElementById('other_allowance').value) || 0;
+            // Allowances
+            const allowances = [
+                'housing_allowance', 'transport_allowance', 'meal_allowance',
+                'medical_allowance', 'other_allowance'
+            ].reduce((sum, id) => sum + getNumericValue(id), 0);
             
-            const taxDeduction = parseFloat(document.getElementById('tax_deduction').value) || 0;
-            const insuranceDeduction = parseFloat(document.getElementById('insurance_deduction').value) || 0;
-            const providentFund = parseFloat(document.getElementById('provident_fund').value) || 0;
-            const loanDeduction = parseFloat(document.getElementById('loan_deduction').value) || 0;
-            const otherDeduction = parseFloat(document.getElementById('other_deduction').value) || 0;
+            // Deductions
+            const deductions = [
+                'tax_deduction', 'insurance_deduction', 'provident_fund',
+                'loan_deduction', 'other_deduction'
+            ].reduce((sum, id) => sum + getNumericValue(id), 0);
             
-            const totalAllowances = housingAllowance + transportAllowance + mealAllowance + medicalAllowance + otherAllowance;
-            const totalDeductions = taxDeduction + insuranceDeduction + providentFund + loanDeduction + otherDeduction;
-            const netSalary = baseSalary + totalAllowances - totalDeductions;
-            
+            const netSalary = baseSalary + allowances - deductions;
             document.getElementById('netSalaryDisplay').textContent = '$' + netSalary.toFixed(2);
         }
 
-        // Show/Hide Bank Details based on Payment Method
-        document.getElementById('payment_method')?.addEventListener('change', function() {
-            const bankSection = document.getElementById('bankDetailsSection');
-            if (this.value === 'bank') {
-                bankSection.classList.remove('hidden');
-            } else {
-                bankSection.classList.add('hidden');
-            }
-        });
+        // Select/Clear Teacher functions
+        function selectTeacher(teacherId, name, idNumber, position) {
+            document.getElementById('selected_teacher_id').value = teacherId;
+            document.getElementById('selectedTeacherName').textContent = name;
+            document.getElementById('selectedTeacherId').textContent = `ID: ${idNumber}`;
+            document.getElementById('selectedTeacherPosition').textContent = position;
+            document.getElementById('selectedTeacherInfo').classList.remove('hidden');
+            document.getElementById('personalInfoSection').classList.add('hidden');
+            document.getElementById('createNewEmployee').checked = false;
+        }
 
-        // Add event listeners for real-time calculation
+        function clearSelectedTeacher() {
+            document.getElementById('selected_teacher_id').value = '';
+            document.getElementById('selectedTeacherInfo').classList.add('hidden');
+            const teacherSelect = document.getElementById('teacher_select');
+            if (teacherSelect) teacherSelect.value = '';
+            document.getElementById('createNewEmployee').checked = false;
+        }
+
+        // Table filtering (search and filters combined)
+        function applyTableFilters() {
+            const searchValue = document.getElementById('searchEmployee')?.value.toLowerCase() || '';
+            const typeFilter = document.getElementById('filterType')?.value.toLowerCase() || '';
+            const statusFilter = document.getElementById('filterStatus')?.value.toLowerCase() || '';
+            const tableRows = document.querySelectorAll('#payrollTable tbody tr');
+            
+            tableRows.forEach(row => {
+                if (row.cells.length <= 1) return;
+                
+                const rowText = row.textContent.toLowerCase();
+                const typeCell = row.cells[2]?.textContent.toLowerCase() || '';
+                const statusCell = row.cells[9]?.textContent.toLowerCase() || '';
+                
+                const searchMatch = !searchValue || rowText.includes(searchValue);
+                const typeMatch = !typeFilter || typeCell.includes(typeFilter);
+                const statusMatch = !statusFilter || statusCell.includes(statusFilter);
+                
+                row.style.display = (searchMatch && typeMatch && statusMatch) ? '' : 'none';
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('searchEmployee').value = '';
+            document.getElementById('filterType').value = '';
+            document.getElementById('filterStatus').value = '';
+            applyTableFilters();
+        }
+
+        // Placeholder functions for backend (Laravel will handle)
+        function viewEmployee(id) {
+            console.log('View employee:', id);
+        }
+
+        function editEmployee(id) {
+            console.log('Edit employee:', id);
+        }
+
+        function deleteEmployee(id) {
+            if (confirm('Are you sure you want to delete this employee from payroll?')) {
+                console.log('Delete employee:', id);
+            }
+        }
+
+        // Initialize all event listeners on DOMContentLoaded
         document.addEventListener('DOMContentLoaded', function() {
+            // Validation error clearing on input
+            document.addEventListener('input', function(e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+                    e.target.classList.remove('border-red-500', 'ring-red-500');
+                }
+            });
+
+            // Salary calculation inputs
             const salaryInputs = [
                 'base_salary', 'housing_allowance', 'transport_allowance', 'meal_allowance',
                 'medical_allowance', 'other_allowance', 'tax_deduction', 'insurance_deduction',
@@ -541,75 +657,114 @@
             
             salaryInputs.forEach(inputId => {
                 const element = document.getElementById(inputId);
-                if (element) {
-                    element.addEventListener('input', calculateNetSalary);
-                }
+                if (element) element.addEventListener('input', calculateNetSalary);
             });
 
-            // Initialize icons
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
+            // Payment method change
+            const paymentMethod = document.getElementById('payment_method');
+            if (paymentMethod) {
+                paymentMethod.addEventListener('change', function() {
+                    const bankSection = document.getElementById('bankDetailsSection');
+                    bankSection?.classList.toggle('hidden', this.value !== 'bank');
+                });
             }
-        });
 
-        // Reset Filters
-        function resetFilters() {
-            document.getElementById('searchEmployee').value = '';
-            document.getElementById('filterType').value = '';
-            document.getElementById('filterStatus').value = '';
-            filterTable();
-        }
-
-        // Search functionality
-        document.getElementById('searchEmployee')?.addEventListener('input', function() {
-            const searchValue = this.value.toLowerCase();
-            const tableRows = document.querySelectorAll('#payrollTable tbody tr');
-            
-            tableRows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchValue) ? '' : 'none';
-            });
-        });
-
-        // Filter functionality
-        document.getElementById('filterType')?.addEventListener('change', filterTable);
-        document.getElementById('filterStatus')?.addEventListener('change', filterTable);
-
-        function filterTable() {
-            const typeFilter = document.getElementById('filterType').value.toLowerCase();
-            const statusFilter = document.getElementById('filterStatus').value.toLowerCase();
-            const tableRows = document.querySelectorAll('#payrollTable tbody tr');
-            
-            tableRows.forEach(row => {
-                if (row.cells.length > 1) {
-                    const typeCell = row.cells[2]?.textContent.toLowerCase();
-                    const statusCell = row.cells[9]?.textContent.toLowerCase();
-                    
-                    const typeMatch = !typeFilter || typeCell.includes(typeFilter);
-                    const statusMatch = !statusFilter || statusCell.includes(statusFilter);
-                    
-                    row.style.display = (typeMatch && statusMatch) ? '' : 'none';
-                }
-            });
-        }
-
-        // View, Edit, Delete functions (placeholders for backend implementation)
-        function viewEmployee(id) {
-            console.log('View employee:', id);
-            // Implement AJAX call to fetch and display employee details
-        }
-
-        function editEmployee(id) {
-            console.log('Edit employee:', id);
-            // Implement AJAX call to fetch employee data and populate form
-        }
-
-        function deleteEmployee(id) {
-            if (confirm('Are you sure you want to delete this employee from payroll?')) {
-                console.log('Delete employee:', id);
-                // Implement AJAX call to delete employee
+            // Teacher dropdown selection
+            const teacherSelect = document.getElementById('teacher_select');
+            if (teacherSelect) {
+                teacherSelect.addEventListener('change', function() {
+                    const opt = this.selectedOptions[0];
+                    if (!opt || !this.value) {
+                        clearSelectedTeacher();
+                        return;
+                    }
+                    selectTeacher(
+                        this.value,
+                        opt.dataset.name || '',
+                        opt.dataset.idnumber || '',
+                        opt.dataset.position || ''
+                    );
+                });
             }
-        }
+
+            // Create new employee toggle
+            const createNewCheckbox = document.getElementById('createNewEmployee');
+            if (createNewCheckbox) {
+                createNewCheckbox.addEventListener('change', function() {
+                    const personalInfoSection = document.getElementById('personalInfoSection');
+                    if (this.checked) {
+                        personalInfoSection?.classList.remove('hidden');
+                        clearSelectedTeacher();
+                    } else {
+                        personalInfoSection?.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Form validation on submit
+            const payrollForm = document.getElementById('payrollForm');
+            if (payrollForm) {
+                payrollForm.addEventListener('submit', function(e) {
+                    const selectedTeacherId = document.getElementById('selected_teacher_id')?.value;
+                    const createNewEmployee = document.getElementById('createNewEmployee')?.checked;
+                    
+                    // Validate personal info if creating new employee
+                    if (createNewEmployee || (!selectedTeacherId && !createNewEmployee)) {
+                        const requiredFields = ['employee_id', 'name', 'email', 'phone', 'type', 'position'];
+                        let isValid = true;
+                        
+                        requiredFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (!field?.value.trim()) {
+                                field?.classList.add('border-red-500', 'ring-red-500');
+                                isValid = false;
+                            } else {
+                                field?.classList.remove('border-red-500', 'ring-red-500');
+                            }
+                        });
+                        
+                        if (!isValid) {
+                            e.preventDefault();
+                            alert('Please fill in all required personal information fields.');
+                            return;
+                        }
+                    }
+                    
+                    // Validate financial info (always required)
+                    const baseSalary = document.getElementById('base_salary')?.value;
+                    const paymentMethod = document.getElementById('payment_method')?.value;
+                    
+                    if (!baseSalary || baseSalary <= 0) {
+                        e.preventDefault();
+                        alert('Please enter a valid base salary.');
+                        document.getElementById('base_salary')?.focus();
+                        return;
+                    }
+                    
+                    if (!paymentMethod) {
+                        e.preventDefault();
+                        alert('Please select a payment method.');
+                        document.getElementById('payment_method')?.focus();
+                        return;
+                    }
+                });
+            }
+
+            // Table search
+            const searchEmployee = document.getElementById('searchEmployee');
+            if (searchEmployee) {
+                searchEmployee.addEventListener('input', applyTableFilters);
+            }
+
+            // Table filters
+            const filterType = document.getElementById('filterType');
+            const filterStatus = document.getElementById('filterStatus');
+            if (filterType) filterType.addEventListener('change', applyTableFilters);
+            if (filterStatus) filterStatus.addEventListener('change', applyTableFilters);
+
+            // Initialize Lucide icons
+            initLucideIcons();
+        });
     </script>
 
 </x-Account-sidebar>

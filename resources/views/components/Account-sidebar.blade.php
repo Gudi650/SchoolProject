@@ -107,11 +107,45 @@
           </li>
 
           <li>
+            {{-- 
             <a href="{{ route('accounting.payrollManagement') }}" 
             class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.payrollManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
               <i data-lucide="users" class="w-5 h-5"></i>
               <span class="flex-1 text-left text-sm font-medium nav-label">Payroll</span>
-            </a>
+            </a>  --}}
+
+
+            <div class="relative">
+              <button id="payrollToggle" aria-expanded="{{ request()->routeIs('accounting.payrollSettings','accounting.payrollManagement') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.payrollSettings', 'accounting.payrollManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                <span class="flex items-center gap-3">
+                  <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+                  <span class="text-sm font-medium nav-label">Payroll</span>
+                </span>
+                <span id="payrollChevron" class="transition-transform duration-200 {{ request()->routeIs('accounting.payrollManagement', 'accounting.payrollSettings') ? 'rotate-180' : '' }}">
+                  <i data-lucide="chevron-down" class="w-4 h-4 text-sm"></i>
+                </span>
+              </button>
+              
+              <ul id="payrollMenu" class="{{ request()->routeIs('accounting.payrollManagement', 'accounting.payrollSettings') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+                
+                <li>
+                  <a href="{{ route('accounting.payrollManagement') }}" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.payrollManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
+                    Payroll Records
+                  </a>
+                </li>
+
+                <li>
+                  <a href="{{ route('accounting.payrollSettings') }}" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.payrollSettings') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                    Payroll Settings
+                  </a>
+                </li>
+              </ul>
+            </div>
+
           </li>
 
           <li>
@@ -253,6 +287,35 @@
           });
         }
 
+        // Payroll dropdown toggle
+        const payrollToggle = document.getElementById('payrollToggle');
+        const payrollMenu = document.getElementById('payrollMenu');
+        const payrollChevron = document.getElementById('payrollChevron');
+        
+        if (payrollToggle && payrollMenu && payrollChevron) {
+          payrollToggle.addEventListener('click', () => {
+            const open = payrollMenu.classList.toggle('hidden') === false;
+            payrollToggle.setAttribute('aria-expanded', open);
+            payrollChevron.classList.toggle('rotate-180', open);
+          });
+          // keep chevron in sync when a child link is clicked
+          payrollMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+              payrollMenu.classList.remove('hidden');
+              payrollToggle.setAttribute('aria-expanded', 'true');
+              payrollChevron.classList.add('rotate-180');
+            });
+          });
+          // Close dropdown when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!payrollToggle.contains(e.target) && !payrollMenu.contains(e.target)) {
+              payrollMenu.classList.add('hidden');
+              payrollToggle.setAttribute('aria-expanded', 'false');
+              payrollChevron.classList.remove('rotate-180');
+            }
+          });
+        }
+
         // mobile toggle
         if (mobileBtn && overlay && sidebar){
           mobileBtn.addEventListener('click', ()=>{ overlay.classList.toggle('hidden'); sidebar.classList.toggle('-translate-x-full'); mobileBtn.querySelector('.menu-icon')?.classList.toggle('hidden'); mobileBtn.querySelector('.close-icon')?.classList.toggle('hidden'); });
@@ -281,6 +344,14 @@
               });
             }
             
+            // Toggle payroll toggle button
+            if (payrollToggle) {
+              payrollToggle.classList.toggle('justify-center', isExpanded);
+              payrollToggle.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+            
             // Hide fee menu chevron and dropdown when collapsed
             if (isExpanded && feeMenu && feeToggle && feeChevron) {
               feeMenu.classList.add('hidden');
@@ -291,9 +362,26 @@
               feeChevron.classList.remove('hidden');
             }
             
+            // Hide payroll menu chevron and dropdown when collapsed
+            if (isExpanded && payrollMenu && payrollToggle && payrollChevron) {
+              payrollMenu.classList.add('hidden');
+              payrollToggle.setAttribute('aria-expanded', 'false');
+              payrollChevron.classList.remove('rotate-180');
+              payrollChevron.classList.add('hidden');
+            } else if (!isExpanded && payrollChevron) {
+              payrollChevron.classList.remove('hidden');
+            }
+            
             // Hide fee menu labels
             if (feeMenu) {
               feeMenu.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+            
+            // Hide payroll menu labels
+            if (payrollMenu) {
+              payrollMenu.querySelectorAll('.nav-label').forEach(label => {
                 label.classList.toggle('hidden', isExpanded);
               });
             }
