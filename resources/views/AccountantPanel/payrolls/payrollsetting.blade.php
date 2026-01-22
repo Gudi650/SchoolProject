@@ -320,15 +320,6 @@
                                     <input type="number" id="base_salary" name="base_salary" step="0.01" min="0" required class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
-                            <div>
-                                <label for="payment_frequency" class="block text-sm font-medium text-slate-700 mb-1">Payment Frequency <span class="text-red-600">*</span></label>
-                                <select id="payment_frequency" name="payment_frequency" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
-                                    <option value="">Select Frequency</option>
-                                    <option value="monthly">Monthly</option>
-                                    <option value="bi-weekly">Bi-Weekly</option>
-                                    <option value="weekly">Weekly</option>
-                                </select>
-                            </div>
                         </div>
                     </div>
 
