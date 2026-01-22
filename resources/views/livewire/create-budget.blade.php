@@ -127,11 +127,15 @@
     Reinitialize Lucide icons after Livewire updates
     This ensures icons render properly after adding/removing categories
   --}}
-  <script>
-    document.addEventListener('livewire:update', () => {
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-      }
-    });
-  </script>
+@script
+<script>
+  // Initial load
+  lucide.createIcons();
+  
+  // Reinitialize after every Livewire DOM update
+  $wire.on('categoryUpdated', () => {
+    lucide.createIcons();
+  });
+</script>
+@endscript
 </div>
