@@ -1,9 +1,3 @@
-{{-- 
-  Budget Categories Livewire Component
-  Handles adding/removing budget allocation categories
-  Emits events to parent for real-time summary updates
---}}
-
 <div>
   {{-- Header Section --}}
           <div class="flex justify-between items-start mb-6">
