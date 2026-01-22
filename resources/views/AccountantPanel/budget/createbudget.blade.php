@@ -38,7 +38,8 @@
         </div>
       </div>
 
-      <!-- Main Form Container -->
+      <!-- Main Form Container - Wrapped in Livewire -->
+      
       <form id="budgetForm" class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
         
         <!-- Section 1: Budget Overview -->
@@ -126,39 +127,9 @@
 
         <!-- Section 2: Budget Allocation -->
         <div class="p-6 border-b border-slate-200 bg-white">
-          <div class="flex justify-between items-start mb-6">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                <i data-lucide="layers" class="w-5 h-5 text-purple-600"></i>
-              </div>
-              <div>
-                <h3 class="text-lg font-semibold text-slate-900">Budget Allocation</h3>
-                <p class="text-sm text-slate-600 mt-1">Add budget items by specifying department and expense type (e.g., Academic - Teaching Staff, Infrastructure - Maintenance)</p>
-              </div>
-            </div>
-            <!-- Add Category Button -->
-            <button 
-              type="button" 
-              id="addCategoryBtn"
-              class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-all shadow-sm hover:shadow-md flex-shrink-0"
-              onclick="addBudgetCategory()"
-            >
-              <i data-lucide="plus-circle" class="w-4 h-4"></i>
-              Add Category
-            </button>
-          </div>
+            {{-- Livewire component renders categories dynamically --}}
+            @livewire('create-budget')
 
-          <!-- Categories Container -->
-          <div id="categoriesContainer" class="space-y-4">
-            <!-- Initial empty state message -->
-            <div id="emptyState" class="p-10 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300 text-center">
-              <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i data-lucide="folder-open" class="w-8 h-8 text-slate-400"></i>
-              </div>
-              <p class="text-slate-700 text-base font-semibold mb-1">No budget items added yet</p>
-              <p class="text-slate-500 text-sm">Click "Add Category" to create budget allocations by department and expense type</p>
-            </div>
-          </div>
         </div>
 
         <!-- Section 3: Summary -->
@@ -291,139 +262,35 @@
   </main>
 
   <script>
-    // Track category count for unique IDs
-    let categoryCount = 0;
-
     /**
-     * Add a new budget category row
-     * Creates input fields for category name and amount allocation
+     * Listen for category updates from Livewire component
+     * This event is dispatched whenever categories change (add/remove/edit)
+     * Updates the budget summary in real-time
      */
-    function addBudgetCategory() {
-      const container = document.getElementById('categoriesContainer');
-      const emptyState = document.getElementById('emptyState');
-
-      // Remove empty state on first category
-      if (categoryCount === 0 && emptyState) {
-        emptyState.remove();
-      }
-
-      categoryCount++;
-      const categoryId = `category_${categoryCount}`;
-
-      // Create category row HTML
-      const categoryRow = document.createElement('div');
-      categoryRow.id = categoryId;
-      categoryRow.className = 'flex gap-3 items-end p-5 bg-white rounded-r-xl rounded-l-none border-l-4 border-indigo-400 shadow-sm hover:shadow transition-all';
-      categoryRow.innerHTML = `
-        <!-- Category Icon -->
-        <div class="flex-shrink-0 pt-6">
-          <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-            <i data-lucide="tag" class="w-5 h-5 text-indigo-600"></i>
-          </div>
-        </div>
-        
-        <!-- Department Input -->
-        <div class="flex-1">
-          <label class="block text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1">
-            <i data-lucide="building-2" class="w-3 h-3 text-indigo-600"></i>
-            Department
-          </label>
-          <select 
-            class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm category-department transition-all bg-slate-50 focus:bg-white"
-            required
-          >
-            <option value="">Select Department...</option>
-            <option value="Academic">Academic</option>
-            <option value="Infrastructure">Infrastructure</option>
-            <option value="Library">Library</option>
-            <option value="Sports">Sports</option>
-            <option value="Transportation">Transportation</option>
-            <option value="Administration">Administration</option>
-          </select>
-        </div>
-
-        <!-- Expense Type Input -->
-        <div class="flex-1">
-          <label class="block text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1">
-            <i data-lucide="bookmark" class="w-3 h-3 text-purple-600"></i>
-            Expense Type
-          </label>
-          <input 
-            type="text" 
-            placeholder="e.g., Teaching Staff, Facilities, Equipment"
-            class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm category-expense-type transition-all bg-slate-50 focus:bg-white"
-          >
-        </div>
-
-        <!-- Amount Input -->
-        <div class="flex-1">
-          <label class="block text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1">
-            <i data-lucide="dollar-sign" class="w-3 h-3 text-green-600"></i>
-            Budget Amount
-          </label>
-          <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500 font-medium text-sm">$</span>
-            <input 
-              type="number" 
-              placeholder="0.00"
-              step="0.01"
-              min="0"
-              class="w-full pl-8 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm category-amount transition-all bg-slate-50 focus:bg-white font-semibold text-slate-900"
-              oninput="updateBudgetSummary()"
-            >
-          </div>
-        </div>
-
-        <!-- Remove Button -->
-        <button 
-          type="button" 
-          class="px-3 py-2.5 bg-red-50 border border-red-200 hover:bg-red-100 hover:border-red-300 text-red-600 rounded-lg transition-all text-sm font-medium"
-          onclick="removeBudgetCategory('${categoryId}')"
-          title="Remove item"
-        >
-          <i data-lucide="x-circle" class="w-5 h-5"></i>
-        </button>
-      `;
-
-      container.appendChild(categoryRow);
-
-      // Focus on the new department input and reinitialize icons
-      categoryRow.querySelector('.category-department').focus();
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-      }
-    }
+    window.addEventListener('categoryUpdated', event => {
+      const categories = event.detail[0];
+      updateBudgetSummaryFromLivewire(categories);
+    });
 
     /**
-     * Remove a specific budget category
-     * @param {string} categoryId - The ID of the category to remove
+     * Listen for category validation errors from Livewire
+     * Displays error messages when validation fails
      */
-    function removeBudgetCategory(categoryId) {
-      const categoryElement = document.getElementById(categoryId);
-      if (categoryElement) {
-        categoryElement.remove();
-        updateBudgetSummary();
-
-        // Show empty state if no categories left
-        const container = document.getElementById('categoriesContainer');
-        if (container.children.length === 0) {
-          container.innerHTML = '<div id="emptyState" class="p-10 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300 text-center"><div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="folder-open" class="w-8 h-8 text-slate-400"></i></div><p class="text-slate-700 text-base font-semibold mb-1">No budget items added yet</p><p class="text-slate-500 text-sm">Click "Add Category" to create budget allocations by department and expense type</p></div>';
-          if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-          }
-        }
-      }
-    }
+    window.addEventListener('categoryError', event => {
+      const errorMessage = event.detail[0];
+      alert(errorMessage); // TODO: Replace with better UI notification
+    });
 
     /**
-     * Update budget summary calculations
+     * Update budget summary from Livewire categories
      * Calculates total allocated, remaining amount, and allocation percentage
+     * @param {Array} categories - Array of category objects from Livewire
      */
-    function updateBudgetSummary() {
+    function updateBudgetSummaryFromLivewire(categories) {
       const totalBudgetInput = parseFloat(document.getElementById('totalBudget').value) || 0;
-      const categoryAmounts = Array.from(document.querySelectorAll('.category-amount'))
-        .map(input => parseFloat(input.value) || 0)
-        .reduce((sum, amount) => sum + amount, 0);
+      
+      // Calculate total from Livewire categories
+      const categoryAmounts = categories.reduce((sum, cat) => sum + (parseFloat(cat.amount) || 0), 0);
 
       const remaining = totalBudgetInput - categoryAmounts;
       const percentage = totalBudgetInput > 0 ? Math.round((categoryAmounts / totalBudgetInput) * 100) : 0;
@@ -468,52 +335,67 @@
 
     /**
      * Handle form submission
-     * Prevents default and logs budget data (backend integration point)
+     * Gets data from form and Livewire component, then submits to backend
      */
     document.getElementById('budgetForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      // Validate form
+      // Get form values
       const budgetName = document.getElementById('budgetName').value.trim();
       const budgetPeriod = document.getElementById('budgetPeriod').value.trim();
       const totalBudget = parseFloat(document.getElementById('totalBudget').value) || 0;
-      const categories = Array.from(document.querySelectorAll('#categoriesContainer > div:not(#emptyState)'))
-        .map(row => ({
-          department: row.querySelector('.category-department').value.trim(),
-          expenseType: row.querySelector('.category-expense-type').value.trim(),
-          amount: parseFloat(row.querySelector('.category-amount').value) || 0
-        }))
-        .filter(cat => cat.department && cat.expenseType && cat.amount > 0);
+      const description = document.getElementById('description').value.trim();
 
-      // Basic validation
+      // Basic validation for form fields
       if (!budgetName || !budgetPeriod || totalBudget <= 0) {
         alert('Please fill in all required fields');
         return;
       }
 
-      if (categories.length === 0) {
-        alert('Please add at least one budget item with department, expense type, and amount');
-        return;
+      // Get categories from Livewire component via Alpine.js or window access
+      // Note: We'll validate categories in Livewire before submitting
+      const livewireComponent = Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id'));
+      
+      if (livewireComponent && typeof livewireComponent.validateCategories === 'function') {
+        // Validate categories using Livewire method
+        if (!livewireComponent.validateCategories()) {
+          return; // Validation failed, error event already dispatched
+        }
+        
+        // Get validated categories
+        const categories = livewireComponent.getCategories();
+        
+        // Prepare data for backend
+        const budgetData = {
+          name: budgetName,
+          period: budgetPeriod,
+          total: totalBudget,
+          description: description,
+          categories: categories
+        };
+
+        // Log budget data (replace with actual API call)
+        console.log('Budget Data:', budgetData);
+        alert('Budget created successfully!'); // Remove after backend integration
+        
+        // TODO: Submit to backend
+        // fetch('/api/budgets', { method: 'POST', body: JSON.stringify(budgetData) })
+      } else {
+        alert('Error: Could not access category data. Please try again.');
       }
-
-      // Prepare data for backend
-      const budgetData = {
-        name: budgetName,
-        period: budgetPeriod,
-        total: totalBudget,
-        description: document.getElementById('description').value.trim(),
-        categories: categories
-      };
-
-      // Log budget data (replace with actual API call)
-      console.log('Budget Data:', budgetData);
-      alert('Budget created successfully!'); // Remove after backend integration
     });
 
     /**
      * Update summary when total budget changes
+     * Triggers recalculation from Livewire categories
      */
-    document.getElementById('totalBudget').addEventListener('input', updateBudgetSummary);
+    document.getElementById('totalBudget').addEventListener('input', function() {
+      // Trigger update with current Livewire categories
+      const livewireComponent = Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id'));
+      if (livewireComponent && livewireComponent.categories) {
+        updateBudgetSummaryFromLivewire(livewireComponent.categories);
+      }
+    });
 
     /**
      * Open budget selection modal
@@ -685,26 +567,14 @@
       document.getElementById('totalBudget').value = lastBudgetData.total;
       document.getElementById('description').value = lastBudgetData.description;
 
-      // Clear existing categories
-      const container = document.getElementById('categoriesContainer');
-      container.innerHTML = '';
-      categoryCount = 0;
-
-      // Add each category from last budget
-      lastBudgetData.categories.forEach(category => {
-        addBudgetCategory();
-        const currentRow = document.getElementById(`category_${categoryCount}`);
-        currentRow.querySelector('.category-department').value = category.department;
-        currentRow.querySelector('.category-expense-type').value = category.expenseType;
-        currentRow.querySelector('.category-amount').value = category.amount;
-      });
-
-      // Update summary
-      updateBudgetSummary();
-
-      // Reinitialize icons
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
+      // Push categories into Livewire component
+      const livewireComponent = Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id'));
+      if (livewireComponent && typeof livewireComponent.loadCategories === 'function') {
+        livewireComponent.loadCategories(lastBudgetData.categories);
+        updateBudgetSummaryFromLivewire(lastBudgetData.categories);
+      } else {
+        alert('Error: Could not load categories. Please try again.');
+        return;
       }
 
       // Close modal
