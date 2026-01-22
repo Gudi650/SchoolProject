@@ -5,25 +5,36 @@
     <div class="max-w-5xl mx-auto">
 
       <!-- Page Header with Icon -->
-      <div class="mb-8 bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
-        <div class="flex items-center justify-between">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <i data-lucide="wallet" class="w-6 h-6 text-indigo-600"></i>
+      <div class="mb-8 bg-white rounded-xl p-4 sm:p-6 border border-slate-200 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div class="flex items-start gap-3 sm:gap-4 min-w-0">
+            <div class="w-10 sm:w-12 h-10 sm:h-12 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="wallet" class="w-5 sm:w-6 h-5 sm:h-6 text-indigo-600"></i>
             </div>
-            <div>
-              <h1 class="text-3xl font-bold text-slate-900">Create Budget</h1>
-              <p class="text-slate-600 mt-2">Set up a new budget and allocate funds across departments</p>
+            <div class="min-w-0">
+              <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Create Budget</h1>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-2">Set up a new budget and allocate funds across departments</p>
             </div>
           </div>
-          <button 
-            type="button" 
-            onclick="loadLastBudget()"
-            class="px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2"
-          >
-            <i data-lucide="copy" class="w-4 h-4"></i>
-            Copy from Last Budget
-          </button>
+          <div class="flex flex-col xs:flex-row gap-2 w-full sm:w-auto">
+            <a 
+              href="{{ route('accounting.departmentManagement') }}"
+              class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-purple-600 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors inline-flex items-center justify-center sm:justify-start gap-2 whitespace-nowrap"
+            >
+              <i data-lucide="building-2" class="w-4 h-4 flex-shrink-0"></i>
+              <span class="hidden sm:inline">Manage Departments</span>
+              <span class="sm:hidden">Departments</span>
+            </a>
+            <button 
+              type="button" 
+              onclick="loadLastBudget()"
+              class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors inline-flex items-center justify-center sm:justify-start gap-2 whitespace-nowrap"
+            >
+              <i data-lucide="copy" class="w-4 h-4 flex-shrink-0"></i>
+              <span class="hidden sm:inline">Copy from Last Budget</span>
+              <span class="sm:hidden">Copy</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -223,6 +234,60 @@
       </form>
 
     </div>
+
+    <!-- Budget Selection Modal -->
+    <div id="budgetModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4 md:pl-72" style="display: none;">
+      <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col mx-auto">
+        <!-- Modal Header -->
+        <div class="p-4 sm:p-6 border-b border-slate-200 bg-indigo-50">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <i data-lucide="copy" class="w-5 h-5 text-indigo-600"></i>
+              </div>
+              <div>
+                <h2 class="text-lg sm:text-xl font-bold text-slate-900">Select Budget to Copy</h2>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1">Choose a previous budget to use as template</p>
+              </div>
+            </div>
+            <button 
+              type="button" 
+              onclick="closeBudgetModal()"
+              class="text-slate-400 hover:text-slate-600 transition-colors p-1"
+            >
+              <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="flex-1 overflow-y-auto p-4 sm:p-6">
+          <div id="budgetsList" class="space-y-3">
+            <!-- Budget items will be inserted here -->
+          </div>
+
+          <!-- Empty State -->
+          <div id="noBudgetsMessage" class="hidden text-center py-12">
+            <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i>
+            </div>
+            <p class="text-slate-700 text-base font-semibold mb-1">No previous budgets found</p>
+            <p class="text-slate-500 text-sm">Create your first budget to get started</p>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="p-4 sm:p-6 border-t border-slate-200 bg-slate-50">
+          <button 
+            type="button" 
+            onclick="closeBudgetModal()"
+            class="w-full sm:w-auto px-6 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
   </main>
 
   <script>
@@ -263,11 +328,18 @@
             <i data-lucide="building-2" class="w-3 h-3 text-indigo-600"></i>
             Department
           </label>
-          <input 
-            type="text" 
-            placeholder="e.g., Academic, Infrastructure, Sports"
+          <select 
             class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm category-department transition-all bg-slate-50 focus:bg-white"
+            required
           >
+            <option value="">Select Department...</option>
+            <option value="Academic">Academic</option>
+            <option value="Infrastructure">Infrastructure</option>
+            <option value="Library">Library</option>
+            <option value="Sports">Sports</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Administration">Administration</option>
+          </select>
         </div>
 
         <!-- Expense Type Input -->
@@ -444,28 +516,168 @@
     document.getElementById('totalBudget').addEventListener('input', updateBudgetSummary);
 
     /**
-     * Load last budget data and populate the form
-     * Fetches the most recent budget and fills all fields
+     * Open budget selection modal
      */
     function loadLastBudget() {
-      // TODO: Replace with actual API call to fetch last budget
-      // For now, this is a placeholder that shows how it would work
+      // TODO: Replace with actual API call to fetch budgets from last year
+      // Example: fetch('/api/budgets/previous-year')
       
-      // Example of what the API response would look like:
-      const lastBudgetData = {
-        name: 'FY 2025 School Operations',
-        period: 'January - December 2025',
-        total: 950000,
-        description: 'Previous year annual operating budget',
-        categories: [
-          { department: 'Academic', expenseType: 'Teaching Staff', amount: 570000 },
-          { department: 'Academic', expenseType: 'Teaching Facilities', amount: 120000 },
-          { department: 'Infrastructure', expenseType: 'Maintenance', amount: 110000 },
-          { department: 'Library', expenseType: 'Books & Resources', amount: 65000 },
-          { department: 'Sports', expenseType: 'Equipment', amount: 45000 },
-          { department: 'Transportation', expenseType: 'Bus Operations', amount: 40000 }
-        ]
-      };
+      const previousBudgets = [
+        {
+          id: 1,
+          name: 'FY 2025 School Operations',
+          period: 'January - December 2025',
+          total: 950000,
+          description: 'Previous year annual operating budget',
+          created_at: '2025-01-15',
+          categories: [
+            { department: 'Academic', expenseType: 'Teaching Staff', amount: 570000 },
+            { department: 'Academic', expenseType: 'Teaching Facilities', amount: 120000 },
+            { department: 'Infrastructure', expenseType: 'Maintenance', amount: 110000 },
+            { department: 'Library', expenseType: 'Books & Resources', amount: 65000 },
+            { department: 'Sports', expenseType: 'Equipment', amount: 45000 },
+            { department: 'Transportation', expenseType: 'Bus Operations', amount: 40000 }
+          ]
+        },
+        {
+          id: 2,
+          name: 'FY 2025 Q4 Supplementary Budget',
+          period: 'October - December 2025',
+          total: 250000,
+          description: 'Fourth quarter supplementary allocation',
+          created_at: '2025-10-01',
+          categories: [
+            { department: 'Academic', expenseType: 'Teaching Staff', amount: 150000 },
+            { department: 'Infrastructure', expenseType: 'Renovations', amount: 100000 }
+          ]
+        },
+        {
+          id: 3,
+          name: 'FY 2025 Special Projects',
+          period: 'March - August 2025',
+          total: 450000,
+          description: 'Special projects and initiatives',
+          created_at: '2025-03-10',
+          categories: [
+            { department: 'Library', expenseType: 'Digital Resources', amount: 120000 },
+            { department: 'Sports', expenseType: 'Facilities Upgrade', amount: 200000 },
+            { department: 'Administration', expenseType: 'Technology', amount: 130000 }
+          ]
+        }
+      ];
+
+      displayBudgetModal(previousBudgets);
+    }
+
+    /**
+     * Display budget selection modal
+     */
+    function displayBudgetModal(budgets) {
+      const modal = document.getElementById('budgetModal');
+      const budgetsList = document.getElementById('budgetsList');
+      const noBudgetsMessage = document.getElementById('noBudgetsMessage');
+
+      if (budgets.length === 0) {
+        budgetsList.innerHTML = '';
+        noBudgetsMessage.style.display = 'block';
+      } else {
+        noBudgetsMessage.style.display = 'none';
+        budgetsList.innerHTML = budgets.map(budget => `
+          <div 
+            class="p-4 sm:p-5 border-2 border-slate-200 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all cursor-pointer group"
+            onclick="selectBudget(${budget.id})"
+          >
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-200 transition-colors">
+                    <i data-lucide="file-text" class="w-5 h-5 text-indigo-600"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-sm sm:text-base font-semibold text-slate-900 break-words">${escapeHtml(budget.name)}</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-1">${escapeHtml(budget.period)}</p>
+                    <p class="text-xs text-slate-500 mt-1 line-clamp-2">${escapeHtml(budget.description || 'No description')}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col sm:items-end gap-1 sm:ml-4">
+                <span class="text-lg sm:text-xl font-bold text-indigo-600">$${budget.total.toLocaleString()}</span>
+                <span class="text-xs text-slate-500">${budget.categories.length} categories</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        // Reinitialize icons
+        if (typeof lucide !== 'undefined') {
+          lucide.createIcons();
+        }
+      }
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    /**
+     * Close budget modal
+     */
+    function closeBudgetModal() {
+      const modal = document.getElementById('budgetModal');
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    /**
+     * Select and load a budget
+     */
+    function selectBudget(budgetId) {
+      // TODO: Replace with actual API call
+      // fetch(`/api/budgets/${budgetId}`)
+      
+      // Find the selected budget from the demo data
+      const budgets = [
+        {
+          id: 1,
+          name: 'FY 2025 School Operations',
+          period: 'January - December 2025',
+          total: 950000,
+          description: 'Previous year annual operating budget',
+          categories: [
+            { department: 'Academic', expenseType: 'Teaching Staff', amount: 570000 },
+            { department: 'Academic', expenseType: 'Teaching Facilities', amount: 120000 },
+            { department: 'Infrastructure', expenseType: 'Maintenance', amount: 110000 },
+            { department: 'Library', expenseType: 'Books & Resources', amount: 65000 },
+            { department: 'Sports', expenseType: 'Equipment', amount: 45000 },
+            { department: 'Transportation', expenseType: 'Bus Operations', amount: 40000 }
+          ]
+        },
+        {
+          id: 2,
+          name: 'FY 2025 Q4 Supplementary Budget',
+          period: 'October - December 2025',
+          total: 250000,
+          description: 'Fourth quarter supplementary allocation',
+          categories: [
+            { department: 'Academic', expenseType: 'Teaching Staff', amount: 150000 },
+            { department: 'Infrastructure', expenseType: 'Renovations', amount: 100000 }
+          ]
+        },
+        {
+          id: 3,
+          name: 'FY 2025 Special Projects',
+          period: 'March - August 2025',
+          total: 450000,
+          description: 'Special projects and initiatives',
+          categories: [
+            { department: 'Library', expenseType: 'Digital Resources', amount: 120000 },
+            { department: 'Sports', expenseType: 'Facilities Upgrade', amount: 200000 },
+            { department: 'Administration', expenseType: 'Technology', amount: 130000 }
+          ]
+        }
+      ];
+
+      const lastBudgetData = budgets.find(b => b.id === budgetId);
+      if (!lastBudgetData) return;
 
       // Populate budget overview fields
       document.getElementById('budgetName').value = lastBudgetData.name + ' (Copy)';
@@ -495,23 +707,28 @@
         lucide.createIcons();
       }
 
+      // Close modal
+      closeBudgetModal();
+
       // Show success message
-      alert('Last budget loaded successfully! You can now modify and save as a new budget.');
-      
-      // TODO: When backend is ready, replace above with actual fetch:
-      /*
-      fetch('/api/budgets/last')
-        .then(response => response.json())
-        .then(data => {
-          // Populate form with data
-          document.getElementById('budgetName').value = data.name + ' (Copy)';
-          // ... rest of the population logic
-        })
-        .catch(error => {
-          alert('Could not load last budget. Please create a new one.');
-        });
-      */
+      alert('Budget loaded successfully! You can now modify and save as a new budget.');
     }
+
+    /**
+     * Escape HTML to prevent XSS
+     */
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text || '';
+      return div.innerHTML;
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('budgetModal')?.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeBudgetModal();
+      }
+    });
 
     /**
      * Initialize page - reinitialize Lucide icons

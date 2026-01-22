@@ -416,6 +416,11 @@ Route::get('/create-budget', function () {
     return view('AccountantPanel.budget.createbudget');
 })->name('accounting.createBudget');
 
+//route to manage department
+Route::get('/department-management', function () {
+    return view('AccountantPanel.budget.manageDepartments');
+})->name('accounting.departmentManagement');
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
