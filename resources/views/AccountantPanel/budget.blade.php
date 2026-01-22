@@ -17,10 +17,10 @@
                 <i data-lucide="download" class="w-4 h-4"></i>
                 Export
               </button>
-              <button class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
+              <a href="{{ route('accounting.createBudget') }}" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 Create Budget
-              </button>
+              </a>
             </div>
           </div>
         </div>

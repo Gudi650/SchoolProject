@@ -401,10 +401,24 @@ Route::get('/vendors-management', function () {
     return view('AccountantPanel.vendors');
 })->name('accounting.vendorsManagement');
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //route for budgeting management
 Route::get('/budgeting-management', function () {
     return view('AccountantPanel.budget');
 })->name('accounting.budgetingManagement');
+
+//route to create budget
+Route::get('/create-budget', function () {
+    return view('AccountantPanel.budget.createbudget');
+})->name('accounting.createBudget');
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 //route for reports management
 Route::get('/reports-management', function () {
