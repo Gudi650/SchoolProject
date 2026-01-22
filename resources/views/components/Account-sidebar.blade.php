@@ -107,13 +107,6 @@
           </li>
 
           <li>
-            {{-- 
-            <a href="{{ route('accounting.payrollManagement') }}" 
-            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.payrollManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
-              <i data-lucide="users" class="w-5 h-5"></i>
-              <span class="flex-1 text-left text-sm font-medium nav-label">Payroll</span>
-            </a>  --}}
-
 
             <div class="relative">
               <button id="payrollToggle" aria-expanded="{{ request()->routeIs('accounting.payrollSettings','accounting.payrollManagement') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.payrollSettings', 'accounting.payrollManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
@@ -164,11 +157,45 @@
           </li>
 
           <li>
-            <a href="{{ route('accounting.budgetingManagement') }}" 
-              class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.budgetingManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
-              <i data-lucide="pie-chart" class="w-5 h-5"></i>
-              <span class="flex-1 text-left text-sm font-medium nav-label">Budget</span>
-            </a>
+
+            <div class="relative">
+              <button id="budgetToggle" aria-expanded="{{ request()->routeIs('accounting.budgetingManagement', 'accounting.createBudget', 'accounting.departmentManagement') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.budgetingManagement', 'accounting.createBudget', 'accounting.departmentManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                <span class="flex items-center gap-3">
+                  <i data-lucide="pie-chart" class="w-5 h-5"></i>
+                  <span class="text-sm font-medium nav-label">Budget Management</span>
+                </span>
+                <span id="budgetChevron" class="transition-transform duration-200 {{ request()->routeIs('accounting.budgetingManagement', 'accounting.createBudget', 'accounting.departmentManagement') ? 'rotate-180' : '' }}">
+                  <i data-lucide="chevron-down" class="w-4 h-4 text-sm"></i>
+                </span>
+              </button>
+              
+              <ul id="budgetMenu" class="{{ request()->routeIs('accounting.budgetingManagement', 'accounting.createBudget', 'accounting.departmentManagement') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+                <li>
+                  <a href="#" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.budgetingManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                    Budget Management
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ route('accounting.createBudget') }}" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.createBudget') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
+                    Create Budget
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ route('accounting.departmentManagement') }}" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.departmentManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    Department Management
+                  </a>
+                  <li>
+                  
+                </li>
+              </ul>
+            </div>
+
           </li>
 
           <li>
@@ -312,6 +339,35 @@
               payrollMenu.classList.add('hidden');
               payrollToggle.setAttribute('aria-expanded', 'false');
               payrollChevron.classList.remove('rotate-180');
+            }
+          });
+        }
+
+        //budget managment dropdown toggle
+        const budgetToggle = document.getElementById('budgetToggle');
+        const budgetMenu = document.getElementById('budgetMenu');
+        const budgetChevron = document.getElementById('budgetChevron');
+
+        if (budgetToggle && budgetMenu && budgetChevron) {
+          budgetToggle.addEventListener('click', () => {
+            const open = budgetMenu.classList.toggle('hidden') === false;
+            budgetToggle.setAttribute('aria-expanded', open);
+            budgetChevron.classList.toggle('rotate-180', open);
+          });
+          // keep chevron in sync when a child link is clicked
+          budgetMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+              budgetMenu.classList.remove('hidden');
+              budgetToggle.setAttribute('aria-expanded', 'true');
+              budgetChevron.classList.add('rotate-180');
+            });
+          });
+          // Close dropdown when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!budgetToggle.contains(e.target) && !budgetMenu.contains(e.target)) {
+              budgetMenu.classList.add('hidden');
+              budgetToggle.setAttribute('aria-expanded', 'false');
+              budgetChevron.classList.remove('rotate-180');
             }
           });
         }
