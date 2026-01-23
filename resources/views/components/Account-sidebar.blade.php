@@ -171,10 +171,10 @@
               
               <ul id="budgetMenu" class="{{ request()->routeIs('accounting.budgetingManagement', 'accounting.createBudget', 'accounting.departmentManagement') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
                 <li>
-                  <a href="#" 
+                  <a href="{{ route('accounting.budgetingManagement') }}" 
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.budgetingManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                     <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-                    Budget Management
+                    Budget Analysis
                   </a>
                 </li>
                 <li>
