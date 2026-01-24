@@ -6,6 +6,7 @@ use App\Http\Controllers\AssignClasses;
 use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BudgetDepartmentController;
 use App\Http\Controllers\FeeOptionsController;
 use App\Http\Controllers\feestructure;
 use App\Http\Controllers\GeneratedTimetableController;
@@ -416,10 +417,22 @@ Route::get('/create-budget', function () {
     return view('AccountantPanel.budget.createbudget');
 })->name('accounting.createBudget');
 
-//route to manage department
-Route::get('/department-management', function () {
-    return view('AccountantPanel.budget.manageDepartments');
-})->name('accounting.departmentManagement');
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//route to manage departments with controller
+Route::get('/department-management', 
+[BudgetDepartmentController::class, 'viewbudgetdepartments'])
+->name('accounting.departmentManagement');
+
+
+//route to create new department with controller
+Route::post('/create-department', 
+[BudgetDepartmentController::class, 'createbudgetdepartment'])
+->name('accounting.departmentManagement.create');
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
