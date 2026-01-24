@@ -419,24 +419,25 @@ Route::get('/create-budget', function () {
 
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
+//routes for budget department management using controller
+Route::controller(BudgetDepartmentController::class)->group(function () {
+    // Additional routes can be added here if needed
 
-//route to manage departments with controller
-Route::get('/department-management', 
-[BudgetDepartmentController::class, 'viewbudgetdepartments'])
-->name('accounting.departmentManagement');
+    //display route
+    Route::get('/department-management', 'viewbudgetdepartments')->name('accounting.departmentManagement');
+
+    //create route
+    Route::post('/create-department', 'createbudgetdepartment')->name('accounting.departmentManagement.create');
+
+    //update route
+    Route::post('/update-department/{id}', 'updatebudgetdepartment')->name('accounting.departmentManagement.update');
+
+    //delete route
+    Route::delete('/delete-department/{id}', 'deletebudgetdepartment')->name('accounting.departmentManagement.delete');
 
 
-//route to create new department with controller
-Route::post('/create-department', 
-[BudgetDepartmentController::class, 'createbudgetdepartment'])
-->name('accounting.departmentManagement.create');
+});
 
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
 
 //route for reports management
 Route::get('/reports-management', function () {

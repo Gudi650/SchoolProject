@@ -180,7 +180,7 @@
                 </div>
                 <div>
                   <h3 class="text-lg font-semibold text-slate-900">Departments</h3>
-                  <p class="text-sm text-slate-600 mt-1">Total: <span id="departmentCount" class="font-semibold text-emerald-600">0</span></p>
+                  <p class="text-sm text-slate-600 mt-1">Total: <span id="departmentCount" class="font-semibold text-emerald-600">{{ $totalDepartments }}</span></p>
                 </div>
               </div>
             </div>
@@ -210,9 +210,12 @@
                               <p class="text-xs text-slate-500 mt-1">{{ $department->description }}</p>
                             </div>
                           </div>
+
+                          
                           <div class="flex gap-2 ml-4">
                             <button 
                               type="button"
+                              onclick="document.getElementById('editModal{{ $department->id }}').style.display='flex'; document.body.style.overflow='hidden';"
                               class="px-3 py-2 text-xs font-medium text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 rounded-lg transition-colors"
                               title="Edit"
                             >
@@ -220,12 +223,179 @@
                             </button>
                             <button 
                               type="button"
+                              onclick="document.getElementById('deleteModal{{ $department->id }}').style.display='flex'; document.body.style.overflow='hidden';"
                               class="px-3 py-2 text-xs font-medium text-red-600 bg-red-50 border border-red-200 hover:bg-red-100 rounded-lg transition-colors"
                               title="Delete"
                             >
                               <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                           </div>
+                        </div>
+                      </div> <!--end of department row-->
+
+                      <!-- Edit Modal for this Department -->
+                      <div id="editModal{{ $department->id }}" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display: none;">
+                        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
+                          
+                          <!-- Modal Header -->
+                          <div class="p-6 bg-indigo-600 border-b border-indigo-700">
+                            <div class="flex items-center justify-between">
+                              <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                  <i data-lucide="edit-3" class="w-6 h-6 text-white"></i>
+                                </div>
+                                <div>
+                                  <h2 class="text-xl font-bold text-white">Edit Department</h2>
+                                  <p class="text-sm text-indigo-100 mt-0.5">Update department information</p>
+                                </div>
+                              </div>
+                              <button 
+                                type="button" 
+                                onclick="document.getElementById('editModal{{ $department->id }}').style.display='none'; document.body.style.overflow='';"
+                                class="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-colors"
+                              >
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                              </button>
+                            </div>
+                          </div>
+
+                          <!-- Modal Body -->
+                          <form action="{{ route('accounting.departmentManagement.update', $department->id) }}" method="POST" class="p-6">
+                            @csrf
+                            
+                            <!-- Department Name Input -->
+                            <div class="mb-5">
+                              <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <i data-lucide="briefcase" class="w-4 h-4 text-indigo-600"></i>
+                                Department Name <span class="text-red-600">*</span>
+                              </label>
+                              <input 
+                                type="text" 
+                                name="department_name" 
+                                placeholder="e.g., Academic"
+                                value="{{ $department->department_name }}"
+                                class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm transition-all bg-slate-50 focus:bg-white"
+                                required
+                              >
+                            </div>
+
+                            <!-- Description Input -->
+                            <div class="mb-6">
+                              <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <i data-lucide="align-left" class="w-4 h-4 text-indigo-600"></i>
+                                Description
+                              </label>
+                              <textarea 
+                                name="description" 
+                                rows="4"
+                                placeholder="Optional description..."
+                                class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm resize-none transition-all bg-slate-50 focus:bg-white"
+                              >{{ $department->description }}</textarea>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-3">
+                              <button 
+                                type="button" 
+                                onclick="document.getElementById('editModal{{ $department->id }}').style.display='none'; document.body.style.overflow='';"
+                                class="flex-1 px-4 py-3 text-sm font-semibold text-slate-700 bg-red-100 hover:bg-red-200 border-2 border-slate-300 rounded-xl transition-all flex items-center justify-center gap-2"
+                              >
+                                <i data-lucide="x-circle" class="w-4 h-4"></i>
+                                Cancel
+                              </button>
+                              <button 
+                                type="submit" 
+                                class="flex-1 px-4 py-3 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 border-2 border-indigo-600 hover:border-indigo-700 rounded-xl transition-all shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 flex items-center justify-center gap-2"
+                              >
+                                <i data-lucide="save" class="w-4 h-4"></i>
+                                Update Department
+                              </button>
+                            </div>
+                          </form>
+
+                          <!-- Close on backdrop click -->
+                          <script>
+                            document.getElementById('editModal{{ $department->id }}')?.addEventListener('click', function(e) {
+                              if (e.target === this) {
+                                this.style.display = 'none';
+                                document.body.style.overflow = '';
+                              }
+                            });
+                          </script>
+                        </div>
+                      </div> <!--end of edit modal-->
+
+                      <!-- Delete Confirmation Modal for this Department -->
+                      <div id="deleteModal{{ $department->id }}" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display: none;">
+                        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
+
+                          <!-- Modal Header -->
+                          <div class="p-5 bg-red-600 border-b border-red-700">
+                            <div class="flex items-center justify-between">
+                              <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                  <i data-lucide="alert-octagon" class="w-6 h-6 text-white"></i>
+                                </div>
+                                <div>
+                                  <h2 class="text-lg font-bold text-white">Delete Department</h2>
+                                  <p class="text-xs text-red-100 mt-0.5">This action cannot be undone</p>
+                                </div>
+                              </div>
+                              <button 
+                                type="button" 
+                                onclick="document.getElementById('deleteModal{{ $department->id }}').style.display='none'; document.body.style.overflow='';"
+                                class="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-colors"
+                              >
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                              </button>
+                            </div>
+                          </div>
+
+                          <!-- Modal Body -->
+                          <div class="p-6 space-y-4">
+                            <div class="flex items-center gap-3">
+                              <div class="w-12 h-12 bg-red-50 border-2 border-red-100 rounded-xl flex items-center justify-center">
+                                <i data-lucide="shield-off" class="w-6 h-6 text-red-600"></i>
+                              </div>
+                              <div>
+                                <p class="text-sm text-slate-700">Are you sure you want to delete <span class="font-semibold text-slate-900">{{ $department->department_name }}</span>?</p>
+                                <p class="text-xs text-slate-500 mt-1">All related budget allocations may need reassignment.</p>
+                              </div>
+                            </div>
+
+                            <form action="{{ route('accounting.departmentManagement.delete', $department->id) }}" method="POST" class="space-y-3">
+                              @csrf
+                              @method('DELETE')
+
+                              <div class="flex gap-3">
+                                <button 
+                                  type="button" 
+                                  onclick="document.getElementById('deleteModal{{ $department->id }}').style.display='none'; document.body.style.overflow='';"
+                                  class="flex-1 px-4 py-3 text-sm font-semibold text-slate-700 bg-green-100 hover:bg-green-200 border-2 border-slate-300 rounded-xl transition-all flex items-center justify-center gap-2"
+                                >
+                                  <i data-lucide="x-circle" class="w-4 h-4"></i>
+                                  Cancel
+                                </button>
+                                <button 
+                                  type="submit" 
+                                  class="flex-1 px-4 py-3 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 border-2 border-red-600 hover:border-red-700 rounded-xl transition-all shadow-lg shadow-red-500/30 hover:shadow-xl hover:shadow-red-500/40 flex items-center justify-center gap-2"
+                                >
+                                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                  Delete
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+
+                          <!-- Close on backdrop click -->
+                          <script>
+                            document.getElementById('deleteModal{{ $department->id }}')?.addEventListener('click', function(e) {
+                              if (e.target === this) {
+                                this.style.display = 'none';
+                                document.body.style.overflow = '';
+                              }
+                            });
+                          </script>
                         </div>
                       </div>
                     
@@ -289,6 +459,19 @@
           validationErrors.style.opacity = '0';
           setTimeout(() => validationErrors.remove(), 500);
         }, 8000);
+      }
+    });
+
+    /**
+     * Close modals with Escape key
+     */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modals = document.querySelectorAll('[id^="editModal"]');
+        modals.forEach(modal => {
+          modal.style.display = 'none';
+          document.body.style.overflow = '';
+        });
       }
     });
   </script>
