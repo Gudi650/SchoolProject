@@ -30,9 +30,13 @@ class Budget extends Controller
         //now call the fetch department function to get the departments
         $departments = $this->fetchbudgetdepartments(1); //hardcoded for now
 
-        //return the view and pass the departments data
+        //fetch previous budgets for copying (from last year or earlier)
+        $previousBudgets = ModelsBudget::orderBy('created_at', 'desc')->get();
+
+        //return the view and pass the departments and previous budgets data
         return view('AccountantPanel.budget.createbudget',[
             'departments' => $departments,
+            'previousBudgets' => $previousBudgets,
         ]);
 
     }

@@ -321,16 +321,41 @@
         <!-- Modal Body -->
         <div class="flex-1 overflow-y-auto p-4 sm:p-6">
           <div id="budgetsList" class="space-y-3">
-            <!-- Budget items will be inserted here -->
-          </div>
-
-          <!-- Empty State -->
-          <div id="noBudgetsMessage" class="hidden text-center py-12">
-            <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
-              <i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i>
-            </div>
-            <p class="text-slate-700 text-base font-semibold mb-1">No previous budgets found</p>
-            <p class="text-slate-500 text-sm">Create your first budget to get started</p>
+            <!-- Budget Items - Hardcoded for Backend Integration -->
+            @forelse($previousBudgets ?? [] as $budget)
+              <div 
+                class="p-4 sm:p-5 border-2 border-slate-200 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all cursor-pointer group"
+                onclick="selectBudget({{ $budget->id }})"
+              >
+                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-start gap-3">
+                      <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-200 transition-colors">
+                        <i data-lucide="file-text" class="w-5 h-5 text-indigo-600"></i>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <h3 class="text-sm sm:text-base font-semibold text-slate-900 break-words">{{ $budget->budget_name }}</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-1">{{ \Carbon\Carbon::parse($budget->start_date)->format('M d, Y') }} - {{ \Carbon\Carbon::parse($budget->end_date)->format('M d, Y') }}</p>
+                        <p class="text-xs text-slate-500 mt-1 line-clamp-2">{{ $budget->description ?? 'No description' }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex flex-col sm:items-end gap-1 sm:ml-4">
+                    <span class="text-lg sm:text-xl font-bold text-indigo-600">${{ number_format($budget->total_amount, 2) }}</span>
+                    <span class="text-xs text-slate-500">{{ $budget->categories->count() }} categories</span>
+                  </div>
+                </div>
+              </div>
+            @empty
+              <!-- Empty State -->
+              <div class="text-center py-12">
+                <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i>
+                </div>
+                <p class="text-slate-700 text-base font-semibold mb-1">No previous budgets found</p>
+                <p class="text-slate-500 text-sm">Create your first budget to get started</p>
+              </div>
+            @endforelse
           </div>
         </div>
 
@@ -339,8 +364,9 @@
           <button 
             type="button" 
             onclick="closeBudgetModal()"
-            class="w-full sm:w-auto px-6 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+            class="w-full sm:w-auto px-6 py-2.5 text-sm font-medium text-slate-700 bg-red-200 border border-slate-300 rounded-lg hover:bg-red-300 transition-colors flex items-center justify-center sm:justify-start gap-2"
           >
+            <i data-lucide="x-circle" class="w-4 h-4"></i>
             Cancel
           </button>
         </div>
@@ -362,31 +388,22 @@
       return el ? Livewire.find(el.getAttribute('wire:id')) : null;
     }
 
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text || '';
-      return div.innerHTML;
-    }
-
-    // ===== STATE =====
-    let PREVIOUS_BUDGETS = [];
+    const getStatusStyle = (percentage) => {
+      const statusMap = {
+        text: percentage > 100 ? 'Over Budget' : percentage === 100 ? 'Fully Allocated' : percentage > 0 ? 'Partial Allocation' : 'Ready',
+        class: percentage > 100 ? 'bg-red-100 text-red-700' : percentage === 100 ? 'bg-green-100 text-green-700' : percentage > 0 ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-700',
+        barColor: percentage > 100 ? 'bg-red-600' : percentage === 100 ? 'bg-green-600' : 'bg-indigo-600'
+      };
+      return statusMap;
+    };
 
     // ===== EVENT LISTENERS =====
 
-    window.addEventListener('categoryUpdated', event => {
-      const categories = event.detail[0];
-      updateBudgetSummaryFromLivewire(categories);
-    });
+    window.addEventListener('categoryUpdated', event => updateBudgetSummaryFromLivewire(event.detail[0]));
+    window.addEventListener('categoryError', event => alert(event.detail[0]));
 
-    window.addEventListener('categoryError', event => {
-      const errorMessage = event.detail[0];
-      alert(errorMessage); // TODO: Replace with better UI notification
-    });
+    // ===== BUDGET SUMMARY =====
 
-    /**
-     * Update budget summary from Livewire categories
-     * Calculates total allocated, remaining amount, and allocation percentage
-     */
     function updateBudgetSummaryFromLivewire(categories) {
       const totalBudgetInput = parseFloat(document.getElementById('totalBudget').value) || 0;
       const categoryAmounts = categories.reduce((sum, cat) => sum + (parseFloat(cat.amount) || 0), 0);
@@ -398,246 +415,107 @@
       document.getElementById('allocationPercent').textContent = percentage;
       document.getElementById('progressBar').style.width = percentage + '%';
 
-      // Determine status based on allocation percentage
-      let statusText = 'Ready';
-      let statusClass = 'bg-slate-100 text-slate-700';
-      if (percentage === 100) {
-        statusText = 'Fully Allocated';
-        statusClass = 'bg-green-100 text-green-700';
-      } else if (percentage > 100) {
-        statusText = 'Over Budget';
-        statusClass = 'bg-red-100 text-red-700';
-      } else if (percentage > 0) {
-        statusText = 'Partial Allocation';
-        statusClass = 'bg-blue-100 text-blue-700';
-      }
-      
+      const styles = getStatusStyle(percentage);
       const statusElement = document.getElementById('statusText');
-      statusElement.textContent = statusText;
-      statusElement.className = 'px-3 py-1 text-xs font-semibold rounded-full ' + statusClass;
+      statusElement.textContent = styles.text;
+      statusElement.className = `px-3 py-1 text-xs font-semibold rounded-full ${styles.class}`;
 
-      // Update progress bar color
       const progressBar = document.getElementById('progressBar');
-      if (percentage > 100) {
-        progressBar.className = 'h-full bg-red-600 rounded-full transition-all duration-300';
-      } else if (percentage === 100) {
-        progressBar.className = 'h-full bg-green-600 rounded-full transition-all duration-300';
-      } else {
-        progressBar.className = 'h-full bg-indigo-600 rounded-full transition-all duration-300';
-      }
+      progressBar.className = `h-full ${styles.barColor} rounded-full transition-all duration-300`;
     }
 
-    // ===== MODAL FUNCTIONS =====
-
-    function displayBudgetModal(budgets) {
-      const modal = document.getElementById('budgetModal');
-      const budgetsList = document.getElementById('budgetsList');
-      const noBudgetsMessage = document.getElementById('noBudgetsMessage');
-
-      if (budgets.length === 0) {
-        budgetsList.innerHTML = '';
-        noBudgetsMessage.style.display = 'block';
-      } else {
-        noBudgetsMessage.style.display = 'none';
-        budgetsList.innerHTML = budgets.map(budget => `
-          <div 
-            class="p-4 sm:p-5 border-2 border-slate-200 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all cursor-pointer group"
-            onclick="selectBudget(${budget.id})"
-          >
-            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-              <div class="flex-1 min-w-0">
-                <div class="flex items-start gap-3">
-                  <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-200 transition-colors">
-                    <i data-lucide="file-text" class="w-5 h-5 text-indigo-600"></i>
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <h3 class="text-sm sm:text-base font-semibold text-slate-900 break-words">${escapeHtml(budget.name)}</h3>
-                    <p class="text-xs sm:text-sm text-slate-600 mt-1">${escapeHtml(budget.period)}</p>
-                    <p class="text-xs text-slate-500 mt-1 line-clamp-2">${escapeHtml(budget.description || 'No description')}</p>
-                  </div>
-                </div>
-              </div>
-              <div class="flex flex-col sm:items-end gap-1 sm:ml-4">
-                <span class="text-lg sm:text-xl font-bold text-indigo-600">$${budget.total.toLocaleString()}</span>
-                <span class="text-xs text-slate-500">${budget.categories.length} categories</span>
-              </div>
-            </div>
-          </div>
-        `).join('');
-
-        reinitIcons();
-      }
-
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
+    // ===== MODAL MANAGEMENT =====
 
     function closeBudgetModal() {
       document.getElementById('budgetModal').style.display = 'none';
       document.body.style.overflow = '';
     }
 
+    function openBudgetModal() {
+      document.getElementById('budgetModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      reinitIcons();
+    }
+
     function loadLastBudget() {
-      // TODO: Replace with actual API call to fetch budgets from last year
-      PREVIOUS_BUDGETS = [
-        {
-          id: 1,
-          name: 'FY 2025 School Operations',
-          period: 'January - December 2025',
-          total: 950000,
-          description: 'Previous year annual operating budget',
-          created_at: '2025-01-15',
-          categories: [
-            { department: 'Academic', expenseType: 'Teaching Staff', amount: 570000 },
-            { department: 'Academic', expenseType: 'Teaching Facilities', amount: 120000 },
-            { department: 'Infrastructure', expenseType: 'Maintenance', amount: 110000 },
-            { department: 'Library', expenseType: 'Books & Resources', amount: 65000 },
-            { department: 'Sports', expenseType: 'Equipment', amount: 45000 },
-            { department: 'Transportation', expenseType: 'Bus Operations', amount: 40000 }
-          ]
-        },
-        {
-          id: 2,
-          name: 'FY 2025 Q4 Supplementary Budget',
-          period: 'October - December 2025',
-          total: 250000,
-          description: 'Fourth quarter supplementary allocation',
-          created_at: '2025-10-01',
-          categories: [
-            { department: 'Academic', expenseType: 'Teaching Staff', amount: 150000 },
-            { department: 'Infrastructure', expenseType: 'Renovations', amount: 100000 }
-          ]
-        },
-        {
-          id: 3,
-          name: 'FY 2025 Special Projects',
-          period: 'March - August 2025',
-          total: 450000,
-          description: 'Special projects and initiatives',
-          created_at: '2025-03-10',
-          categories: [
-            { department: 'Library', expenseType: 'Digital Resources', amount: 120000 },
-            { department: 'Sports', expenseType: 'Facilities Upgrade', amount: 200000 },
-            { department: 'Administration', expenseType: 'Technology', amount: 130000 }
-          ]
-        }
-      ];
-      displayBudgetModal(PREVIOUS_BUDGETS);
+      openBudgetModal();
     }
 
     function selectBudget(budgetId) {
-      const selectedBudget = PREVIOUS_BUDGETS.find(b => b.id === budgetId);
-      if (!selectedBudget) return;
-
-      // Populate budget overview fields
-      document.getElementById('budgetName').value = selectedBudget.name + ' (Copy)';
-      document.getElementById('budgetPeriod').value = selectedBudget.period;
-      document.getElementById('totalBudget').value = selectedBudget.total;
-      document.getElementById('description').value = selectedBudget.description;
-
-      // Load categories into Livewire component
-      const livewireComponent = getLivewireComponent();
-      if (livewireComponent && typeof livewireComponent.loadCategories === 'function') {
-        livewireComponent.loadCategories(selectedBudget.categories);
-        updateBudgetSummaryFromLivewire(selectedBudget.categories);
-      } else {
-        alert('Error: Could not load categories. Please try again.');
+      const budgetElement = document.querySelector(`[onclick="selectBudget(${budgetId})"]`);
+      if (!budgetElement) {
+        alert('Error: Could not find budget. Please try again.');
         return;
       }
 
+      const budgetName = budgetElement.querySelector('.font-semibold.text-slate-900')?.textContent || '';
+      const budgetTotal = budgetElement.querySelector('.font-bold.text-indigo-600')?.textContent?.replace('$', '').replace(/,/g, '') || '0';
+      const budgetDescription = budgetElement.querySelector('.line-clamp-2')?.textContent || '';
+
+      document.getElementById('budgetName').value = budgetName + ' (Copy)';
+      document.getElementById('totalBudget').value = budgetTotal;
+      document.getElementById('description').value = budgetDescription;
+
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('budgetStartDate').value = today;
+      
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + 365);
+      document.getElementById('budgetEndDate').value = endDate.toISOString().split('T')[0];
+
       closeBudgetModal();
-      alert('Budget loaded successfully! You can now modify and save as a new budget.');
+      alert('Budget loaded successfully! You can now modify and save as a new budget.\n\nNote: Category data will be loaded from the backend.');
     }
 
-    // ===== FORM HANDLERS =====
+    // ===== AUTO-DISMISS MESSAGE HELPER =====
 
-    // Submit form with proper logging
-    document.getElementById('budgetForm').addEventListener('submit', function(e) {
-      console.log('Form submit event triggered');
+    function autoDismissMessage(elementId, duration) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
       
-      const livewireComponent = getLivewireComponent();
-      console.log('Livewire component found:', !!livewireComponent);
-      
-      if (livewireComponent && typeof livewireComponent.validateCategories === 'function') {
-        console.log('validateCategories method found, calling it...');
-        const isValid = livewireComponent.validateCategories();
-        console.log('validateCategories returned:', isValid);
-        
-        if (!isValid) {
-          console.log('Validation failed, preventing form submission');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => {
+        element.style.opacity = '0';
+        element.style.transition = 'opacity 0.3s ease-out';
+        setTimeout(() => element.remove(), 300);
+      }, duration);
+    }
+
+    // ===== FORM INITIALIZATION & HANDLERS =====
+
+    document.addEventListener('DOMContentLoaded', () => {
+      reinitIcons();
+      autoDismissMessage('successMessage', 5000);
+      autoDismissMessage('errorMessage', 7000);
+
+      document.getElementById('budgetForm').addEventListener('submit', function(e) {
+        const livewireComponent = getLivewireComponent();
+        if (livewireComponent?.validateCategories && !livewireComponent.validateCategories()) {
           e.preventDefault();
           return false;
         }
-      }
-      
-      console.log('Allowing form submission to proceed');
-    });
+      });
 
-    // Update summary when total budget input changes
-    document.getElementById('totalBudget').addEventListener('input', function() {
-      const livewireComponent = getLivewireComponent();
-      if (livewireComponent) {
-        const cats = typeof livewireComponent.getCategories === 'function'
-          ? livewireComponent.getCategories()
-          : livewireComponent.categories || [];
-        updateBudgetSummaryFromLivewire(cats);
-      }
-    });
+      document.getElementById('totalBudget').addEventListener('input', function() {
+        const livewireComponent = getLivewireComponent();
+        if (livewireComponent) {
+          const cats = typeof livewireComponent.getCategories === 'function'
+            ? livewireComponent.getCategories()
+            : livewireComponent.categories || [];
+          updateBudgetSummaryFromLivewire(cats);
+        }
+      });
 
-    // ===== MODAL INTERACTIONS =====
+      const budgetModal = document.getElementById('budgetModal');
+      budgetModal?.addEventListener('click', (e) => {
+        if (e.target === budgetModal) closeBudgetModal();
+      });
 
-    document.getElementById('budgetModal')?.addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeBudgetModal();
-      }
-    });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && document.getElementById('budgetModal').style.display === 'flex') {
-        closeBudgetModal();
-      }
-    });
-
-    // ===== INITIALIZATION =====
-
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('=== Budget Form Initialization ===');
-      reinitIcons();
-
-      // Check if success/error messages exist
-      const successMessage = document.getElementById('successMessage');
-      const errorMessage = document.getElementById('errorMessage');
-      
-      console.log('Success message present:', !!successMessage);
-      console.log('Error message present:', !!errorMessage);
-
-      // Auto-dismiss success message after 5 seconds and scroll to top
-      if (successMessage) {
-        console.log('Showing success message and scrolling to top');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(function() {
-          successMessage.style.opacity = '0';
-          successMessage.style.transition = 'opacity 0.3s ease-out';
-          setTimeout(function() {
-            successMessage.remove();
-          }, 300);
-        }, 5000);
-      }
-
-      // Auto-dismiss error message after 7 seconds
-      if (errorMessage) {
-        console.log('Showing error message and scrolling to top');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(function() {
-          errorMessage.style.opacity = '0';
-          errorMessage.style.transition = 'opacity 0.3s ease-out';
-          setTimeout(function() {
-            errorMessage.remove();
-          }, 300);
-        }, 7000);
-      }
-
-      console.log('=== Budget Form Ready ===');
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && budgetModal?.style.display === 'flex') {
+          closeBudgetModal();
+        }
+      });
     });
   </script>
 
