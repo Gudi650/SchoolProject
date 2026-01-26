@@ -68,11 +68,15 @@ class Budget extends Controller
             return redirect()->route('accounting.createBudget')->with('success', 'Budget created successfully with ' . count($categories) . ' categories!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+
             //if validation fails, redirect back with errors
             return redirect()->route('accounting.createBudget')->withErrors($e->errors())->withInput();
+
         } catch (\Exception $e) {
+
             //handle any other exceptions
             return redirect()->route('accounting.createBudget')->with('error', 'Error creating budget: ' . $e->getMessage())->withInput();
+            
         }
 
     }

@@ -551,14 +551,26 @@
 
     // ===== FORM HANDLERS =====
 
-    // Validate categories before form submit; block if invalid
+    // Submit form with proper logging
     document.getElementById('budgetForm').addEventListener('submit', function(e) {
+      console.log('Form submit event triggered');
+      
       const livewireComponent = getLivewireComponent();
+      console.log('Livewire component found:', !!livewireComponent);
+      
       if (livewireComponent && typeof livewireComponent.validateCategories === 'function') {
-        if (!livewireComponent.validateCategories()) {
-          e.preventDefault(); // stop submit if validation fails
+        console.log('validateCategories method found, calling it...');
+        const isValid = livewireComponent.validateCategories();
+        console.log('validateCategories returned:', isValid);
+        
+        if (!isValid) {
+          console.log('Validation failed, preventing form submission');
+          e.preventDefault();
+          return false;
         }
       }
+      
+      console.log('Allowing form submission to proceed');
     });
 
     // Update summary when total budget input changes
@@ -589,11 +601,19 @@
     // ===== INITIALIZATION =====
 
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('=== Budget Form Initialization ===');
       reinitIcons();
 
-      // Auto-dismiss success message after 5 seconds and scroll to top
+      // Check if success/error messages exist
       const successMessage = document.getElementById('successMessage');
+      const errorMessage = document.getElementById('errorMessage');
+      
+      console.log('Success message present:', !!successMessage);
+      console.log('Error message present:', !!errorMessage);
+
+      // Auto-dismiss success message after 5 seconds and scroll to top
       if (successMessage) {
+        console.log('Showing success message and scrolling to top');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         setTimeout(function() {
           successMessage.style.opacity = '0';
@@ -605,8 +625,8 @@
       }
 
       // Auto-dismiss error message after 7 seconds
-      const errorMessage = document.getElementById('errorMessage');
       if (errorMessage) {
+        console.log('Showing error message and scrolling to top');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         setTimeout(function() {
           errorMessage.style.opacity = '0';
@@ -616,6 +636,8 @@
           }, 300);
         }, 7000);
       }
+
+      console.log('=== Budget Form Ready ===');
     });
   </script>
 
