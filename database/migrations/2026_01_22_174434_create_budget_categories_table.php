@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('budget_categories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('budget_id');
-            $table->string('department');
+            $table->unsignedBigInteger('department_id');
             $table->string('expense_type');
             $table->decimal('amount', 15, 2);
             $table->timestamps();
@@ -23,6 +23,9 @@ return new class extends Migration
 
             //budget foreign key
             $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
+
+            //department foreign key
+            $table->foreign('department_id')->references('id')->on('budget_departments')->onDelete('cascade');
 
         });
     }

@@ -4,6 +4,38 @@
   <main class="p-6 bg-white min-h-screen">
     <div class="max-w-5xl mx-auto">
 
+      <!-- Success Message -->
+      @if(session('success'))
+        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3 animate-pulse" id="successMessage">
+          <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i data-lucide="check" class="w-4 h-4 text-green-600"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-green-800">Success</p>
+            <p class="text-sm text-green-700 mt-0.5">{{ session('success') }}</p>
+          </div>
+          <button type="button" onclick="document.getElementById('successMessage').remove()" class="text-green-500 hover:text-green-700 transition-colors">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      @endif
+
+      <!-- Error Message -->
+      @if(session('error'))
+        <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3" id="errorMessage">
+          <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+            <i data-lucide="alert-circle" class="w-4 h-4 text-red-600"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-red-800">Error</p>
+            <p class="text-sm text-red-700 mt-0.5">{{ session('error') }}</p>
+          </div>
+          <button type="button" onclick="document.getElementById('errorMessage').remove()" class="text-red-500 hover:text-red-700 transition-colors">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      @endif
+
       <!-- Page Header with Icon -->
       <div class="mb-8 bg-white rounded-xl p-4 sm:p-6 border border-slate-200 shadow-sm">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -40,7 +72,12 @@
 
       <!-- Main Form Container - Wrapped in Livewire -->
       
-      <form id="budgetForm" class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+      <form id="budgetForm" 
+      action="{{ route('accounting.storeBudget') }}"
+      method="POST"
+      class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+
+      @csrf
         
         <!-- Section 1: Budget Overview -->
         <div class="p-6 border-b border-slate-200 bg-slate-50">
@@ -63,31 +100,21 @@
                 id="budgetName" 
                 name="budgetName" 
                 placeholder="e.g., FY 2026 School Operations"
-                class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm transition-all bg-slate-50 focus:bg-white"
+                value="{{ old('budgetName') }}"
+                class="w-full px-4 py-2.5 border @error('budgetName') border-red-500 @else border-slate-300 @enderror rounded-lg focus:ring-2 @error('budgetName') focus:ring-red-500 focus:border-red-500 @else focus:ring-indigo-500 focus:border-indigo-500 @enderror outline-none text-sm transition-all bg-slate-50 focus:bg-white"
                 required
               >
+              @error('budgetName')
+                <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
+                  <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                  {{ $message }}
+                </p>
+              @enderror
               <p class="text-xs text-slate-500 mt-1">A descriptive name for this budget</p>
             </div>
 
-            <!-- Budget Year/Period -->
-            <div>
-              <label for="budgetPeriod" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
-                <i data-lucide="calendar" class="w-4 h-4 text-blue-600"></i>
-                Budget Period <span class="text-red-600">*</span>
-              </label>
-              <input 
-                type="text" 
-                id="budgetPeriod" 
-                name="budgetPeriod" 
-                placeholder="e.g., January - December 2026"
-                class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm transition-all bg-slate-50 focus:bg-white"
-                required
-              >
-              <p class="text-xs text-slate-500 mt-1">Timeline for this budget</p>
-            </div>
-
             <!-- Total Budget Amount -->
-            <div class="md:col-span-2">
+            <div>
               <label for="totalBudget" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
                 <i data-lucide="dollar-sign" class="w-4 h-4 text-green-600"></i>
                 Total Budget Amount <span class="text-red-600">*</span>
@@ -101,11 +128,64 @@
                   placeholder="0.00"
                   step="0.01"
                   min="0"
-                  class="w-full pl-8 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm transition-all bg-slate-50 focus:bg-white font-semibold text-slate-900"
+                  value="{{ old('totalBudget') }}"
+                  class="w-full pl-8 pr-4 py-2.5 border @error('totalBudget') border-red-500 @else border-slate-300 @enderror rounded-lg focus:ring-2 @error('totalBudget') focus:ring-red-500 focus:border-red-500 @else focus:ring-indigo-500 focus:border-indigo-500 @enderror outline-none text-sm transition-all bg-slate-50 focus:bg-white font-semibold text-slate-900"
                   required
                 >
               </div>
+              @error('totalBudget')
+                <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
+                  <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                  {{ $message }}
+                </p>
+              @enderror
               <p class="text-xs text-slate-500 mt-1">Total amount available for allocation</p>
+            </div>
+
+            <!-- Budget Start Date -->
+            <div>
+              <label for="budgetStartDate" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                <i data-lucide="calendar" class="w-4 h-4 text-blue-600"></i>
+                Start Date <span class="text-red-600">*</span>
+              </label>
+              <input 
+                type="date" 
+                id="budgetStartDate" 
+                name="budgetStartDate" 
+                value="{{ old('budgetStartDate') }}"
+                class="w-full px-4 py-2.5 border @error('budgetStartDate') border-red-500 @else border-slate-300 @enderror rounded-lg focus:ring-2 @error('budgetStartDate') focus:ring-red-500 focus:border-red-500 @else focus:ring-indigo-500 focus:border-indigo-500 @enderror outline-none text-sm transition-all bg-slate-50 focus:bg-white"
+                required
+              >
+              @error('budgetStartDate')
+                <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
+                  <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                  {{ $message }}
+                </p>
+              @enderror
+              <p class="text-xs text-slate-500 mt-1">Budget period start date</p>
+            </div>
+
+            <!-- Budget End Date -->
+            <div>
+              <label for="budgetEndDate" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                <i data-lucide="calendar" class="w-4 h-4 text-blue-600"></i>
+                End Date <span class="text-red-600">*</span>
+              </label>
+              <input 
+                type="date" 
+                id="budgetEndDate" 
+                name="budgetEndDate" 
+                value="{{ old('budgetEndDate') }}"
+                class="w-full px-4 py-2.5 border @error('budgetEndDate') border-red-500 @else border-slate-300 @enderror rounded-lg focus:ring-2 @error('budgetEndDate') focus:ring-red-500 focus:border-red-500 @else focus:ring-indigo-500 focus:border-indigo-500 @enderror outline-none text-sm transition-all bg-slate-50 focus:bg-white"
+                required
+              >
+              @error('budgetEndDate')
+                <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
+                  <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                  {{ $message }}
+                </p>
+              @enderror
+              <p class="text-xs text-slate-500 mt-1">Budget period end date</p>
             </div>
 
             <!-- Description -->
@@ -119,16 +199,23 @@
                 name="description" 
                 rows="3"
                 placeholder="Add notes or details about this budget..."
-                class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm resize-none transition-all bg-slate-50 focus:bg-white"
-              ></textarea>
+                class="w-full px-4 py-2.5 border @error('description') border-red-500 @else border-slate-300 @enderror rounded-lg focus:ring-2 @error('description') focus:ring-red-500 focus:border-red-500 @else focus:ring-indigo-500 focus:border-indigo-500 @enderror outline-none text-sm resize-none transition-all bg-slate-50 focus:bg-white"
+              >{{ old('description') }}</textarea>
+              @error('description')
+                <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
+                  <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                  {{ $message }}
+                </p>
+              @enderror
             </div>
           </div>
         </div>
 
         <!-- Section 2: Budget Allocation -->
         <div class="p-6 border-b border-slate-200 bg-white">
+
             {{-- Livewire component renders categories dynamically --}}
-            @livewire('create-budget')
+            @livewire('create-budget', ['departments' => $departments])
 
         </div>
 
@@ -262,20 +349,35 @@
   </main>
 
   <script>
-    /**
-     * Listen for category updates from Livewire component
-     * This event is dispatched whenever categories change (add/remove/edit)
-     * Updates the budget summary in real-time
-     */
+    // ===== HELPERS =====
+    
+    function reinitIcons() {
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    }
+
+    function getLivewireComponent() {
+      const el = document.querySelector('[wire\\:id]');
+      return el ? Livewire.find(el.getAttribute('wire:id')) : null;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text || '';
+      return div.innerHTML;
+    }
+
+    // ===== STATE =====
+    let PREVIOUS_BUDGETS = [];
+
+    // ===== EVENT LISTENERS =====
+
     window.addEventListener('categoryUpdated', event => {
       const categories = event.detail[0];
       updateBudgetSummaryFromLivewire(categories);
     });
 
-    /**
-     * Listen for category validation errors from Livewire
-     * Displays error messages when validation fails
-     */
     window.addEventListener('categoryError', event => {
       const errorMessage = event.detail[0];
       alert(errorMessage); // TODO: Replace with better UI notification
@@ -284,24 +386,19 @@
     /**
      * Update budget summary from Livewire categories
      * Calculates total allocated, remaining amount, and allocation percentage
-     * @param {Array} categories - Array of category objects from Livewire
      */
     function updateBudgetSummaryFromLivewire(categories) {
       const totalBudgetInput = parseFloat(document.getElementById('totalBudget').value) || 0;
-      
-      // Calculate total from Livewire categories
       const categoryAmounts = categories.reduce((sum, cat) => sum + (parseFloat(cat.amount) || 0), 0);
-
       const remaining = totalBudgetInput - categoryAmounts;
       const percentage = totalBudgetInput > 0 ? Math.round((categoryAmounts / totalBudgetInput) * 100) : 0;
 
-      // Update summary display
       document.getElementById('totalAllocated').textContent = categoryAmounts.toFixed(2);
       document.getElementById('totalRemaining').textContent = remaining.toFixed(2);
       document.getElementById('allocationPercent').textContent = percentage;
       document.getElementById('progressBar').style.width = percentage + '%';
 
-      // Update status message based on allocation
+      // Determine status based on allocation percentage
       let statusText = 'Ready';
       let statusClass = 'bg-slate-100 text-slate-700';
       if (percentage === 100) {
@@ -319,92 +416,70 @@
       statusElement.textContent = statusText;
       statusElement.className = 'px-3 py-1 text-xs font-semibold rounded-full ' + statusClass;
 
-      // Change progress bar color if over budget
+      // Update progress bar color
       const progressBar = document.getElementById('progressBar');
       if (percentage > 100) {
-        progressBar.classList.remove('bg-indigo-600', 'bg-green-600');
-        progressBar.classList.add('bg-red-600');
+        progressBar.className = 'h-full bg-red-600 rounded-full transition-all duration-300';
       } else if (percentage === 100) {
-        progressBar.classList.remove('bg-indigo-600', 'bg-red-600');
-        progressBar.classList.add('bg-green-600');
+        progressBar.className = 'h-full bg-green-600 rounded-full transition-all duration-300';
       } else {
-        progressBar.classList.remove('bg-red-600', 'bg-green-600');
-        progressBar.classList.add('bg-indigo-600');
+        progressBar.className = 'h-full bg-indigo-600 rounded-full transition-all duration-300';
       }
     }
 
-    /**
-     * Handle form submission
-     * Gets data from form and Livewire component, then submits to backend
-     */
-    document.getElementById('budgetForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+    // ===== MODAL FUNCTIONS =====
 
-      // Get form values
-      const budgetName = document.getElementById('budgetName').value.trim();
-      const budgetPeriod = document.getElementById('budgetPeriod').value.trim();
-      const totalBudget = parseFloat(document.getElementById('totalBudget').value) || 0;
-      const description = document.getElementById('description').value.trim();
+    function displayBudgetModal(budgets) {
+      const modal = document.getElementById('budgetModal');
+      const budgetsList = document.getElementById('budgetsList');
+      const noBudgetsMessage = document.getElementById('noBudgetsMessage');
 
-      // Basic validation for form fields
-      if (!budgetName || !budgetPeriod || totalBudget <= 0) {
-        alert('Please fill in all required fields');
-        return;
-      }
-
-      // Get categories from Livewire component via Alpine.js or window access
-      // Note: We'll validate categories in Livewire before submitting
-      const livewireComponent = Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id'));
-      
-      if (livewireComponent && typeof livewireComponent.validateCategories === 'function') {
-        // Validate categories using Livewire method
-        if (!livewireComponent.validateCategories()) {
-          return; // Validation failed, error event already dispatched
-        }
-        
-        // Get validated categories
-        const categories = livewireComponent.getCategories();
-        
-        // Prepare data for backend
-        const budgetData = {
-          name: budgetName,
-          period: budgetPeriod,
-          total: totalBudget,
-          description: description,
-          categories: categories
-        };
-
-        // Log budget data (replace with actual API call)
-        console.log('Budget Data:', budgetData);
-        alert('Budget created successfully!'); // Remove after backend integration
-        
-        // TODO: Submit to backend
-        // fetch('/api/budgets', { method: 'POST', body: JSON.stringify(budgetData) })
+      if (budgets.length === 0) {
+        budgetsList.innerHTML = '';
+        noBudgetsMessage.style.display = 'block';
       } else {
-        alert('Error: Could not access category data. Please try again.');
-      }
-    });
+        noBudgetsMessage.style.display = 'none';
+        budgetsList.innerHTML = budgets.map(budget => `
+          <div 
+            class="p-4 sm:p-5 border-2 border-slate-200 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all cursor-pointer group"
+            onclick="selectBudget(${budget.id})"
+          >
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-200 transition-colors">
+                    <i data-lucide="file-text" class="w-5 h-5 text-indigo-600"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-sm sm:text-base font-semibold text-slate-900 break-words">${escapeHtml(budget.name)}</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-1">${escapeHtml(budget.period)}</p>
+                    <p class="text-xs text-slate-500 mt-1 line-clamp-2">${escapeHtml(budget.description || 'No description')}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col sm:items-end gap-1 sm:ml-4">
+                <span class="text-lg sm:text-xl font-bold text-indigo-600">$${budget.total.toLocaleString()}</span>
+                <span class="text-xs text-slate-500">${budget.categories.length} categories</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
 
-    /**
-     * Update summary when total budget changes
-     * Triggers recalculation from Livewire categories
-     */
-    document.getElementById('totalBudget').addEventListener('input', function() {
-      // Trigger update with current Livewire categories
-      const livewireComponent = Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id'));
-      if (livewireComponent && livewireComponent.categories) {
-        updateBudgetSummaryFromLivewire(livewireComponent.categories);
+        reinitIcons();
       }
-    });
 
-    /**
-     * Open budget selection modal
-     */
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeBudgetModal() {
+      document.getElementById('budgetModal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
     function loadLastBudget() {
       // TODO: Replace with actual API call to fetch budgets from last year
-      // Example: fetch('/api/budgets/previous-year')
-      
-      const previousBudgets = [
+      PREVIOUS_BUDGETS = [
         {
           id: 1,
           name: 'FY 2025 School Operations',
@@ -447,165 +522,99 @@
           ]
         }
       ];
-
-      displayBudgetModal(previousBudgets);
+      displayBudgetModal(PREVIOUS_BUDGETS);
     }
 
-    /**
-     * Display budget selection modal
-     */
-    function displayBudgetModal(budgets) {
-      const modal = document.getElementById('budgetModal');
-      const budgetsList = document.getElementById('budgetsList');
-      const noBudgetsMessage = document.getElementById('noBudgetsMessage');
-
-      if (budgets.length === 0) {
-        budgetsList.innerHTML = '';
-        noBudgetsMessage.style.display = 'block';
-      } else {
-        noBudgetsMessage.style.display = 'none';
-        budgetsList.innerHTML = budgets.map(budget => `
-          <div 
-            class="p-4 sm:p-5 border-2 border-slate-200 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all cursor-pointer group"
-            onclick="selectBudget(${budget.id})"
-          >
-            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-              <div class="flex-1 min-w-0">
-                <div class="flex items-start gap-3">
-                  <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-200 transition-colors">
-                    <i data-lucide="file-text" class="w-5 h-5 text-indigo-600"></i>
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <h3 class="text-sm sm:text-base font-semibold text-slate-900 break-words">${escapeHtml(budget.name)}</h3>
-                    <p class="text-xs sm:text-sm text-slate-600 mt-1">${escapeHtml(budget.period)}</p>
-                    <p class="text-xs text-slate-500 mt-1 line-clamp-2">${escapeHtml(budget.description || 'No description')}</p>
-                  </div>
-                </div>
-              </div>
-              <div class="flex flex-col sm:items-end gap-1 sm:ml-4">
-                <span class="text-lg sm:text-xl font-bold text-indigo-600">$${budget.total.toLocaleString()}</span>
-                <span class="text-xs text-slate-500">${budget.categories.length} categories</span>
-              </div>
-            </div>
-          </div>
-        `).join('');
-
-        // Reinitialize icons
-        if (typeof lucide !== 'undefined') {
-          lucide.createIcons();
-        }
-      }
-
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
-
-    /**
-     * Close budget modal
-     */
-    function closeBudgetModal() {
-      const modal = document.getElementById('budgetModal');
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-
-    /**
-     * Select and load a budget
-     */
     function selectBudget(budgetId) {
-      // TODO: Replace with actual API call
-      // fetch(`/api/budgets/${budgetId}`)
-      
-      // Find the selected budget from the demo data
-      const budgets = [
-        {
-          id: 1,
-          name: 'FY 2025 School Operations',
-          period: 'January - December 2025',
-          total: 950000,
-          description: 'Previous year annual operating budget',
-          categories: [
-            { department: 'Academic', expenseType: 'Teaching Staff', amount: 570000 },
-            { department: 'Academic', expenseType: 'Teaching Facilities', amount: 120000 },
-            { department: 'Infrastructure', expenseType: 'Maintenance', amount: 110000 },
-            { department: 'Library', expenseType: 'Books & Resources', amount: 65000 },
-            { department: 'Sports', expenseType: 'Equipment', amount: 45000 },
-            { department: 'Transportation', expenseType: 'Bus Operations', amount: 40000 }
-          ]
-        },
-        {
-          id: 2,
-          name: 'FY 2025 Q4 Supplementary Budget',
-          period: 'October - December 2025',
-          total: 250000,
-          description: 'Fourth quarter supplementary allocation',
-          categories: [
-            { department: 'Academic', expenseType: 'Teaching Staff', amount: 150000 },
-            { department: 'Infrastructure', expenseType: 'Renovations', amount: 100000 }
-          ]
-        },
-        {
-          id: 3,
-          name: 'FY 2025 Special Projects',
-          period: 'March - August 2025',
-          total: 450000,
-          description: 'Special projects and initiatives',
-          categories: [
-            { department: 'Library', expenseType: 'Digital Resources', amount: 120000 },
-            { department: 'Sports', expenseType: 'Facilities Upgrade', amount: 200000 },
-            { department: 'Administration', expenseType: 'Technology', amount: 130000 }
-          ]
-        }
-      ];
-
-      const lastBudgetData = budgets.find(b => b.id === budgetId);
-      if (!lastBudgetData) return;
+      const selectedBudget = PREVIOUS_BUDGETS.find(b => b.id === budgetId);
+      if (!selectedBudget) return;
 
       // Populate budget overview fields
-      document.getElementById('budgetName').value = lastBudgetData.name + ' (Copy)';
-      document.getElementById('budgetPeriod').value = lastBudgetData.period;
-      document.getElementById('totalBudget').value = lastBudgetData.total;
-      document.getElementById('description').value = lastBudgetData.description;
+      document.getElementById('budgetName').value = selectedBudget.name + ' (Copy)';
+      document.getElementById('budgetPeriod').value = selectedBudget.period;
+      document.getElementById('totalBudget').value = selectedBudget.total;
+      document.getElementById('description').value = selectedBudget.description;
 
-      // Push categories into Livewire component
-      const livewireComponent = Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id'));
+      // Load categories into Livewire component
+      const livewireComponent = getLivewireComponent();
       if (livewireComponent && typeof livewireComponent.loadCategories === 'function') {
-        livewireComponent.loadCategories(lastBudgetData.categories);
-        updateBudgetSummaryFromLivewire(lastBudgetData.categories);
+        livewireComponent.loadCategories(selectedBudget.categories);
+        updateBudgetSummaryFromLivewire(selectedBudget.categories);
       } else {
         alert('Error: Could not load categories. Please try again.');
         return;
       }
 
-      // Close modal
       closeBudgetModal();
-
-      // Show success message
       alert('Budget loaded successfully! You can now modify and save as a new budget.');
     }
 
-    /**
-     * Escape HTML to prevent XSS
-     */
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text || '';
-      return div.innerHTML;
-    }
+    // ===== FORM HANDLERS =====
 
-    // Close modal when clicking outside
+    // Validate categories before form submit; block if invalid
+    document.getElementById('budgetForm').addEventListener('submit', function(e) {
+      const livewireComponent = getLivewireComponent();
+      if (livewireComponent && typeof livewireComponent.validateCategories === 'function') {
+        if (!livewireComponent.validateCategories()) {
+          e.preventDefault(); // stop submit if validation fails
+        }
+      }
+    });
+
+    // Update summary when total budget input changes
+    document.getElementById('totalBudget').addEventListener('input', function() {
+      const livewireComponent = getLivewireComponent();
+      if (livewireComponent) {
+        const cats = typeof livewireComponent.getCategories === 'function'
+          ? livewireComponent.getCategories()
+          : livewireComponent.categories || [];
+        updateBudgetSummaryFromLivewire(cats);
+      }
+    });
+
+    // ===== MODAL INTERACTIONS =====
+
     document.getElementById('budgetModal')?.addEventListener('click', function(e) {
       if (e.target === this) {
         closeBudgetModal();
       }
     });
 
-    /**
-     * Initialize page - reinitialize Lucide icons
-     */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && document.getElementById('budgetModal').style.display === 'flex') {
+        closeBudgetModal();
+      }
+    });
+
+    // ===== INITIALIZATION =====
+
     document.addEventListener('DOMContentLoaded', function() {
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
+      reinitIcons();
+
+      // Auto-dismiss success message after 5 seconds and scroll to top
+      const successMessage = document.getElementById('successMessage');
+      if (successMessage) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(function() {
+          successMessage.style.opacity = '0';
+          successMessage.style.transition = 'opacity 0.3s ease-out';
+          setTimeout(function() {
+            successMessage.remove();
+          }, 300);
+        }, 5000);
+      }
+
+      // Auto-dismiss error message after 7 seconds
+      const errorMessage = document.getElementById('errorMessage');
+      if (errorMessage) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(function() {
+          errorMessage.style.opacity = '0';
+          errorMessage.style.transition = 'opacity 0.3s ease-out';
+          setTimeout(function() {
+            errorMessage.remove();
+          }, 300);
+        }, 7000);
       }
     });
   </script>

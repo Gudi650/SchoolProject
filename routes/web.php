@@ -6,6 +6,7 @@ use App\Http\Controllers\AssignClasses;
 use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Budget;
 use App\Http\Controllers\BudgetDepartmentController;
 use App\Http\Controllers\FeeOptionsController;
 use App\Http\Controllers\feestructure;
@@ -412,16 +413,21 @@ Route::get('/budgeting-management', function () {
     return view('AccountantPanel.budget');
 })->name('accounting.budgetingManagement');
 
-//route to create budget
-Route::get('/create-budget', function () {
-    return view('AccountantPanel.budget.createbudget');
-})->name('accounting.createBudget');
+
+//route to view create budget with controller
+Route::get('/create-budget',
+[Budget::class, 'showBudgetManagement'])
+->name('accounting.createBudget');
+
+//route to store budget data with controller
+Route::post('/store-budget',
+[Budget::class, 'storeBudget'])
+->name('accounting.storeBudget');
 
 
 
 //routes for budget department management using controller
 Route::controller(BudgetDepartmentController::class)->group(function () {
-    // Additional routes can be added here if needed
 
     //display route
     Route::get('/department-management', 'viewbudgetdepartments')->name('accounting.departmentManagement');

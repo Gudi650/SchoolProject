@@ -40,6 +40,11 @@
         wire:key="category-{{ $index }}" 
         class="flex gap-3 items-end p-5 bg-white rounded-r-xl rounded-l-none border-l-4 border-indigo-400 shadow-sm hover:shadow transition-all"
       >
+        {{-- Hidden inputs to submit categories with the form --}}
+        <input type="hidden" name="categories[{{ $index }}][departmentId]" value="{{ $category['departmentId'] ?? '' }}">
+        <input type="hidden" name="categories[{{ $index }}][expenseType]" value="{{ $category['expenseType'] ?? '' }}">
+        <input type="hidden" name="categories[{{ $index }}][amount]" value="{{ $category['amount'] ?? '' }}">
+
         {{-- Category Icon --}}
         <div class="flex-shrink-0 pt-6">
           <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -54,17 +59,30 @@
             Department
           </label>
           {{-- Wire:model.live creates two-way binding and triggers updatedCategories() --}}
-          <select 
-            wire:model.live="categories.{{ $index }}.department"
-            class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm transition-all bg-slate-50 focus:bg-white"
-            required
-          >
-            <option value="">Select Department...</option>
-            {{-- Loop through available departments --}}
-            @foreach($availableDepartments as $dept)
-              <option value="{{ $dept }}">{{ $dept }}</option>
-            @endforeach
-          </select>
+
+          {{-- check if the departments exist before rendering the select options --}}
+          @if(!empty($departments) && count($departments) > 0)
+            <select 
+              wire:model.live="categories.{{ $index }}.departmentId"
+              class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm transition-all bg-slate-50 focus:bg-white"
+              required
+            >
+              <option value="">Select Department...</option>
+
+              {{-- Loop through available departments --}}
+              @foreach ($departments as $department)
+                <option 
+                  value="{{ $department->id }}"
+                >
+                  {{ $department->department_name }}
+                </option>
+                
+              @endforeach
+
+            </select>
+          @else
+            <p class="text-sm text-red-600">No departments available. Please add departments first.</p>
+          @endif
         </div>
 
         {{-- Expense Type Input --}}

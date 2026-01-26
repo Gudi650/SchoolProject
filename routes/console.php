@@ -15,6 +15,9 @@ Artisan::command('set:migration-batches', function () {
         '2026_01_20_022445_create_deductions_table' => 6,
         '2026_01_22_004008_create_employees_table' => 7,
         '2026_01_22_050000_create_payroll_configurations_table' => 8,
+        '2026_01_22_173006_create_budgets_table' => 9,
+        '2026_01_22_174434_create_budget_categories_table' => 10,
+        '2026_01_23_214122_create_budget_departments_table' => 11,
     ];
 
     $updated = 0;

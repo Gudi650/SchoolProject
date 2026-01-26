@@ -6,60 +6,34 @@ use Livewire\Component;
 
 class CreateBudget extends Component
 {
-    /**
-     * Array to store all budget categories
-     * Each category contains: department, expenseType, amount
-     * 
-     * @var array
-     */
+    //array to hold budget categories
     public $categories = [];
 
-    /**
-     * Available departments for dropdown selection
-     * This prevents inconsistent typing and data fragmentation
-     * 
-     * @var array
-     */
-    public $availableDepartments = [
-        'Academic',
-        'Infrastructure',
-        'Library',
-        'Sports',
-        'Transportation',
-        'Administration',
-    ];
-
-    /**
-     * Counter to track total categories added
-     * Used for display purposes and statistics
-     * 
-     * @var int
-     */
+    //accept available departments from parent
+    public $departments ;
+    
+    //counter for categories
     public $categoryCount = 0;
 
-    /**
-     * Initialize component with empty state
-     * Called when component first loads
-     */
+    // Initialize component state
     public function mount()
     {
         // Start with no categories
         $this->categories = [];
         $this->categoryCount = 0;
+
+        //mount departments if not set
+        if (!isset($this->departments)) {
+            $this->departments = [];
+        }
     }
 
-    /**
-     * Add a new budget category row
-     * Creates empty category with default values
-     * User will fill in department, expense type, and amount
-     * 
-     * @return void
-     */
+    //add new budget category when button is clicked
     public function addCategory()
     {
         // Add new empty category to the array
         $this->categories[] = [
-            'department' => '',      // Department dropdown selection
+            'departmentId' => '',      // Department dropdown selection
             'expenseType' => '',     // Expense type text input
             'amount' => 0,           // Budget amount (numeric)
         ];
@@ -67,18 +41,19 @@ class CreateBudget extends Component
         // Increment counter for display
         $this->categoryCount++;
 
+        /*try to dump the category when categorycount is greateer than 1
+            if ($this->categoryCount > 2) {
+                //dump the categories for debugging
+                dump($this->categories);
+            }
+        */
+
         // Emit event to parent page to update budget summary
         // This allows real-time calculation of totals
         $this->dispatch('categoryUpdated', $this->categories);
     }
 
-    /**
-     * Remove a specific budget category by index
-     * Updates the categories array and recalculates summary
-     * 
-     * @param int $index - The array index of category to remove
-     * @return void
-     */
+    //remove budget category at specific index when remove button is clicked
     public function removeCategory($index)
     {
         // Check if index exists to prevent errors
@@ -92,61 +67,20 @@ class CreateBudget extends Component
             
             // Decrement counter
             $this->categoryCount--;
+
             
             // Emit event to update parent summary
             $this->dispatch('categoryUpdated', $this->categories);
         }
     }
 
-    /**
-     * Update category values when user types
-     * Triggered by wire:change or wire:model.live
-     * Emits event to recalculate budget summary in real-time
-     * 
-     * @return void
-     */
+
+    //Update category values when user types 
+    //this enables live updates as user fills in data
     public function updatedCategories()
     {
         // This hook runs automatically whenever $categories property changes
         // Emit event to parent for real-time summary calculation
-        $this->dispatch('categoryUpdated', $this->categories);
-    }
-
-    /**
-     * Get all categories for form submission
-     * Can be called from parent component/page
-     * 
-     * @return array
-     */
-    public function getCategories()
-    {
-        return $this->categories;
-    }
-
-    /**
-     * Load categories from existing budget (for copy/edit feature)
-     * 
-     * @param array $existingCategories - Array of categories to load
-     * @return void
-     */
-    public function loadCategories($existingCategories)
-    {
-        // Clear current categories
-        $this->categories = [];
-        
-        // Load each category
-        foreach ($existingCategories as $category) {
-            $this->categories[] = [
-                'department' => $category['department'] ?? '',
-                'expenseType' => $category['expenseType'] ?? '',
-                'amount' => $category['amount'] ?? 0,
-            ];
-        }
-        
-        // Update counter
-        $this->categoryCount = count($this->categories);
-        
-        // Emit update event
         $this->dispatch('categoryUpdated', $this->categories);
     }
 
@@ -168,7 +102,7 @@ class CreateBudget extends Component
         // Validate each category
         foreach ($this->categories as $index => $category) {
             // Check department is selected
-            if (empty($category['department'])) {
+                if (empty($category['departmentId'])) {
                 $this->dispatch('categoryError', "Category " . ($index + 1) . ": Please select a department");
                 return false;
             }
@@ -189,12 +123,13 @@ class CreateBudget extends Component
         return true;
     }
 
-    /**
-     * Render the Livewire component view
-     * Returns the blade template for categories section
-     * 
-     * @return \Illuminate\View\View
-     */
+    // Expose categories to JS (used in fetch payload)
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    //render the component view
     public function render()
     {
         return view('livewire.create-budget');

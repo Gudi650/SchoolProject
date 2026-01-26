@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('school_id');
             $table->string('budget_name');
-            $table->string('budget_period');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->decimal('total_amount', 15, 2);
             $table->string('description')->nullable();
             $table->timestamps();
