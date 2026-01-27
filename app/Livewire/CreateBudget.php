@@ -2,30 +2,31 @@
 
 namespace App\Livewire;
 
+use App\Models\budget;
+use App\Models\budgetCategories;
 use Livewire\Component;
 
 class CreateBudget extends Component
 {
-    //array to hold budget categories
+    // array to hold budget categories
     public $categories = [];
 
-    //accept available departments from parent
-    public $departments ;
+    // accept available departments from parent
+    public $departments;
     
-    //counter for categories
+    // counter for categories
     public $categoryCount = 0;
 
-    // Initialize component state
-    public function mount()
+    // accept previousBudgets from parent
+    public $previousBudgets;
+
+    // Initialize component state with provided data
+    public function mount($departments = [], $previousBudgets = [])
     {
-        // Start with no categories
         $this->categories = [];
         $this->categoryCount = 0;
-
-        //mount departments if not set
-        if (!isset($this->departments)) {
-            $this->departments = [];
-        }
+        $this->departments = $departments ?? [];
+        $this->previousBudgets = $previousBudgets ?? [];
     }
 
     //add new budget category when button is clicked
@@ -127,6 +128,33 @@ class CreateBudget extends Component
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    // load a previous budget into the Livewire state
+    public function loadPreviousBudget($budgetId)
+    {
+        // find the budget with its categories
+        $budget = budget::with('categories')->find($budgetId);
+        if (!$budget) {
+            $this->dispatch('categoryError', 'Selected budget not found');
+            return;
+        }
+
+        // map DB categories to the structure used by the form
+        $mappedCategories = collect($budget->categories)->map(function ($cat) {
+            return [
+                'departmentId' => $cat->department_id,
+                'expenseType' => $cat->expense_type,
+                'amount' => (float) $cat->amount,
+            ];
+        })->toArray();
+
+        // Load fetched categories into the component
+        $this->categories = $mappedCategories;
+        $this->categoryCount = count($mappedCategories);
+
+        // Notify parent to update summary
+        $this->dispatch('categoryUpdated', $this->categories);
     }
 
     //render the component view

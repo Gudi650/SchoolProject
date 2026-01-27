@@ -215,7 +215,7 @@
         <div class="p-6 border-b border-slate-200 bg-white">
 
             {{-- Livewire component renders categories dynamically --}}
-            @livewire('create-budget', ['departments' => $departments])
+            @livewire('create-budget', ['departments' => $departments , 'previousBudgets' => $previousBudgets])
 
         </div>
 
@@ -462,6 +462,12 @@
       const endDate = new Date();
       endDate.setDate(endDate.getDate() + 365);
       document.getElementById('budgetEndDate').value = endDate.toISOString().split('T')[0];
+
+      // Ask Livewire to load categories for this budget so the table updates
+      const livewireComponent = getLivewireComponent();
+      if (livewireComponent?.call) {
+        livewireComponent.call('loadPreviousBudget', budgetId);
+      }
 
       closeBudgetModal();
       alert('Budget loaded successfully! You can now modify and save as a new budget.\n\nNote: Category data will be loaded from the backend.');
