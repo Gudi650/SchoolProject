@@ -150,7 +150,7 @@
           </li>
 
           <li>
-            <a href="{{ route('accounting.vendorsManagement') }}" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.vendorsManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+            <a href="{{ route('accounting.vendorsManagement') }}" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.vendorsManagement','accounting.createVendor') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
               <i data-lucide="receipt" class="w-5 h-5"></i>
               <span class="flex-1 text-left text-sm font-medium nav-label">Vendors</span>
             </a>
