@@ -150,10 +150,41 @@
           </li>
 
           <li>
-            <a href="{{ route('accounting.vendorsManagement') }}" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.vendorsManagement','accounting.createVendor') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
-              <i data-lucide="receipt" class="w-5 h-5"></i>
-              <span class="flex-1 text-left text-sm font-medium nav-label">Vendors</span>
-            </a>
+
+
+            <div class="relative">
+              <button id="vendorToggle" aria-expanded="{{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                <span class="flex items-center gap-3">
+                  <i data-lucide="pie-chart" class="w-5 h-5"></i>
+                  <span class="text-sm font-medium nav-label">Vendors </span>
+                </span>
+                <span id="vendorChevron" class="transition-transform duration-200 {{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor') ? 'rotate-180' : '' }}">
+                  <i data-lucide="chevron-down" class="w-4 h-4 text-sm"></i>
+                </span>
+              </button>
+              
+              <ul id="vendorMenu" class="{{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+
+                <li>
+                  <a href="{{ route('accounting.vendorsManagement') }}" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.vendorsManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                    Vendor Management
+                  </a>
+                </li>
+
+                <li>
+                  <a href="{{ route('accounting.createVendor') }}" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.createVendor') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
+                    Create Vendor
+                  </a>
+                </li>
+
+              </ul>
+            </div>
+
+
           </li>
 
           <li>
@@ -343,6 +374,35 @@
           });
         }
 
+        // Vendor dropdown toggle
+        const vendorToggle = document.getElementById('vendorToggle');
+        const vendorMenu = document.getElementById('vendorMenu');
+        const vendorChevron = document.getElementById('vendorChevron');
+        
+        if (vendorToggle && vendorMenu && vendorChevron) {
+          vendorToggle.addEventListener('click', () => {
+            const open = vendorMenu.classList.toggle('hidden') === false;
+            vendorToggle.setAttribute('aria-expanded', open);
+            vendorChevron.classList.toggle('rotate-180', open);
+          });
+          // keep chevron in sync when a child link is clicked
+          vendorMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+              vendorMenu.classList.remove('hidden');
+              vendorToggle.setAttribute('aria-expanded', 'true');
+              vendorChevron.classList.add('rotate-180');
+            });
+          });
+          // Close dropdown when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!vendorToggle.contains(e.target) && !vendorMenu.contains(e.target)) {
+              vendorMenu.classList.add('hidden');
+              vendorToggle.setAttribute('aria-expanded', 'false');
+              vendorChevron.classList.remove('rotate-180');
+            }
+          });
+        }
+
         //budget managment dropdown toggle
         const budgetToggle = document.getElementById('budgetToggle');
         const budgetMenu = document.getElementById('budgetMenu');
@@ -408,6 +468,22 @@
               });
             }
             
+            // Toggle vendor toggle button
+            if (vendorToggle) {
+              vendorToggle.classList.toggle('justify-center', isExpanded);
+              vendorToggle.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+            
+            // Toggle budget toggle button
+            if (budgetToggle) {
+              budgetToggle.classList.toggle('justify-center', isExpanded);
+              budgetToggle.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+            
             // Hide fee menu chevron and dropdown when collapsed
             if (isExpanded && feeMenu && feeToggle && feeChevron) {
               feeMenu.classList.add('hidden');
@@ -428,6 +504,26 @@
               payrollChevron.classList.remove('hidden');
             }
             
+            // Hide vendor menu chevron and dropdown when collapsed
+            if (isExpanded && vendorMenu && vendorToggle && vendorChevron) {
+              vendorMenu.classList.add('hidden');
+              vendorToggle.setAttribute('aria-expanded', 'false');
+              vendorChevron.classList.remove('rotate-180');
+              vendorChevron.classList.add('hidden');
+            } else if (!isExpanded && vendorChevron) {
+              vendorChevron.classList.remove('hidden');
+            }
+            
+            // Hide budget menu chevron and dropdown when collapsed
+            if (isExpanded && budgetMenu && budgetToggle && budgetChevron) {
+              budgetMenu.classList.add('hidden');
+              budgetToggle.setAttribute('aria-expanded', 'false');
+              budgetChevron.classList.remove('rotate-180');
+              budgetChevron.classList.add('hidden');
+            } else if (!isExpanded && budgetChevron) {
+              budgetChevron.classList.remove('hidden');
+            }
+            
             // Hide fee menu labels
             if (feeMenu) {
               feeMenu.querySelectorAll('.nav-label').forEach(label => {
@@ -438,6 +534,20 @@
             // Hide payroll menu labels
             if (payrollMenu) {
               payrollMenu.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+            
+            // Hide vendor menu labels
+            if (vendorMenu) {
+              vendorMenu.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+            
+            // Hide budget menu labels
+            if (budgetMenu) {
+              budgetMenu.querySelectorAll('.nav-label').forEach(label => {
                 label.classList.toggle('hidden', isExpanded);
               });
             }
