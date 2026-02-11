@@ -319,7 +319,7 @@ Route::post('teacher-registration',[TeacherregistrationController::class, 'regis
 
 
 
-//route for testing purposes
+
 
 //////////////////////////////////////////////////////////////////////
 //route for accounting
@@ -398,10 +398,20 @@ Route::get('/banking-cash-management', function () {
     return view('AccountantPanel.bankingCash');
 })->name('accounting.bankingCashManagement');
 
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//vendor management routes
+
+
 //route for vendors management
 Route::get('/vendors-management', function () {
-    return view('AccountantPanel.vendors');
+    return view('AccountantPanel.vendors.vendorsManagement');
 })->name('accounting.vendorsManagement');
+
+//route for creating vendors
+Route::get('/create-vendor', function () {
+    return view('AccountantPanel.vendors.createvendors');
+})->name('accounting.createVendor');
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -413,20 +423,21 @@ Route::get('/budgeting-management', function () {
     return view('AccountantPanel.budget');
 })->name('accounting.budgetingManagement');
 
+///////////////////////////////////////////////////////////////
 
-//route to view create budget with controller
-Route::get('/create-budget',
-[Budget::class, 'showBudgetManagement'])
-->name('accounting.createBudget');
+Route::controller(Budget::class)->group(function () {
 
-//route to store budget data with controller
-Route::post('/store-budget',
-[Budget::class, 'storeBudget'])
-->name('accounting.storeBudget');
+    //display route
+    Route::get('/create-budget', 'showBudgetManagement')->name('accounting.createBudget');
+
+    //store budget data route
+    Route::post('/store-budget', 'storeBudget')->name('accounting.storeBudget');
+
+});
 
 
 
-//routes for budget department management using controller
+//routes for budget department management using controller grouping as well
 Route::controller(BudgetDepartmentController::class)->group(function () {
 
     //display route
@@ -440,7 +451,6 @@ Route::controller(BudgetDepartmentController::class)->group(function () {
 
     //delete route
     Route::delete('/delete-department/{id}', 'deletebudgetdepartment')->name('accounting.departmentManagement.delete');
-
 
 });
 

@@ -125,6 +125,74 @@
               </div>
             </div>
           </div>
+
+          <!-- Fee Management Reports -->
+          <div class="bg-white rounded-xl p-6 border border-slate-200">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-2 bg-purple-100 rounded-lg">
+                <i data-lucide="bar-chart-3" class="w-5 h-5 text-purple-600"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-slate-900">Fee Management Reports</h3>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg transition-colors group">
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-slate-900">Collection Efficiency Report</p>
+                  <p class="text-xs text-slate-600 mt-0.5">Track collection rates and trends</p>
+                  <p class="text-xs text-slate-500 mt-1"><span class="inline-flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Monthly/Quarterly</span></p>
+                </div>
+                <button class="px-3 py-1.5 text-xs font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100 flex items-center gap-1">
+                  <i data-lucide="download" class="w-3 h-3"></i>
+                  Generate
+                </button>
+              </div>
+              <div class="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg transition-colors group">
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-slate-900">Payment Method Analysis</p>
+                  <p class="text-xs text-slate-600 mt-0.5">Breakdown by cash, online, cheque</p>
+                  <p class="text-xs text-slate-500 mt-1"><span class="inline-flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Monthly/Custom</span></p>
+                </div>
+                <button class="px-3 py-1.5 text-xs font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100 flex items-center gap-1">
+                  <i data-lucide="download" class="w-3 h-3"></i>
+                  Generate
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Budget Analysis Reports -->
+          <div class="bg-white rounded-xl p-6 border border-slate-200">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-2 bg-amber-100 rounded-lg">
+                <i data-lucide="line-chart" class="w-5 h-5 text-amber-600"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-slate-900">Budget Analysis Reports</h3>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg transition-colors group">
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-slate-900">Over/Under Budget Report</p>
+                  <p class="text-xs text-slate-600 mt-0.5">Variance analysis by department</p>
+                  <p class="text-xs text-slate-500 mt-1"><span class="inline-flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Monthly/Quarterly</span></p>
+                </div>
+                <button class="px-3 py-1.5 text-xs font-medium text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100 flex items-center gap-1">
+                  <i data-lucide="download" class="w-3 h-3"></i>
+                  Generate
+                </button>
+              </div>
+              <div class="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg transition-colors group">
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-slate-900">Budget Trend Prediction</p>
+                  <p class="text-xs text-slate-600 mt-0.5">AI-powered spending forecasts</p>
+                  <p class="text-xs text-slate-500 mt-1"><span class="inline-flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Next 3/6 months</span></p>
+                </div>
+                <button class="px-3 py-1.5 text-xs font-medium text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100 flex items-center gap-1">
+                  <i data-lucide="download" class="w-3 h-3"></i>
+                  Generate
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Export Options -->

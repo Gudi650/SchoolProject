@@ -1,0 +1,7 @@
+Here we will list things that are to be done later on
+1)ACCOUNTING DASHBOARD
+
+a)Auto-validate TIN format
+  VAT auto-calculation when recording invoice
+  Withholding tax auto-deduction based on vendor type 
+
