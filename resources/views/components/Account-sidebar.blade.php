@@ -177,7 +177,7 @@
                   <a href="{{ route('accounting.createVendor') }}" 
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.createVendor') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                     <i data-lucide="layers" class="w-4 h-4"></i>
-                    Create Vendor
+                    Add New Vendor
                   </a>
                 </li>
 
