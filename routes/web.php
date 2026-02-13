@@ -460,11 +460,22 @@ Route::get('/reports-management', function () {
     return view('AccountantPanel.report');
 })->name('accounting.reportsManagement');
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
 //route for invoice management
 Route::get('/invoice-management', function () {
-    return view('AccountantPanel.invoicing');
+    return view('AccountantPanel.invoices.invoicing');
 })->name('accounting.invoiceManagement');
 
+//route for creating invoices
+Route::get('/create-invoice', function () {
+    return view('AccountantPanel.invoices.createinvoices');
+})->name('accounting.createInvoice');
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 //route for settings 
 Route::get('/accounting-settings', function () {
     return view('AccountantPanel.settings');

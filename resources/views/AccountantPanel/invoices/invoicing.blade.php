@@ -15,15 +15,18 @@
                 <span class="hidden sm:inline">Send Reminders</span>
                 <span class="sm:hidden">Reminders</span>
               </button>
+
               <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
                 <i data-lucide="download" class="w-4 h-4"></i>
                 <span class="hidden sm:inline">Export</span>
                 <span class="sm:hidden">Export</span>
               </button>
-              <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
+
+              <a href="{{ route('accounting.createInvoice') }}" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 Create Invoice
-              </button>
+              </a>
+
             </div>
           </div>
         </div>
