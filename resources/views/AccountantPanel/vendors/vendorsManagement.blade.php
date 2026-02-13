@@ -9,7 +9,7 @@
               <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Vendor Management</h1>
               <p class="text-xs sm:text-sm text-slate-700 mt-1">Manage vendors, suppliers, and payment tracking</p>
             </div>
-            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 pt-2">
               <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
                 <i data-lucide="phone" class="w-4 h-4"></i>
                 <span class="hidden sm:inline">Contact Vendor</span>
