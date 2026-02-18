@@ -298,7 +298,8 @@
                 <button id="submitBtn" 
                   type="submit" 
                   class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md">
-                  Create account
+                  <i class="bi bi-arrow-clockwise animate-spin hidden" id="btnLoader"></i>
+                  <span id="btnText">Create account</span>
                 </button>
 
               </div>
@@ -387,7 +388,17 @@
 
       function showToast(){ toast.classList.remove('hidden'); setTimeout(()=> toast.classList.add('hidden'), 2800); }
 
+      // Button loader on form submit
+      const form = document.getElementById('registerForm');
+      const btn = document.getElementById('submitBtn');
+      const loader = document.getElementById('btnLoader');
+      const btnText = document.getElementById('btnText');
       
+      form?.addEventListener('submit', () => {
+        btn.disabled = true; // Disable button
+        loader.classList.remove('hidden'); // Show spinner
+        btnText.textContent = 'Creating...'; // Change text
+      });
     });
     </script>
   </body>

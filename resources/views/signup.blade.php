@@ -51,7 +51,6 @@
             <option value="">Select Your Role:</option>
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
-            <option value="admin">Admin</option>
           </select>
 
           <!--check school from database-->
@@ -112,7 +111,7 @@
 
         <div class="relative">
 
-          <input id="signupPassword" 
+          <input id="signupPassword2" 
           type="password" 
           class="w-full p-2 border rounded" 
           placeholder="password_confirmation"
@@ -120,12 +119,13 @@
           required 
           />
 
-          <button type="button" id="toggleSignupPassword" class="absolute right-2 top-2 text-gray-500"><i class="fa fa-eye"></i></button>
+          <button type="button" id="toggleSignupPassword2" class="absolute right-2 top-2 text-gray-500"><i class="fa fa-eye"></i></button>
 
         </div>
 
-        <button class="w-full bg-indigo-600 text-white py-2 rounded">
-          Create account
+        <button id="createAccountBtn" class="w-full bg-indigo-600 text-white py-2 rounded">
+          <i class="fa fa-spinner fa-spin hidden" id="btnLoader"></i>
+          <span id="btnText">Create account</span>
         </button>
 
         <div class="text-center text-sm">
@@ -156,8 +156,24 @@
     //toogle the password
 
     const t2 = document.getElementById('toggleSignupPassword');
-     const sp = document.getElementById('signupPassword'); 
-     t2?.addEventListener('click', () => { sp.type = sp.type === 'password' ? 'text' : 'password'; t2.innerHTML = sp.type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>'; });
+    const sp = document.getElementById('signupPassword'); 
+    t2?.addEventListener('click', () => { sp.type = sp.type === 'password' ? 'text' : 'password'; t2.innerHTML = sp.type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>'; });
+
+    const t3 = document.getElementById('toggleSignupPassword2');
+    const sp2 = document.getElementById('signupPassword2');
+    t3?.addEventListener('click', () => { sp2.type = sp2.type === 'password' ? 'text' : 'password'; t3.innerHTML = sp2.type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>'; });
+
+    // Button loader on form submit
+    const form = document.querySelector('form');
+    const btn = document.getElementById('createAccountBtn');
+    const loader = document.getElementById('btnLoader');
+    const btnText = document.getElementById('btnText');
+    
+    form?.addEventListener('submit', () => {
+      btn.disabled = true; // Disable button
+      loader.classList.remove('hidden'); // Show spinner
+      btnText.textContent = 'Creating...'; // Change text
+    });
 
   </script>
 
