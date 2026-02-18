@@ -87,7 +87,7 @@ class ParentregistrationController extends Controller
             'email' => 'nullable|email|unique:students,email',
             'date_of_birth' => 'required|date',
             'gender' => 'required|string|in:male,female',
-            'class_id' => 'required|integer|exists:class-availables,id',
+            'class_id' => 'required|integer|exists:class_availables,id',
             'street' => 'nullable|string|max:255',
             'ward' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',

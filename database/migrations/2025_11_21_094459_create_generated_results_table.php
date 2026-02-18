@@ -29,7 +29,7 @@ return new class extends Migration
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             
             //linking to the classes table
-            $table->foreign('class_id')->references('id')->on('class-availables')->onDelete('cascade');
+            $table->foreign('class_id')->references('id')->on('class_availables')->onDelete('cascade');
 
             //linking to the schools table
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');

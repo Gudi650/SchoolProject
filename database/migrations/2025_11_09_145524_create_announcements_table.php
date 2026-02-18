@@ -27,7 +27,7 @@ return new class extends Migration
             // Foreign key constraints
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade'); //referencing the schools table
             $table->foreign('created_by')->references('id')->on('teachers')->onDelete('cascade'); //referencing the teachers table
-            $table->foreign('class_available_id')->references('id')->on('class-availables')->onDelete('cascade'); //referencing the classes table
+            $table->foreign('class_available_id')->references('id')->on('class_availables')->onDelete('cascade'); //referencing the classes table
             
         });
     }

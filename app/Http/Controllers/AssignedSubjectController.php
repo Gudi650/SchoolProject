@@ -50,7 +50,7 @@ class AssignedSubjectController extends Controller
     {
         //validate the request
         $validated = $request->validate([
-            'class_id' => 'required|exists:class-availables,id',
+            'class_id' => 'required|exists:class_availables,id',
             'availablesubject_id' => 'required|exists:availablesubjects,id',
             'teacher_id' => 'required|exists:teachers,id',
             'school_id' => 'required|exists:schools,id',

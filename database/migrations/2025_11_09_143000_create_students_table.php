@@ -29,7 +29,7 @@ return new class extends Migration
 
             // Foreign key constraint
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('class_id')->references('id')->on('class-availables')->onDelete('cascade');
+            $table->foreign('class_id')->references('id')->on('class_availables')->onDelete('cascade');
 
         });
     }

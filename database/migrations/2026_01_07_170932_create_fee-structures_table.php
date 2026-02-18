@@ -35,7 +35,7 @@ return new class extends Migration
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
 
             //class_id foreign key definition
-            $table->foreign('class_id')->references('id')->on('class-availables')->onDelete('cascade');
+            $table->foreign('class_id')->references('id')->on('class_availables')->onDelete('cascade');
 
         });
     }

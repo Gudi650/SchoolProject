@@ -85,7 +85,7 @@ class PostExamResults extends Controller
     {
 
         $validatedData = $request->validate([
-            'class_id' => 'required|exists:class-availables,id',
+            'class_id' => 'required|exists:class_availables,id',
             'TermName' => 'required|string',
             'subject_id' => 'required|exists:availablesubjects,id',
             'exam_date' => 'required|date',
@@ -142,7 +142,7 @@ class PostExamResults extends Controller
             'remarks.*' => 'nullable|string|max:255',
             'TermName' => 'required|string',
             'subject_id.*' => 'required|exists:availablesubjects,id',
-            'class_id.*' => 'required|exists:class-availables,id',
+            'class_id.*' => 'required|exists:class_availables,id',
             'teacher_id' => 'required|exists:teachers,id',
             'exam_date' => 'required|date',
         ]);

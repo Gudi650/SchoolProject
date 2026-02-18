@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('budget_categories')) {
+            return;
+        }
+
         Schema::create('budget_categories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('budget_id');
@@ -23,9 +27,6 @@ return new class extends Migration
 
             //budget foreign key
             $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
-
-            //department foreign key
-            $table->foreign('department_id')->references('id')->on('budget_departments')->onDelete('cascade');
 
         });
     }

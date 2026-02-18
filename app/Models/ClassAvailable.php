@@ -10,7 +10,7 @@ class ClassAvailable extends Model
     use HasFactory;
     
     //explicit table name because the DB table uses a hyphen
-    protected $table = 'class-availables';
+    protected $table = 'class_availables';
 
     //fillable
     protected $fillable = [

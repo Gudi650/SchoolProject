@@ -46,7 +46,7 @@ class AssignClasses extends Controller
 
         //validate the data from the form
         $validatedData = $request->validate([
-            'class-available_id' => 'required|exists:class-availables,id',
+            'class-available_id' => 'required|exists:class_availables,id',
             'teacher_id' => 'required|exists:assigned_roles,teacher_id',
         ]);
 

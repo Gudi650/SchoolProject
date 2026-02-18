@@ -20,8 +20,8 @@ return new class extends Migration
 
             //foreign keys
             
-            //foreign key referencing class-availables table
-            $table->foreign('class_id')->references('id')->on('class-availables')->onDelete('cascade');
+            //foreign key referencing class_availables table
+            $table->foreign('class_id')->references('id')->on('class_availables')->onDelete('cascade');
 
             //foreign key referencing fee-structures table
             $table->foreign('fee_options_id')->references('id')->on('fee_options')->onDelete('cascade');

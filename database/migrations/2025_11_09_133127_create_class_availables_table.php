@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('class-availables', function (Blueprint $table) {
+        Schema::create('class_availables', function (Blueprint $table) {
             $table->id();
             $table->string('name');   //name of class available
             $table->unsignedBigInteger('school_id'); // Link to school table
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('class-availables');
+        Schema::dropIfExists('class_availables');
     }
 };

@@ -55,6 +55,18 @@
         >
 
         @csrf
+          <!-- Error Messages -->
+          @if ($errors->any())
+            <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
+              <h3 class="text-red-700 font-semibold text-sm mb-2">Please fix the following errors:</h3>
+              <ul class="list-disc list-inside space-y-1">
+                @foreach ($errors->all() as $error)
+                  <li class="text-red-600 text-sm">{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
+
           <!-- Personal section -->
           <div class="bg-indigo-50 p-4 rounded mb-4">
             <h2 class="text-indigo-700 font-semibold mb-3">Personal information</h2>
@@ -69,9 +81,12 @@
 
                 <input id="firstName" 
                 name="fname" 
-                value="{{ old('fname') }}"
+                value="{{ old('fname', $personalInfo['fname'] ?? '') }}"
                 required 
-                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400" />
+                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400 @error('fname') border-red-500 @enderror" />
+                @error('fname')
+                  <span class="text-red-600 text-sm mt-1">{{ $message }}</span>
+                @enderror
               </div>
               <div>
                 <label for="middleName" 
@@ -81,8 +96,11 @@
 
                 <input id="middleName" 
                 name="mname" 
-                value="{{ old('mname') }}"
-                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400" />
+                value="{{ old('mname', $personalInfo['mname'] ?? '') }}"
+                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400 @error('mname') border-red-500 @enderror" />
+                @error('mname')
+                  <span class="text-red-600 text-sm mt-1">{{ $message }}</span>
+                @enderror
 
               </div>
 
@@ -94,9 +112,12 @@
 
                 <input id="lastName" 
                 name="lname" 
-                value = "{{ old('lname') }}"
+                value = "{{ old('lname', $personalInfo['lname'] ?? '') }}"
                 required 
-                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400" />
+                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400 @error('lname') border-red-500 @enderror" />
+                @error('lname')
+                  <span class="text-red-600 text-sm mt-1">{{ $message }}</span>
+                @enderror
               </div>
             </div>
 
@@ -110,10 +131,13 @@
 
                 <input id="email" 
                 name="email" 
-                value = "{{ old('email') }}"
+                value = "{{ old('email', $personalInfo['email'] ?? '') }}"
                 type="email" 
                 required 
-                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400" />
+                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400 @error('email') border-red-500 @enderror" />
+                @error('email')
+                  <span class="text-red-600 text-sm mt-1">{{ $message }}</span>
+                @enderror
 
               </div>
 
@@ -125,9 +149,12 @@
 
                 <input id="phone" 
                 name="phone" 
-                value = "{{ old('phone') }}"
+                value = "{{ old('phone', $personalInfo['phone'] ?? '') }}"
                 type="tel" 
-                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400" />
+                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400 @error('phone') border-red-500 @enderror" />
+                @error('phone')
+                  <span class="text-red-600 text-sm mt-1">{{ $message }}</span>
+                @enderror
 
               </div>
 
@@ -140,14 +167,17 @@
 
                 <select id="gender" 
                 name="gender" 
-                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400">
+                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400 @error('gender') border-red-500 @enderror">
 
                   <option value="">
                     Select gender
                   </option>
-                  <option value = "male">Male</option>
-                  <option value = "female">Female</option>
+                  <option value = "male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                  <option value = "female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
                 </select>
+                @error('gender')
+                  <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
+                @enderror
 
               </div>
             </div>
@@ -174,73 +204,28 @@
                   <div id="subjectsMenu" 
                   class="hidden absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-md shadow max-h-48 overflow-auto z-40">
 
-                    <!-- list of common subjects -->
-                    <label class="flex items-center gap-2 p-2 hover:bg-indigo-50 cursor-pointer">
-                      <input type="checkbox" class="subject-option" 
-                      name = "subject_specialization"
-                      value="Mathematics">
-                      <span class="text-sm">
-                        Mathematics
-                      </span>
-                    </label>
-
-                    <label class="flex items-center gap-2 p-2 hover:bg-indigo-50 cursor-pointer">
-                      <input type="checkbox" class="subject-option"
-                        name = "subject_specialization"
-                        value="English">
-                      <span class="text-sm">
-                        English
-                      </span>
-                    </label>
-
-                    <label class="flex items-center gap-2 p-2 hover:bg-indigo-50 cursor-pointer">
-                      <input type="checkbox" class="subject-option" 
-                      name = "subject_specialization"
-                      value="Science">
-                      <span class="text-sm">
-                        Science
-                      </span>
-                    </label>
-
-                    <label class="flex items-center gap-2 p-2 hover:bg-indigo-50 cursor-pointer">
-                      <input type="checkbox" class="subject-option"
-                      name = "subject_specialization"
-                      value="History">
-                      <span class="text-sm">
-                        History
-                      </span>
-                    </label>
-
-                    <label class="flex items-center gap-2 p-2 hover:bg-indigo-50 cursor-pointer">
-                      <input type="checkbox" class="subject-option"
-                      name = "subject_specialization"
-                      value="Geography">
-                      <span class="text-sm">
-                        Geography
-                      </span>
-                    </label>
-
-                    <label class="flex items-center gap-2 p-2 hover:bg-indigo-50 cursor-pointer">
-                      <input type="checkbox" class="subject-option"
-                      name = "subject_specialization"
-                      value="Computer Science">
-                      <span class="text-sm">
-                        Computer Science
-                      </span>
-                    </label>
-
-                    <label class="flex items-center gap-2 p-2 hover:bg-indigo-50 cursor-pointer">
-                      <input type="checkbox" class="subject-option"
-                      name = "subject_specialization"
-                      value="Art">
-                      <span class="text-sm">
-                        Art
-                      </span>
-                    </label>
-
+                    <!--fetch subjects from database and loop through them to show in the dropdown-->
+                    @if ($subjects->count() > 0)
+                      
+                      @foreach ($subjects as $subject)
+                        <label class="flex items-center gap-2 p-2 hover:bg-indigo-50 cursor-pointer">
+                          <input type="checkbox" class="subject-option" 
+                          name = "subject_specialization"
+                          value="{{ $subject->subject_name }}">
+                          <span class="text-sm">
+                            {{ $subject->subject_name }}
+                          </span>
+                        </label>
+                      @endforeach
+                    @else
+                      <div class="p-4 text-sm text-gray-500">No subjects available for your school.</div>
+                    @endif
                   </div>
                 </div>
                 <div id="selectedSubjects" class="mt-2 flex flex-wrap gap-2"></div>
+                @error('subject_specialization')
+                  <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
+                @enderror
               </div>
 
               <div>
@@ -252,7 +237,11 @@
                 name="experience" 
                 type="number" 
                 min="0" 
-                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400"/>
+                value="{{ old('experience') }}"
+                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400 @error('experience') border-red-500 @enderror"/>
+                @error('experience')
+                  <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
+                @enderror
 
               </div>
             </div>
@@ -264,13 +253,16 @@
               </label>
 
                <select name="qualification" id="qualification"
-                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400"
+                class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400 @error('qualification') border-red-500 @enderror"
                required>
                 <option value="">Select qualification</option>
-                <option value="bachelor">Bachelor's Degree</option>
-                <option value="master">Master's Degree</option>
-                <option value="phd">Ph.D.</option>
+                <option value="bachelor" {{ old('qualification') == 'bachelor' ? 'selected' : '' }}>Bachelor's Degree</option>
+                <option value="master" {{ old('qualification') == 'master' ? 'selected' : '' }}>Master's Degree</option>
+                <option value="phd" {{ old('qualification') == 'phd' ? 'selected' : '' }}>Ph.D.</option>
               </select>
+              @error('qualification')
+                <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
+              @enderror
             </div>
 
             

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('gender');
             $table->string('subject_specialization')->nullable();
             $table->string('qualification')->nullable();
-            $table->unsignedBigInteger('school_id')->unique();  //link to the schools table where the teacher belongs
+            $table->unsignedBigInteger('school_id');  //link to the schools table where the teacher belongs
             $table->unsignedBigInteger('user_id')->unique();    // Link to users table
             $table->timestamps();
 
