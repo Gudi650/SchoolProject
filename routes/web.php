@@ -13,6 +13,7 @@ use App\Http\Controllers\feestructure;
 use App\Http\Controllers\GeneratedTimetableController;
 use App\Http\Controllers\GenerateExamController;
 use App\Http\Controllers\ParentregistrationController;
+use App\Http\Controllers\PayrollConfigurationsController;
 use App\Http\Controllers\PostExamResults;
 use App\Http\Controllers\Student;
 use App\Http\Controllers\StudentApplicants;
@@ -21,6 +22,7 @@ use App\Http\Controllers\studentEnrollment;
 use App\Http\Controllers\Teacherprofile;
 use App\Http\Controllers\TeacherregistrationController;
 use App\Http\Controllers\TeacherRoleController;
+use App\Models\PayrollConfigurations;
 use Illuminate\Support\Facades\Route;
 
 
@@ -382,11 +384,10 @@ Route::get('/payroll-management', function () {
     return view('AccountantPanel.payroll');
 })->name('accounting.payrollManagement');
 
-
-//route for payroll settings
-Route::get('/payroll-settings', function () {
-    return view('AccountantPanel.payrolls.payrollsetting');
-})->name('accounting.payrollSettings');
+//route to show payroll configuration page using controller
+Route::get('/payroll-configuration', 
+[PayrollConfigurationsController::class, 'showPayrollConfiguration'])
+->name('accounting.payrollSettings');
 
 
 

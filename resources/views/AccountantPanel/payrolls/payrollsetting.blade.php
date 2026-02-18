@@ -229,11 +229,11 @@
                                     @forelse($teachers ?? [] as $teacher)
                                         <option 
                                             value="{{ $teacher->id }}" 
-                                            data-name="{{ $teacher->name }}" 
-                                            data-idnumber="{{ $teacher->employee_id ?? ($teacher->id_number ?? '') }}" 
+                                            data-name="{{ $teacher->fname }} {{ $teacher->lname }}" 
+                                            data-idnumber="{{ $teacher->id ?? ($teacher->id_number ?? '') }}" 
                                             data-position="{{ $teacher->position ?? '' }}">
-                                            {{ $teacher->name }}
-                                            @if(!empty($teacher->employee_id ?? ($teacher->id_number ?? ''))) ({{ $teacher->employee_id ?? $teacher->id_number }}) @endif
+                                            {{ $teacher->fname }} {{ $teacher->lname }}
+                                            @if(!empty($teacher->employee_id ?? ($teacher->id ?? ''))) ({{ $teacher->employee_id ?? $teacher->id }}) @endif
                                         </option>
                                     @empty
                                         <option value="" disabled>No teachers available</option>
@@ -555,22 +555,22 @@
 
         // Calculate Net Salary in real-time
         function calculateNetSalary() {
-            const baseSalary = getNumericValue('base_salary');
+            const baseSalary = parseFloat(removeCommas(document.getElementById('base_salary')?.value)) || 0;
             
             // Allowances
             const allowances = [
                 'housing_allowance', 'transport_allowance', 'meal_allowance',
                 'medical_allowance', 'extra_time_allowance', 'other_allowance'
-            ].reduce((sum, id) => sum + getNumericValue(id), 0);
+            ].reduce((sum, id) => sum + (parseFloat(removeCommas(document.getElementById(id)?.value)) || 0), 0);
             
             // Deductions
             const deductions = [
                 'tax_deduction', 'insurance_deduction', 'provident_fund',
                 'loan_deduction', 'other_deduction'
-            ].reduce((sum, id) => sum + getNumericValue(id), 0);
+            ].reduce((sum, id) => sum + (parseFloat(removeCommas(document.getElementById(id)?.value)) || 0), 0);
             
             const netSalary = baseSalary + allowances - deductions;
-            document.getElementById('netSalaryDisplay').textContent = '$' + netSalary.toFixed(2);
+            document.getElementById('netSalaryDisplay').textContent = '$' + netSalary.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
 
         // Select/Clear Teacher functions
@@ -636,6 +636,16 @@
             }
         }
 
+        // Format number input with commas
+        function formatNumberWithCommas(value) {
+            return value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // Remove commas from input value for processing
+        function removeCommas(value) {
+            return value.replace(/,/g, '');
+        }
+
         // Initialize all event listeners on DOMContentLoaded
         document.addEventListener('DOMContentLoaded', function() {
             // Validation error clearing on input
@@ -654,7 +664,24 @@
             
             salaryInputs.forEach(inputId => {
                 const element = document.getElementById(inputId);
-                if (element) element.addEventListener('input', calculateNetSalary);
+                if (element) {
+                    // Format on blur (when user leaves field)
+                    element.addEventListener('blur', function() {
+                        const cleaned = removeCommas(this.value);
+                        if (cleaned && !isNaN(cleaned)) {
+                            this.value = formatNumberWithCommas(parseFloat(cleaned).toFixed(2));
+                            calculateNetSalary();
+                        }
+                    });
+                    
+                    // Remove commas on focus (for easy editing)
+                    element.addEventListener('focus', function() {
+                        this.value = removeCommas(this.value);
+                    });
+                    
+                    // Recalculate on input
+                    element.addEventListener('input', calculateNetSalary);
+                }
             });
 
             // Payment method change
