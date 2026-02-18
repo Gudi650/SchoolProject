@@ -290,7 +290,7 @@
                 <button id="submitBtn" 
                   type="submit" 
                   class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md">
-                  <i class="bi bi-arrow-clockwise animate-spin hidden" id="btnLoader"></i>
+                  <i class="fa fa-spinner fa-spin hidden" id="btnLoader"></i>
                   <span id="btnText">Create account</span>
                 </button>
 

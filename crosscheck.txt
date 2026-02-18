@@ -19,7 +19,7 @@ ALL THE DASHBOARD
 Teacher SIgnup
 1)The subjectsdropdown available
 2)The school_id filling in the backend of this as it now fills the default of 1
-
+3)Teacher registering more than 1 subject at a time, only the last subject gets registered here
 
 TEACHER DASHBOARD
 1)The Attendance,assign Roles (all three dropdowns look at it) role based

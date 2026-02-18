@@ -71,11 +71,18 @@
 
           <a href="{{ route('showsignup') }}" id="showSignUp" class="text-sm">
             Create account
-        </a>
+          </a>
 
         </div>
-        <button class="w-full bg-indigo-600 text-white py-2 rounded">
-            Sign in
+        <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded flex items-center justify-center gap-2">
+            <span id="signInText">Sign in</span>
+            <!-- Loader spinner - hidden by default -->
+            <span id="signInLoader" class="hidden">
+                <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </span>
         </button>
       </form>
 
@@ -83,13 +90,19 @@
   </div>
 
   <script>
-
-    //toogle the password
-
+    // Toggle password visibility
     const t1 = document.getElementById('toggleLoginPassword'); 
     const lp = document.getElementById('loginPassword'); 
     t1.addEventListener('click', () => { lp.type = lp.type === 'password' ? 'text' : 'password'; t1.innerHTML = lp.type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>'; });
 
+    // Show loader on form submit
+    const loginForm = document.querySelector('form[action*="login"]');
+    if (loginForm) {
+      loginForm.addEventListener('submit', () => {
+        document.getElementById('signInText').classList.add('hidden');
+        document.getElementById('signInLoader').classList.remove('hidden');
+      });
+    }
   </script>
 
   
