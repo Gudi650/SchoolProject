@@ -54,7 +54,7 @@
 		}
 	</style>
 
-	<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+	<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 bg-slate-50 min-h-screen space-y-6">
 		
 		{{-- Success and Error Messages --}}
 		@if(session('success'))
@@ -114,11 +114,11 @@
 			</div>
 		@endif
 
-		<div class="mb-6">
+		<div class="mb-6 rounded-lg border border-indigo-100 bg-indigo-50 px-4 sm:px-6 py-4">
 		<div class="flex items-start justify-between gap-4">
 			<div>
-				<h1 class="text-2xl font-bold text-slate-900">Fee Settings</h1>
-				<p class="text-sm text-slate-600 mt-1">Configure which fee components are required or optional for students</p>
+				<h1 class="text-xl sm:text-2xl font-bold text-slate-900">Fee Settings</h1>
+				<p class="text-xs sm:text-sm text-slate-700 mt-1">Configure which fee components are required or optional for students</p>
 			</div>
 		</div>
 	</div>
@@ -131,7 +131,7 @@
 			@csrf
 
 			<!-- General settings container -->
-			<div class="bg-white rounded-xl border border-slate-200 pb-6 px-6 mb-6">
+			<div class="bg-white rounded-xl border border-slate-200 pb-6 px-6 mb-6 shadow-sm">
 				<div class="mb-4">
 					<div class="-mx-6 px-6 py-3 bg-indigo-50 rounded-t-lg flex items-center justify-between">
 						<div>
@@ -210,7 +210,7 @@
 			</div>
 
 			<!-- Specific settings container -->
-			<div class="bg-white rounded-xl border border-slate-200 pb-6 px-6">
+			<div class="bg-white rounded-xl border border-slate-200 pb-6 px-6 shadow-sm">
 				<div class="mb-4">
 					<div class="-mx-6 px-6 py-3 bg-indigo-50 rounded-t-lg flex items-center justify-between">
 						<div>
@@ -291,7 +291,7 @@
 			</div>
 
 			<div class="mt-6 flex justify-end">
-				<button type="submit" class="px-5 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium flex items-center gap-2">
+				<button type="submit" class="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium flex items-center gap-2 shadow-sm transition-colors">
 					<i data-lucide="save" class="w-4 h-4"></i>
 					<span>Save Settings</span>
 				</button>

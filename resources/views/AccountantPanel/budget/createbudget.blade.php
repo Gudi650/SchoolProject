@@ -1,7 +1,7 @@
 <x-Account-sidebar>
   <x-slot name="title">Budget Management</x-slot>
 
-  <main class="p-6 bg-white min-h-screen">
+  <main class="p-4 sm:p-6 bg-slate-50 min-h-screen">
     <div class="max-w-5xl mx-auto">
 
       <!-- Success Message -->
@@ -37,7 +37,7 @@
       @endif
 
       <!-- Page Header with Icon -->
-      <div class="mb-8 bg-white rounded-xl p-4 sm:p-6 border border-slate-200 shadow-sm">
+      <div class="mb-8 rounded-lg border border-indigo-100 bg-indigo-50 px-4 sm:px-6 py-4">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div class="flex items-start gap-3 sm:gap-4 min-w-0">
             <div class="w-10 sm:w-12 h-10 sm:h-12 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -51,7 +51,7 @@
           <div class="flex flex-col xs:flex-row gap-2 w-full sm:w-auto">
             <a 
               href="{{ route('accounting.departmentManagement') }}"
-              class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-purple-600 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors inline-flex items-center justify-center sm:justify-start gap-2 whitespace-nowrap"
+              class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors inline-flex items-center justify-center sm:justify-start gap-2 shadow-sm whitespace-nowrap"
             >
               <i data-lucide="building-2" class="w-4 h-4 flex-shrink-0"></i>
               <span class="hidden sm:inline">Manage Departments</span>
@@ -80,10 +80,10 @@
       @csrf
         
         <!-- Section 1: Budget Overview -->
-        <div class="p-6 border-b border-slate-200 bg-slate-50">
+        <div class="p-6 border-b border-slate-200 bg-indigo-50">
           <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <i data-lucide="file-text" class="w-5 h-5 text-blue-600"></i>
+            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="file-text" class="w-5 h-5 text-indigo-600"></i>
             </div>
             <h3 class="text-lg font-semibold text-slate-900">Budget Overview</h3>
           </div>
@@ -145,7 +145,7 @@
             <!-- Budget Start Date -->
             <div>
               <label for="budgetStartDate" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
-                <i data-lucide="calendar" class="w-4 h-4 text-blue-600"></i>
+                <i data-lucide="calendar" class="w-4 h-4 text-indigo-600"></i>
                 Start Date <span class="text-red-600">*</span>
               </label>
               <input 
@@ -168,7 +168,7 @@
             <!-- Budget End Date -->
             <div>
               <label for="budgetEndDate" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
-                <i data-lucide="calendar" class="w-4 h-4 text-blue-600"></i>
+                <i data-lucide="calendar" class="w-4 h-4 text-indigo-600"></i>
                 End Date <span class="text-red-600">*</span>
               </label>
               <input 
@@ -220,21 +220,21 @@
         </div>
 
         <!-- Section 3: Summary -->
-        <div class="p-6 bg-slate-50 border-t border-slate-200">
+        <div class="p-6 bg-indigo-50 border-t border-slate-200">
           <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-              <i data-lucide="pie-chart" class="w-5 h-5 text-emerald-600"></i>
+            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="pie-chart" class="w-5 h-5 text-indigo-600"></i>
             </div>
             <h3 class="text-lg font-semibold text-slate-900">Budget Summary</h3>
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <!-- Total Allocated -->
-            <div class="bg-white rounded-r-xl rounded-l-none p-5 border-l-4 border-blue-500 shadow-sm">
+            <div class="bg-white rounded-r-xl rounded-l-none p-5 border-l-4 border-indigo-500 shadow-sm">
               <div class="flex items-center justify-between mb-2">
                 <p class="text-xs font-medium text-slate-600 uppercase tracking-wide">Total Allocated</p>
-                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <i data-lucide="trending-up" class="w-4 h-4 text-blue-600"></i>
+                <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <i data-lucide="trending-up" class="w-4 h-4 text-indigo-600"></i>
                 </div>
               </div>
               <p class="text-2xl font-bold text-slate-900">$<span id="totalAllocated">0.00</span></p>
@@ -364,7 +364,7 @@
           <button 
             type="button" 
             onclick="closeBudgetModal()"
-            class="w-full sm:w-auto px-6 py-2.5 text-sm font-medium text-slate-700 bg-red-200 border border-slate-300 rounded-lg hover:bg-red-300 transition-colors flex items-center justify-center sm:justify-start gap-2"
+            class="w-full sm:w-auto px-6 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors flex items-center justify-center sm:justify-start gap-2"
           >
             <i data-lucide="x-circle" class="w-4 h-4"></i>
             Cancel

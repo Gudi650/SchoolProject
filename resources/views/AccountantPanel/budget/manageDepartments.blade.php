@@ -1,15 +1,15 @@
 <x-Account-sidebar>
   <x-slot name="title">Budget Management</x-slot>
 
-  <main class="p-6 bg-white min-h-screen">
+  <main class="p-4 sm:p-6 bg-slate-50 min-h-screen">
     <div class="max-w-5xl mx-auto">
 
       <!-- Page Header with Icon -->
-      <div class="mb-8 bg-white rounded-xl p-4 sm:p-6 border border-slate-200 shadow-sm">
+      <div class="mb-8 rounded-lg border border-indigo-100 bg-indigo-50 px-4 sm:px-6 py-4">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div class="flex items-start gap-3 sm:gap-4 min-w-0">
-            <div class="w-10 sm:w-12 h-10 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <i data-lucide="building-2" class="w-5 sm:w-6 h-5 sm:h-6 text-purple-600"></i>
+            <div class="w-10 sm:w-12 h-10 sm:h-12 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="building-2" class="w-5 sm:w-6 h-5 sm:h-6 text-indigo-600"></i>
             </div>
             <div class="min-w-0">
               <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Manage Departments</h1>
@@ -18,7 +18,7 @@
           </div>
           <a 
             href="{{ route('accounting.createBudget') }}"
-            class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors inline-flex items-center justify-center sm:justify-start gap-2 whitespace-nowrap w-full sm:w-auto"
+            class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors inline-flex items-center justify-center sm:justify-start gap-2 shadow-sm whitespace-nowrap w-full sm:w-auto"
           >
             <i data-lucide="arrow-left" class="w-4 h-4 flex-shrink-0"></i>
             <span class="hidden sm:inline">Back to Budget</span>
@@ -111,10 +111,10 @@
         <div class="lg:col-span-1">
           <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
             <!-- Form Header -->
-            <div class="p-6 bg-blue-50 border-b border-slate-200">
+            <div class="p-6 bg-indigo-50 border-b border-slate-200">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <i data-lucide="plus-circle" class="w-5 h-5 text-blue-600"></i>
+                <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <i data-lucide="plus-circle" class="w-5 h-5 text-indigo-600"></i>
                 </div>
                 <h3 class="text-lg font-semibold text-slate-900">Add Department</h3>
               </div>
@@ -135,7 +135,7 @@
                     id="departmentName" 
                     name="department_name" 
                     placeholder="e.g., Academic"
-                    class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm transition-all bg-slate-50 focus:bg-white"
+                    class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm transition-all bg-slate-50 focus:bg-white"
                     required
                   >
                   <p class="text-xs text-slate-500 mt-1">Unique department name</p>
@@ -152,14 +152,14 @@
                     name="description" 
                     rows="3"
                     placeholder="Optional description..."
-                    class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm resize-none transition-all bg-slate-50 focus:bg-white"
+                    class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm resize-none transition-all bg-slate-50 focus:bg-white"
                   ></textarea>
                 </div>
 
                 <!-- Submit Button -->
                 <button 
                   type="submit" 
-                  class="w-full px-4 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all shadow-sm hover:shadow flex items-center justify-center gap-2"
+                  class="w-full px-4 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-all shadow-sm hover:shadow flex items-center justify-center gap-2"
                 >
                   <i data-lucide="check-circle" class="w-4 h-4"></i>
                   Add Department
@@ -173,14 +173,14 @@
         <div class="lg:col-span-2">
           <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
             <!-- List Header -->
-            <div class="p-6 bg-emerald-50 border-b border-slate-200">
+            <div class="p-6 bg-indigo-50 border-b border-slate-200">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                  <i data-lucide="layers" class="w-5 h-5 text-emerald-600"></i>
+                <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <i data-lucide="layers" class="w-5 h-5 text-indigo-600"></i>
                 </div>
                 <div>
                   <h3 class="text-lg font-semibold text-slate-900">Departments</h3>
-                  <p class="text-sm text-slate-600 mt-1">Total: <span id="departmentCount" class="font-semibold text-emerald-600">{{ $totalDepartments }}</span></p>
+                  <p class="text-sm text-slate-600 mt-1">Total: <span id="departmentCount" class="font-semibold text-indigo-600">{{ $totalDepartments }}</span></p>
                 </div>
               </div>
             </div>
@@ -199,11 +199,11 @@
                     @foreach ( $departments as $department )
                     
                       <!-- Department rows -->
-                      <div class="p-5 hover:bg-slate-50 transition-colors">
+                      <div class="p-5 hover:bg-indigo-50 transition-colors">
                         <div class="flex items-start justify-between">
                           <div class="flex items-start gap-4 flex-1">
-                            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                              <i data-lucide="briefcase" class="w-5 h-5 text-purple-600"></i>
+                            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                              <i data-lucide="briefcase" class="w-5 h-5 text-indigo-600"></i>
                             </div>
                             <div class="flex-1">
                               <h4 class="text-sm font-semibold text-slate-900">{{ $department->department_name }}</h4>
@@ -298,7 +298,7 @@
                               <button 
                                 type="button" 
                                 onclick="document.getElementById('editModal{{ $department->id }}').style.display='none'; document.body.style.overflow='';"
-                                class="flex-1 px-4 py-3 text-sm font-semibold text-slate-700 bg-red-100 hover:bg-red-200 border-2 border-slate-300 rounded-xl transition-all flex items-center justify-center gap-2"
+                                class="flex-1 px-4 py-3 text-sm font-semibold text-slate-700 bg-white hover:bg-slate-100 border-2 border-slate-300 rounded-xl transition-all flex items-center justify-center gap-2"
                               >
                                 <i data-lucide="x-circle" class="w-4 h-4"></i>
                                 Cancel
@@ -371,7 +371,7 @@
                                 <button 
                                   type="button" 
                                   onclick="document.getElementById('deleteModal{{ $department->id }}').style.display='none'; document.body.style.overflow='';"
-                                  class="flex-1 px-4 py-3 text-sm font-semibold text-slate-700 bg-green-100 hover:bg-green-200 border-2 border-slate-300 rounded-xl transition-all flex items-center justify-center gap-2"
+                                  class="flex-1 px-4 py-3 text-sm font-semibold text-slate-700 bg-white hover:bg-slate-100 border-2 border-slate-300 rounded-xl transition-all flex items-center justify-center gap-2"
                                 >
                                   <i data-lucide="x-circle" class="w-4 h-4"></i>
                                   Cancel

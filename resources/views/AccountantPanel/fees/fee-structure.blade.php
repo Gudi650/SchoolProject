@@ -2,26 +2,26 @@
   <x-slot name="title">Fee Structure</x-slot>
   
     <!-- Page Header -->
-    <div class="mb-6">
+    <div class="mb-6 rounded-lg border border-indigo-100 bg-indigo-50 px-4 sm:px-6 py-4">
       <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between items-start gap-4">
         <div class="sm:flex-1">
-          <h1 class="text-2xl font-bold text-slate-900">Fee Structure</h1>
-          <p class="text-sm text-slate-600 mt-1">Manage and configure annual fee structure for all classes</p>
+          <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Fee Structure</h1>
+          <p class="text-xs sm:text-sm text-slate-700 mt-1">Manage and configure annual fee structure for all classes</p>
         </div>
 
         <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto">
-          <button class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-2 justify-center">
+          <button class="w-full sm:w-auto px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 justify-center shadow-sm">
             <i data-lucide="download" class="w-4 h-4"></i>
             <span>Export</span>
           </button>
 
-          <a href="{{ route('accounting.feeSettings')}}" class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-2 justify-center">
+          <a href="{{ route('accounting.feeSettings')}}" class="w-full sm:w-auto px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 justify-center shadow-sm">
             <i data-lucide="settings" class="w-4 h-4"></i>
             <span>Settings</span>
           </a>
 
           <div class="w-full sm:w-auto">
-            <button id="openEditStructureModal" class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center">
+            <button id="openEditStructureModal" class="w-full sm:w-auto px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center shadow-sm">
               <i data-lucide="edit-3" class="w-4 h-4"></i>
               <span>Create Structure</span>
             </button>
@@ -75,7 +75,7 @@
 
     <!-- Info Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      <div class="bg-white rounded-xl p-6 border border-slate-200">
+      <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm text-slate-600 mb-1">Total Classes</p>
@@ -86,18 +86,18 @@
           </div>
         </div>
       </div>
-      <div class="bg-white rounded-xl p-6 border border-slate-200">
+      <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm text-slate-600 mb-1">Fee Components</p>
             <p class="text-2xl font-bold text-slate-900">6</p>
           </div>
-          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-            <i data-lucide="layers" class="w-6 h-6 text-blue-600"></i>
+          <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+            <i data-lucide="layers" class="w-6 h-6 text-indigo-600"></i>
           </div>
         </div>
       </div>
-      <div class="bg-white rounded-xl p-6 border border-slate-200">
+      <div class="bg-white rounded-xl p-6 border border-green-100 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm text-slate-600 mb-1">Highest Fee</p>
@@ -111,10 +111,13 @@
     </div>
 
     <!-- Fee Structure -->
-    <div class="bg-white rounded-xl border border-slate-200">
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm">
       <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
         <div>
-          <h2 class="text-lg font-semibold text-slate-900">General Fee Structure</h2>
+          <h2 class="text-base sm:text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <span class="w-1 h-6 bg-indigo-600 rounded"></span>
+            General Fee Structure
+          </h2>
           <p class="text-sm text-slate-600">Applies to all classes</p>
         </div>
         <button id="editGeneralStructureBtn" class="px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2">
@@ -124,11 +127,11 @@
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm">
-          <thead class="bg-slate-50 border-b border-slate-200">
+          <thead class="bg-indigo-50 border-b border-indigo-100">
             <tr>
-              <th class="px-6 py-3 font-semibold text-slate-700">Fee Component</th>
-              <th class="px-6 py-3 font-semibold text-slate-700 text-right">Amount</th>
-              <th class="px-6 py-3 font-semibold text-slate-700">Currency</th>
+              <th class="px-6 py-3 font-semibold text-indigo-900">Fee Component</th>
+              <th class="px-6 py-3 font-semibold text-indigo-900 text-right">Amount</th>
+              <th class="px-6 py-3 font-semibold text-indigo-900">Currency</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200">
@@ -154,7 +157,7 @@
 
                 {{-- display the tuition fee first --}}
 
-                <tr class="hover:bg-slate-50 transition-colors">
+                <tr class="hover:bg-indigo-50 transition-colors">
                   <td class="px-6 py-4 font-medium text-slate-900">Tuition Fee</td>
                   <td class="px-6 py-4 text-slate-700 text-right">{{ number_format($structure->tuition_fee, 3, '.', ',') }}</td>
                   <td class="px-6 py-4 text-slate-700">{{ $structure->currency }}</td>
@@ -170,7 +173,7 @@
                 @foreach (['transport_fee' => 'Transport Fee', 'library_fee' => 'Library Fee', 'exam_fee' => 'Exam Fee', 'hostel_fee' => 'Hostel Fee'] as $field => $label)
 
                   @if ($structure->$field)
-                    <tr class="hover:bg-slate-50 transition-colors">
+                    <tr class="hover:bg-indigo-50 transition-colors">
                       <td class="px-6 py-4 font-medium text-slate-900">{{ $label }}</td>
                       <td class="px-6 py-4 text-slate-700 text-right">{{ number_format($structure->$field, 3, '.', ',') }}</td>
                       <td class="px-6 py-4 text-slate-700">{{ $structure->currency }}</td>
@@ -189,10 +192,10 @@
                 {{-- now check for the json file to display --}}
                 @if (!empty($structure->dynamic_attributes['all_components']))
                   @foreach ($structure->dynamic_attributes['all_components'] as $component)
-                    <tr class="hover:bg-slate-50 transition-colors">
+                    <tr class="hover:bg-indigo-50 transition-colors">
                       <td class="px-6 py-4 font-medium text-slate-900">
                         {{ $component['name'] }}
-                        <span class="text-xs text-blue-600">(Custom)</span>
+                        <span class="text-xs text-indigo-600">(Custom)</span>
                       </td>
                       <td class="px-6 py-4 text-slate-700 text-right">{{ number_format($component['amount'], 3, '.', ',') }}</td>
                       <td class="px-6 py-4 text-slate-700">{{ $structure->currency }}</td>
@@ -208,7 +211,7 @@
 
                 {{-- finally display the total --}}
 
-                <tr class="bg-slate-50">
+                <tr class="bg-indigo-50">
                   <td class="px-6 py-4 font-semibold text-slate-900">Total</td>
                   <td class="px-6 py-4 font-semibold text-slate-900 text-right">{{ number_format($totalFees, 3, '.', ',') }}</td>
                   <td class="px-6 py-4">{{ $structure->currency }} </td>
@@ -238,7 +241,10 @@
     <!-- Fee Structure by Class -->
     <div class="mt-8">
       <div class="mb-6">
-        <h2 class="text-lg font-semibold text-slate-900">Fee Structure by Class</h2>
+        <h2 class="text-base sm:text-lg font-semibold text-slate-900 flex items-center gap-2">
+          <span class="w-1 h-6 bg-indigo-600 rounded"></span>
+          Fee Structure by Class
+        </h2>
         <p class="text-sm text-slate-600 mt-1">Each class can have different fee components applied</p>
       </div>
 
@@ -264,7 +270,7 @@
 
             <!-- Class 10 Card -->
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6">
-              <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+              <div class="px-6 py-4 border-b border-slate-200 bg-indigo-50 flex items-center justify-between">
                 <h3 class="font-semibold text-slate-800">{{ $customStructure->classes->pluck('name')->join(', ') ?: 'No classes' }}</h3>
                 <button class="edit-class-btn px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors flex items-center gap-2" data-class="Class 10">
                   <i data-lucide="edit-2" class="w-4 h-4"></i>
@@ -275,16 +281,16 @@
               
 
               <table class="w-full text-left text-sm">
-                <thead class="bg-slate-50 border-b border-slate-200">
+                <thead class="bg-indigo-50 border-b border-indigo-100">
                   <tr>
-                    <th class="px-6 py-3 font-semibold text-slate-700">Fee Component</th>
-                    <th class="px-6 py-3 font-semibold text-slate-700 text-right">Amount</th>
-                    <th class="px-6 py-3 font-semibold text-slate-700">Currency</th>
+                    <th class="px-6 py-3 font-semibold text-indigo-900">Fee Component</th>
+                    <th class="px-6 py-3 font-semibold text-indigo-900 text-right">Amount</th>
+                    <th class="px-6 py-3 font-semibold text-indigo-900">Currency</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200">
 
-                  <tr class="hover:bg-slate-50">
+                  <tr class="hover:bg-indigo-50 transition-colors">
                     <td class="px-6 py-3 text-slate-800">Tuition Fee</td>
                     <td class="px-6 py-3 text-slate-700 text-right">{{ number_format($customStructure->tuition_fee , 3, '.', ',') }}</td>
                     <td class="px-6 py-3 text-slate-700">TSH</td>
@@ -300,7 +306,7 @@
                   {{-- now check for other table columns if they exists and display their contents --}}
                   @foreach (['transport_fee' => 'Transport Fee', 'library_fee' => 'Library Fee', 'exam_fee' => 'Exam Fee', 'hostel_fee' => 'Hostel Fee'] as $field => $label)
                     @if ($customStructure->$field)
-                      <tr class="hover:bg-slate-50 transition-colors">
+                      <tr class="hover:bg-indigo-50 transition-colors">
                         <td class="px-6 py-4 font-medium text-slate-900">{{ $label }}</td>
                         <td class="px-6 py-4 text-slate-700 text-right">{{ number_format($customStructure->$field, 3, '.', ',') }}</td>
                         <td class="px-6 py-4 text-slate-700">{{ $customStructure->currency }}</td>
@@ -318,10 +324,10 @@
                   {{-- now check for the json file to display --}}
                   @if (!empty($customStructure->dynamic_attributes['all_components']))
                     @foreach ($customStructure->dynamic_attributes['all_components'] as $component)
-                      <tr class="hover:bg-slate-50 transition-colors">
+                      <tr class="hover:bg-indigo-50 transition-colors">
                         <td class="px-6 py-4 font-medium text-slate-900">
                           {{ $component['name'] }}
-                          <span class="text-xs text-blue-600">(Custom)</span>
+                          <span class="text-xs text-indigo-600">(Custom)</span>
                         </td>
                         <td class="px-6 py-4 text-slate-700 text-right">{{ number_format($component['amount'], 3, '.', ',') }}</td>
                         <td class="px-6 py-4 text-slate-700">{{ $customStructure->currency }}</td>
@@ -336,7 +342,7 @@
                   @endif
 
                   {{-- finally display the total --}}
-                  <tr class="bg-slate-50">
+                  <tr class="bg-indigo-50">
                     <td class="px-6 py-4 font-semibold text-slate-900">Total</td>
                     <td class="px-6 py-4 font-semibold text-slate-900 text-right">{{ number_format($totalFees, 3, '.', ',') }}</td>
                     <td class="px-6 py-4">{{ $customStructure->currency }} </td>
@@ -375,17 +381,17 @@
 <div id="editClassFeeModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 overflow-y-auto hidden">
   <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto" style="max-height: 90vh;">
     <!-- Header -->
-    <div class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+    <div class="flex items-center justify-between px-6 py-4 bg-indigo-50 border-b border-indigo-100 text-slate-900">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+        <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
           <i data-lucide="edit-3" class="w-5 h-5"></i>
         </div>
         <div>
           <h2 class="text-lg font-bold">Edit Fee Structure</h2>
-          <p class="text-sm text-white/80" id="editModalClassName">Class Name</p>
+          <p class="text-sm text-slate-600" id="editModalClassName">Class Name</p>
         </div>
       </div>
-      <button id="closeEditClassModal" type="button" class="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors">
+      <button id="closeEditClassModal" type="button" class="text-slate-500 hover:text-slate-700 p-2 rounded-lg hover:bg-slate-100 transition-colors">
         <i data-lucide="x" class="w-6 h-6"></i>
       </button>
     </div>
@@ -468,11 +474,11 @@
 
     <!-- Footer -->
     <div class="px-6 py-4 border-t border-slate-200 flex justify-end gap-3 bg-slate-50">
-      <button id="cancelEditClassModal" type="button" class="px-5 py-2.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 font-medium transition-colors flex items-center gap-2">
+      <button id="cancelEditClassModal" type="button" class="px-5 py-2.5 rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 font-medium transition-colors flex items-center gap-2">
         <i data-lucide="x" class="w-4 h-4"></i>
         Cancel
       </button>
-      <button id="saveEditClassFee" type="button" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+      <button id="saveEditClassFee" type="button" class="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium shadow-sm transition-colors flex items-center gap-2">
         <i data-lucide="check" class="w-4 h-4"></i>
         Save Changes
       </button>

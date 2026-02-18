@@ -1,24 +1,26 @@
 <x-Account-sidebar>
     <x-slot name="title">Payroll Settings</x-slot>
     
-    <main class="p-4 min-h-screen">
+    <main class="p-4 sm:p-6 bg-slate-50 min-h-screen">
         <div class="max-w-full mx-auto px-6">
         
         <!-- Page Header -->
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h2 class="text-2xl font-bold text-slate-900">Payroll Management</h2>
-                <p class="text-sm text-slate-600 mt-1">Manage staff and teacher payroll settings</p>
+        <div class="mb-6 rounded-lg border border-indigo-100 bg-indigo-50 px-4 sm:px-6 py-4">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Payroll Management</h2>
+                    <p class="text-xs sm:text-sm text-slate-700 mt-1">Manage staff and teacher payroll settings</p>
+                </div>
+                <button type="button" onclick="openAddModal()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 text-xs sm:text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-150 w-full sm:w-auto">
+                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                    Add New Employee
+                </button>
             </div>
-            <button type="button" onclick="openAddModal()" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-150">
-                <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
-                Add New Employee
-            </button>
         </div>
 
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+            <div class="bg-white rounded-xl p-6 border border-green-100 shadow-sm">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
                         <i data-lucide="users" class="w-6 h-6 text-indigo-600"></i>
@@ -42,10 +44,10 @@
                 </div>
             </div>
             
-            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+            <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <i data-lucide="user-check" class="w-6 h-6 text-blue-600"></i>
+                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                        <i data-lucide="user-check" class="w-6 h-6 text-indigo-600"></i>
                     </div>
                     <div>
                         <p class="text-sm text-slate-600">Staff</p>
@@ -54,7 +56,7 @@
                 </div>
             </div>
             
-            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+            <div class="bg-white rounded-xl p-6 border border-amber-100 shadow-sm">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
                         <i data-lucide="dollar-sign" class="w-6 h-6 text-amber-600"></i>
@@ -99,29 +101,30 @@
 
         <!-- Payroll Table -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-200">
+            <div class="px-6 py-4 border-b border-slate-200 flex items-center gap-2">
+                <span class="w-1 h-6 bg-indigo-600 rounded"></span>
                 <h5 class="text-lg font-semibold text-slate-900">Employee Payroll Records</h5>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-slate-200" id="payrollTable">
-                    <thead class="bg-slate-50">
+                    <thead class="bg-indigo-50 border-b border-indigo-100">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Employee ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Type</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Position</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Base Salary</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Allowances</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Deductions</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Net Salary</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Payment</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Employee ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Position</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Base Salary</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Allowances</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Deductions</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Net Salary</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Payment</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-indigo-900 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-slate-200">
+                    <tbody class="bg-white divide-y divide-slate-100">
                         @forelse($employees ?? [] as $employee)
-                        <tr class="hover:bg-slate-50 transition-colors">
+                        <tr class="hover:bg-indigo-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{{ $employee->employee_id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
@@ -137,7 +140,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $employee->type === 'teacher' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $employee->type === 'teacher' ? 'bg-green-100 text-green-800' : 'bg-indigo-100 text-indigo-800' }}">
                                     {{ ucfirst($employee->type) }}
                                 </span>
                             </td>
@@ -157,7 +160,7 @@
                                 @if($employee->status === 'active')
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
                                 @else
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Inactive</span>
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-700">Inactive</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
@@ -198,7 +201,7 @@
     <!-- Add/Edit Payroll Modal -->
     <div id="payrollModal" class="hidden fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4" style="margin-left: 280px !important; left: 0;">
         <div class="w-full max-w-3xl max-h-[95vh] bg-white shadow-2xl rounded-xl flex flex-col overflow-hidden">
-            <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-white flex-shrink-0">
+            <div class="flex justify-between items-center px-6 py-4 border-b border-indigo-100 bg-indigo-50 flex-shrink-0">
                 <h3 class="text-xl font-bold text-slate-900" id="modalTitle">
                     <i data-lucide="user-plus" class="w-5 h-5 inline mr-2"></i>
                     Add New Employee to Payroll
@@ -325,7 +328,7 @@
 
                     <!-- Allowances -->
                     <div class="mb-6">
-                        <h6 class="text-green-700 font-semibold mb-4 pb-2 border-b border-slate-200">
+                        <h6 class="text-indigo-700 font-semibold mb-4 pb-2 border-b border-slate-200">
                             <i data-lucide="plus-circle" class="w-4 h-4 inline mr-2"></i>
                             Allowances
                         </h6>
@@ -334,42 +337,42 @@
                                 <label for="housing_allowance" class="block text-sm font-medium text-slate-700 mb-1">Housing Allowance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="housing_allowance" name="housing_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm">
+                                    <input type="number" id="housing_allowance" name="housing_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="transport_allowance" class="block text-sm font-medium text-slate-700 mb-1">Transport Allowance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="transport_allowance" name="transport_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm">
+                                    <input type="number" id="transport_allowance" name="transport_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="meal_allowance" class="block text-sm font-medium text-slate-700 mb-1">Meal Allowance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="meal_allowance" name="meal_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm">
+                                    <input type="number" id="meal_allowance" name="meal_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="medical_allowance" class="block text-sm font-medium text-slate-700 mb-1">Medical Allowance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="medical_allowance" name="medical_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm">
+                                    <input type="number" id="medical_allowance" name="medical_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="extra_time_allowance" class="block text-sm font-medium text-slate-700 mb-1">Extra Time Allowance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="extra_time_allowance" name="extra_time_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm">
+                                    <input type="number" id="extra_time_allowance" name="extra_time_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="other_allowance" class="block text-sm font-medium text-slate-700 mb-1">Other Allowances</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="other_allowance" name="other_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm">
+                                    <input type="number" id="other_allowance" name="other_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                         </div>
@@ -377,7 +380,7 @@
 
                     <!-- Deductions -->
                     <div class="mb-6">
-                        <h6 class="text-red-700 font-semibold mb-4 pb-2 border-b border-slate-200">
+                        <h6 class="text-indigo-700 font-semibold mb-4 pb-2 border-b border-slate-200">
                             <i data-lucide="minus-circle" class="w-4 h-4 inline mr-2"></i>
                             Deductions
                         </h6>
@@ -386,49 +389,49 @@
                                 <label for="tax_deduction" class="block text-sm font-medium text-slate-700 mb-1">Tax Deduction</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="tax_deduction" name="tax_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm">
+                                    <input type="number" id="tax_deduction" name="tax_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="insurance_deduction" class="block text-sm font-medium text-slate-700 mb-1">Insurance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="insurance_deduction" name="insurance_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm">
+                                    <input type="number" id="insurance_deduction" name="insurance_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="provident_fund" class="block text-sm font-medium text-slate-700 mb-1">Provident Fund</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="provident_fund" name="provident_fund" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm">
+                                    <input type="number" id="provident_fund" name="provident_fund" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="loan_deduction" class="block text-sm font-medium text-slate-700 mb-1">Loan Deduction</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="loan_deduction" name="loan_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm">
+                                    <input type="number" id="loan_deduction" name="loan_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="other_deduction" class="block text-sm font-medium text-slate-700 mb-1">Other Deductions</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="other_deduction" name="other_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm">
+                                    <input type="number" id="other_deduction" name="other_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Net Salary Display -->
-                    <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="mb-6 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
                         <div class="flex justify-between items-center">
                             <div>
                                 <h6 class="font-semibold text-slate-900">Net Salary (Calculated)</h6>
                                 <p class="text-xs text-slate-600 mt-1">Base Salary + Total Allowances - Total Deductions</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-3xl font-bold text-blue-600" id="netSalaryDisplay">$0.00</p>
+                                <p class="text-3xl font-bold text-indigo-600" id="netSalaryDisplay">$0.00</p>
                             </div>
                         </div>
                     </div>
@@ -509,7 +512,7 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row justify-end gap-3 px-6 py-4 border-t border-slate-200 bg-slate-50 flex-shrink-0">
-                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors border border-red-700 text-sm">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 font-semibold rounded-lg transition-colors text-sm">
                         <i data-lucide="x" class="w-4 h-4 inline mr-2"></i>
                         Cancel
                     </button>
