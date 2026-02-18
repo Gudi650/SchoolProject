@@ -5,3 +5,7 @@ a)Auto-validate TIN format
   VAT auto-calculation when recording invoice
   Withholding tax auto-deduction based on vendor type 
 
+
+
+2)Teacher registration
+a)fetch data personal details from the signup

@@ -60,7 +60,21 @@ class TeacherregistrationController extends Controller
                 'qualification' => $validatedData['qualification'],
             ]
         );  
-
+        } else {
+            // If no existing teacher record, create a new one
+            Teacher::create([
+                'user_id' => $userId,
+                'school_id' => $schoolId,
+                'fname' => $validatedData['fname'],
+                'mname' => $validatedData['mname'],
+                'lname' => $validatedData['lname'],
+                'email' => $validatedData['email'],
+                'phone' => $validatedData['phone'],
+                'gender' => $validatedData['gender'],
+                'subject_specialization' => $validatedData['subject_specialization'],
+                'qualification' => $validatedData['qualification'],
+            ]
+        );  
         }
 
         //redirect to the teacher panel dashboard with success message
