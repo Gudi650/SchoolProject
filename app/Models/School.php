@@ -50,4 +50,10 @@ class School extends Model
         return $this->hasMany(studentEnrollment::class, 'school_id');
     }
 
+    //relationship with NSSFPSSF model (one to many)
+    public function nssfPsssf()
+    {
+        return $this->hasMany(NSSFPSSF::class, 'school_id');
+    }
+
 }

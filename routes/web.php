@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountantSettings;
 use App\Http\Controllers\Announcements\AnnouncementController;
 use App\Http\Controllers\Announcements\StudentController;
 use App\Http\Controllers\AssignClasses;
@@ -478,9 +479,17 @@ Route::get('/create-invoice', function () {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //route for settings 
-Route::get('/accounting-settings', function () {
-    return view('AccountantPanel.settings');
-})->name('accounting.settings');
+
+
+//route to view the accountant settings page using controller
+Route::get('/accounting-settings', 
+[AccountantSettings::class, 'showSettings'])
+->name('accounting.settings');
+
+//route to handle psssf and nssf contributions settings form submission
+Route::post('/accounting-settings',
+[AccountantSettings::class, 'saveContributions'])
+->name('accounting.contributionsSettings');
 
 ///////////////////////////////////////////////////////////////////////
 

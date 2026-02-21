@@ -9,9 +9,9 @@ ALL THE DASHBOARD
 
 
 
-
-
-
+Accountant DASHBOARD
+1)remove the hardcoded school_id in Accountant settings in the nssfpsf settings
+2)If no nssf or psssf provided by the user then prompts for user to fill in 
 
 
 
@@ -23,3 +23,4 @@ Teacher SIgnup
 
 TEACHER DASHBOARD
 1)The Attendance,assign Roles (all three dropdowns look at it) role based
+2)roless have to be filled in if not then prompt 

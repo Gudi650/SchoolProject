@@ -69,28 +69,96 @@
               </div>
             </div>
 
-            <div class="bg-white rounded-xl p-6 border border-slate-200">
-              <h3 class="text-lg font-semibold text-slate-900 mb-4">Financial Year Configuration</h3>
-              <div class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Current Financial Year</label>
-                    <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>2023-2024</option>
-                      <option>2024-2025</option>
-                    </select>
+              <div class="bg-white rounded-xl p-6 border border-slate-200">
+                <h3 class="text-lg font-semibold text-slate-900 mb-4">Financial Year Configuration</h3>
+                <div class="space-y-4">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-2">Current Financial Year</label>
+                      <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>2023-2024</option>
+                        <option>2024-2025</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-2">Currency</label>
+                      <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>INR (₹)</option>
+                        <option>USD ($)</option>
+                        <option>EUR (€)</option>
+                      </select>
+                    </div>
                   </div>
-                  <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Currency</label>
-                    <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>INR (₹)</option>
-                      <option>USD ($)</option>
-                      <option>EUR (€)</option>
-                    </select>
+
+                <form action="{{ route('accounting.contributionsSettings') }}" method="POST">
+                  @csrf
+
+                  <!-- NSSF/PSSF Configuration -->
+                  <div class="mt-6 p-4 border border-slate-300 rounded-lg bg-slate-50">
+                    <h4 class="font-semibold text-slate-900 mb-4">Social Security Contributions</h4>
+                    
+                    <!-- NSSF Configuration -->
+                    <div class="mb-4 p-4 bg-white rounded-lg border border-slate-200">
+                      <div class="flex items-center justify-between mb-3">
+                        <div>
+                          <p class="font-medium text-slate-900">NSSF (National Social Security Fund)</p>
+                          <p class="text-sm text-slate-600">Enable NSSF contributions for employees</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                          <input type="checkbox" name= "contribution_type" value="nssf" id="nssfToggle" class="sr-only peer">
+                          <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
+                      </div>
+
+                      <div id="nssfPercentageField" class="hidden">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Contribution Percentage (%)</label>
+                        <div class="flex items-center gap-2">
+                          <input type="number" step="0.01" min="0" max="100" name= "nssf_contribution" value="10.00" placeholder="e.g., 10.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                          <span class="text-slate-600">%</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Default: 10% of gross salary</p>
+                      </div>
+
+                    </div>
+
+                    <!-- PSSF Configuration -->
+                    <div class="p-4 bg-white rounded-lg border border-slate-200">
+                      <div class="flex items-center justify-between mb-3">
+                        <div>
+                          <p class="font-medium text-slate-900">PSSSF (Public Service Social Security Fund)</p>
+                          <p class="text-sm text-slate-600">Enable PSSF contributions for employees</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                          <input type="checkbox" name= "contribution_type" value="psssf" id="pssfToggle" class="sr-only peer">
+                          <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
+                      </div>
+                      <div id="pssfPercentageField" class="hidden">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Contribution Percentage (%)</label>
+                        <div class="flex items-center gap-2">
+                          <input type="number" name= "psssf_contribution" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                          <span class="text-slate-600">%</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Default: 5% of gross salary</p>
+                      </div>
+                    </div>
+
+                    <p class="text-xs text-amber-600 mt-3 flex items-start gap-2">
+                      <i data-lucide="alert-circle" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+                      <span>Note: Employees can typically only be enrolled in either NSSF or PSSF, not both. The system will validate this during payroll processing.</span>
+                    </p>
+
+                    <div class="mt-6">
+                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                          <i data-lucide="check" class="w-4 h-4"></i>
+                          Save Contribution Settings
+                        </button>
+                    </div>
+
                   </div>
                 </div>
               </div>
-            </div>
+            </form>
 
             <!-- Notifications Section -->
             <div id="notifications" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6">
@@ -388,6 +456,46 @@
     if (cancelPasswordBtn && passwordForm) {
       cancelPasswordBtn.addEventListener('click', function() {
         passwordForm.classList.add('hidden');
+      });
+    }
+
+    // ===== NSSF/PSSF TOGGLE FUNCTIONALITY =====
+    const nssfToggle = document.getElementById('nssfToggle');
+    const nssfPercentageField = document.getElementById('nssfPercentageField');
+    const pssfToggle = document.getElementById('pssfToggle');
+    const pssfPercentageField = document.getElementById('pssfPercentageField');
+
+    // Toggle NSSF percentage field
+    if (nssfToggle && nssfPercentageField) {
+      nssfToggle.addEventListener('change', function() {
+        if (this.checked) {
+          nssfPercentageField.classList.remove('hidden');
+          // Optionally uncheck PSSF if NSSF is enabled (mutual exclusivity)
+          // Uncomment the next two lines if you want to enforce only one can be active
+          // if (pssfToggle) pssfToggle.checked = false;
+          // if (pssfPercentageField) pssfPercentageField.classList.add('hidden');
+        } else {
+          nssfPercentageField.classList.add('hidden');
+        }
+        // Re-initialize icons after showing/hiding fields
+        if (window.lucide) lucide.createIcons();
+      });
+    }
+
+    // Toggle PSSF percentage field
+    if (pssfToggle && pssfPercentageField) {
+      pssfToggle.addEventListener('change', function() {
+        if (this.checked) {
+          pssfPercentageField.classList.remove('hidden');
+          // Optionally uncheck NSSF if PSSF is enabled (mutual exclusivity)
+          // Uncomment the next two lines if you want to enforce only one can be active
+          // if (nssfToggle) nssfToggle.checked = false;
+          // if (nssfPercentageField) nssfPercentageField.classList.add('hidden');
+        } else {
+          pssfPercentageField.classList.add('hidden');
+        }
+        // Re-initialize icons after showing/hiding fields
+        if (window.lucide) lucide.createIcons();
       });
     }
   });

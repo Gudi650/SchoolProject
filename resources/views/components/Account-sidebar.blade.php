@@ -6,6 +6,7 @@
     <title>{{ $title ?? '' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    @livewireStyles
     
   </head>
   <body class="antialiased bg-slate-50 text-slate-900">
@@ -301,6 +302,8 @@
 
 
 </body>
+
+@livewireScripts
 
 <script>
  //initialize lucide icons

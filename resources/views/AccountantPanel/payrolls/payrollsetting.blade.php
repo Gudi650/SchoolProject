@@ -378,6 +378,11 @@
                         </div>
                     </div>
 
+                    <!-- PAYE Calculator (Livewire) -->
+                    <div class="mb-6">
+                        @livewire('payee-calculator')
+                    </div>
+
                     <!-- Deductions -->
                     <div class="mb-6">
                         <h6 class="text-indigo-700 font-semibold mb-4 pb-2 border-b border-slate-200">
@@ -546,6 +551,8 @@
             document.getElementById('personalInfoSection').classList.add('hidden');
             document.getElementById('selectedTeacherInfo').classList.add('hidden');
             document.getElementById('bankDetailsSection').classList.add('hidden');
+            calculateNetSalary();
+            setTimeout(syncPayeeCalculator, 0);
             initLucideIcons();
         }
 
@@ -558,10 +565,7 @@
             const baseSalary = parseFloat(removeCommas(document.getElementById('base_salary')?.value)) || 0;
             
             // Allowances
-            const allowances = [
-                'housing_allowance', 'transport_allowance', 'meal_allowance',
-                'medical_allowance', 'extra_time_allowance', 'other_allowance'
-            ].reduce((sum, id) => sum + (parseFloat(removeCommas(document.getElementById(id)?.value)) || 0), 0);
+            const allowances = getTotalAllowances();
             
             // Deductions
             const deductions = [
@@ -571,6 +575,25 @@
             
             const netSalary = baseSalary + allowances - deductions;
             document.getElementById('netSalaryDisplay').textContent = '$' + netSalary.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function getTotalAllowances() {
+            return [
+                'housing_allowance', 'transport_allowance', 'meal_allowance',
+                'medical_allowance', 'extra_time_allowance', 'other_allowance'
+            ].reduce((sum, id) => sum + (parseFloat(removeCommas(document.getElementById(id)?.value || '0')) || 0), 0);
+        }
+
+        function syncPayeeCalculator() {
+            if (!window.Livewire || typeof window.Livewire.dispatch !== 'function') {
+                return;
+            }
+
+            const baseSalary = parseFloat(removeCommas(document.getElementById('base_salary')?.value || '0')) || 0;
+            const allowances = getTotalAllowances();
+
+            window.Livewire.dispatch('update:baseSalary', { value: baseSalary });
+            window.Livewire.dispatch('update:allowances', { value: allowances });
         }
 
         // Select/Clear Teacher functions
@@ -648,6 +671,22 @@
 
         // Initialize all event listeners on DOMContentLoaded
         document.addEventListener('DOMContentLoaded', function() {
+            window.addEventListener('payee-calculated', function(event) {
+                const payload = Array.isArray(event.detail) ? event.detail[0] : event.detail;
+
+                if (!payload) {
+                    return;
+                }
+
+                const taxInput = document.getElementById('tax_deduction');
+                if (taxInput) {
+                    const calculatedTax = Number(payload.taxDeduction ?? 0);
+                    taxInput.value = calculatedTax.toFixed(2);
+                }
+
+                calculateNetSalary();
+            });
+
             // Validation error clearing on input
             document.addEventListener('input', function(e) {
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
@@ -671,6 +710,9 @@
                         if (cleaned && !isNaN(cleaned)) {
                             this.value = formatNumberWithCommas(parseFloat(cleaned).toFixed(2));
                             calculateNetSalary();
+                            if (inputId === 'base_salary' || inputId.includes('allowance')) {
+                                syncPayeeCalculator();
+                            }
                         }
                     });
                     
@@ -680,7 +722,12 @@
                     });
                     
                     // Recalculate on input
-                    element.addEventListener('input', calculateNetSalary);
+                    element.addEventListener('input', function() {
+                        calculateNetSalary();
+                        if (inputId === 'base_salary' || inputId.includes('allowance')) {
+                            syncPayeeCalculator();
+                        }
+                    });
                 }
             });
 
@@ -788,6 +835,9 @@
 
             // Initialize Lucide icons
             initLucideIcons();
+
+            // Initial sync so calculator starts with current form values
+            syncPayeeCalculator();
         });
     </script>
 
