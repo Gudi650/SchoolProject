@@ -378,11 +378,6 @@
                         </div>
                     </div>
 
-                    <!-- PAYE Calculator (Livewire) -->
-                    <div class="mb-6">
-                        @livewire('payee-calculator')
-                    </div>
-
                     <!-- Deductions -->
                     <div class="mb-6">
                         <h6 class="text-indigo-700 font-semibold mb-4 pb-2 border-b border-slate-200">
@@ -428,17 +423,9 @@
                         </div>
                     </div>
 
-                    <!-- Net Salary Display -->
-                    <div class="mb-6 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h6 class="font-semibold text-slate-900">Net Salary (Calculated)</h6>
-                                <p class="text-xs text-slate-600 mt-1">Base Salary + Total Allowances - Total Deductions</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-3xl font-bold text-indigo-600" id="netSalaryDisplay">$0.00</p>
-                            </div>
-                        </div>
+                    <!-- PAYE Calculator (Livewire) -->
+                    <div class="mb-6">
+                        @livewire('payee-calculator')
                     </div>
 
                     <!-- Payment Information -->
@@ -574,7 +561,11 @@
             ].reduce((sum, id) => sum + (parseFloat(removeCommas(document.getElementById(id)?.value)) || 0), 0);
             
             const netSalary = baseSalary + allowances - deductions;
-            document.getElementById('netSalaryDisplay').textContent = '$' + netSalary.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            const netSalaryDisplay = document.getElementById('netSalaryDisplay');
+
+            if (netSalaryDisplay) {
+                netSalaryDisplay.textContent = '$' + netSalary.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
         }
 
         function getTotalAllowances() {
