@@ -657,7 +657,7 @@
 
         // Remove commas from input value for processing
         function removeCommas(value) {
-            return value.replace(/,/g, '');
+            return String(value ?? '').replace(/,/g, '');
         }
 
         // Initialize all event listeners on DOMContentLoaded
@@ -699,17 +699,12 @@
                     element.addEventListener('blur', function() {
                         const cleaned = removeCommas(this.value);
                         if (cleaned && !isNaN(cleaned)) {
-                            this.value = formatNumberWithCommas(parseFloat(cleaned).toFixed(2));
+                            this.value = parseFloat(cleaned).toFixed(2);
                             calculateNetSalary();
                             if (inputId === 'base_salary' || inputId.includes('allowance')) {
                                 syncPayeeCalculator();
                             }
                         }
-                    });
-                    
-                    // Remove commas on focus (for easy editing)
-                    element.addEventListener('focus', function() {
-                        this.value = removeCommas(this.value);
                     });
                     
                     // Recalculate on input
