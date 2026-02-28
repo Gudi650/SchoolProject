@@ -20,12 +20,17 @@ class PayeeCalculator extends Component
     public $taxDeduction     = 0;
     public $netSalary        = 0;
 
+    //HESLB
+    public $heslbDeduction   = 0;
+    public $heslbEnabled     = false;
+
     // Internal state (must be public in Livewire to persist between updates)
     public $PayeeRules      = [];
     public $taxContribution = [];
 
     public function mount(): void
     {
+        $this->calculateHESLBDeduction();
         $this->loadPayeeRules();
         $this->taxContribution = $this->loadNSSFPSSF();
         $this->calculateNetSalary();
@@ -72,6 +77,20 @@ class PayeeCalculator extends Component
     private function calculateGrossSalary(): float
     {
         return (float) $this->baseSalary + (float) $this->allowances;
+    }
+
+    /**
+     * HESLB = Gross - 15% of gross
+     * HEskb percentage is fixed at 15% as per HESLB guidelines
+     */
+    private function calculateHESLBDeduction(): float
+    {
+        $gross = $this->calculateGrossSalary();
+        if (!$this->heslbEnabled) {
+            return (float) $this->heslbDeduction = 0;
+        }
+
+        return (float) $this->heslbDeduction = $gross * 0.15;
     }
 
     /**
@@ -126,10 +145,11 @@ class PayeeCalculator extends Component
      */
     private function calculateNetSalary(): void
     {
+        $this->calculateHESLBDeduction();
         $this->calculatePaye();
 
         $gross           = $this->calculateGrossSalary();
-        $totalDeductions = $this->taxDeduction + $this->nssfAmount + $this->psssfAmount;
+        $totalDeductions = $this->taxDeduction + $this->nssfAmount + $this->psssfAmount + $this->heslbDeduction;
 
         $this->netSalary = max(0, $gross - $totalDeductions);
     }
@@ -141,7 +161,8 @@ class PayeeCalculator extends Component
             netSalary: $this->netSalary,
             nssfAmount: $this->nssfAmount,
             psssfAmount: $this->psssfAmount,
-            taxableIncome: $this->taxableIncome
+            taxableIncome: $this->taxableIncome,
+            heslbDeduction: $this->heslbDeduction
         );
     }
 
@@ -157,6 +178,14 @@ class PayeeCalculator extends Component
     public function updatedAllowances($value): void
     {
         $this->allowances = $value;
+        $this->calculateNetSalary();
+        $this->emitPayeeCalculation();
+    }
+
+    #[\Livewire\Attributes\On('update:heslbEnabled')]
+    public function updatedHeslbEnabled($value): void
+    {
+        $this->heslbEnabled = filter_var($value, FILTER_VALIDATE_BOOLEAN);
         $this->calculateNetSalary();
         $this->emitPayeeCalculation();
     }
