@@ -191,6 +191,18 @@
                   </select>
                   <p class="text-xs text-slate-500 mt-1">Choose the health insurance provider that best suits your employees' needs.</p>
 
+                  <!--choose if its percentages or fixed amounts for both employer and employee-->
+                  <div class="flex items-center gap-4 mt-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="contribution_type" value="percentage" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                      <span class="text-sm text-slate-700">Percentage</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="contribution_type" value="fixed" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                      <span class="text-sm text-slate-700">Fixed Amount</span>
+                    </label>
+                  </div>
+
                   <!--show the insurance contribution percentages for both employer and employee if health insurance is enabled-->
 
                   <!--make them be side by side-->
@@ -217,20 +229,8 @@
 
                   <!--now if the user selects "Other" from the insurance provider dropdown, show a text field to enter the name of the insurance provider-->
                   <div id="otherInsuranceField" class=" mt-4 hidden">
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Specify Insurance Provider</label>
+                    <label class="block text-sm font-medium text-slate-700 mb-2 hidden">Specify Insurance Provider</label>
                     <input name="other_insurance_provider" type="text" placeholder="Enter insurance provider name" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-
-                    <!--choose if they charge percentages or fixed amounts for both employer and employee-->
-                    <div class="flex items-center gap-4 mt-4">
-                      <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="contribution_type" value="percentage" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
-                        <span class="text-sm text-slate-700">Percentage</span>
-                      </label>
-                      <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="contribution_type" value="fixed" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
-                        <span class="text-sm text-slate-700">Fixed Amount</span>
-                      </label>
-                    </div>
 
                     <!--also input the contributions if percentage is selected for both employer and employee-->
                     <div class="flex items-center gap-2 mt-4">
