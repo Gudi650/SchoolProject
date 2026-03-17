@@ -70,7 +70,7 @@
             </div>
 
               <div class="bg-white rounded-xl p-6 border border-slate-200">
-                <h3 class="text-lg font-semibold text-slate-900 mb-4">Financial Year Configuration</h3>
+                <h3 class="text-lg font-semibold text-slate-900 mb-4">Financial Configuration</h3>
                 <div class="space-y-4">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -83,7 +83,7 @@
                     <div>
                       <label class="block text-sm font-medium text-slate-700 mb-2">Currency</label>
                       <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option>INR (₹)</option>
+                        <option>TSH (tsh)</option>
                         <option>USD ($)</option>
                         <option>EUR (€)</option>
                       </select>
@@ -156,9 +156,99 @@
                     </div>
 
                   </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Health Insurance Section -->
+            <div id="health-insurance" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6">
+              <h3 class="text-lg font-semibold text-slate-900 mb-4">Health Insurance</h3>
+
+              <div class="space-y-4">
+                <!--
+                <label class="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg cursor-pointer">
+                  <input type="checkbox" checked class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                  <span class="text-sm text-slate-700">Enable health insurance benefits for employees</span>
+                </label> -->
+                
+                <!--choose the insurance provider-->
+                <div class="p-4 border border-slate-300 rounded-lg bg-slate-50">
+
+                  <h4 class="font-semibold text-slate-900 mb-3">Select Insurance Provider</h4>
+
+                  <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>Choose Insurance Provider</option>
+                    <option>NHIF</option>
+                    <option>Jubilee</option>
+                    <option>AAR (Assemble)</option>
+                    <option>Strategis</option>
+                    <option>Resolution Health</option>
+                    <option>Metropolitan</option>
+                    <option>Other</option>
+                  </select>
+                  <p class="text-xs text-slate-500 mt-1">Choose the health insurance provider that best suits your employees' needs.</p>
+
+                  <!--show the insurance contribution percentages for both employer and employee if health insurance is enabled-->
+
+                  <!--make them be side by side-->
+                  <div class="flex">
+
+                    <!--empoyer contribution-->
+                    <div class="mt-4 w-full">
+                      <label class="block text-sm font-medium text-slate-700 mb-2">Employer Contribution (%)</label>
+                      <div class="flex items-center gap-2 mb-4">
+                        <input type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <span class="text-slate-600">%</span>
+                      </div>
+                    </div>
+
+                    <!--employee contribution -->
+                    <div class="mt-4 w-full">
+                      <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution (%)</label>
+                      <div class="flex items-center gap-2 mb-4">
+                        <input type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <span class="text-slate-600">%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--now if the user selects "Other" from the insurance provider dropdown, show a text field to enter the name of the insurance provider-->
+                  <div id="otherInsuranceField" class=" mt-4 hidden">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Specify Insurance Provider</label>
+                    <input type="text" placeholder="Enter insurance provider name" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                    <!--choose if they charge percentages or fixed amounts for both employer and employee-->
+                    <div class="flex items-center gap-4 mt-4">
+                      <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="contribution_type_other" value="percentage" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                        <span class="text-sm text-slate-700">Percentage</span>
+                      </label>
+                      <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="contribution_type_other" value="fixed" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                        <span class="text-sm text-slate-700">Fixed Amount</span>
+                      </label>
+                    </div>
+
+                    <!--also input the contributions if percentage is selected for both employer and employee-->
+                    <div class="flex items-center gap-2 mt-4">
+
+                      <div class="w-full">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Employer Contribution</label>
+                        <input type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employer Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                      </div>
+                        
+                      <div class="w-full">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution </label>
+                        <input type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employee Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                      </div>
+                        
+                    </div>
+                  </div>
+
                 </div>
               </div>
-            </form>
+            </div>
+            
 
             <!-- Notifications Section -->
             <div id="notifications" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6">

@@ -434,7 +434,7 @@
                                     <input type="number" id="heslb_deduction" name="heslb_deduction" step="0.01" min="0" value="0.00" readonly class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg bg-slate-50 text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
-                        </div>
+                        </div>  
                     </div>
 
                     <!-- PAYE Calculator (Livewire) -->
