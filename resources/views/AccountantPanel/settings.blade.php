@@ -176,7 +176,7 @@
 
                   <h4 class="font-semibold text-slate-900 mb-3">Select Insurance Provider</h4>
 
-                  <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <select id="insuranceProviderSelect" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>Choose Insurance Provider</option>
                     <option>NHIF</option>
                     <option>Jubilee</option>
@@ -184,7 +184,7 @@
                     <option>Strategis</option>
                     <option>Resolution Health</option>
                     <option>Metropolitan</option>
-                    <option>Other</option>
+                    <option value="other">Other</option>
                   </select>
                   <p class="text-xs text-slate-500 mt-1">Choose the health insurance provider that best suits your employees' needs.</p>
 
@@ -554,6 +554,21 @@
     const nssfPercentageField = document.getElementById('nssfPercentageField');
     const pssfToggle = document.getElementById('pssfToggle');
     const pssfPercentageField = document.getElementById('pssfPercentageField');
+
+    // ===== HEALTH INSURANCE "OTHER" TOGGLE =====
+    const insuranceProviderSelect = document.getElementById('insuranceProviderSelect');
+    const otherInsuranceField = document.getElementById('otherInsuranceField');
+
+    // Show "Other Insurance" field only when user selects "Other"
+    if (insuranceProviderSelect && otherInsuranceField) {
+      insuranceProviderSelect.addEventListener('change', function() {
+        if (this.value === 'other') {
+          otherInsuranceField.classList.remove('hidden');
+        } else {
+          otherInsuranceField.classList.add('hidden');
+        }
+      });
+    }
 
     // Toggle NSSF percentage field
     if (nssfToggle && nssfPercentageField) {
