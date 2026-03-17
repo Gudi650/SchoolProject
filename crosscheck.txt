@@ -1,5 +1,6 @@
 RECOMMENDATIONS TO ADD LATER only
 1)Same parent to see both children if two or more -- saves resources
+2)Service file for getting the personal datas
 
 
 

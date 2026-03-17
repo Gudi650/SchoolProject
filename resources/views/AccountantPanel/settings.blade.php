@@ -166,7 +166,7 @@
 
               <div class="space-y-4">
 
-                <form actioin = "" method = "POST">
+                <form action="{{ route('accounting.healthInsuranceSettings') }}" method = "POST">
                   @csrf
                 <!--
                 <label class="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg cursor-pointer">
@@ -179,14 +179,14 @@
 
                   <h4 class="font-semibold text-slate-900 mb-3">Select Insurance Provider</h4>
 
-                  <select id="insuranceProviderSelect" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <select name="health_insurance_provider" id="insuranceProviderSelect" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>Choose Insurance Provider</option>
                     <option value="nhif">NHIF</option>
-                    <option>Jubilee</option>
-                    <option>AAR (Assemble)</option>
-                    <option>Strategis</option>
-                    <option>Resolution Health</option>
-                    <option>Metropolitan</option>
+                    <option value="jubilee">Jubilee</option>
+                    <option value="aar">AAR (Assemble)</option>
+                    <option value="strategis">Strategis</option>
+                    <option value="resolution-health">Resolution Health</option>
+                    <option value="metropolitan">Metropolitan</option>
                     <option value="other">Other</option>
                   </select>
                   <p class="text-xs text-slate-500 mt-1">Choose the health insurance provider that best suits your employees' needs.</p>
@@ -200,7 +200,7 @@
                     <div class="mt-4 w-full">
                       <label class="block text-sm font-medium text-slate-700 mb-2">Employer Contribution (%)</label>
                       <div class="flex items-center gap-2 mb-4">
-                        <input id="employerContributionInput" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input name="employer_contribution" id="employerContributionInput" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         <span class="text-slate-600">%</span>
                       </div>
                     </div>
@@ -209,7 +209,7 @@
                     <div class="mt-4 w-full">
                       <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution (%)</label>
                       <div class="flex items-center gap-2 mb-4">
-                        <input id="employeeContributionInput" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input name="employee_contribution" id="employeeContributionInput" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         <span class="text-slate-600">%</span>
                       </div>
                     </div>
@@ -218,16 +218,16 @@
                   <!--now if the user selects "Other" from the insurance provider dropdown, show a text field to enter the name of the insurance provider-->
                   <div id="otherInsuranceField" class=" mt-4 hidden">
                     <label class="block text-sm font-medium text-slate-700 mb-2">Specify Insurance Provider</label>
-                    <input type="text" placeholder="Enter insurance provider name" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <input name="other_insurance_provider" type="text" placeholder="Enter insurance provider name" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                     <!--choose if they charge percentages or fixed amounts for both employer and employee-->
                     <div class="flex items-center gap-4 mt-4">
                       <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="contribution_type_other" value="percentage" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                        <input type="radio" name="contribution_type" value="percentage" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
                         <span class="text-sm text-slate-700">Percentage</span>
                       </label>
                       <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="contribution_type_other" value="fixed" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                        <input type="radio" name="contribution_type" value="fixed" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
                         <span class="text-sm text-slate-700">Fixed Amount</span>
                       </label>
                     </div>
@@ -237,12 +237,12 @@
 
                       <div class="w-full">
                         <label class="block text-sm font-medium text-slate-700 mb-2">Employer Contribution</label>
-                        <input type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employer Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input name="employer_contribution" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employer Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                       </div>
                         
                       <div class="w-full">
                         <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution </label>
-                        <input type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employee Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input name="employee_contribution" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employee Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                       </div>
                         
                     </div>

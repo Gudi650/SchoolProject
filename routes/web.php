@@ -491,6 +491,11 @@ Route::post('/accounting-settings',
 [AccountantSettings::class, 'saveContributions'])
 ->name('accounting.contributionsSettings');
 
+//route to handle health insurance settings form submission
+Route::post('/accounting-settings/health-insurance',
+[AccountantSettings::class, 'saveHealthInsuranceSettings'])
+->name('accounting.healthInsuranceSettings');
+
 ///////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////

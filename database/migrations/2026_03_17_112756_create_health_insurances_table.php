@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('type', ['percentage', 'fixed_amount']);
             $table->decimal('employee_contribution', 8, 2);
             $table->decimal('employer_contribution', 8, 2);
+            $table->boolean('has_ranges')->default(false);
             $table->timestamps();
 
 

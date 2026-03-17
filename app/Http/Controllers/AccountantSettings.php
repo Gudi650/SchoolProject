@@ -77,4 +77,47 @@ class AccountantSettings extends Controller
         //redirect back with success message
         return redirect()->route('accounting.settings')->with('success', 'Contributions updated successfully.');
     }
+
+
+    //function to save health insuranc settings
+    public function saveHealthInsuranceSettings(Request $request)
+    {
+
+        //validate the request
+        $validated = $request->validate([
+            //'health_insurance_enabled' => 'required|boolean',
+            'health_insurance_provider' => 'nullable|string|max:255',
+            'employer_contribution' => 'nullable|numeric|min:0',
+            'employee_contribution' => 'nullable|numeric|min:0',
+            'other_insurance_provider' => 'nullable|string|max:255',
+            'contribution_type' => 'nullable|string|in:percentage,fixed',
+        ]);
+
+        //dump the validated data
+        dd($validated);
+
+        /**
+         * Check if health insurance is the other selection from the dropdown ,if so, then we have to get the other insurance provider name from the form and save it to the database
+         * We also need to check if the contribution type is percentage or fixed amount and save that to the database as well.
+         * If its percentage we save them as decimal so as its ready to use later on ed 20% -> 0.2
+         * We will also need to save the contribution percentage or fixed amount to the database as well depending on the contribution type selected.
+         */
+
+
+        //save the health insurance settings to the database
+        // For simplicity, we will just save these settings in the same NSSFPSSF model, but in a real application, you might want to have a separate model for health insurance settings.
+
+        NSSFPSSF::updateOrCreate(
+            ['school_id' => 1], // Again, the school_id is hardcoded for now
+            [
+                'health_insurance_enabled' => $validated['health_insurance_enabled'],
+                'health_insurance_provider' => $validated['health_insurance_provider'],
+                'health_insurance_contribution' => $validated['health_insurance_contribution'],
+            ]
+        );
+
+        //redirect back with success message
+        return redirect()->route('accounting.settings')->with('success', 'Health insurance settings updated successfully.');
+    }
+
 }
