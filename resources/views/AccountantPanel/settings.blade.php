@@ -178,7 +178,7 @@
 
                   <select id="insuranceProviderSelect" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>Choose Insurance Provider</option>
-                    <option>NHIF</option>
+                    <option value="nhif">NHIF</option>
                     <option>Jubilee</option>
                     <option>AAR (Assemble)</option>
                     <option>Strategis</option>
@@ -197,7 +197,7 @@
                     <div class="mt-4 w-full">
                       <label class="block text-sm font-medium text-slate-700 mb-2">Employer Contribution (%)</label>
                       <div class="flex items-center gap-2 mb-4">
-                        <input type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input id="employerContributionInput" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         <span class="text-slate-600">%</span>
                       </div>
                     </div>
@@ -206,7 +206,7 @@
                     <div class="mt-4 w-full">
                       <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution (%)</label>
                       <div class="flex items-center gap-2 mb-4">
-                        <input type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input id="employeeContributionInput" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         <span class="text-slate-600">%</span>
                       </div>
                     </div>
@@ -555,9 +555,11 @@
     const pssfToggle = document.getElementById('pssfToggle');
     const pssfPercentageField = document.getElementById('pssfPercentageField');
 
-    // ===== HEALTH INSURANCE "OTHER" TOGGLE =====
+    // ===== HEALTH INSURANCE TOGGLE AND FUNCTIONIALITIES =====
     const insuranceProviderSelect = document.getElementById('insuranceProviderSelect');
     const otherInsuranceField = document.getElementById('otherInsuranceField');
+    const employerContributionInput = document.getElementById('employerContributionInput');
+    const employeeContributionInput = document.getElementById('employeeContributionInput');
 
     // Show "Other Insurance" field only when user selects "Other"
     if (insuranceProviderSelect && otherInsuranceField) {
@@ -566,6 +568,12 @@
           otherInsuranceField.classList.remove('hidden');
         } else {
           otherInsuranceField.classList.add('hidden');
+        }
+
+        // If NHIF is selected, auto-fill both contributions with 3%
+        if (this.value === 'nhif') {
+          if (employerContributionInput) employerContributionInput.value = '3.00';
+          if (employeeContributionInput) employeeContributionInput.value = '3.00';
         }
       });
     }
