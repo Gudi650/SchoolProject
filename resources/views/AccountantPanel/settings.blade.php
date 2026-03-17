@@ -165,6 +165,9 @@
               <h3 class="text-lg font-semibold text-slate-900 mb-4">Health Insurance</h3>
 
               <div class="space-y-4">
+
+                <form actioin = "" method = "POST">
+                  @csrf
                 <!--
                 <label class="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg cursor-pointer">
                   <input type="checkbox" checked class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
@@ -246,6 +249,16 @@
                   </div>
 
                 </div>
+
+                <!--adding the submit button for the health insurance settings-->
+                <div class="mt-6">
+                  <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                    Save Health Insurance Settings
+                  </button>
+                </div>
+
+                </form>
               </div>
             </div>
             
