@@ -191,7 +191,7 @@
                   <!--show the insurance contribution percentages for both employer and employee if health insurance is enabled-->
 
                   <!--make them be side by side-->
-                  <div class="flex">
+                  <div id="defaultInsuranceContributionFields" class="flex">
 
                     <!--empoyer contribution-->
                     <div class="mt-4 w-full">
@@ -558,16 +558,20 @@
     // ===== HEALTH INSURANCE TOGGLE AND FUNCTIONIALITIES =====
     const insuranceProviderSelect = document.getElementById('insuranceProviderSelect');
     const otherInsuranceField = document.getElementById('otherInsuranceField');
+    const defaultInsuranceContributionFields = document.getElementById('defaultInsuranceContributionFields');
     const employerContributionInput = document.getElementById('employerContributionInput');
     const employeeContributionInput = document.getElementById('employeeContributionInput');
 
     // Show "Other Insurance" field only when user selects "Other"
     if (insuranceProviderSelect && otherInsuranceField) {
       insuranceProviderSelect.addEventListener('change', function() {
+        // If user selects "Other", hide default contribution fields and show custom fields
         if (this.value === 'other') {
           otherInsuranceField.classList.remove('hidden');
+          if (defaultInsuranceContributionFields) defaultInsuranceContributionFields.classList.add('hidden');
         } else {
           otherInsuranceField.classList.add('hidden');
+          if (defaultInsuranceContributionFields) defaultInsuranceContributionFields.classList.remove('hidden');
         }
 
         // If NHIF is selected, auto-fill both contributions with 3%
