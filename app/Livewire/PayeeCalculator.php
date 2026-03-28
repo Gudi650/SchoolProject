@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\HealthInsurance;
+use App\Models\HealthInsuranceRanges;
 use App\Models\NSSFPSSF;
 use App\Models\PayeeRanges;
 use Livewire\Component;
@@ -23,6 +25,10 @@ class PayeeCalculator extends Component
     //HESLB
     public $heslbDeduction   = 0;
     public $heslbEnabled     = false;
+
+    //Health insurance
+    public $healthInsuranceDeduction = 0;
+    public $healthInsuranceEnabled   = false;
 
     // Internal state (must be public in Livewire to persist between updates)
     public $PayeeRules      = [];
@@ -61,6 +67,68 @@ class PayeeCalculator extends Component
     }
 
     /**
+     * Load Health Insurance config for the school (called once in mount)
+     */
+    private function loadHealthInsuranceConfig(): array
+    {
+        $user = Auth::user();
+        $school_id = $user?->school_id
+            ?? $user?->teachers?->first()?->school_id
+            ?? 1;
+
+
+        $config = HealthInsurance::where('school_id', $school_id)->first();
+        if (!$config) {
+            return [
+                'employeeContribution' => 0,
+                'employerContribution' => 0,
+                'type' => 'percentage',
+            ];
+        }
+
+        /**
+         * if config exists, then look if the is_ranges if active or not
+         * if is_ranges is active, then we need to load the ranges and calculate the contribution based on the ranges
+         * if is_ranges is not active, then we can use the fixed contribution values
+         */
+
+        if ($config->has_ranges) {
+
+            //get the ranges of the health insurance config
+            $ranges = HealthInsuranceRanges::where('health_insurance_id', $config->id)->get();
+
+            //calculate the contribution based on the ranges
+            foreach ($ranges as $range) {
+                $withinLower = $this->calculateGrossSalary() >= $range->lower_bound;
+                $withinUpper = $range->upper_bound === null || $this->calculateGrossSalary() <= $range->upper_bound;
+
+                if ($withinLower && $withinUpper) {
+                    return [
+                        'employeeContribution' => (float) $range->employee_contribution,
+                        'employerContribution' => (float) $range->employer_contribution,
+                        'type' => $config->type,
+                    ];
+                }
+            }
+
+            // No matching range found for this salary
+            return [
+                'employeeContribution' => 0,
+                'employerContribution' => 0,
+                'type' => $config->type,
+            ];
+
+        }
+
+        return [
+            'employeeContribution' => (float) $config->employee_contribution,
+            'employerContribution' => (float) $config->employer_contribution,
+            'type' => $config->type,
+        ];
+        
+    }
+
+    /**
      * Load PAYE brackets from DB (called once in mount)
      */
     private function loadPayeeRules(): void
@@ -81,7 +149,7 @@ class PayeeCalculator extends Component
 
     /**
      * HESLB = Gross - 15% of gross
-     * HEskb percentage is fixed at 15% as per HESLB guidelines
+     * HEslb percentage is fixed at 15% as per HESLB guidelines
      */
     private function calculateHESLBDeduction(): float
     {
@@ -91,6 +159,31 @@ class PayeeCalculator extends Component
         }
 
         return (float) $this->heslbDeduction = $gross * 0.15;
+    }
+
+    /**
+     * Calculate Health Insurance deduction
+     */
+    private function calculateHealthInsuranceDeduction(): float
+    {
+        $gross = $this->calculateGrossSalary();
+        if (!$this->healthInsuranceEnabled) {
+
+            return (float) $this->healthInsuranceDeduction = 0;
+
+        }
+
+        $healthInsuranceConfig = $this->loadHealthInsuranceConfig();
+        $employeeContribution = (float) ($healthInsuranceConfig['employeeContribution'] ?? 0);
+        $contributionType = $healthInsuranceConfig['type'] ?? 'percentage';
+
+        // If fixed amount, use the configured amount directly
+        if ($contributionType === 'fixed_amount' || $contributionType === 'fixed') {
+            return (float) $this->healthInsuranceDeduction = $employeeContribution;
+        }
+
+        // If percentage, multiply against gross salary
+        return (float) $this->healthInsuranceDeduction = $gross * $employeeContribution;
     }
 
     /**
@@ -147,9 +240,10 @@ class PayeeCalculator extends Component
     {
         $this->calculateHESLBDeduction();
         $this->calculatePaye();
+        $this->calculateHealthInsuranceDeduction();
 
         $gross           = $this->calculateGrossSalary();
-        $totalDeductions = $this->taxDeduction + $this->nssfAmount + $this->psssfAmount + $this->heslbDeduction;
+        $totalDeductions = $this->taxDeduction + $this->nssfAmount + $this->psssfAmount + $this->heslbDeduction + $this->healthInsuranceDeduction;
 
         $this->netSalary = max(0, $gross - $totalDeductions);
     }
@@ -162,7 +256,8 @@ class PayeeCalculator extends Component
             nssfAmount: $this->nssfAmount,
             psssfAmount: $this->psssfAmount,
             taxableIncome: $this->taxableIncome,
-            heslbDeduction: $this->heslbDeduction
+            heslbDeduction: $this->heslbDeduction,
+            healthInsuranceDeduction: $this->healthInsuranceDeduction
         );
     }
 
@@ -186,6 +281,14 @@ class PayeeCalculator extends Component
     public function updatedHeslbEnabled($value): void
     {
         $this->heslbEnabled = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        $this->calculateNetSalary();
+        $this->emitPayeeCalculation();
+    }
+
+    #[\Livewire\Attributes\On('update:healthInsuranceEnabled')]
+    public function updatedHealthInsuranceEnabled($value): void
+    {
+        $this->healthInsuranceEnabled = filter_var($value, FILTER_VALIDATE_BOOLEAN);
         $this->calculateNetSalary();
         $this->emitPayeeCalculation();
     }

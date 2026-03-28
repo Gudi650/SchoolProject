@@ -19,7 +19,7 @@ ALL THE DASHBOARD
 Accountant DASHBOARD
 1)remove the hardcoded school_id in Accountant settings in the nssfpsf settings
 2)If no nssf or psssf provided by the user then prompts for user to fill in 
-3)
+3)show in the setting the passf/nssf also the health insurance as well if set 
 
 
 

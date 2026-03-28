@@ -384,13 +384,22 @@
                             <i data-lucide="minus-circle" class="w-4 h-4 inline mr-2"></i>
                             Deductions
                         </h6>
-                        <div class="mb-4 flex items-center gap-2">
-                            <div class="flex items-center gap-2">
+                        <div class="mb-4 flex flex-wrap items-center gap-4 sm:gap-6">
+                            <!-- Toggle for HESLB Loan Deduction -->
+                            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 border border-slate-200">
                                 <input type="hidden" name="heslb_loan" value="0">
                                 <input type="checkbox" id="heslb_loan" name="heslb_loan" value="1" class="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
                                 <label for="heslb_loan" class="text-sm font-medium text-slate-700 cursor-pointer">HESLB loan</label>
                             </div>
+
+                            <!--toogle for Health Insurance Deductions -->
+                            <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 border border-slate-200">
+                                <input type="hidden" name="health_insurance" value="0">
+                                <input type="checkbox" id="health_insurance" name="health_insurance" value="1" class="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                                <label for="health_insurance" class="text-sm font-medium text-slate-700 cursor-pointer">Health Insurance Deduction</label>
+                            </div>
                         </div>
+                        
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label for="tax_deduction" class="block text-sm font-medium text-slate-700 mb-1">Payee Tax</label>
@@ -400,10 +409,10 @@
                                 </div>
                             </div>
                             <div>
-                                <label for="insurance_deduction" class="block text-sm font-medium text-slate-700 mb-1">Insurance</label>
+                                <label for="insurance_deduction" class="block text-sm font-medium text-slate-700 mb-1">Health Insurance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="insurance_deduction" name="insurance_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="insurance_deduction" name="insurance_deduction" step="0.01" min="0" value="0.00" readonly class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg bg-slate-50 text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
@@ -552,9 +561,15 @@
             document.getElementById('personalInfoSection').classList.add('hidden');
             document.getElementById('selectedTeacherInfo').classList.add('hidden');
             document.getElementById('bankDetailsSection').classList.add('hidden');
+
             const heslbDeductionField = document.getElementById('heslb_deduction');
             if (heslbDeductionField) {
                 heslbDeductionField.value = '0.00';
+            }
+            
+            const insuranceDeductionField = document.getElementById('insurance_deduction');
+            if (insuranceDeductionField) {
+                insuranceDeductionField.value = '0.00';
             }
             calculateNetSalary();
             setTimeout(syncPayeeCalculator, 0);
@@ -606,10 +621,12 @@
             const baseSalary = parseFloat(removeCommas(document.getElementById('base_salary')?.value || '0')) || 0;
             const allowances = getTotalAllowances();
             const heslbEnabled = !!document.getElementById('heslb_loan')?.checked;
+            const healthInsuranceEnabled = !!document.getElementById('health_insurance')?.checked;
 
             window.Livewire.dispatch('update:baseSalary', { value: baseSalary });
             window.Livewire.dispatch('update:allowances', { value: allowances });
             window.Livewire.dispatch('update:heslbEnabled', { value: heslbEnabled });
+            window.Livewire.dispatch('update:healthInsuranceEnabled', { value: healthInsuranceEnabled });
         }
 
         // Select/Clear Teacher functions
@@ -687,6 +704,7 @@
 
         // Initialize all event listeners on DOMContentLoaded
         document.addEventListener('DOMContentLoaded', function() {
+            // Listen to calculated values coming from Livewire PAYE calculator
             window.addEventListener('payee-calculated', function(event) {
                 const payload = Array.isArray(event.detail) ? event.detail[0] : event.detail;
 
@@ -704,6 +722,13 @@
                 if (heslbInput) {
                     const calculatedHeslb = Number(payload.heslbDeduction ?? 0);
                     heslbInput.value = calculatedHeslb.toFixed(2);
+                }
+
+                // Show calculated health insurance deduction in the form
+                const healthInsuranceInput = document.getElementById('insurance_deduction');
+                if (healthInsuranceInput) {
+                    const calculatedHealthInsurance = Number(payload.healthInsuranceDeduction ?? 0);
+                    healthInsuranceInput.value = calculatedHealthInsurance.toFixed(2);
                 }
 
                 calculateNetSalary();
@@ -796,6 +821,24 @@
                     if (!this.checked && heslbInput) {
                         heslbInput.value = '0.00';
                     }
+                    syncPayeeCalculator();
+                    calculateNetSalary();
+                });
+            }
+
+            // Health Insurance toggle:
+            // 1) When checked => ask Livewire to calculate health insurance deduction
+            // 2) When unchecked => reset displayed amount to 0.00
+            const healthInsuranceCheckbox = document.getElementById('health_insurance');
+            if (healthInsuranceCheckbox) {
+                healthInsuranceCheckbox.addEventListener('change', function() {
+                    const insuranceInput = document.getElementById('insurance_deduction');
+
+                    if (!this.checked && insuranceInput) {
+                        insuranceInput.value = '0.00';
+                    }
+
+                    // Send latest values to Livewire so it can calculate percentage-based deduction
                     syncPayeeCalculator();
                     calculateNetSalary();
                 });
