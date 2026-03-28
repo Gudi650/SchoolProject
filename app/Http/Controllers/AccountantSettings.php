@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\NSSFPSSF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AccountantSettings extends Controller
 {
@@ -82,15 +83,25 @@ class AccountantSettings extends Controller
     //function to save health insuranc settings
     public function saveHealthInsuranceSettings(Request $request)
     {
+        //log all incoming request data
+        Log::info('Health Insurance Request:', $request->all());
 
         //validate the request
         $validated = $request->validate([
-            //'health_insurance_enabled' => 'required|boolean',
             'health_insurance_provider' => 'nullable|string|max:255',
             'employer_contribution' => 'nullable|numeric|min:0',
             'employee_contribution' => 'nullable|numeric|min:0',
             'other_insurance_provider' => 'nullable|string|max:255',
             'contribution_type' => 'nullable|string|in:percentage,fixed',
+            'insurance_has_ranges_hidden' => 'nullable|string|in:yes,no',
+            'range_lower_bound' => 'nullable|array',
+            'range_lower_bound.*' => 'nullable|numeric|min:0',
+            'range_upper_bound' => 'nullable|array',
+            'range_upper_bound.*' => 'nullable|numeric|min:0',
+            'range_employer_contribution' => 'nullable|array',
+            'range_employer_contribution.*' => 'nullable|numeric|min:0',
+            'range_employee_contribution' => 'nullable|array',
+            'range_employee_contribution.*' => 'nullable|numeric|min:0',
         ]);
 
         //dump the validated data

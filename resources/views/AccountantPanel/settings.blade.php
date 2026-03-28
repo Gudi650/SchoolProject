@@ -166,8 +166,10 @@
 
               <div class="space-y-4">
 
-                <form action="{{ route('accounting.healthInsuranceSettings') }}" method = "POST">
+                <form action="{{ route('accounting.healthInsuranceSettings') }}" method = "POST" id="healthInsuranceForm">
                   @csrf
+                  <!-- Hidden input to track if rate ranges is selected -->
+                  <input type="hidden" name="insurance_has_ranges_hidden" id="insurance_has_ranges_hidden" value="no" />
                 <!--
                 <label class="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg cursor-pointer">
                   <input type="checkbox" checked class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
@@ -255,7 +257,7 @@
                     <div class="mt-4 w-full">
                       <label class="block text-sm font-medium text-slate-700 mb-2">Employer Contribution <span class="contribution-unit-label">(%)</span></label>
                       <div class="flex items-center gap-2 mb-4">
-                        <input name="employer_contribution" id="employerContributionInput" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input name="employer_contribution" id="employerContributionInput" type="number" step="0.01" min="0" max="100" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         <span class="text-slate-600 contribution-unit-symbol">%</span>
                       </div>
                     </div>
@@ -264,7 +266,7 @@
                     <div class="mt-4 w-full">
                       <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution <span class="contribution-unit-label">(%)</span></label>
                       <div class="flex items-center gap-2 mb-4">
-                        <input name="employee_contribution" id="employeeContributionInput" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input name="employee_contribution" id="employeeContributionInput" type="number" step="0.01" min="0" max="100"  placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         <span class="text-slate-600 contribution-unit-symbol">%</span>
                       </div>
                     </div>
@@ -281,7 +283,7 @@
                       <div class="w-full">
                         <label class="block text-sm font-medium text-slate-700 mb-2">Employer Contribution <span class="contribution-unit-label">(%)</span></label>
                         <div class="flex items-center gap-2">
-                          <input name="employer_contribution" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employer Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                          <input name="employer_contribution" type="number" step="0.01" min="0" max="100" value="" placeholder="Employer Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                           <span class="text-slate-600 contribution-unit-symbol">%</span>
                         </div>
                       </div>
@@ -289,7 +291,7 @@
                       <div class="w-full">
                         <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution <span class="contribution-unit-label">(%)</span></label>
                         <div class="flex items-center gap-2">
-                          <input name="employee_contribution" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employee Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                          <input name="employee_contribution" type="number" step="0.01" min="0" max="100" value="" placeholder="Employee Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                           <span class="text-slate-600 contribution-unit-symbol">%</span>
                         </div>
                       </div>
@@ -672,6 +674,7 @@
     const hasRangesYes = document.getElementById('hasRangesYes');
     const hasRangesNo = document.getElementById('hasRangesNo');
     const rateRangesSection = document.getElementById('rateRangesSection');
+    const insuranceHasRangesHidden = document.getElementById('insurance_has_ranges_hidden');
 
     // Show rate ranges section when "has ranges" is selected
     if (hasRangesYes && hasRangesNo && rateRangesSection) {
@@ -682,6 +685,10 @@
           if (defaultInsuranceContributionFields) {
             defaultInsuranceContributionFields.classList.add('hidden');
           }
+          // Update hidden field
+          if (insuranceHasRangesHidden) {
+            insuranceHasRangesHidden.value = 'yes';
+          }
         }
       });
 
@@ -691,6 +698,10 @@
           // Show default contribution fields when rate ranges are disabled
           if (defaultInsuranceContributionFields) {
             defaultInsuranceContributionFields.classList.remove('hidden');
+          }
+          // Update hidden field
+          if (insuranceHasRangesHidden) {
+            insuranceHasRangesHidden.value = 'no';
           }
         }
       });
@@ -727,6 +738,22 @@
         }
         // Re-initialize icons after showing/hiding fields
         if (window.lucide) lucide.createIcons();
+      });
+    }
+
+    // ===== HEALTH INSURANCE FORM SUBMISSION =====
+    const healthInsuranceForm = document.getElementById('healthInsuranceForm');
+    if (healthInsuranceForm) {
+      healthInsuranceForm.addEventListener('submit', function(e) {
+        // Ensure rate ranges selection is properly set
+        const hasRangesYesChecked = document.getElementById('hasRangesYes')?.checked;
+        const insuranceHasRangesHidden = document.getElementById('insurance_has_ranges_hidden');
+        
+        if (hasRangesYesChecked && insuranceHasRangesHidden) {
+          insuranceHasRangesHidden.value = 'yes';
+        } else if (insuranceHasRangesHidden) {
+          insuranceHasRangesHidden.value = 'no';
+        }
       });
     }
   });
