@@ -194,35 +194,33 @@
                   <!--choose if its percentages or fixed amounts for both employer and employee-->
                   <div class="flex items-center gap-4 mt-4">
                     <label class="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="contribution_type" value="percentage" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                      <input type="radio" name="contribution_type" value="percentage" class="health-contribution-type w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
                       <span class="text-sm text-slate-700">Percentage</span>
                     </label>
                     <label class="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="contribution_type" value="fixed" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                      <input type="radio" name="contribution_type" value="fixed" class="health-contribution-type w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
                       <span class="text-sm text-slate-700">Fixed Amount</span>
                     </label>
                   </div>
 
                   <!--show the insurance contribution percentages for both employer and employee if health insurance is enabled-->
-
-                  <!--make them be side by side-->
                   <div id="defaultInsuranceContributionFields" class="flex">
 
                     <!--empoyer contribution-->
                     <div class="mt-4 w-full">
-                      <label class="block text-sm font-medium text-slate-700 mb-2">Employer Contribution (%)</label>
+                      <label class="block text-sm font-medium text-slate-700 mb-2">Employer Contribution <span class="contribution-unit-label">(%)</span></label>
                       <div class="flex items-center gap-2 mb-4">
                         <input name="employer_contribution" id="employerContributionInput" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        <span class="text-slate-600">%</span>
+                        <span class="text-slate-600 contribution-unit-symbol">%</span>
                       </div>
                     </div>
 
                     <!--employee contribution -->
                     <div class="mt-4 w-full">
-                      <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution (%)</label>
+                      <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution <span class="contribution-unit-label">(%)</span></label>
                       <div class="flex items-center gap-2 mb-4">
                         <input name="employee_contribution" id="employeeContributionInput" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        <span class="text-slate-600">%</span>
+                        <span class="text-slate-600 contribution-unit-symbol">%</span>
                       </div>
                     </div>
                   </div>
@@ -236,13 +234,19 @@
                     <div class="flex items-center gap-2 mt-4">
 
                       <div class="w-full">
-                        <label class="block text-sm font-medium text-slate-700 mb-2">Employer Contribution</label>
-                        <input name="employer_contribution" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employer Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Employer Contribution <span class="contribution-unit-label">(%)</span></label>
+                        <div class="flex items-center gap-2">
+                          <input name="employer_contribution" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employer Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                          <span class="text-slate-600 contribution-unit-symbol">%</span>
+                        </div>
                       </div>
                         
                       <div class="w-full">
-                        <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution </label>
-                        <input name="employee_contribution" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employee Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution <span class="contribution-unit-label">(%)</span></label>
+                        <div class="flex items-center gap-2">
+                          <input name="employee_contribution" type="number" step="0.01" min="0" max="100" value="5.00" placeholder="Employee Contribution (%) e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                          <span class="text-slate-600 contribution-unit-symbol">%</span>
+                        </div>
                       </div>
                         
                     </div>
@@ -574,6 +578,30 @@
     const defaultInsuranceContributionFields = document.getElementById('defaultInsuranceContributionFields');
     const employerContributionInput = document.getElementById('employerContributionInput');
     const employeeContributionInput = document.getElementById('employeeContributionInput');
+    const healthContributionTypeRadios = document.querySelectorAll('.health-contribution-type');
+
+    // Change contribution unit text based on selected type (percentage/fixed amount)
+    function updateContributionUnit() {
+      const selectedType = document.querySelector('.health-contribution-type:checked')?.value || 'percentage';
+      const unitLabel = selectedType === 'fixed' ? '(Tsh)' : '(%)';
+      const unitSymbol = selectedType === 'fixed' ? 'Tsh' : '%';
+
+      // Update all contribution labels
+      document.querySelectorAll('.contribution-unit-label').forEach(function(label) {
+        label.textContent = unitLabel;
+      });
+
+      // Update all contribution symbols near inputs
+      document.querySelectorAll('.contribution-unit-symbol').forEach(function(symbol) {
+        symbol.textContent = unitSymbol;
+      });
+    }
+
+    // Run once on load and whenever user changes the contribution type
+    updateContributionUnit();
+    healthContributionTypeRadios.forEach(function(radio) {
+      radio.addEventListener('change', updateContributionUnit);
+    });
 
     // Show "Other Insurance" field only when user selects "Other"
     if (insuranceProviderSelect && otherInsuranceField) {
