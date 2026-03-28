@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('health_insurance_ranges', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('health_insurance_id');
-            $table->decimal('lower_bound', 8, 2);
-            $table->decimal('upper_bound', 8, 2);
-            $table->decimal('employee_contribution', 8, 2);
-            $table->decimal('employer_contribution', 8, 2);
+            $table->decimal('lower_bound', 15, 2);
+            $table->decimal('upper_bound', 15, 2);
+            $table->decimal('employee_contribution', 15, 2);
+            $table->decimal('employer_contribution', 15, 2);
             $table->timestamps();
 
             //foreign key constraint linking to the health_insurances table

@@ -164,6 +164,34 @@
             <div id="health-insurance" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6">
               <h3 class="text-lg font-semibold text-slate-900 mb-4">Health Insurance</h3>
 
+              @if(session('error'))
+                <div class="mb-4 p-3 rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm">
+                  {{ session('error') }}
+                </div>
+              @endif
+
+              @if(session('success'))
+                <div class="mb-4 p-3 rounded-lg border border-green-200 bg-green-50 text-green-700 text-sm">
+                  {{ session('success') }}
+                </div>
+              @endif
+
+              @if($errors->has('health_insurance'))
+                <div class="mb-4 p-3 rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm">
+                  {{ $errors->first('health_insurance') }}
+                </div>
+              @endif
+
+              @if($errors->has('range_lower_bound.*') || $errors->has('range_upper_bound.*') || $errors->has('range_employer_contribution.*') || $errors->has('range_employee_contribution.*'))
+                <div class="mb-4 p-3 rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm">
+                  <ul class="list-disc ml-5 space-y-1">
+                    @foreach($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                    @endforeach
+                  </ul>
+                </div>
+              @endif
+
               <div class="space-y-4">
 
                 <form action="{{ route('accounting.healthInsuranceSettings') }}" method = "POST" id="healthInsuranceForm">
@@ -266,7 +294,7 @@
                     <div class="mt-4 w-full">
                       <label class="block text-sm font-medium text-slate-700 mb-2">Employee Contribution <span class="contribution-unit-label">(%)</span></label>
                       <div class="flex items-center gap-2 mb-4">
-                        <input name="employee_contribution" id="employeeContributionInput" type="number" step="0.01" min="0" max="100"  placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input name="employee_contribution" id="employeeContributionInput" type="number" step="0.01" min="0" max="100" placeholder="e.g., 5.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         <span class="text-slate-600 contribution-unit-symbol">%</span>
                       </div>
                     </div>
@@ -650,6 +678,39 @@
       radio.addEventListener('change', updateContributionUnit);
     });
 
+    // Enable or disable inputs inside a section
+    function setSectionInputsEnabled(section, enabled) {
+      if (!section) return;
+      section.querySelectorAll('input, select, textarea').forEach(function(field) {
+        field.disabled = !enabled;
+      });
+    }
+
+    // Keep contribution input state in sync so hidden duplicate fields are not submitted
+    function syncHealthInsuranceInputState() {
+      const isOtherProvider = insuranceProviderSelect?.value === 'other';
+      const hasRateRanges = document.getElementById('hasRangesYes')?.checked;
+
+      if (defaultInsuranceContributionFields) {
+        const defaultContributionInputs = defaultInsuranceContributionFields.querySelectorAll('input[name="employer_contribution"], input[name="employee_contribution"]');
+        defaultContributionInputs.forEach(function(input) {
+          input.disabled = isOtherProvider || !!hasRateRanges || defaultInsuranceContributionFields.classList.contains('hidden');
+        });
+      }
+
+      if (otherInsuranceField) {
+        const otherContributionInputs = otherInsuranceField.querySelectorAll('input[name="employer_contribution"], input[name="employee_contribution"]');
+        otherContributionInputs.forEach(function(input) {
+          input.disabled = !isOtherProvider || !!hasRateRanges || otherInsuranceField.classList.contains('hidden');
+        });
+
+        const otherProviderInput = otherInsuranceField.querySelector('input[name="other_insurance_provider"]');
+        if (otherProviderInput) {
+          otherProviderInput.disabled = !isOtherProvider;
+        }
+      }
+    }
+
     // Show "Other Insurance" field only when user selects "Other"
     if (insuranceProviderSelect && otherInsuranceField) {
       insuranceProviderSelect.addEventListener('change', function() {
@@ -659,7 +720,9 @@
           if (defaultInsuranceContributionFields) defaultInsuranceContributionFields.classList.add('hidden');
         } else {
           otherInsuranceField.classList.add('hidden');
-          if (defaultInsuranceContributionFields) defaultInsuranceContributionFields.classList.remove('hidden');
+          if (defaultInsuranceContributionFields && !document.getElementById('hasRangesYes')?.checked) {
+            defaultInsuranceContributionFields.classList.remove('hidden');
+          }
         }
 
         // If NHIF is selected, auto-fill both contributions with 3%
@@ -667,6 +730,8 @@
           if (employerContributionInput) employerContributionInput.value = '3.00';
           if (employeeContributionInput) employeeContributionInput.value = '3.00';
         }
+
+        syncHealthInsuranceInputState();
       });
     }
 
@@ -689,6 +754,7 @@
           if (insuranceHasRangesHidden) {
             insuranceHasRangesHidden.value = 'yes';
           }
+          syncHealthInsuranceInputState();
         }
       });
 
@@ -696,13 +762,14 @@
         if (this.checked) {
           rateRangesSection.classList.add('hidden');
           // Show default contribution fields when rate ranges are disabled
-          if (defaultInsuranceContributionFields) {
+          if (defaultInsuranceContributionFields && insuranceProviderSelect?.value !== 'other') {
             defaultInsuranceContributionFields.classList.remove('hidden');
           }
           // Update hidden field
           if (insuranceHasRangesHidden) {
             insuranceHasRangesHidden.value = 'no';
           }
+          syncHealthInsuranceInputState();
         }
       });
     }
@@ -754,8 +821,13 @@
         } else if (insuranceHasRangesHidden) {
           insuranceHasRangesHidden.value = 'no';
         }
+
+        syncHealthInsuranceInputState();
       });
     }
+
+    // Initial sync on page load
+    syncHealthInsuranceInputState();
   });
 </script>
 
