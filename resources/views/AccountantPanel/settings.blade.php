@@ -191,18 +191,6 @@
                   </select>
                   <p class="text-xs text-slate-500 mt-1">Choose the health insurance provider that best suits your employees' needs.</p>
 
-                  <!--check if the insurance provider has rate ranges-->
-                  <div class="flex items-center gap-4 mt-4">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="insurance_has_ranges" value="yes" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
-                      <span class="text-sm text-slate-700">Insurance has rate ranges</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="insurance_has_ranges" value="no" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
-                      <span class="text-sm text-slate-700">No rate ranges</span>
-                    </label>
-                  </div>
-
                   <!--choose if its percentages or fixed amounts for both employer and employee-->
                   <div class="flex items-center gap-4 mt-4">
                     <label class="flex items-center gap-2 cursor-pointer">
@@ -213,6 +201,51 @@
                       <input type="radio" name="contribution_type" value="fixed" class="health-contribution-type w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
                       <span class="text-sm text-slate-700">Fixed Amount</span>
                     </label>
+                  </div>
+
+                  <!--check if the insurance provider has rate ranges-->
+                  <div class="flex items-center gap-4 mt-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="insurance_has_ranges" value="yes" id="hasRangesYes" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                      <span class="text-sm text-slate-700">Insurance has rate ranges</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="insurance_has_ranges" value="no" id="hasRangesNo" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                      <span class="text-sm text-slate-700">No rate ranges</span>
+                    </label>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-2">Choose selection based on your insurance provider's structure.</p>
+
+                  <!--rate ranges input section - hidden by default-->
+                  <div id="rateRangesSection" class="hidden mt-4 p-4 border border-slate-300 rounded-lg bg-slate-50">
+                    <h5 class="font-semibold text-slate-900 mb-3">Define Rate Ranges</h5>
+                    <div id="rangesContainer" class="space-y-4">
+                      <!-- Rate range row will be added dynamically -->
+                      <div class="rangeRow grid grid-cols-4 gap-3 p-3 bg-white rounded-lg border border-slate-200">
+                        <div>
+                          <label class="block text-xs font-medium text-slate-700 mb-1">Lower Bound</label>
+                          <input type="number" name="range_lower_bound[]" step="0.01" min="0" placeholder="0.00" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                        </div>
+                        <div>
+                          <label class="block text-xs font-medium text-slate-700 mb-1">Upper Bound</label>
+                          <input type="number" name="range_upper_bound[]" step="0.01" min="0" placeholder="5000.00" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                        </div>
+                        <div>
+                          <label class="block text-xs font-medium text-slate-700 mb-1">Employer Contribution <span class="contribution-unit-label">(%)</span></label>
+                          <input type="number" name="range_employer_contribution[]" step="0.01" min="0" placeholder="5.00" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                        </div>
+                        <div>
+                          <label class="block text-xs font-medium text-slate-700 mb-1">Employee Contribution <span class="contribution-unit-label">(%)</span></label>
+                          <input type="number" name="range_employee_contribution[]" step="0.01" min="0" placeholder="3.00" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Add range button -->
+                    <button type="button" onclick="addRateRange()" class="mt-3 px-3 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center gap-2">
+                      <i data-lucide="plus" class="w-4 h-4"></i>
+                      Add Another Range
+                    </button>
                   </div>
 
                   <!--show the insurance contribution percentages for both employer and employee if health insurance is enabled-->
@@ -635,6 +668,34 @@
       });
     }
 
+    // ===== HEALTH INSURANCE RATE RANGES TOGGLE =====
+    const hasRangesYes = document.getElementById('hasRangesYes');
+    const hasRangesNo = document.getElementById('hasRangesNo');
+    const rateRangesSection = document.getElementById('rateRangesSection');
+
+    // Show rate ranges section when "has ranges" is selected
+    if (hasRangesYes && hasRangesNo && rateRangesSection) {
+      hasRangesYes.addEventListener('change', function() {
+        if (this.checked) {
+          rateRangesSection.classList.remove('hidden');
+          // Hide default contribution fields when rate ranges are enabled
+          if (defaultInsuranceContributionFields) {
+            defaultInsuranceContributionFields.classList.add('hidden');
+          }
+        }
+      });
+
+      hasRangesNo.addEventListener('change', function() {
+        if (this.checked) {
+          rateRangesSection.classList.add('hidden');
+          // Show default contribution fields when rate ranges are disabled
+          if (defaultInsuranceContributionFields) {
+            defaultInsuranceContributionFields.classList.remove('hidden');
+          }
+        }
+      });
+    }
+
     // Toggle NSSF percentage field
     if (nssfToggle && nssfPercentageField) {
       nssfToggle.addEventListener('change', function() {
@@ -669,6 +730,59 @@
       });
     }
   });
+</script>
+
+<script>
+  // Function to add new rate range row
+  function addRateRange() {
+    const rangesContainer = document.getElementById('rangesContainer');
+    
+    // Get current unit label for dynamic display
+    const selectedType = document.querySelector('.health-contribution-type:checked')?.value || 'percentage';
+    const unitLabel = selectedType === 'fixed' ? '(Tsh)' : '(%)';
+    
+    // Create new range row HTML
+    const newRow = document.createElement('div');
+    newRow.className = 'rangeRow grid grid-cols-4 gap-3 p-3 bg-white rounded-lg border border-slate-200';
+    newRow.innerHTML = `
+      <div>
+        <label class="block text-xs font-medium text-slate-700 mb-1">Lower Bound</label>
+        <input type="number" name="range_lower_bound[]" step="0.01" min="0" placeholder="0.00" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-700 mb-1">Upper Bound</label>
+        <input type="number" name="range_upper_bound[]" step="0.01" min="0" placeholder="5000.00" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-700 mb-1">Employer Contribution <span class="contribution-unit-label">${unitLabel}</span></label>
+        <input type="number" name="range_employer_contribution[]" step="0.01" min="0" placeholder="5.00" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+      </div>
+      <div class="flex flex-col">
+        <label class="block text-xs font-medium text-slate-700 mb-1">Employee Contribution <span class="contribution-unit-label">${unitLabel}</span></label>
+        <div class="flex gap-2 items-start">
+          <input type="number" name="range_employee_contribution[]" step="0.01" min="0" placeholder="3.00" class="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+          <button type="button" onclick="removeRateRange(this)" class="px-2 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors mt-0.5">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    `;
+    
+    rangesContainer.appendChild(newRow);
+    
+    // Re-initialize Lucide icons for the new button
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  }
+
+  // Function to remove a rate range row
+  function removeRateRange(button) {
+    const rangeRow = button.closest('.rangeRow');
+    if (rangeRow) {
+      rangeRow.remove();
+    }
+  }
 </script>
 
 </x-Account-sidebar>
