@@ -191,6 +191,18 @@
                   </select>
                   <p class="text-xs text-slate-500 mt-1">Choose the health insurance provider that best suits your employees' needs.</p>
 
+                  <!--check if the insurance provider has rate ranges-->
+                  <div class="flex items-center gap-4 mt-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="insurance_has_ranges" value="yes" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                      <span class="text-sm text-slate-700">Insurance has rate ranges</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="insurance_has_ranges" value="no" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-2 focus:ring-blue-500" />
+                      <span class="text-sm text-slate-700">No rate ranges</span>
+                    </label>
+                  </div>
+
                   <!--choose if its percentages or fixed amounts for both employer and employee-->
                   <div class="flex items-center gap-4 mt-4">
                     <label class="flex items-center gap-2 cursor-pointer">
