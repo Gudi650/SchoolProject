@@ -282,7 +282,8 @@
                             
                             <!-- Toggle for New Employee -->
                             <div class="flex items-center gap-2 pt-2">
-                                <input type="checkbox" id="createNewEmployee" name="create_new_employee" class="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                                <input type="hidden" name="create_new_employee" value="0">
+                                <input type="checkbox" id="createNewEmployee" name="create_new_employee" value="1" class="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
                                 <label for="createNewEmployee" class="text-sm font-medium text-slate-700 cursor-pointer">
                                     Create new employee record (if not found above)
                                 </label>
@@ -298,9 +299,9 @@
                         </h6>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="employee_id" class="block text-sm font-semibold text-slate-700 mb-2">Employee ID <span class="text-red-600">*</span></label>
-                                <input type="text" id="employee_id" name="employee_id" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
-                                <p class="mt-1 text-xs text-slate-500">Unique identifier for the employee</p>
+                                <label for="employee_id" class="block text-sm font-semibold text-slate-700 mb-2">Employee ID</label>
+                                <input type="text" id="employee_id" name="employee_id" readonly placeholder="Auto-generated when saving" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg bg-slate-50 text-slate-600 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm cursor-not-allowed">
+                                <p class="mt-1 text-xs text-slate-500">This ID is generated automatically by the system.</p>
                             </div>
                             <div>
                                 <label for="name" class="block text-sm font-semibold text-slate-700 mb-2">Full Name <span class="text-red-600">*</span></label>
@@ -662,12 +663,14 @@
             document.getElementById('createNewEmployee').checked = false;
         }
 
-        function clearSelectedTeacher() {
+        function clearSelectedTeacher(keepCreateNewEmployeeChecked = false) {
             document.getElementById('selected_teacher_id').value = '';
             document.getElementById('selectedTeacherInfo').classList.add('hidden');
             const teacherSelect = document.getElementById('teacher_select');
             if (teacherSelect) teacherSelect.value = '';
-            document.getElementById('createNewEmployee').checked = false;
+            if (!keepCreateNewEmployeeChecked) {
+                document.getElementById('createNewEmployee').checked = false;
+            }
         }
 
         // Table filtering (search and filters combined)
@@ -829,7 +832,7 @@
                     const personalInfoSection = document.getElementById('personalInfoSection');
                     if (this.checked) {
                         personalInfoSection?.classList.remove('hidden');
-                        clearSelectedTeacher();
+                        clearSelectedTeacher(true);
                     } else {
                         personalInfoSection?.classList.add('hidden');
                     }
@@ -875,7 +878,7 @@
                     
                     // Validate personal info if creating new employee
                     if (createNewEmployee || (!selectedTeacherId && !createNewEmployee)) {
-                        const requiredFields = ['employee_id', 'name', 'phone', 'type', 'position'];
+                        const requiredFields = ['name', 'phone', 'type', 'position'];
                         let isValid = true;
                         
                         requiredFields.forEach(fieldId => {

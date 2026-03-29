@@ -79,11 +79,15 @@ class PayrollConfigurationsController extends Controller
     //save the payroll configuration data to the database
     public function storePayrollConfiguration(Request $request)
     {
+        $request->merge([
+            'create_new_employee' => $request->boolean('create_new_employee'),
+        ]);
+
         //validate the request data
         $validated = $request->validate([
             'teacher_id' => ['nullable', 'integer', 'exists:teachers,id'],
+            'employee_id' => ['nullable', 'integer', 'exists:employees,id'],
             'create_new_employee' => ['nullable', 'boolean'],
-            'employee_id' => ['nullable', 'integer'],
             'name' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
@@ -116,6 +120,13 @@ class PayrollConfigurationsController extends Controller
             'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
+        /*dump the data
+        Log::info('Received payroll configuration data', [
+            'data' => $validated,
+        ]);
+
+        dd($validated); */
+
         //get the school_id from the authenticated user and use it to save the payroll configuration data to the database
         $schoolId = $this->getSchoolId();
 
@@ -134,7 +145,7 @@ class PayrollConfigurationsController extends Controller
         //if new employee record is to be created, then validate the employee data
         if ($createNewEmployee) {
             $request->validate([
-                'employee_id' => ['required', 'integer'],
+                'employee_id' => ['nullable', 'integer', 'exists:employees,id'],
                 'name' => ['required', 'string', 'max:255'],
                 'phone' => ['required', 'string', 'max:30'],
                 'type' => ['required', 'in:teacher,staff,admin'],
@@ -150,18 +161,21 @@ class PayrollConfigurationsController extends Controller
             $employeeRecordId = null;
 
             if ($createNewEmployee || !$teacherId) {
+                
+                //generate a unique employee number for the new employee record to be created
+                $generatedEmployeeId = $this->generateEmployeeNumber();
 
-            //make sure the employee_id is unique across the employees table to prevent duplicate employee records
-                if (Employee::where('employee_id', (int) $validated['employee_id'])->exists()) {
-                    throw ValidationException::withMessages([
-                        'employee_id' => 'This employee ID already exists. Please use another one.',
+                //check the if the bank number already exists in the database for another employee, if it exists then return an error message to the user
+                if (!$this->isBankAccountNumberUnique($validated['account_number'] ?? null, $validated['bank_name'] ?? null)) {
+                    return redirect()->back()->withInput()->withErrors([
+                        'account_number' => 'The provided bank account number already exists for another employee. Please provide a unique bank account number.',
                     ]);
                 }
 
                 //store the employee data in the employees table and get the employee record id to be used in the payroll configuration record
                 $employee = Employee::create([
                     'school_id' => $schoolId,
-                    'employee_id' => (int) $validated['employee_id'],
+                    'employee_id' => $generatedEmployeeId,
                     'full_name' => $validated['name'],
                     'email' => $validated['email'] ?? null,
                     'phone' => $validated['phone'],
@@ -250,6 +264,13 @@ class PayrollConfigurationsController extends Controller
             $grossSalary = $baseSalary + $totalAllowances;
             $netSalary = $grossSalary - $totalDeductions;
 
+            //check the if the bank number already exists in the database for another employee, if it exists then return an error message to the user
+            if (!$this->isBankAccountNumberUnique($validated['account_number'] ?? null, $validated['bank_name'] ?? null)) {
+                return redirect()->back()->withInput()->withErrors([
+                    'account_number' => 'The provided bank account number already exists for another employee. Please provide a unique bank account number.',
+                ]);
+            }
+
             PayrollConfigurations::create([
                 'school_id' => $schoolId,
                 'academic_year' => now(),
@@ -298,16 +319,33 @@ class PayrollConfigurationsController extends Controller
     }
 
 
-    protected function generateEmployeeNumber(int $teacherId): int
+    /**
+     * generate a unique id for the emloyee
+     * if the employee_id exists then regenerate and check again till we get the correct unique employee_id
+     */
+    protected function generateEmployeeNumber(): string
     {
-        $candidate = (int) ('9' . str_pad((string) $teacherId, 5, '0', STR_PAD_LEFT));
+        do {
+            $employeeNumber = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+        } while (Employee::where('employee_id', $employeeNumber)->exists());
 
-        while (Employee::where('employee_id', $candidate)->exists()) {
-            $candidate++;
+        return $employeeNumber;
+    }
+
+    /**
+     * function to check the bank number is not existing in the db to avoid duplicate bank account numbers for different employees
+     * if the bank account number exists for another employee, then return an error message to the user
+     */
+    protected function isBankAccountNumberUnique(?string $accountNumber, ?string $bankName): bool
+    {
+        if (empty($accountNumber) || empty($bankName)) {
+            return true; // If account number is empty, we consider it as unique (or handle it separately if needed)
         }
 
-        return $candidate;
+        $query = PayrollConfigurations::where('bank_account_number', $accountNumber)->where('bank_name', $bankName);
 
+
+        return !$query->exists();
     }
 
 }
