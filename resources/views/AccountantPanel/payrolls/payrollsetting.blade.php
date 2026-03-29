@@ -550,13 +550,14 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row justify-end gap-3 px-6 py-4 border-t border-slate-200 bg-slate-50 flex-shrink-0">
-                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 font-semibold rounded-lg transition-colors text-sm">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 text-slate-700 bg-white border border-slate-300 font-semibold rounded-lg transition-colors text-sm hover:bg-red-300 hover:border-red-400">
                         <i data-lucide="x" class="w-4 h-4 inline mr-2"></i>
                         Cancel
                     </button>
-                    <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors shadow-md text-sm">
-                        <i data-lucide="save" class="w-4 h-4 inline mr-2"></i>
-                        Save Employee
+                    <button type="submit" id="submitBtn" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors shadow-md text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i id="submitIcon" data-lucide="save" class="w-4 h-4 inline mr-2"></i>
+                        <i id="submitLoader" data-lucide="loader" class="w-4 h-4 inline mr-2 hidden animate-spin"></i>
+                        <span id="submitText">Save Employee</span>
                     </button>
                 </div>
             </form>
@@ -594,6 +595,20 @@
             if (insuranceDeductionField) {
                 insuranceDeductionField.value = '0.00';
             }
+            
+            // Reset submit button state
+            const submitBtn = document.getElementById('submitBtn');
+            const submitIcon = document.getElementById('submitIcon');
+            const submitLoader = document.getElementById('submitLoader');
+            const submitText = document.getElementById('submitText');
+            
+            if (submitBtn && submitIcon && submitLoader && submitText) {
+                submitBtn.disabled = false;
+                submitIcon.classList.remove('hidden');
+                submitLoader.classList.add('hidden');
+                submitText.textContent = 'Save Employee';
+            }
+            
             calculateNetSalary();
             setTimeout(syncPayeeCalculator, 0);
             initLucideIcons();
@@ -932,6 +947,19 @@
                         alert('Please select a payment method.');
                         document.getElementById('payment_method')?.focus();
                         return;
+                    }
+                    
+                    // Show loader, hide save icon, disable button on successful validation
+                    const submitBtn = document.getElementById('submitBtn');
+                    const submitIcon = document.getElementById('submitIcon');
+                    const submitLoader = document.getElementById('submitLoader');
+                    const submitText = document.getElementById('submitText');
+                    
+                    if (submitBtn && submitIcon && submitLoader && submitText) {
+                        submitIcon.classList.add('hidden');
+                        submitLoader.classList.remove('hidden');
+                        submitBtn.disabled = true;
+                        submitText.textContent = 'Saving...';
                     }
                 });
             }
