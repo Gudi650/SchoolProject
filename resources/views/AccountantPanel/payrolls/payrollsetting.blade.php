@@ -3,6 +3,28 @@
     
     <main class="p-4 sm:p-6 bg-slate-50 min-h-screen">
         <div class="max-w-full mx-auto px-6">
+
+        @if(session('success'))
+            <div class="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <ul class="list-disc list-inside space-y-1">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         
         <!-- Page Header -->
         <div class="mb-6 rounded-lg border border-indigo-100 bg-indigo-50 px-4 sm:px-6 py-4">
@@ -211,7 +233,7 @@
                 </button>
             </div>
             
-            <form id="payrollForm" method="POST" action="" class="flex flex-col h-full overflow-hidden">
+            <form id="payrollForm" method="POST" action="{{ route('accounting.payrollSettings.save') }}" class="flex flex-col h-full overflow-hidden">
                 @csrf
                 <div class="flex-1 overflow-y-auto px-6 py-5">
                     

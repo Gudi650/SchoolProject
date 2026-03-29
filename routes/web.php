@@ -390,6 +390,10 @@ Route::get('/payroll-configuration',
 [PayrollConfigurationsController::class, 'showPayrollConfiguration'])
 ->name('accounting.payrollSettings');
 
+Route::post('/payroll-configuration',
+[PayrollConfigurationsController::class, 'storePayrollConfiguration'])
+->name('accounting.payrollSettings.save');
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
