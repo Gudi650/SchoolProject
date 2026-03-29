@@ -195,7 +195,32 @@
                                     @csrf
                                     @method('DELETE')
                                 </form>
-                                <button onclick="editEmployee({{ $employee->id }})" class="text-amber-600 hover:text-amber-900 mx-1" title="Edit">
+                                <button
+                                    onclick="editEmployee(this)"
+                                    data-payroll-id="{{ $employee->id }}"
+                                    data-employee-id="{{ $employee->id }}"
+                                    data-employee-code="{{ $employee->employee_id }}"
+                                    data-employee-name="{{ $employee->name }}"
+                                    data-employee-email="{{ $employee->email }}"
+                                    data-employee-type="{{ $employee->type }}"
+                                    data-employee-position="{{ $employee->position }}"
+                                    data-base-salary="{{ $employee->base_salary }}"
+                                    data-payment-method="{{ $employee->payment_method }}"
+                                    data-status="{{ $employee->status }}"
+                                    data-housing-allowance="{{ $employee->allowances_data['housing_allowance'] ?? 0 }}"
+                                    data-transport-allowance="{{ $employee->allowances_data['transport_allowance'] ?? 0 }}"
+                                    data-meal-allowance="{{ $employee->allowances_data['meal_allowance'] ?? 0 }}"
+                                    data-medical-allowance="{{ $employee->allowances_data['medical_allowance'] ?? 0 }}"
+                                    data-extra-time-allowance="{{ $employee->allowances_data['extra_time'] ?? 0 }}"
+                                    data-other-allowance="{{ $employee->allowances_data['other_allowances'] ?? 0 }}"
+                                    data-tax-deduction="{{ $employee->deductions_data['PAYE'] ?? 0 }}"
+                                    data-insurance-deduction="{{ $employee->deductions_data['NHIF_contribution'] ?? 0 }}"
+                                    data-provident-fund="{{ $employee->deductions_data['NSSF_contribution'] ?? 0 }}"
+                                    data-loan-deduction="{{ $employee->deductions_data['loan_deductions'] ?? 0 }}"
+                                    data-other-deduction="{{ $employee->deductions_data['other_deductions'] ?? 0 }}"
+                                    data-heslb-deduction="{{ $employee->deductions_data['heslb_deduction'] ?? 0 }}"
+                                    class="text-amber-600 hover:text-amber-900 mx-1"
+                                    title="Edit">
                                     <i data-lucide="edit" class="w-4 h-4"></i>
                                 </button>
 
@@ -242,6 +267,8 @@
             
             <form id="payrollForm" method="POST" action="{{ route('accounting.payrollSettings.save') }}" class="flex flex-col h-full overflow-hidden">
                 @csrf
+                <input type="hidden" id="payrollConfigId" name="payroll_config_id" value="">
+                <input type="hidden" id="formMethod" name="_method" value="">
                 <div class="flex-1 overflow-y-auto px-6 py-5">
                     
                     <!-- Teacher Search Section -->
@@ -610,10 +637,22 @@
             return parseFloat(document.getElementById(elementId)?.value) || 0;
         }
 
+        // Modal mode tracking
+        let isEditMode = false;
+
         // Modal functions
         function openAddModal() {
-            document.getElementById('payrollModal').classList.remove('hidden');
-            document.getElementById('payrollForm').reset();
+            isEditMode = false;
+            const payrollModal = document.getElementById('payrollModal');
+            const payrollForm = document.getElementById('payrollForm');
+            
+            payrollModal.classList.remove('hidden');
+            payrollForm.reset();
+            payrollForm.method = 'POST';
+            payrollForm.action = '{{ route("accounting.payrollSettings.save") }}';
+            
+            document.getElementById('payrollConfigId').value = '';
+            document.getElementById('formMethod').value = '';
             document.getElementById('modalTitle').innerHTML = '<i data-lucide="user-plus" class="w-5 h-5 inline mr-2"></i>Add New Employee to Payroll';
             document.getElementById('personalInfoSection').classList.add('hidden');
             document.getElementById('selectedTeacherInfo').classList.add('hidden');
@@ -755,8 +794,108 @@
             console.log('View employee:', id);
         }
 
-        function editEmployee(id) {
-            console.log('Edit employee:', id);
+        function editEmployee(buttonElement) {
+            const data = buttonElement?.dataset || {};
+            isEditMode = true;
+
+            const payrollConfigId = data.payrollId;
+            const payrollModal = document.getElementById('payrollModal');
+            const payrollForm = document.getElementById('payrollForm');
+            const modalTitle = document.getElementById('modalTitle');
+            const personalInfoSection = document.getElementById('personalInfoSection');
+            const selectedTeacherInfo = document.getElementById('selectedTeacherInfo');
+            const bankDetailsSection = document.getElementById('bankDetailsSection');
+            const createNewEmployee = document.getElementById('createNewEmployee');
+            const teacherSelect = document.getElementById('teacher_select');
+            const selectedTeacherId = document.getElementById('selected_teacher_id');
+
+            payrollModal?.classList.remove('hidden');
+            payrollForm?.reset();
+
+            // Set up form for edit mode (PUT request)
+            if (payrollForm) {
+                payrollForm.method = 'POST';
+                payrollForm.action = `{{ route('accounting.payrollSettings.update', ':id') }}`.replace(':id', payrollConfigId);
+            }
+            const payrollConfigIdField = document.getElementById('payrollConfigId');
+            if (payrollConfigIdField) {
+                payrollConfigIdField.value = payrollConfigId;
+            }
+            const formMethodField = document.getElementById('formMethod');
+            if (formMethodField) {
+                formMethodField.value = 'PUT';
+            }
+
+            if (modalTitle) {
+                modalTitle.innerHTML = '<i data-lucide="edit" class="w-5 h-5 inline mr-2"></i>Edit Employee Payroll';
+            }
+
+            personalInfoSection?.classList.remove('hidden');
+            selectedTeacherInfo?.classList.add('hidden');
+
+            if (createNewEmployee) {
+                createNewEmployee.checked = true;
+            }
+
+            if (teacherSelect) {
+                teacherSelect.value = '';
+            }
+
+            if (selectedTeacherId) {
+                selectedTeacherId.value = '';
+            }
+
+            const employeeIdField = document.getElementById('employee_id');
+            const nameField = document.getElementById('name');
+            const emailField = document.getElementById('email');
+            const typeField = document.getElementById('type');
+            const positionField = document.getElementById('position');
+            const baseSalaryField = document.getElementById('base_salary');
+            const paymentMethodField = document.getElementById('payment_method');
+            const statusField = document.getElementById('status');
+
+            if (employeeIdField) employeeIdField.value = data.employeeCode || '';
+            if (nameField) nameField.value = data.employeeName || '';
+            if (emailField) emailField.value = data.employeeEmail || '';
+            if (typeField) typeField.value = data.employeeType || '';
+            if (positionField) positionField.value = data.employeePosition || '';
+            if (baseSalaryField) baseSalaryField.value = data.baseSalary || '';
+            if (paymentMethodField) paymentMethodField.value = data.paymentMethod || '';
+            if (statusField) statusField.value = data.status || 'active';
+
+            // Prefill allowances
+            if (document.getElementById('housing_allowance')) document.getElementById('housing_allowance').value = data.housingAllowance || '0';
+            if (document.getElementById('transport_allowance')) document.getElementById('transport_allowance').value = data.transportAllowance || '0';
+            if (document.getElementById('meal_allowance')) document.getElementById('meal_allowance').value = data.mealAllowance || '0';
+            if (document.getElementById('medical_allowance')) document.getElementById('medical_allowance').value = data.medicalAllowance || '0';
+            if (document.getElementById('extra_time_allowance')) document.getElementById('extra_time_allowance').value = data.extraTimeAllowance || '0';
+            if (document.getElementById('other_allowance')) document.getElementById('other_allowance').value = data.otherAllowance || '0';
+
+            // Prefill deductions
+            if (document.getElementById('tax_deduction')) document.getElementById('tax_deduction').value = data.taxDeduction || '0';
+            if (document.getElementById('insurance_deduction')) document.getElementById('insurance_deduction').value = data.insuranceDeduction || '0';
+            if (document.getElementById('provident_fund')) document.getElementById('provident_fund').value = data.providentFund || '0';
+            if (document.getElementById('loan_deduction')) document.getElementById('loan_deduction').value = data.loanDeduction || '0';
+            if (document.getElementById('other_deduction')) document.getElementById('other_deduction').value = data.otherDeduction || '0';
+            if (document.getElementById('heslb_deduction')) document.getElementById('heslb_deduction').value = data.heslbDeduction || '0';
+
+            bankDetailsSection?.classList.toggle('hidden', (data.paymentMethod || '') !== 'bank');
+
+            const submitBtn = document.getElementById('submitBtn');
+            const submitIcon = document.getElementById('submitIcon');
+            const submitLoader = document.getElementById('submitLoader');
+            const submitText = document.getElementById('submitText');
+
+            if (submitBtn && submitIcon && submitLoader && submitText) {
+                submitBtn.disabled = false;
+                submitIcon.classList.remove('hidden');
+                submitLoader.classList.add('hidden');
+                submitText.textContent = 'Update Employee';
+            }
+
+            calculateNetSalary();
+            setTimeout(syncPayeeCalculator, 0);
+            initLucideIcons();
         }
 
         let selectedEmployeeIdToDelete = null;
