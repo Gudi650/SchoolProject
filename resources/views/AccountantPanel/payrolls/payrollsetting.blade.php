@@ -5,19 +5,19 @@
         <div class="max-w-full mx-auto px-6">
 
         @if(session('success'))
-            <div class="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+            <div id="successAlert" class="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 transition-opacity duration-300">
                 {{ session('success') }}
             </div>
         @endif
 
         @if(session('error'))
-            <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <div id="errorAlert" class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 transition-opacity duration-300">
                 {{ session('error') }}
             </div>
         @endif
 
         @if($errors->any())
-            <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <div id="validationErrorsAlert" class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 transition-opacity duration-300">
                 <ul class="list-disc list-inside space-y-1">
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -283,7 +283,7 @@
                             <!-- Toggle for New Employee -->
                             <div class="flex items-center gap-2 pt-2">
                                 <input type="hidden" name="create_new_employee" value="0">
-                                <input type="checkbox" id="createNewEmployee" name="create_new_employee" value="1" class="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                                <input type="checkbox" id="createNewEmployee" name="create_new_employee" value="1" {{ old('create_new_employee') ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
                                 <label for="createNewEmployee" class="text-sm font-medium text-slate-700 cursor-pointer">
                                     Create new employee record (if not found above)
                                 </label>
@@ -305,29 +305,29 @@
                             </div>
                             <div>
                                 <label for="name" class="block text-sm font-semibold text-slate-700 mb-2">Full Name <span class="text-red-600">*</span></label>
-                                <input type="text" id="name" name="name" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <input type="text" id="name" name="name" value="{{ old('name') }}" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                             </div>
                             <div>
                                 <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
-                                <input type="email" id="email" name="email" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <input type="email" id="email" name="email" value="{{ old('email') }}" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 <p class="mt-1 text-xs text-slate-500">Optional</p>
                             </div>
                             <div>
                                 <label for="phone" class="block text-sm font-semibold text-slate-700 mb-2">Phone Number <span class="text-red-600">*</span></label>
-                                <input type="tel" id="phone" name="phone" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                             </div>
                             <div>
                                 <label for="type" class="block text-sm font-semibold text-slate-700 mb-2">Employee Type <span class="text-red-600">*</span></label>
                                 <select id="type" name="type" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                     <option value="">Select Type</option>
-                                    <option value="teacher">Teacher</option>
-                                    <option value="staff">Staff</option>
-                                    <option value="admin">Administrative</option>
+                                    <option value="teacher" {{ old('type') === 'teacher' ? 'selected' : '' }}>Teacher</option>
+                                    <option value="staff" {{ old('type') === 'staff' ? 'selected' : '' }}>Staff</option>
+                                    <option value="admin" {{ old('type') === 'admin' ? 'selected' : '' }}>Administrative</option>
                                 </select>
                             </div>
                             <div>
                                 <label for="position" class="block text-sm font-semibold text-slate-700 mb-2">Position/Designation <span class="text-red-600">*</span></label>
-                                <input type="text" id="position" name="position" placeholder="e.g., Mathematics Teacher" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                <input type="text" id="position" name="position" placeholder="e.g., Mathematics Teacher" value="{{ old('position') }}" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                             </div>
                         </div>
                     </div>
@@ -343,7 +343,7 @@
                                 <label for="base_salary" class="block text-sm font-medium text-slate-700 mb-1">Base Salary <span class="text-red-600">*</span></label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="base_salary" name="base_salary" step="0.01" min="0" required class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="base_salary" name="base_salary" step="0.01" min="0" required value="{{ old('base_salary') }}" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                         </div>
@@ -360,42 +360,42 @@
                                 <label for="housing_allowance" class="block text-sm font-medium text-slate-700 mb-1">Housing Allowance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="housing_allowance" name="housing_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="housing_allowance" name="housing_allowance" step="0.01" min="0" value="{{ old('housing_allowance', '0') }}" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="transport_allowance" class="block text-sm font-medium text-slate-700 mb-1">Transport Allowance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="transport_allowance" name="transport_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="transport_allowance" name="transport_allowance" step="0.01" min="0" value="{{ old('transport_allowance', '0') }}" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="meal_allowance" class="block text-sm font-medium text-slate-700 mb-1">Meal Allowance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="meal_allowance" name="meal_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="meal_allowance" name="meal_allowance" step="0.01" min="0" value="{{ old('meal_allowance', '0') }}" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="medical_allowance" class="block text-sm font-medium text-slate-700 mb-1">Medical Allowance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="medical_allowance" name="medical_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="medical_allowance" name="medical_allowance" step="0.01" min="0" value="{{ old('medical_allowance', '0') }}" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="extra_time_allowance" class="block text-sm font-medium text-slate-700 mb-1">Extra Time Allowance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="extra_time_allowance" name="extra_time_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="extra_time_allowance" name="extra_time_allowance" step="0.01" min="0" value="{{ old('extra_time_allowance', '0') }}" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="other_allowance" class="block text-sm font-medium text-slate-700 mb-1">Other Allowances</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="other_allowance" name="other_allowance" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="other_allowance" name="other_allowance" step="0.01" min="0" value="{{ old('other_allowance', '0') }}" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                         </div>
@@ -411,14 +411,14 @@
                             <!-- Toggle for HESLB Loan Deduction -->
                             <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 border border-slate-200">
                                 <input type="hidden" name="heslb_loan" value="0">
-                                <input type="checkbox" id="heslb_loan" name="heslb_loan" value="1" class="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                                <input type="checkbox" id="heslb_loan" name="heslb_loan" value="1" {{ old('heslb_loan') ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
                                 <label for="heslb_loan" class="text-sm font-medium text-slate-700 cursor-pointer">HESLB loan</label>
                             </div>
 
                             <!--toogle for Health Insurance Deductions -->
                             <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 border border-slate-200">
                                 <input type="hidden" name="health_insurance" value="0">
-                                <input type="checkbox" id="health_insurance" name="health_insurance" value="1" class="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                                <input type="checkbox" id="health_insurance" name="health_insurance" value="1" {{ old('health_insurance') ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
                                 <label for="health_insurance" class="text-sm font-medium text-slate-700 cursor-pointer">Health Insurance Deduction</label>
                             </div>
                         </div>
@@ -428,42 +428,42 @@
                                 <label for="tax_deduction" class="block text-sm font-medium text-slate-700 mb-1">Payee Tax</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="tax_deduction" name="tax_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="tax_deduction" name="tax_deduction" step="0.01" min="0" value="{{ old('tax_deduction', '0') }}" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="insurance_deduction" class="block text-sm font-medium text-slate-700 mb-1">Health Insurance</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="insurance_deduction" name="insurance_deduction" step="0.01" min="0" value="0.00" readonly class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg bg-slate-50 text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="insurance_deduction" name="insurance_deduction" step="0.01" min="0" value="{{ old('insurance_deduction', '0.00') }}" readonly class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg bg-slate-50 text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="provident_fund" class="block text-sm font-medium text-slate-700 mb-1">Provident Fund</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="provident_fund" name="provident_fund" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="provident_fund" name="provident_fund" step="0.01" min="0" value="{{ old('provident_fund', '0') }}" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="loan_deduction" class="block text-sm font-medium text-slate-700 mb-1">Loan Deduction</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="loan_deduction" name="loan_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="loan_deduction" name="loan_deduction" step="0.01" min="0" value="{{ old('loan_deduction', '0') }}" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="other_deduction" class="block text-sm font-medium text-slate-700 mb-1">Other Deductions</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="other_deduction" name="other_deduction" step="0.01" min="0" value="0" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="other_deduction" name="other_deduction" step="0.01" min="0" value="{{ old('other_deduction', '0') }}" class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="heslb_deduction" class="block text-sm font-medium text-slate-700 mb-1">HESLB Deduction Amount</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
-                                    <input type="number" id="heslb_deduction" name="heslb_deduction" step="0.01" min="0" value="0.00" readonly class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg bg-slate-50 text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                    <input type="number" id="heslb_deduction" name="heslb_deduction" step="0.01" min="0" value="{{ old('heslb_deduction', '0.00') }}" readonly class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg bg-slate-50 text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                 </div>
                             </div>
                         </div>  
@@ -485,32 +485,32 @@
                                 <label for="payment_method" class="block text-sm font-medium text-slate-700 mb-1">Payment Method <span class="text-red-600">*</span></label>
                                 <select id="payment_method" name="payment_method" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                     <option value="">Select Method</option>
-                                    <option value="bank">Bank Transfer</option>
-                                    <option value="cash">Cash</option>
-                                    <option value="check">Check</option>
+                                    <option value="bank" {{ old('payment_method') === 'bank' ? 'selected' : '' }}>Bank Transfer</option>
+                                    <option value="cash" {{ old('payment_method') === 'cash' ? 'selected' : '' }}>Cash</option>
+                                    <option value="check" {{ old('payment_method') === 'check' ? 'selected' : '' }}>Check</option>
                                 </select>
                             </div>
                             <div id="bankDetailsSection" class="md:col-span-2 hidden">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label for="bank_name" class="block text-sm font-medium text-slate-700 mb-1">Bank Name</label>
-                                        <input type="text" id="bank_name" name="bank_name" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                        <input type="text" id="bank_name" name="bank_name" value="{{ old('bank_name') }}" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                     </div>
                                     <div>
                                         <label for="account_number" class="block text-sm font-medium text-slate-700 mb-1">Account Number</label>
-                                        <input type="text" id="account_number" name="account_number" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                        <input type="text" id="account_number" name="account_number" value="{{ old('account_number') }}" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                     </div>
                                     <div>
                                         <label for="account_name" class="block text-sm font-medium text-slate-700 mb-1">Account Holder Name</label>
-                                        <input type="text" id="account_name" name="account_name" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                        <input type="text" id="account_name" name="account_name" value="{{ old('account_name') }}" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                     </div>
                                     <div>
                                         <label for="ifsc_code" class="block text-sm font-medium text-slate-700 mb-1">IFSC/Routing Code</label>
-                                        <input type="text" id="ifsc_code" name="ifsc_code" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                        <input type="text" id="ifsc_code" name="ifsc_code" value="{{ old('ifsc_code') }}" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                     </div>
                                     <div class="md:col-span-2">
                                         <label for="branch_name" class="block text-sm font-medium text-slate-700 mb-1">Branch Name</label>
-                                        <input type="text" id="branch_name" name="branch_name" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                                        <input type="text" id="branch_name" name="branch_name" value="{{ old('branch_name') }}" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
                                     </div>
                                 </div>
                             </div>
@@ -527,22 +527,22 @@
                             <div>
                                 <label for="status" class="block text-sm font-medium text-slate-700 mb-1">Employment Status <span class="text-red-600">*</span></label>
                                 <select id="status" name="status" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                    <option value="on_leave">On Leave</option>
+                                    <option value="active" {{ old('status') === 'active' ? 'selected' : '' }}>Active</option>
+                                    <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                    <option value="on_leave" {{ old('status') === 'on_leave' ? 'selected' : '' }}>On Leave</option>
                                 </select>
                             </div>
                             <div>
                                 <label for="contract_type" class="block text-sm font-medium text-slate-700 mb-1">Contract Type</label>
                                 <select id="contract_type" name="contract_type" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
-                                    <option value="permanent">Permanent</option>
-                                    <option value="temporary">Temporary</option>
-                                    <option value="contract">Contract</option>
+                                    <option value="permanent" {{ old('contract_type') === 'permanent' ? 'selected' : '' }}>Permanent</option>
+                                    <option value="temporary" {{ old('contract_type') === 'temporary' ? 'selected' : '' }}>Temporary</option>
+                                    <option value="contract" {{ old('contract_type') === 'contract' ? 'selected' : '' }}>Contract</option>
                                 </select>
                             </div>
                             <div class="md:col-span-2">
                                 <label for="notes" class="block text-sm font-medium text-slate-700 mb-1">Notes/Remarks</label>
-                                <textarea id="notes" name="notes" rows="3" placeholder="Any additional information..." class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm"></textarea>
+                                <textarea id="notes" name="notes" rows="3" placeholder="Any additional information..." class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">{{ old('notes') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -725,6 +725,24 @@
         // Remove commas from input value for processing
         function removeCommas(value) {
             return String(value ?? '').replace(/,/g, '');
+        }
+
+        // Auto-dismiss alert messages after 5 seconds
+        function autoDismissAlerts() {
+            const alerts = ['successAlert', 'errorAlert', 'validationErrorsAlert'];
+            
+            alerts.forEach(alertId => {
+                const alertElement = document.getElementById(alertId);
+                if (alertElement) {
+                    setTimeout(() => {
+                        alertElement.style.opacity = '0';
+                        alertElement.style.pointerEvents = 'none';
+                        setTimeout(() => {
+                            alertElement.style.display = 'none';
+                        }, 300);
+                    }, 5000);
+                }
+            });
         }
 
         // Initialize all event listeners on DOMContentLoaded
@@ -935,6 +953,9 @@
 
             // Initial sync so calculator starts with current form values
             syncPayeeCalculator();
+            
+            // Auto-dismiss alerts after 5 seconds
+            autoDismissAlerts();
         });
     </script>
 
