@@ -564,6 +564,30 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-black/50 z-[10000] flex items-center justify-center p-4" onclick="if(event.target === this) closeDeleteModal()">
+        <div class="w-full max-w-md bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-red-50">
+                <h4 class="text-lg font-bold text-slate-900 flex items-center">
+                    <i data-lucide="alert-triangle" class="w-5 h-5 mr-2 text-red-600"></i>
+                    Confirm Delete
+                </h4>
+            </div>
+            <div class="px-5 py-4">
+                <p class="text-sm text-slate-700">Are you sure you want to delete this employee from payroll?</p>
+                <p class="text-xs text-slate-500 mt-2">This action cannot be undone.</p>
+            </div>
+            <div class="px-5 py-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3">
+                <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors">
+                    Cancel
+                </button>
+                <button type="button" onclick="confirmDeleteEmployee()" class="px-4 py-2 text-sm font-semibold text-white bg-red-600 border border-red-600 rounded-lg hover:bg-red-700 hover:border-red-700 transition-colors">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Utility: Initialize Lucide icons
         function initLucideIcons() {
@@ -726,10 +750,29 @@
             console.log('Edit employee:', id);
         }
 
+        let selectedEmployeeIdToDelete = null;
+
         function deleteEmployee(id) {
-            if (confirm('Are you sure you want to delete this employee from payroll?')) {
-                console.log('Delete employee:', id);
+            selectedEmployeeIdToDelete = id;
+            const deleteModal = document.getElementById('deleteConfirmModal');
+            deleteModal?.classList.remove('hidden');
+            initLucideIcons();
+        }
+
+        function closeDeleteModal() {
+            const deleteModal = document.getElementById('deleteConfirmModal');
+            deleteModal?.classList.add('hidden');
+            selectedEmployeeIdToDelete = null;
+        }
+
+        function confirmDeleteEmployee() {
+            if (!selectedEmployeeIdToDelete) {
+                closeDeleteModal();
+                return;
             }
+
+            console.log('Delete employee:', selectedEmployeeIdToDelete);
+            closeDeleteModal();
         }
 
         // Format number input with commas
