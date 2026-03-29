@@ -17,4 +17,11 @@ class Allowances extends Model
         'extra_time',
         'total_allowance',
     ];
+
+    //relationships
+    //relationship with the school table
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
 }

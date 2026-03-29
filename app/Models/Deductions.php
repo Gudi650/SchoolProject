@@ -15,4 +15,12 @@ class Deductions extends Model
         'other_deductions',
         'total_deductions',
     ];
+
+    //relationships
+
+    //relationship with the school table
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
 }

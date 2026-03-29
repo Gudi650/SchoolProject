@@ -56,4 +56,28 @@ class School extends Model
         return $this->hasMany(NSSFPSSF::class, 'school_id');
     }
 
+    //relationship with allowances table
+    public function allowances()
+    {
+        return $this->hasMany(Allowances::class, 'school_id');
+    }
+
+    //relationship with deductions table
+    public function deductions()
+    {
+        return $this->hasMany(Deductions::class, 'school_id');
+    }
+
+    //relationship with employee table
+    public function employees()
+    {
+        return $this->hasMany(Employee::class, 'school_id');
+    }
+
+    //relationship with payroll configuration table
+    public function payrollConfigurations()
+    {
+        return $this->hasMany(PayrollConfigurations::class, 'school_id');
+    }
+
 }

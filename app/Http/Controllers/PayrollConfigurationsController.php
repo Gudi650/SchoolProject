@@ -305,6 +305,30 @@ class PayrollConfigurationsController extends Controller
         }
     }
 
+    //function to delete the payroll configuration data from the database
+    public function deletePayrollConfiguration(int $id)
+    {
+
+        try {
+            //try to find the user with that id, if not found then return an error message to the user
+            $payrollConfig = PayrollConfigurations::findOrFail($id);
+
+            //just to be safe check if the payroll configuration record belongs to the school of the authenticated user, if not then return an error message to the user
+            if ($payrollConfig->school_id !== $this->getSchoolId()) {
+                return redirect()->route('accounting.payrollSettings')->with('error', 'Unauthorized action. You cannot delete this payroll configuration.');
+            }
+
+            //delete the user record from the database
+            $payrollConfig->delete();
+
+            return redirect()->route('accounting.payrollSettings')->with('success', 'Payroll configuration deleted successfully.');
+        } catch (Throwable $exception) {
+            Log::error('Failed to delete payroll configuration', [
+                'message' => $exception->getMessage(),            
+                ]);
+        }
+    }
+
     //function to get the teachers of the school and show them in the payroll configuration page
     protected function getTeachers(int $schoolId)
     {

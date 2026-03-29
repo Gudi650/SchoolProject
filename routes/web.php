@@ -390,9 +390,15 @@ Route::get('/payroll-configuration',
 [PayrollConfigurationsController::class, 'showPayrollConfiguration'])
 ->name('accounting.payrollSettings');
 
+//route to store payroll configuration data to the database using controller
 Route::post('/payroll-configuration',
 [PayrollConfigurationsController::class, 'storePayrollConfiguration'])
 ->name('accounting.payrollSettings.save');
+
+//route to delete payroll configuration
+Route::delete('/payroll-configuration/{id}',
+[PayrollConfigurationsController::class, 'deletePayrollConfiguration'])
+->name('accounting.payrollSettings.delete');
 
 
 

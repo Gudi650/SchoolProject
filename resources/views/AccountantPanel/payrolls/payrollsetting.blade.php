@@ -189,10 +189,17 @@
                                 <button onclick="viewEmployee({{ $employee->id }})" class="text-indigo-600 hover:text-indigo-900 mx-1" title="View">
                                     <i data-lucide="eye" class="w-4 h-4"></i>
                                 </button>
+
+                                <!--add form with method post and action to the route for deleting an employee record, the form should be hidden and should be submitted when the delete button is clicked-->
+                                <form id="deleteEmployeeForm{{ $employee->id }}" method="POST" action="{{ route('accounting.payrollSettings.delete', $employee->id ? $employee->id : null ) }}" class="hidden">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
                                 <button onclick="editEmployee({{ $employee->id }})" class="text-amber-600 hover:text-amber-900 mx-1" title="Edit">
                                     <i data-lucide="edit" class="w-4 h-4"></i>
                                 </button>
-                                <button onclick="deleteEmployee({{ $employee->id }})" class="text-red-600 hover:text-red-900 mx-1" title="Delete">
+
+                                <button onclick="deleteEmployee(this)" data-employee-id="{{ $employee->id }}" data-employee-name="{{ $employee->name }}" class="text-red-600 hover:text-red-900 mx-1" title="Delete">
                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                                 </button>
                             </td>
@@ -574,15 +581,17 @@
                 </h4>
             </div>
             <div class="px-5 py-4">
-                <p class="text-sm text-slate-700">Are you sure you want to delete this employee from payroll?</p>
+                <p class="text-sm text-slate-700">Are you sure you want to delete <span id="deleteEmployeeName" class="font-semibold"></span> from payroll?</p>
                 <p class="text-xs text-slate-500 mt-2">This action cannot be undone.</p>
             </div>
             <div class="px-5 py-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3">
                 <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors">
                     Cancel
                 </button>
-                <button type="button" onclick="confirmDeleteEmployee()" class="px-4 py-2 text-sm font-semibold text-white bg-red-600 border border-red-600 rounded-lg hover:bg-red-700 hover:border-red-700 transition-colors">
-                    Delete
+                <button type="button" id="deleteBtn" onclick="confirmDeleteEmployee()" class="px-4 py-2 text-sm font-semibold text-white bg-red-600 border border-red-600 rounded-lg hover:bg-red-700 hover:border-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i id="deleteIcon" data-lucide="trash-2" class="w-4 h-4 inline mr-2"></i>
+                    <i id="deleteLoader" data-lucide="loader" class="w-4 h-4 inline mr-2 hidden animate-spin"></i>
+                    <span id="deleteText">Delete</span>
                 </button>
             </div>
         </div>
@@ -752,8 +761,17 @@
 
         let selectedEmployeeIdToDelete = null;
 
-        function deleteEmployee(id) {
-            selectedEmployeeIdToDelete = id;
+        function deleteEmployee(buttonElement) {
+            const employeeId = buttonElement?.dataset?.employeeId;
+            const employeeName = buttonElement?.dataset?.employeeName || 'this employee';
+
+            selectedEmployeeIdToDelete = employeeId;
+
+            const deleteEmployeeName = document.getElementById('deleteEmployeeName');
+            if (deleteEmployeeName) {
+                deleteEmployeeName.textContent = employeeName;
+            }
+
             const deleteModal = document.getElementById('deleteConfirmModal');
             deleteModal?.classList.remove('hidden');
             initLucideIcons();
@@ -762,6 +780,25 @@
         function closeDeleteModal() {
             const deleteModal = document.getElementById('deleteConfirmModal');
             deleteModal?.classList.add('hidden');
+
+            const deleteEmployeeName = document.getElementById('deleteEmployeeName');
+            if (deleteEmployeeName) {
+                deleteEmployeeName.textContent = '';
+            }
+
+            // Reset delete button state
+            const deleteBtn = document.getElementById('deleteBtn');
+            const deleteIcon = document.getElementById('deleteIcon');
+            const deleteLoader = document.getElementById('deleteLoader');
+            const deleteText = document.getElementById('deleteText');
+            
+            if (deleteBtn && deleteIcon && deleteLoader && deleteText) {
+                deleteBtn.disabled = false;
+                deleteIcon.classList.remove('hidden');
+                deleteLoader.classList.add('hidden');
+                deleteText.textContent = 'Delete';
+            }
+
             selectedEmployeeIdToDelete = null;
         }
 
@@ -771,7 +808,26 @@
                 return;
             }
 
-            console.log('Delete employee:', selectedEmployeeIdToDelete);
+            // Show loader and disable button
+            const deleteBtn = document.getElementById('deleteBtn');
+            const deleteIcon = document.getElementById('deleteIcon');
+            const deleteLoader = document.getElementById('deleteLoader');
+            const deleteText = document.getElementById('deleteText');
+        
+            if (deleteBtn && deleteIcon && deleteLoader && deleteText) {
+                deleteBtn.disabled = true;
+                deleteIcon.classList.add('hidden');
+                deleteLoader.classList.remove('hidden');
+                deleteText.textContent = 'Deleting...';
+            }
+
+            const deleteForm = document.getElementById(`deleteEmployeeForm${selectedEmployeeIdToDelete}`);
+            if (deleteForm) {
+                deleteForm.submit();
+                return;
+            }
+
+            console.log('Delete form not found for employee:', selectedEmployeeIdToDelete);
             closeDeleteModal();
         }
 

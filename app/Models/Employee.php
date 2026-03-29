@@ -15,4 +15,13 @@ class Employee extends Model
         'employee_type',
         'position',
     ];
+
+    //relationships
+
+    //relationship with school table
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+    
 }

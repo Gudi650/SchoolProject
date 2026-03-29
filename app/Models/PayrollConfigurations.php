@@ -23,4 +23,63 @@ class PayrollConfigurations extends Model
         'gross_salary',
         'net_salary',
     ];
+
+    //relationships
+
+    //teacher table rtnship
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
+    }
+
+    //relationship with school table
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+
+    //relationship with employee table
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
+
+    //relationship with allowances table
+    public function allowances()
+    {
+        return $this->belongsTo(Allowances::class, 'allowances_id');
+    }
+
+    //relationhip with deductions table
+    public function deductions()
+    {
+        return $this->belongsTo(Deductions::class, 'deductions_id');
+    }
+    
+
+    //Cascade delete related records in the allowances and deductions tables when a payroll configuration record is deleted
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($payrollConfiguration) {
+            //delete related allowances record
+            if ($payrollConfiguration->allowances) {
+                $payrollConfiguration->allowances->delete();
+            }
+
+            //delete related deductions record
+            if ($payrollConfiguration->deductions) {
+                $payrollConfiguration->deductions->delete();
+            }
+
+            //delete the employee record 
+            if($payrollConfiguration->employee){
+                $payrollConfiguration->employee->delete();
+            }
+
+        });
+    }
+
+
+
 }
