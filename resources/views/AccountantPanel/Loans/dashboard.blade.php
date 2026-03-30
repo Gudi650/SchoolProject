@@ -149,78 +149,78 @@
 			</div>
 		</div>
 
-		<div class="mb-6 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-			<div class="flex items-center justify-between mb-4">
-				<h2 class="text-base sm:text-lg font-semibold text-slate-900 flex items-center gap-2">
-					<span class="w-1 h-6 bg-indigo-600 rounded"></span>
-					Loan Repayment Breakdown
-				</h2>
-				<span class="text-xs text-slate-500">By repayment completion range</span>
-			</div>
-
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-				<div class="space-y-4">
-					<div>
-						<div class="flex items-center justify-between mb-2">
-							<span class="text-sm font-medium text-slate-700">0% - 25%</span>
-							<span class="text-sm font-semibold text-slate-900">12 accounts</span>
+				<div class="mb-6">
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+						<!-- Loan Repayment Breakdown -->
+						<div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+							<div class="flex items-center justify-between mb-4">
+								<h2 class="text-base sm:text-lg font-semibold text-slate-900 flex items-center gap-2">
+									<span class="w-1 h-6 bg-indigo-600 rounded"></span>
+									Loan Repayment Breakdown
+								</h2>
+								<span class="text-xs text-slate-500">By repayment completion range</span>
+							</div>
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+								<div class="space-y-4">
+									<div>
+										<div class="flex items-center justify-between mb-2">
+											<span class="text-sm font-medium text-slate-700">0% - 25%</span>
+											<span class="text-sm font-semibold text-slate-900">12 accounts</span>
+										</div>
+										<div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 bg-indigo-300 rounded-full" style="width:19%"></div></div>
+									</div>
+									<div>
+										<div class="flex items-center justify-between mb-2">
+											<span class="text-sm font-medium text-slate-700">26% - 50%</span>
+											<span class="text-sm font-semibold text-slate-900">21 accounts</span>
+										</div>
+										<div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 bg-indigo-400 rounded-full" style="width:33%"></div></div>
+									</div>
+								</div>
+								<div class="space-y-4">
+									<div>
+										<div class="flex items-center justify-between mb-2">
+											<span class="text-sm font-medium text-slate-700">51% - 75%</span>
+											<span class="text-sm font-semibold text-slate-900">18 accounts</span>
+										</div>
+										<div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 bg-indigo-500 rounded-full" style="width:28%"></div></div>
+									</div>
+									<div>
+										<div class="flex items-center justify-between mb-2">
+											<span class="text-sm font-medium text-slate-700">76% - 100%</span>
+											<span class="text-sm font-semibold text-slate-900">13 accounts</span>
+										</div>
+										<div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 bg-indigo-600 rounded-full" style="width:20%"></div></div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 bg-indigo-300 rounded-full" style="width:19%"></div></div>
-					</div>
-					<div>
-						<div class="flex items-center justify-between mb-2">
-							<span class="text-sm font-medium text-slate-700">26% - 50%</span>
-							<span class="text-sm font-semibold text-slate-900">21 accounts</span>
+						<!-- Repayment Queue -->
+						<div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+							<div class="flex items-center justify-between mb-4">
+								<h2 class="text-base sm:text-lg font-semibold text-slate-900">Repayment Queue</h2>
+								<i data-lucide="activity" class="w-5 h-5 text-indigo-600"></i>
+							</div>
+							<div class="space-y-3">
+								<div class="p-3 rounded-lg border border-green-200 bg-green-50">
+									<p class="text-sm font-medium text-slate-900">On Schedule</p>
+									<p class="text-2xl font-bold text-green-700 mt-1">46</p>
+									<p class="text-xs text-slate-600 mt-1">Borrowers paying on time</p>
+								</div>
+								<div class="p-3 rounded-lg border border-amber-200 bg-amber-50">
+									<p class="text-sm font-medium text-slate-900">Late (1-15 days)</p>
+									<p class="text-2xl font-bold text-amber-700 mt-1">7</p>
+									<p class="text-xs text-slate-600 mt-1">Needs follow-up</p>
+								</div>
+								<div class="p-3 rounded-lg border border-red-200 bg-red-50">
+									<p class="text-sm font-medium text-slate-900">Severely Late (&gt;15 days)</p>
+									<p class="text-2xl font-bold text-red-700 mt-1">11</p>
+									<p class="text-xs text-slate-600 mt-1">Escalation required</p>
+								</div>
+							</div>
 						</div>
-						<div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 bg-indigo-400 rounded-full" style="width:33%"></div></div>
 					</div>
 				</div>
-
-				<div class="space-y-4">
-					<div>
-						<div class="flex items-center justify-between mb-2">
-							<span class="text-sm font-medium text-slate-700">51% - 75%</span>
-							<span class="text-sm font-semibold text-slate-900">18 accounts</span>
-						</div>
-						<div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 bg-indigo-500 rounded-full" style="width:28%"></div></div>
-					</div>
-					<div>
-						<div class="flex items-center justify-between mb-2">
-							<span class="text-sm font-medium text-slate-700">76% - 100%</span>
-							<span class="text-sm font-semibold text-slate-900">13 accounts</span>
-						</div>
-						<div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 bg-indigo-600 rounded-full" style="width:20%"></div></div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="mb-6 max-w-xl">
-			<div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-				<div class="flex items-center justify-between mb-4">
-					<h2 class="text-base sm:text-lg font-semibold text-slate-900">Repayment Queue</h2>
-					<i data-lucide="activity" class="w-5 h-5 text-indigo-600"></i>
-				</div>
-
-				<div class="space-y-3">
-					<div class="p-3 rounded-lg border border-green-200 bg-green-50">
-						<p class="text-sm font-medium text-slate-900">On Schedule</p>
-						<p class="text-2xl font-bold text-green-700 mt-1">46</p>
-						<p class="text-xs text-slate-600 mt-1">Borrowers paying on time</p>
-					</div>
-					<div class="p-3 rounded-lg border border-amber-200 bg-amber-50">
-						<p class="text-sm font-medium text-slate-900">Late (1-15 days)</p>
-						<p class="text-2xl font-bold text-amber-700 mt-1">7</p>
-						<p class="text-xs text-slate-600 mt-1">Needs follow-up</p>
-					</div>
-					<div class="p-3 rounded-lg border border-red-200 bg-red-50">
-						<p class="text-sm font-medium text-slate-900">Severely Late (&gt;15 days)</p>
-						<p class="text-2xl font-bold text-red-700 mt-1">11</p>
-						<p class="text-xs text-slate-600 mt-1">Escalation required</p>
-					</div>
-				</div>
-			</div>
-		</div>
 
 		<div class="mb-6">
 			<h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
