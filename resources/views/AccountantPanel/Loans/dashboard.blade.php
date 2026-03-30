@@ -160,7 +160,7 @@
 								</h2>
 								<span class="text-xs text-slate-500">By repayment completion range</span>
 							</div>
-							<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+							<div class="grid grid-cols-1  gap-6">
 								<div class="space-y-4">
 									<div>
 										<div class="flex items-center justify-between mb-2">
