@@ -405,6 +405,18 @@ Route::delete('/payroll-configuration/{id}',
 [PayrollConfigurationsController::class, 'deletePayrollConfiguration'])
 ->name('accounting.payrollSettings.delete');
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//route for loans manaagement
+Route::get('/loans-management', function () {
+    return view('AccountantPanel.Loans.dashboard');
+})->name('accounting.loansManagement');
+
+//route for propasal management
+Route::get('/proposal-management', function () {
+    return view('AccountantPanel.Loans.proposals');
+})->name('accounting.proposalManagement');
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
