@@ -414,9 +414,14 @@ Route::get('/loans-management', function () {
 })->name('accounting.loansManagement');
 
 //route for propasal management
-Route::get('/proposal-management', function () {
+Route::get('/loan-proposals', function () {
     return view('AccountantPanel.Loans.proposals');
 })->name('accounting.proposalManagement');
+
+//route for loan lists
+Route::get('/loan-list', function () {
+    return view('AccountantPanel.Loans.loanprogess');
+})->name('accounting.loanList');
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

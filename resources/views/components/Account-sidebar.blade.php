@@ -143,7 +143,7 @@
           <!--Loan Links -->
           <li>
             <div class="relative">
-              <button id="loanToggle" aria-expanded="{{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+              <button id="loanToggle" aria-expanded="{{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement','accounting.loanList') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement','accounting.loanList') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                 <span class="flex items-center gap-3">
                   <i data-lucide="dollar-sign" class="w-5 h-5"></i>
                   <span class="text-sm font-medium nav-label">Loans</span>
@@ -153,7 +153,7 @@
                 </span>
               </button>
               
-              <ul id="loanMenu" class="{{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+              <ul id="loanMenu" class="{{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement','accounting.loanList') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
                 
                 <li>
                   <a href="{{ route('accounting.loansManagement') }}" 
@@ -170,6 +170,15 @@
                     Loan Applications
                   </a>
                 </li>
+
+                <li>
+                  <a href="{{ route('accounting.loanList') }}" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.loanList') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="file-plus" class="w-4 h-4"></i>
+                    Loan Payments
+                  </a>
+                </li>
+
               </ul>
             </div>
           </li>
