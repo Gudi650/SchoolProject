@@ -108,7 +108,6 @@
           </li>
 
           <li>
-
             <div class="relative">
               <button id="payrollToggle" aria-expanded="{{ request()->routeIs('accounting.payrollSettings','accounting.payrollManagement') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.payrollSettings', 'accounting.payrollManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                 <span class="flex items-center gap-3">
@@ -139,7 +138,40 @@
                 </li>
               </ul>
             </div>
+          </li>
 
+          <!--Loan Links -->
+          <li>
+            <div class="relative">
+              <button id="loanToggle" aria-expanded="{{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                <span class="flex items-center gap-3">
+                  <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+                  <span class="text-sm font-medium nav-label">Loans</span>
+                </span>
+                <span id="loanChevron" class="transition-transform duration-200 {{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement') ? 'rotate-180' : '' }}">
+                  <i data-lucide="chevron-down" class="w-4 h-4 text-sm"></i>
+                </span>
+              </button>
+              
+              <ul id="loanMenu" class="{{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+                
+                <li>
+                  <a href="{{ route('accounting.loansManagement') }}" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.loansManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    Loan Dashboard
+                  </a>
+                </li>
+
+                <li>
+                  <a href="{{ route('accounting.proposalManagement') }}" 
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.proposalManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="file-plus" class="w-4 h-4"></i>
+                    Loan Applications
+                  </a>
+                </li>
+              </ul>
+            </div>
           </li>
 
           <li>
@@ -377,6 +409,35 @@
           });
         }
 
+        // Loans dropdown toggle
+        const loanToggle = document.getElementById('loanToggle');
+        const loanMenu = document.getElementById('loanMenu');
+        const loanChevron = document.getElementById('loanChevron');
+        
+        if (loanToggle && loanMenu && loanChevron) {
+          loanToggle.addEventListener('click', () => {
+            const open = loanMenu.classList.toggle('hidden') === false;
+            loanToggle.setAttribute('aria-expanded', open);
+            loanChevron.classList.toggle('rotate-180', open);
+          });
+          // keep chevron in sync when a child link is clicked
+          loanMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+              loanMenu.classList.remove('hidden');
+              loanToggle.setAttribute('aria-expanded', 'true');
+              loanChevron.classList.add('rotate-180');
+            });
+          });
+          // Close dropdown when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!loanToggle.contains(e.target) && !loanMenu.contains(e.target)) {
+              loanMenu.classList.add('hidden');
+              loanToggle.setAttribute('aria-expanded', 'false');
+              loanChevron.classList.remove('rotate-180');
+            }
+          });
+        }
+
         // Vendor dropdown toggle
         const vendorToggle = document.getElementById('vendorToggle');
         const vendorMenu = document.getElementById('vendorMenu');
@@ -470,6 +531,14 @@
                 label.classList.toggle('hidden', isExpanded);
               });
             }
+
+            // Toggle loan toggle button
+            if (loanToggle) {
+              loanToggle.classList.toggle('justify-center', isExpanded);
+              loanToggle.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
             
             // Toggle vendor toggle button
             if (vendorToggle) {
@@ -506,6 +575,16 @@
             } else if (!isExpanded && payrollChevron) {
               payrollChevron.classList.remove('hidden');
             }
+
+            // Hide loan menu chevron and dropdown when collapsed
+            if (isExpanded && loanMenu && loanToggle && loanChevron) {
+              loanMenu.classList.add('hidden');
+              loanToggle.setAttribute('aria-expanded', 'false');
+              loanChevron.classList.remove('rotate-180');
+              loanChevron.classList.add('hidden');
+            } else if (!isExpanded && loanChevron) {
+              loanChevron.classList.remove('hidden');
+            }
             
             // Hide vendor menu chevron and dropdown when collapsed
             if (isExpanded && vendorMenu && vendorToggle && vendorChevron) {
@@ -537,6 +616,13 @@
             // Hide payroll menu labels
             if (payrollMenu) {
               payrollMenu.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+
+            // Hide loan menu labels
+            if (loanMenu) {
+              loanMenu.querySelectorAll('.nav-label').forEach(label => {
                 label.classList.toggle('hidden', isExpanded);
               });
             }
