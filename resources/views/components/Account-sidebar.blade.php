@@ -145,7 +145,7 @@
             <div class="relative">
               <button id="loanToggle" aria-expanded="{{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement','accounting.loanList') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement','accounting.loanList') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                 <span class="flex items-center gap-3">
-                  <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+                  <i data-lucide="wallet" class="w-5 h-5"></i>
                   <span class="text-sm font-medium nav-label">Loans</span>
                 </span>
                 <span id="loanChevron" class="transition-transform duration-200 {{ request()->routeIs('accounting.loansManagement', 'accounting.proposalManagement') ? 'rotate-180' : '' }}">
@@ -158,7 +158,7 @@
                 <li>
                   <a href="{{ route('accounting.loansManagement') }}" 
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.loansManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
-                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                     Loan Dashboard
                   </a>
                 </li>
@@ -166,7 +166,7 @@
                 <li>
                   <a href="{{ route('accounting.proposalManagement') }}" 
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.proposalManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
-                    <i data-lucide="file-plus" class="w-4 h-4"></i>
+                    <i data-lucide="clipboard-list" class="w-4 h-4"></i>
                     Loan Applications
                   </a>
                 </li>
@@ -174,7 +174,7 @@
                 <li>
                   <a href="{{ route('accounting.loanList') }}" 
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.loanList') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
-                    <i data-lucide="file-plus" class="w-4 h-4"></i>
+                    <i data-lucide="wallet" class="w-4 h-4"></i>
                     Loan Payments
                   </a>
                 </li>
