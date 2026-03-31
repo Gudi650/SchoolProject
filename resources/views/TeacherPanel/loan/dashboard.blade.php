@@ -1,7 +1,7 @@
 <x-Teacher-sidebar>
     <x-slot name="title">Loan Application Dashboard</x-slot>
 
-    <main class="p-4 sm:p-6 bg-slate-50 min-h-screen ml-0 md:ml-64">
+    <main class="p-2 sm:p-6 bg-slate-50 min-h-screen ml-0 md:ml-64 w-full">
 
         <!-- Loan Notification Banner (UI/UX Example) -->
         <div id="loan-notification-banner" class="flex items-center gap-3 mb-6 px-4 py-3 rounded-lg border border-yellow-200 bg-yellow-50 text-yellow-900 relative shadow">
@@ -43,10 +43,10 @@
             </div>
         </div>
 
-        <!-- Loans Overview Cards -->
-        <div class="mb-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <!-- Dashboard Cards: 3 on top, 3 on bottom -->
+        <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 xl:gap-8">
             <!-- Total Loans Card -->
-            <div class="flex flex-col items-center bg-white border border-indigo-100 rounded-xl p-6 shadow group hover:shadow-lg transition">
+            <div class="flex flex-col items-center bg-white border border-indigo-100 rounded-xl p-6 shadow group hover:shadow-lg transition h-full">
                 <div class="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-50 mb-3">
                     <i class="bi bi-collection text-indigo-600 text-2xl"></i>
                 </div>
@@ -58,7 +58,7 @@
                 </div>
             </div>
             <!-- Outstanding Balance Card -->
-            <div class="flex flex-col items-center bg-white border border-amber-100 rounded-xl p-6 shadow group hover:shadow-lg transition">
+            <div class="flex flex-col items-center bg-white border border-amber-100 rounded-xl p-6 shadow group hover:shadow-lg transition h-full">
                 <div class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-50 mb-3">
                     <i class="bi bi-cash-stack text-amber-500 text-2xl"></i>
                 </div>
@@ -67,7 +67,7 @@
                 <div class="text-xs text-slate-500">Across all active loans</div>
             </div>
             <!-- Total Repaid Card -->
-            <div class="flex flex-col items-center bg-white border border-green-100 rounded-xl p-6 shadow group hover:shadow-lg transition">
+            <div class="flex flex-col items-center bg-white border border-green-100 rounded-xl p-6 shadow group hover:shadow-lg transition h-full">
                 <div class="flex items-center justify-center w-12 h-12 rounded-full bg-green-50 mb-3">
                     <i class="bi bi-check2-circle text-green-600 text-2xl"></i>
                 </div>
@@ -76,26 +76,23 @@
                 <div class="text-xs text-slate-500">All time</div>
             </div>
         </div>
-        
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
-            <div class="bg-white rounded-xl p-4 sm:p-6 border border-indigo-100 shadow-sm flex flex-col items-center">
+        <div class="mb-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 xl:gap-8">
+            <!-- Current Application Status Card -->
+            <div class="flex flex-col items-center bg-white border border-indigo-100 rounded-xl p-6 shadow-sm h-full">
                 <i data-lucide="file-text" class="w-8 h-8 text-indigo-600 mb-2"></i>
                 <p class="text-sm text-slate-600 mb-1">Current Application Status</p>
-                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700 mb-2">No
-                    Application Yet</span>
-                <p class="text-xs text-slate-500 text-center">You have not started a loan application. Click "Apply for
-                    Loan" to begin.</p>
+                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700 mb-2">No Application Yet</span>
+                <p class="text-xs text-slate-500 text-center">You have not started a loan application. Click "Apply for Loan" to begin.</p>
             </div>
-            <div class="bg-white rounded-xl p-4 sm:p-6 border border-green-100 shadow-sm flex flex-col items-center">
+            <!-- Eligibility Card -->
+            <div class="flex flex-col items-center bg-white border border-green-100 rounded-xl p-6 shadow-sm h-full">
                 <i data-lucide="badge-check" class="w-8 h-8 text-green-600 mb-2"></i>
                 <p class="text-sm text-slate-600 mb-1">Eligibility</p>
-                <span
-                    class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 mb-2">Eligible</span>
-                <p class="text-xs text-slate-500 text-center">You meet the basic requirements for staff loan
-                    application.</p>
+                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 mb-2">Eligible</span>
+                <p class="text-xs text-slate-500 text-center">You meet the basic requirements for staff loan application.</p>
             </div>
-            <div class="bg-white rounded-xl p-4 sm:p-6 border border-blue-100 shadow-sm flex flex-col items-center">
+            <!-- Loan Options Card -->
+            <div class="flex flex-col items-center bg-white border border-blue-100 rounded-xl p-6 shadow-sm h-full">
                 <i data-lucide="info" class="w-8 h-8 text-blue-600 mb-2"></i>
                 <p class="text-sm text-slate-600 mb-1">Loan Options</p>
                 <ul class="text-xs text-slate-700 list-disc list-inside mb-2">
@@ -186,103 +183,22 @@
             </a>
         </div>
 
-        <!-- Apply for Loan Modal (vanilla JS) -->
-        <div id="apply-modal-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-            style="display:none;">
-            <div id="apply-modal" class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 relative">
-                <button id="close-apply-modal" type="button"
-                    class="absolute top-3 right-3 text-slate-400 hover:text-red-500">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-                <h3 class="text-lg font-semibold text-slate-900 mb-2 flex items-center gap-2">
-                    <i data-lucide="plus-circle" class="w-5 h-5 text-indigo-600"></i>
-                    Apply for Loan
-                </h3>
-                <form id="apply-loan-form" class="space-y-4 mt-4">
-                    <div>
-                        <label for="loan-type" class="block text-sm font-medium text-slate-700 mb-1">Loan Type</label>
-                        <select id="loan-type"
-                            class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
-                            <option value="">Select loan type</option>
-                            <option>Personal Loan</option>
-                            <option>Education Loan</option>
-                            <option>Emergency Loan</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="loan-amount" class="block text-sm font-medium text-slate-700 mb-1">Amount
-                            (₹)</label>
-                        <input id="loan-amount" type="number" min="1000" step="100" placeholder="Enter amount"
-                            class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500" />
-                    </div>
-                    <div>
-                        <label for="loan-purpose" class="block text-sm font-medium text-slate-700 mb-1">Purpose</label>
-                        <textarea id="loan-purpose" rows="2" placeholder="Describe the purpose"
-                            class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500"></textarea>
-                    </div>
-                    <div class="flex justify-end gap-2 pt-2">
-                        <button type="button" id="cancel-apply-modal"
-                            class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 flex items-center gap-2">
-                            <i data-lucide="x" class="w-4 h-4"></i>
-                            Cancel
-                        </button>
-                        <button type="submit"
-                            class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 flex items-center gap-2">
-                            <i data-lucide="send" class="w-4 h-4"></i>
-                            Submit Application
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!--end of application modal-->
-
+        <!-- Apply for Loan Modal (imported) -->
+        @include('TeacherPanel.loan.applyLoan_modal')
+        <!-- End of imported modal -->
     </main>
 
     <script>
-        // Modal open/close logic
+        // Modal open/close logic for new modal
         document.addEventListener('DOMContentLoaded', function() {
-            // Open modal from main button
             var openBtn = document.getElementById('open-apply-modal');
-            // Open modal from table buttons
-            var openBtns = document.querySelectorAll('.open-apply-modal');
-            var overlay = document.getElementById('apply-modal-overlay');
-            var closeBtn = document.getElementById('close-apply-modal');
-            var cancelBtn = document.getElementById('cancel-apply-modal');
-            var modal = document.getElementById('apply-modal');
-            var form = document.getElementById('apply-loan-form');
-
-            function openModal() {
-                overlay.style.display = 'flex';
-                if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+            var modal = document.getElementById('applyLoanModal');
+            if (openBtn && modal) {
+                openBtn.addEventListener('click', function() {
+                    modal.classList.remove('hidden');
+                    if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+                });
             }
-
-            function closeModal() {
-                overlay.style.display = 'none';
-            }
-
-            if (openBtn) openBtn.addEventListener('click', openModal);
-
-            openBtns.forEach(function(btn) {
-                btn.addEventListener('click', openModal);
-            });
-
-            if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-            if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
-
-            // Click outside modal closes
-            if (overlay) overlay.addEventListener('mousedown', function(e) {
-
-                if (e.target === overlay) closeModal();
-
-            });
-
-            // Prevent form submit (demo only)
-            if (form) form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                closeModal();
-            });
         });
     </script>
 

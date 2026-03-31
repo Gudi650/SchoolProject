@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HealthInsurance;
 use App\Models\LoanConfigurations;
+use App\Models\LoanType;
 use App\Models\NSSFPSSF;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
@@ -68,12 +69,10 @@ class AccountantSettings extends Controller
         ];
 
         NSSFPSSF::updateOrCreate(
-
             /**
              * The school_id is hardcoded to 1 for now, but in a real application, you would want to get this from the authenticated user's school or from the session.
              */
             ['school_id' => 1], 
-            
             //add th relevant data (contribution type and respsctive percentages as well)
             $updatedData
         );
@@ -215,9 +214,8 @@ class AccountantSettings extends Controller
     public function saveLoanSettings(Request $request)
     {
 
-        //validate the request
+        // Validate the request
         $validated = $request->validate([
-            
             // GENERAL
             'max_loan_multiplier' => 'required|numeric|min:1|max:10',
             'max_loan_amount' => 'nullable|numeric|min:0',
@@ -249,12 +247,9 @@ class AccountantSettings extends Controller
             'notify_on_approval' => 'boolean',
             'notify_on_deduction' => 'boolean',
             'notify_on_completion' => 'boolean',
-
-
         ]);
 
-
-        //handle the checkboxes and convert them to boolean values
+        // Handle checkboxes and convert them to boolean values
         $validated['allow_early_repayment'] = $request->has('allow_early_repayment');
         $validated['allow_multiple_loans'] = $request->has('allow_multiple_loans');
         $validated['auto_payroll_deduction'] = $request->has('auto_payroll_deduction');
@@ -267,14 +262,17 @@ class AccountantSettings extends Controller
         $validated['notify_on_deduction'] = $request->has('notify_on_deduction');
         $validated['notify_on_completion'] = $request->has('notify_on_completion');
 
-        // Now we will save the loan settings to the database
-        // For simplicity, we will assume there is a LoanSettings model that has a single record for the school and we will update that record with the new settings
+        // Get the school_id from the authenticated user or session (replace with your actual logic)
+        $schoolId = auth()->user()->school_id ?? 1;
+        $validated['school_id'] = $schoolId;
+
         try {
-            $loanSettings = LoanConfigurations::updateOrCreate(
-                ['school_id' => 1], // In a real application, you would get this from the authenticated user's school or from the session
+            // Save or update the loan configuration for the school
+            $loanConfig = LoanConfigurations::updateOrCreate(
+                ['school_id' => $schoolId],
                 $validated
             );
-        } catch (QueryException $exception) {
+        } catch (\Illuminate\Database\QueryException $exception) {
             Log::error('Loan settings save failed (database)', [
                 'message' => $exception->getMessage(),
                 'request' => $request->all(),
@@ -285,7 +283,38 @@ class AccountantSettings extends Controller
                 ->with('error', 'An unexpected error occurred while saving loan settings.');
         }
 
-    }
+        // Save loan types
+        if ($request->has('loan_types') && is_array($request->loan_types)) {
+            $loanTypeIds = [];
+            foreach ($request->loan_types as $typeData) {
+                // Validate each loan type (add more rules as needed)
+                $typeValidated = validator($typeData, [
+                    'id' => 'nullable|integer|exists:loan_types,id',
+                    'name' => 'required|string|max:100',
+                    'max_amount' => 'required|numeric|min:0',
+                    'interest_rate' => 'required|numeric|min:0|max:100',
+                    'duration_months' => 'required|integer|min:1|max:60',
+                    'status' => 'required|in:active,inactive',
+                ])->validate();
 
+                $typeValidated['school_id'] = $schoolId;
+
+                // Update or create each loan type
+                $loanType = LoanType::updateOrCreate(
+                    ['id' => $typeValidated['id'] ?? null, 'school_id' => $schoolId],
+                    $typeValidated
+                );
+                $loanTypeIds[] = $loanType->id;
+            }
+
+            // Optionally, delete loan types that were removed in the UI
+            LoanType::where('school_id', $schoolId)
+                ->whereNotIn('id', $loanTypeIds)
+                ->delete();
+        }
+
+        // Redirect back with success message
+        return redirect()->route('accounting.settings')->with('success', 'Loan settings updated successfully.');
+    }
 }
 
