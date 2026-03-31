@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LoanTypes extends Model
+class LoanType extends Model
 {
-    //fillable fields
+    // Fillable fields (should match your migration)
     protected $fillable = [
         'school_id',
         'name',
@@ -16,12 +16,9 @@ class LoanTypes extends Model
         'status',
     ];
 
-    //relationships
-
-    //Relationship with school
+    // Relationship: LoanType belongs to School
     public function school()
     {
         return $this->belongsTo(School::class);
     }
-    
 }

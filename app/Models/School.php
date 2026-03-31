@@ -80,4 +80,16 @@ class School extends Model
         return $this->hasMany(PayrollConfigurations::class, 'school_id');
     }
 
+    //relationship with loan types table
+    public function loanTypes()
+    {
+        return $this->hasMany(LoanTypes::class, 'school_id');
+    }
+
+    //relationship with loan configurations table
+    public function loanConfigurations()
+    {
+        return $this->hasMany(LoanConfigurations::class, 'school_id');
+    }
+
 }
