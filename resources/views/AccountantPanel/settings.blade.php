@@ -318,32 +318,6 @@
                   </div>
                 </div>
 
-                  <!-- 7. Preview Panel -->
-                  <div class="bg-white rounded-xl border border-slate-200 p-6">
-                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="eye" class="w-5 h-5 text-indigo-600"></i>Loan Calculation Preview</h3>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <div class="text-xs text-slate-500 mb-1">Example: Basic Salary</div>
-                      <div class="text-lg font-bold text-slate-900 mb-2">TZS 1,000,000</div>
-                      <div class="text-xs text-slate-500 mb-1">Loan Amount (3× Salary)</div>
-                      <div class="text-lg font-bold text-indigo-700 mb-2">TZS 3,000,000</div>
-                      <div class="text-xs text-slate-500 mb-1">Interest Rate</div>
-                      <div class="text-lg font-bold text-green-700 mb-2">8%</div>
-                      <div class="text-xs text-slate-500 mb-1">Duration</div>
-                      <div class="text-lg font-bold text-slate-900 mb-2">12 months</div>
-                    </div>
-                    <div>
-                      <div class="text-xs text-slate-500 mb-1">Monthly Repayment</div>
-                      <div class="text-lg font-bold text-indigo-700 mb-2">TZS 270,000</div>
-                      <div class="text-xs text-slate-500 mb-1">Total Repayable</div>
-                      <div class="text-lg font-bold text-slate-900 mb-2">TZS 3,240,000</div>
-                      <div class="text-xs text-slate-500 mb-1">Deduction from Salary</div>
-                      <div class="text-lg font-bold text-red-700 mb-2">27%</div>
-                    </div>
-                  </div>
-                  <div class="mt-4 text-xs text-slate-500">This is a sample calculation based on current settings. Actual values may vary.</div>
-                </div>
-
                   <!-- Save Button -->
                   <div class="sticky bottom-0 bg-white py-4 flex justify-end border-t border-slate-200 z-10 rounded-b-xl">
                     <button class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors flex items-center gap-2 text-base font-semibold">
@@ -354,6 +328,7 @@
                 </div>
               </div>
             </div>
+            
             <div id="health-insurance" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6">
               <h3 class="text-lg font-semibold text-slate-900 mb-4">Health Insurance</h3>
 
