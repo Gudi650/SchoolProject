@@ -21,6 +21,18 @@
                   <i data-lucide="user" class="w-5 h-5"></i>
                   <span>Profile Settings</span>
                 </a>
+                <a href="#financial-configuration" class="settings-nav-link w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-50">
+                  <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+                  <span>Financial Configuration</span>
+                </a>
+                <a href="#loan-settings" class="settings-nav-link w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-50">
+                  <i data-lucide="layers" class="w-5 h-5"></i>
+                  <span>Loan Settings</span>
+                </a>
+                <a href="#health-insurance" class="settings-nav-link w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-50">
+                  <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+                  <span>Health Insurance</span>
+                </a>
                 <a href="#notifications" class="settings-nav-link w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-50">
                   <i data-lucide="bell" class="w-5 h-5"></i>
                   <span>Notifications</span>
@@ -70,7 +82,7 @@
             </div>
 
               <div class="bg-white rounded-xl p-6 border border-slate-200">
-                <h3 class="text-lg font-semibold text-slate-900 mb-4">Financial Configuration</h3>
+                <h3 id="financial-configuration" class="text-lg font-semibold text-slate-900 mb-4">Financial Configuration</h3>
                 <div class="space-y-4">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -160,164 +172,131 @@
               </div>
             </div>
 
-            <!-- Loan Settings Configuration (Modern UI, Grouped) -->
-            <div id="loan-settings" class="max-w-3xl mx-auto">
+            <!-- Loan Settings Configuration (Modern UI, Multi-Type) -->
+            <div id="loan-settings">
               <div class="bg-white rounded-xl shadow border border-slate-200 p-0 md:p-2">
-                <h2 class="text-2xl font-bold text-slate-900 mb-6 px-6 pt-6">Loan Settings Configuration</h2>
-                <div class="space-y-6 px-0 md:px-6 pb-6">
-                  <!-- 1. General Loan Rules -->
-                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-indigo-600"></i>General Loan Rules</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Loan Multiplier</label>
-                      <input type="number" min="1" max="5" step="0.1" value="3" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
-                      <p class="text-xs text-slate-500 mt-1">E.g. 3× Basic Salary</p>
-                    </div>
-                    <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Loan Amount (TZS)</label>
-                      <input type="number" min="0" step="10000" value="5000000" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
-                      <p class="text-xs text-slate-500 mt-1">Absolute cap for any loan</p>
-                    </div>
-                    <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Duration (months)</label>
-                      <input type="number" min="1" max="24" value="12" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
-                      <p class="text-xs text-slate-500 mt-1">Max 24 months</p>
-                    </div>
-                    <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-1">Grace Period (days)</label>
-                      <input type="number" min="0" max="90" value="30" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
-                      <p class="text-xs text-slate-500 mt-1">Time before first repayment</p>
-                    </div>
-                  </div>
-                </div>
-
-                  <!-- 2. Interest Settings -->
-                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
-                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="percent" class="w-5 h-5 text-indigo-600"></i>Interest Settings</h3>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-1">Default Interest Rate (%)</label>
-                      <input type="number" min="0" max="100" step="0.01" value="8.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
-                      <p class="text-xs text-slate-500 mt-1">Recommended: 8%</p>
-                    </div>
-                    <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-1">Minimum Interest Rate (BOT Rate)</label>
-                      <input type="number" value="5.75" readonly class="w-full px-4 py-2 border border-slate-300 rounded-lg bg-slate-100 text-slate-500" />
-                      <p class="text-xs text-slate-500 mt-1">Bank of Tanzania minimum rate</p>
-                    </div>
-                  </div>
-                  <div class="mt-4 flex items-center gap-6">
-                    <div class="flex items-center gap-2">
-                      <input type="radio" id="flat-rate" name="interest_type" checked class="accent-indigo-600" />
-                      <label for="flat-rate" class="text-sm text-slate-700">Flat Rate</label>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <input type="radio" id="reducing-balance" name="interest_type" class="accent-indigo-600" />
-                      <label for="reducing-balance" class="text-sm text-slate-700">Reducing Balance</label>
-                    </div>
-                  </div>
-                  <p class="text-xs text-slate-500 mt-2">Choose how interest is calculated on loans</p>
-                </div>
-
-                  <!-- 3. Repayment Rules -->
-                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
-                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="repeat" class="w-5 h-5 text-indigo-600"></i>Repayment Rules</h3>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Deduction from Salary (%)</label>
-                      <input type="number" min="0" max="100" value="40" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
-                      <p class="text-xs text-slate-500 mt-1">Default: 40% of net salary</p>
-                    </div>
-                    <div class="flex flex-col gap-2">
-                      <label class="block text-sm font-medium text-slate-700 mb-1">Repayment Options</label>
-                      <div class="flex items-center gap-3 flex-wrap">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                          <input type="checkbox" checked class="accent-indigo-600" />
-                          <span class="text-sm text-slate-700">Allow Early Repayment</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                          <input type="checkbox" checked class="accent-indigo-600" />
-                          <span class="text-sm text-slate-700">Allow Multiple Loans per Employee</span>
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                          <input type="checkbox" checked class="accent-indigo-600" />
-                          <span class="text-sm text-slate-700">Auto Payroll Deduction</span>
-                        </label>
+                <h2 class="text-2xl font-bold text-slate-900 mb-6 px-6 pt-6">Loan Settings & Types</h2>
+                <div class="space-y-8 px-0 md:px-6 pb-6">
+                  <!-- Global Loan Rules Card -->
+                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6 mb-4">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-indigo-600"></i>Global Loan Rules</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Loan Multiplier</label>
+                        <input type="number" min="1" max="10" step="0.1" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="E.g. 3 (for 3× salary)" />
+                        <p class="text-xs text-slate-500 mt-1">Maximum allowed: 3× employee's basic salary.</p>
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Minimum Interest Rate (BOT Rate)</label>
+                        <input type="number" value="5.75" readonly class="w-full px-4 py-2 border border-slate-300 rounded-lg bg-slate-100 text-slate-500" />
+                        <p class="text-xs text-slate-500 mt-1">Set by Bank of Tanzania. Loans below this rate trigger PAYE.</p>
+                      </div>
+                      <div class="flex items-center gap-2 mt-2">
+                        <input type="checkbox" id="enable-paye" class="accent-indigo-600" />
+                        <label for="enable-paye" class="text-sm text-slate-700">Enable PAYE Calculation</label>
+                        <span class="ml-2 text-xs text-blue-600 cursor-pointer" title="If enabled, PAYE will be calculated for loans below BOT rate."><i data-lucide="info" class="w-4 h-4"></i></span>
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Approval Levels</label>
+                        <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                          <option value="1">1 (Default)</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                        </select>
+                        <p class="text-xs text-slate-500 mt-1">Number of approval steps required for loan approval.</p>
+                      </div>
+                      <div class="flex items-center gap-2 mt-2">
+                        <input type="checkbox" id="allow-override" class="accent-indigo-600" />
+                        <label for="allow-override" class="text-sm text-slate-700">Allow Override</label>
+                        <span class="ml-2 text-xs text-blue-600 cursor-pointer" title="Allow admin to override loan rules in special cases."><i data-lucide="info" class="w-4 h-4"></i></span>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                  <!-- 4. PAYE & Compliance Rules -->
-                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
-                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5 text-indigo-600"></i>PAYE & Compliance Rules</h3>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-1">BOT Rate (Reference)</label>
-                      <input type="number" value="5.75" readonly class="w-full px-4 py-2 border border-slate-300 rounded-lg bg-slate-100 text-slate-500" />
+                  <!-- Loan Types Management Card -->
+                  <div class="bg-white rounded-lg border border-slate-100 p-6 mb-4">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="layers" class="w-5 h-5 text-indigo-600"></i>Loan Types</h3>
+                    <p class="text-xs text-slate-500 mb-4">Add, edit, or remove loan types. Each type can have its own configuration. If your school offers only one loan type, just add one here.</p>
+                    <div id="loanTypesList" class="space-y-4">
+                      <!-- Loan type cards will be added here dynamically -->
                     </div>
-                    <div class="flex items-center gap-2 mt-6 md:mt-0">
-                      <input type="checkbox" checked class="accent-indigo-600" id="enable-paye" />
-                      <label for="enable-paye" class="text-sm text-slate-700">Enable PAYE Fringe Benefit Calculation</label>
-                    </div>
+                    <!-- Add Loan Type Button -->
+                    <button id="addLoanTypeBtn" type="button" class="mt-2 px-4 py-2 bg-green-600 text-white rounded-lg flex items-center gap-2 hover:bg-green-700"><i data-lucide="plus" class="w-4 h-4"></i>Add Loan Type</button>
                   </div>
-                  <div class="mb-4 p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-sm">
-                    <strong>Rule:</strong> If interest rate is less than BOT rate, PAYE applies to the difference as a fringe benefit.
-                  </div>
-                  <div class="mb-4">
-                    <div class="p-4 rounded-lg bg-yellow-50 border border-yellow-300 text-yellow-900 text-sm flex items-center gap-2 mb-2">
-                      <i data-lucide="alert-triangle" class="w-5 h-5"></i>
-                      <span>Warning: Loan amount greater than 3× salary will trigger a compliance warning.</span>
-                    </div>
-                    <div class="p-4 rounded-lg bg-yellow-50 border border-yellow-300 text-yellow-900 text-sm flex items-center gap-2">
-                      <i data-lucide="alert-triangle" class="w-5 h-5"></i>
-                      <span>Warning: Loan duration greater than 12 months will trigger a compliance warning.</span>
-                    </div>
-                  </div>
-                </div>
 
-                  <!-- 5. Approval Workflow -->
-                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
-                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="user-check" class="w-5 h-5 text-indigo-600"></i>Approval Workflow</h3>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="flex items-center gap-2">
-                      <input type="checkbox" checked class="accent-indigo-600" id="require-approval" />
-                      <label for="require-approval" class="text-sm text-slate-700">Require Approval</label>
-                    </div>
-                    <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-1">Approval Levels</label>
-                      <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        <option>Accountant</option>
-                        <option>Admin</option>
-                      </select>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <input type="checkbox" class="accent-indigo-600" id="allow-override" />
-                      <label for="allow-override" class="text-sm text-slate-700">Allow Override for High Loans</label>
+                  <!-- Risk & Warning Settings Card -->
+                  <div class="bg-orange-50 border border-orange-200 rounded-lg p-6 mb-4">
+                    <h3 class="text-lg font-semibold text-orange-900 mb-4 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5 text-orange-500"></i>Risk & Warning Settings</h3>
+                    <div class="flex flex-col gap-3">
+                      <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="accent-orange-500" />
+                        <span class="text-sm text-orange-900">Warn if loan exceeds 3× salary</span>
+                      </label>
+                      <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="accent-orange-500" />
+                        <span class="text-sm text-orange-900">Warn if duration exceeds 12 months</span>
+                      </label>
+                      <p class="text-xs text-orange-700 mt-2">These warnings help maintain compliance and reduce risk for the school.</p>
                     </div>
                   </div>
-                </div>
 
-                  <!-- 6. Notifications Settings -->
-                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
-                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="bell" class="w-5 h-5 text-indigo-600"></i>Notifications Settings</h3>
-                  <div class="flex flex-wrap gap-6">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" checked class="accent-indigo-600" />
-                      <span class="text-sm text-slate-700">Notify Employee on Approval</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" checked class="accent-indigo-600" />
-                      <span class="text-sm text-slate-700">Notify on Deduction</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" checked class="accent-indigo-600" />
-                      <span class="text-sm text-slate-700">Notify on Completion</span>
-                    </label>
+                  <!-- Notifications Settings Card -->
+                  <div class="bg-white rounded-lg border border-slate-100 p-6 mb-4">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="bell" class="w-5 h-5 text-indigo-600"></i>Notifications Settings</h3>
+                    <div class="flex flex-wrap gap-6">
+                      <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="accent-indigo-600" />
+                        <span class="text-sm text-slate-700">Notify on Loan Approval</span>
+                      </label>
+                      <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="accent-indigo-600" />
+                        <span class="text-sm text-slate-700">Notify on Deduction</span>
+                      </label>
+                      <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="accent-indigo-600" />
+                        <span class="text-sm text-slate-700">Notify on Completion</span>
+                      </label>
+                    </div>
                   </div>
-                </div>
 
+                  <!-- Information Panel & Live Preview -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Info Panel -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+                      <h4 class="text-lg font-semibold text-blue-900 mb-2 flex items-center gap-2"><i data-lucide="info" class="w-5 h-5 text-blue-600"></i>Loan Rules & PAYE Info</h4>
+                      <ul class="list-disc ml-5 text-sm text-blue-900 space-y-1">
+                        <li>Maximum loan is based on the multiplier × employee's basic salary.</li>
+                        <li>Minimum interest rate is set by the Bank of Tanzania (BOT).</li>
+                        <li>If interest rate is below BOT rate, PAYE applies to the difference as a fringe benefit.</li>
+                        <li>Approval levels determine how many steps are needed for loan approval.</li>
+                        <li>Override allows admin to bypass certain rules in special cases.</li>
+                      </ul>
+                      <div class="mt-4 text-xs text-blue-700">For more details, consult the school loan policy or contact your system administrator.</div>
+                    </div>
+                    <!-- Live Preview Panel -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 shadow">
+                      <h4 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="eye" class="w-5 h-5 text-indigo-600"></i>Loan Calculation Preview</h4>
+                      <div class="grid grid-cols-1 gap-2">
+                        <div class="text-xs text-slate-500 mb-1">Example: Basic Salary</div>
+                        <div class="text-lg font-bold text-slate-900 mb-2">TZS 1,000,000</div>
+                        <div class="text-xs text-slate-500 mb-1">Loan Amount (3× Salary)</div>
+                        <div class="text-lg font-bold text-indigo-700 mb-2">TZS 3,000,000</div>
+                        <div class="text-xs text-slate-500 mb-1">Interest Rate</div>
+                        <div class="text-lg font-bold text-green-700 mb-2">8%</div>
+                        <div class="text-xs text-slate-500 mb-1">Duration</div>
+                        <div class="text-lg font-bold text-slate-900 mb-2">12 months</div>
+                        <div class="text-xs text-slate-500 mb-1">Monthly Repayment</div>
+                        <div class="text-lg font-bold text-indigo-700 mb-2">TZS 270,000</div>
+                        <div class="text-xs text-slate-500 mb-1">Total Repayable</div>
+                        <div class="text-lg font-bold text-slate-900 mb-2">TZS 3,240,000</div>
+                        <div class="text-xs text-slate-500 mb-1">Deduction from Salary</div>
+                        <div class="text-lg font-bold text-red-700 mb-2">27%</div>
+                      </div>
+                      <div class="mt-4 text-xs text-slate-500">This is a sample calculation based on current settings. Actual values may vary.</div>
+                    </div>
+                  </div>
                   <!-- Save Button -->
                   <div class="sticky bottom-0 bg-white py-4 flex justify-end border-t border-slate-200 z-10 rounded-b-xl">
                     <button class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors flex items-center gap-2 text-base font-semibold">
@@ -752,6 +731,60 @@
   document.addEventListener('DOMContentLoaded', function() {
     // Initialize Lucide icons
     if (window.lucide) lucide.createIcons();
+
+    // ========== BEGIN: Loan Types Add Functionality ========== //
+    // Minimal, beginner-friendly JS for dynamic loan type cards
+    // Get the Add Loan Type button and the container for loan types
+    const addLoanTypeBtn = document.getElementById('addLoanTypeBtn');
+    const loanTypesList = document.getElementById('loanTypesList');
+
+    // Function to create a new loan type card (with input fields)
+    function createLoanTypeCard() {
+      // Create a wrapper div
+      const card = document.createElement('div');
+      card.className = 'bg-slate-50 border border-slate-100 rounded-lg p-4 flex flex-col gap-2 relative';
+
+      // Add input fields for loan type details
+      card.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div class="flex flex-col gap-1">
+            <input type="text" name="loan_type_name[]" placeholder="Loan Type Name (e.g. Personal Loan)" class="font-semibold text-slate-900 bg-white border border-slate-300 rounded px-2 py-1 text-sm mb-1" required />
+            <div class="flex gap-2 text-xs text-slate-500">
+              <input type="number" name="loan_type_max_amount[]" placeholder="Max Amount (TZS)" class="w-32 px-2 py-1 border border-slate-300 rounded" min="0" required />
+              <input type="number" name="loan_type_interest[]" placeholder="Interest (%)" class="w-24 px-2 py-1 border border-slate-300 rounded" min="0" step="0.01" required />
+              <input type="number" name="loan_type_duration[]" placeholder="Duration (months)" class="w-24 px-2 py-1 border border-slate-300 rounded" min="1" required />
+              <select name="loan_type_status[]" class="w-24 px-2 py-1 border border-slate-300 rounded">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" class="delete-loan-type px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 ml-2" title="Remove">Delete</button>
+        </div>
+      `;
+
+      // Add event listener for delete button
+      card.querySelector('.delete-loan-type').addEventListener('click', function() {
+        card.remove();
+      });
+
+      return card;
+    }
+
+    // Add a sample loan type card on page load (for demo, can be removed)
+    if (loanTypesList && loanTypesList.children.length === 0) {
+      loanTypesList.appendChild(createLoanTypeCard());
+    }
+
+    // Add new loan type card when button is clicked
+    if (addLoanTypeBtn) {
+      addLoanTypeBtn.addEventListener('click', function() {
+        loanTypesList.appendChild(createLoanTypeCard());
+        // Re-initialize Lucide icons if needed
+        if (window.lucide) lucide.createIcons();
+      });
+    }
+    // ========== END: Loan Types Add Functionality ========== //
 
     // Get all navigation links
     const navLinks = document.querySelectorAll('.settings-nav-link');
