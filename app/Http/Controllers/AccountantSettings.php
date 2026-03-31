@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HealthInsurance;
+use App\Models\LoanConfigurations;
 use App\Models\NSSFPSSF;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
@@ -208,4 +209,83 @@ class AccountantSettings extends Controller
         return redirect()->route('accounting.settings')->with('success', 'Health insurance settings updated successfully.');
     }
 
+    
+
+    //function to save the Loan configurations
+    public function saveLoanSettings(Request $request)
+    {
+
+        //validate the request
+        $validated = $request->validate([
+            
+            // GENERAL
+            'max_loan_multiplier' => 'required|numeric|min:1|max:10',
+            'max_loan_amount' => 'nullable|numeric|min:0',
+            'max_duration_months' => 'required|integer|min:1|max:60',
+            'grace_period_days' => 'required|integer|min:0|max:365',
+
+            // INTEREST
+            'default_interest_rate' => 'required|numeric|min:0|max:100',
+            'min_interest_rate' => 'required|numeric|min:0|max:100',
+            'interest_type' => 'required|in:flat,reducing',
+
+            // REPAYMENT
+            'max_deduction_percent' => 'required|numeric|min:1|max:100',
+            'allow_early_repayment' => 'boolean',
+            'allow_multiple_loans' => 'boolean',
+            'auto_payroll_deduction' => 'boolean',
+
+            // PAYE
+            'enable_paye_calculation' => 'boolean',
+            'warn_high_loan' => 'boolean',
+            'warn_long_duration' => 'boolean',
+
+            // APPROVAL
+            'require_approval' => 'boolean',
+            'approval_levels' => 'required|integer|min:1|max:5',
+            'allow_override' => 'boolean',
+
+            // NOTIFICATIONS
+            'notify_on_approval' => 'boolean',
+            'notify_on_deduction' => 'boolean',
+            'notify_on_completion' => 'boolean',
+
+
+        ]);
+
+
+        //handle the checkboxes and convert them to boolean values
+        $validated['allow_early_repayment'] = $request->has('allow_early_repayment');
+        $validated['allow_multiple_loans'] = $request->has('allow_multiple_loans');
+        $validated['auto_payroll_deduction'] = $request->has('auto_payroll_deduction');
+        $validated['enable_paye_calculation'] = $request->has('enable_paye_calculation');
+        $validated['warn_high_loan'] = $request->has('warn_high_loan');
+        $validated['warn_long_duration'] = $request->has('warn_long_duration');
+        $validated['require_approval'] = $request->has('require_approval');
+        $validated['allow_override'] = $request->has('allow_override');
+        $validated['notify_on_approval'] = $request->has('notify_on_approval');
+        $validated['notify_on_deduction'] = $request->has('notify_on_deduction');
+        $validated['notify_on_completion'] = $request->has('notify_on_completion');
+
+        // Now we will save the loan settings to the database
+        // For simplicity, we will assume there is a LoanSettings model that has a single record for the school and we will update that record with the new settings
+        try {
+            $loanSettings = LoanConfigurations::updateOrCreate(
+                ['school_id' => 1], // In a real application, you would get this from the authenticated user's school or from the session
+                $validated
+            );
+        } catch (QueryException $exception) {
+            Log::error('Loan settings save failed (database)', [
+                'message' => $exception->getMessage(),
+                'request' => $request->all(),
+            ]);
+
+            return redirect()->back()
+                ->withErrors(['loan_settings' => 'An unexpected error occurred while saving loan settings. Please try again.'])
+                ->with('error', 'An unexpected error occurred while saving loan settings.');
+        }
+
+    }
+
 }
+

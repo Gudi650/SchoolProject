@@ -22,6 +22,7 @@ Accountant DASHBOARD
 3)show in the setting the passf/nssf also the health insurance as well if set
 4)school fees installment payment setting as well 
 5)add the routes in the middleware as well 
+6)The settings controller uses hardcoded school_id and there is no function that does this as well
 
 
 
