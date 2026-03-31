@@ -2,6 +2,30 @@
     <x-slot name="title">Loan Application Dashboard</x-slot>
 
     <main class="p-4 sm:p-6 bg-slate-50 min-h-screen ml-0 md:ml-64">
+
+        <!-- Loan Notification Banner (UI/UX Example) -->
+        <div id="loan-notification-banner" class="flex items-center gap-3 mb-6 px-4 py-3 rounded-lg border border-yellow-200 bg-yellow-50 text-yellow-900 relative shadow">
+            <i class="bi bi-exclamation-circle-fill text-yellow-500 text-xl"></i>
+            <div class="flex-1">
+                <span class="font-semibold">Notice:</span> The interest rate for your <span class="font-bold">Education Loan</span> has changed. Please review your updated repayment schedule.
+            </div>
+            <button id="close-loan-notification" class="absolute top-2 right-2 text-yellow-400 hover:text-yellow-700" aria-label="Dismiss notification">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    <script>
+        // Dismiss notification banner
+        document.addEventListener('DOMContentLoaded', function() {
+            var closeBtn = document.getElementById('close-loan-notification');
+            var banner = document.getElementById('loan-notification-banner');
+            if (closeBtn && banner) {
+                closeBtn.addEventListener('click', function() {
+                    banner.style.display = 'none';
+                });
+            }
+        });
+    </script>
+
         <div class="mb-6 rounded-lg border border-indigo-100 bg-indigo-50 px-4 sm:px-6 py-4">
             <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
@@ -18,6 +42,41 @@
                 </div>
             </div>
         </div>
+
+        <!-- Loans Overview Cards -->
+        <div class="mb-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <!-- Total Loans Card -->
+            <div class="flex flex-col items-center bg-white border border-indigo-100 rounded-xl p-6 shadow group hover:shadow-lg transition">
+                <div class="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-50 mb-3">
+                    <i class="bi bi-collection text-indigo-600 text-2xl"></i>
+                </div>
+                <div class="text-xs text-slate-500 mb-1">Total Active Loans</div>
+                <div class="text-3xl font-bold text-indigo-700 mb-1">2</div>
+                <div class="flex flex-wrap gap-2 justify-center">
+                    <span class="bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full px-3 py-1">Personal: 1</span>
+                    <span class="bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full px-3 py-1">Education: 1</span>
+                </div>
+            </div>
+            <!-- Outstanding Balance Card -->
+            <div class="flex flex-col items-center bg-white border border-amber-100 rounded-xl p-6 shadow group hover:shadow-lg transition">
+                <div class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-50 mb-3">
+                    <i class="bi bi-cash-stack text-amber-500 text-2xl"></i>
+                </div>
+                <div class="text-xs text-slate-500 mb-1">Total Outstanding</div>
+                <div class="text-3xl font-bold text-amber-600 mb-1">₹1,20,000</div>
+                <div class="text-xs text-slate-500">Across all active loans</div>
+            </div>
+            <!-- Total Repaid Card -->
+            <div class="flex flex-col items-center bg-white border border-green-100 rounded-xl p-6 shadow group hover:shadow-lg transition">
+                <div class="flex items-center justify-center w-12 h-12 rounded-full bg-green-50 mb-3">
+                    <i class="bi bi-check2-circle text-green-600 text-2xl"></i>
+                </div>
+                <div class="text-xs text-slate-500 mb-1">Total Repaid</div>
+                <div class="text-3xl font-bold text-green-700 mb-1">₹80,000</div>
+                <div class="text-xs text-slate-500">All time</div>
+            </div>
+        </div>
+        
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
             <div class="bg-white rounded-xl p-4 sm:p-6 border border-indigo-100 shadow-sm flex flex-col items-center">

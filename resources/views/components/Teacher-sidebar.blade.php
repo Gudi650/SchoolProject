@@ -208,12 +208,13 @@
                         <button id="loanToggle"
                             aria-expanded="{{ request()->routeIs('teacher.loans', 'teacher.loans.track') ? 'true' : 'false' }}"
                             class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.loans', 'teacher.loans.track') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                            <span class="flex items-center gap-3">
-                                <i class="bi bi-journal-text"></i>
+                            <span class="flex items-center gap-3 relative">
+                                <i class="bi bi-wallet2"></i>
                                 Loans
+                                <!-- Notification Dot Example -->
+                                <span class="absolute -right-24 top-2 block w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" title="New loan notification"></span>
                             </span>
-                            <i
-                                class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.loans', 'teacher.loans.track') ? 'rotate-180' : '' }}"></i>
+                            <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.loans', 'teacher.loans.track') ? 'rotate-180' : '' }}"></i>
 
                         </button>
 
@@ -222,7 +223,7 @@
                             <li>
                                 <a href="{{ route('teacher.loans') }}"
                                     class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.loans') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
-                                    <i class="bi bi-journal-plus text-lg"></i>
+                                        <i data-lucide="list-plus" class="w-5 h-5"></i>
                                     Dashboard
                                 </a>
                             </li>
@@ -230,7 +231,7 @@
                             <li>
                                 <a href="{{ route('teacher.loans.track') }}"
                                     class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.loans.track') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
-                                    <i class="bi bi-calculator text-lg"></i>
+                                        <i data-lucide="badge-dollar-sign" class="w-5 h-5"></i>
                                     My Loans
                                 </a>
                             </li>
