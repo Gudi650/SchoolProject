@@ -1,401 +1,528 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Teacher Dashboard</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
-    
-  </head>
-  <body class="bg-gray-50 text-gray-800">
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+</head>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+            window.lucide.createIcons();
+        }
+    });
+</script>
+
+<body class="bg-gray-50 text-gray-800">
     <div class="flex">
-      <!-- Sidebar -->
-      <aside id="sidebar" class="hidden md:block fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 p-4 z-40">
-        <style>
-          /* hide scrollbar but keep scrolling behavior */
-          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-          .no-scrollbar::-webkit-scrollbar { display: none; }
-        </style>
-        <div class="flex flex-col h-full">
-          <div>
-            <h1 class="text-indigo-600 text-xl font-semibold mb-2">
-              Teacher Portal
-            </h1>
-            <div class="w-full border-b border-gray-200 mb-4"></div>
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="hidden md:block fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 p-4 z-40">
+            <style>
+                /* hide scrollbar but keep scrolling behavior */
+                .no-scrollbar {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
 
-          </div>
+                .no-scrollbar::-webkit-scrollbar {
+                    display: none;
+                }
+            </style>
+            <div class="flex flex-col h-full">
+                <div>
+                    <h1 class="text-indigo-600 text-xl font-semibold mb-2">
+                        Teacher Portal
+                    </h1>
+                    <div class="w-full border-b border-gray-200 mb-4"></div>
 
-          <!-- scrollable nav area -->
-          <nav class="flex-1 overflow-y-auto space-y-2 pr-2 no-scrollbar">
+                </div>
 
-              <a href="{{ route('teacher.dashboard') }}" class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.dashboard') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                <i class="bi bi-house-door-fill"></i>
-                Dashboard
-              </a>
+                <!-- scrollable nav area -->
+                <nav class="flex-1 overflow-y-auto space-y-2 pr-2 no-scrollbar">
 
-              <a href="{{ route('teacher.announcements') }}" class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.announcements') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                <i class="bi bi-megaphone"></i>
-                Announcements
-              </a>
-
-              <!--hide teh profile link for now-->
-              <a href="{{ route('teacher.profile') }}" class="hidden flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.profile') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                <i class="bi bi-person-circle"></i>
-                 Profile
-              </a>
-
-            <div class="relative">
-
-              <button id="examsToggle" aria-expanded="{{ request()->routeIs('teacher.postresults','teacher.generateresults','teacher.examanalysis') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.postresults','teacher.generateresults','teacher.examanalysis') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                <span class="flex items-center gap-3">
-                  <i class="bi bi-journal-text"></i>
-                   Exams
-                </span>
-                <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.postresults','teacher.generateresults','teacher.examanalysis') ? 'rotate-180' : '' }}"></i>
-
-              </button>
-
-              <ul id="examsMenu" class="{{ request()->routeIs('teacher.postresults','teacher.generateresults','teacher.examanalysis') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
-                <li>
-                  <a href="{{ route('teacher.postresults') }}" class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.postresults') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
-                    <i class="bi bi-journal-plus text-lg"></i>
-                     Post Exam Results
-                  </a>
-                </li>
-
-                <li>
-                  <a href="{{ route('teacher.generateresults') }}" class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.generateresults') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
-                    <i class="bi bi-calculator text-lg"></i>
-                     Generate Exam Results
+                    <!--dashboard link-->
+                    <a href="{{ route('teacher.dashboard') }}"
+                        class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.dashboard') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                        <i class="bi bi-house-door-fill"></i>
+                        Dashboard
                     </a>
-                </li>
 
-                <li>
-                  <a href="{{ route('teacher.examanalysis') }}" class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.examanalysis') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
-                    <i class="bi bi-graph-up text-lg"></i>
-                     Exam Results Analysis
+                    <!--announcements-->
+                    <a href="{{ route('teacher.announcements') }}"
+                        class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.announcements') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                        <i class="bi bi-megaphone"></i>
+                        Announcements
                     </a>
-                </li>
 
-              </ul>
+                    <!--hide teh profile link for now-->
+                    <a href="{{ route('teacher.profile') }}"
+                        class="hidden flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.profile') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                        <i class="bi bi-person-circle"></i>
+                        Profile
+                    </a>
+
+                    <!--exam toogle section -->
+                    <div class="relative">
+
+                        <button id="examsToggle"
+                            aria-expanded="{{ request()->routeIs('teacher.postresults', 'teacher.generateresults', 'teacher.examanalysis') ? 'true' : 'false' }}"
+                            class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.postresults', 'teacher.generateresults', 'teacher.examanalysis') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                            <span class="flex items-center gap-3">
+                                <i class="bi bi-journal-text"></i>
+                                Exams
+                            </span>
+                            <i
+                                class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.postresults', 'teacher.generateresults', 'teacher.examanalysis') ? 'rotate-180' : '' }}"></i>
+
+                        </button>
+
+                        <ul id="examsMenu"
+                            class="{{ request()->routeIs('teacher.postresults', 'teacher.generateresults', 'teacher.examanalysis') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+                            <li>
+                                <a href="{{ route('teacher.postresults') }}"
+                                    class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.postresults') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
+                                    <i class="bi bi-journal-plus text-lg"></i>
+                                    Post Exam Results
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('teacher.generateresults') }}"
+                                    class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.generateresults') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
+                                    <i class="bi bi-calculator text-lg"></i>
+                                    Generate Exam Results
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('teacher.examanalysis') }}"
+                                    class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.examanalysis') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
+                                    <i class="bi bi-graph-up text-lg"></i>
+                                    Exam Results Analysis
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <!-- Schedule dropdown -->
+                    <div class="relative">
+                        <button id="scheduleToggle"
+                            aria-expanded="{{ request()->routeIs('teacher.schedule', 'teacher.generatedtimetable.view', 'teacher.generateexamtimetable') ? 'true' : 'false' }}"
+                            class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.schedule', 'teacher.generatedtimetable.view', 'teacher.generateexamtimetable') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                            <span class="flex items-center gap-3">
+                                <i class="bi bi-calendar3"></i>
+                                Schedule
+                            </span>
+                            <i
+                                class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.schedule', 'teacher.generatedtimetable.view', 'teacher.generateexamtimetable') ? 'rotate-180' : '' }}"></i>
+                        </button>
+
+                        <ul id="scheduleMenu"
+                            class="{{ request()->routeIs('teacher.schedule', 'teacher.generatedtimetable.view', 'teacher.generateexamtimetable') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+
+                            <li>
+                                <a href="{{ route('teacher.schedule') }}"
+                                    class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.schedule') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
+                                    <i class="bi bi-calendar-week"></i>
+                                    View Schedule
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('teacher.generatedtimetable.view') }}"
+                                    class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.generatedtimetable.view') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
+                                    <i class="bi bi-table"></i>
+                                    Generate Timetable
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('teacher.generateexamtimetable') }}"
+                                    class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.generateexamtimetable') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
+                                    <i class="bi bi-calendar-event"></i>
+                                    Generate Exam Timetable
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <!-- Online classes link -->
+                    <a href="./online_classes.html"
+                        class="flex items-center gap-3 p-2 rounded-md {{ request()->is('online_classes*') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                        <i class="bi bi-camera-video"></i>
+                        Online Classes
+                    </a>
+
+                    <!-- Attendance dropdown -->
+                    <div class="relative">
+
+                        <button id="attendanceToggle"
+                            aria-expanded="{{ request()->routeIs('teacher.registerstudentattendance.view', 'studentattendancereport') ? 'true' : 'false' }}"
+                            class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.registerstudentattendance.view', 'studentattendancereport') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                            <span class="flex items-center gap-3">
+                                <i class="bi bi-calendar-check"></i>
+                                Attendance
+                            </span>
+                            <i
+                                class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.registerstudentattendance.view', 'studentattendancereport') ? 'rotate-180' : '' }}"></i>
+                        </button>
+
+                        <ul id="attendanceMenu"
+                            class="{{ request()->routeIs('teacher.registerstudentattendance.view', 'studentattendancereport') ? 'mt-1 space-y-1' : 'hidden mt-1 space-y-1' }}">
+
+                            <li>
+                                <a href="{{ route('teacher.registerstudentattendance.view') }}"
+                                    class="group flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.registerstudentattendance.view') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }} pl-10">
+                                    <i
+                                        class="bi bi-person-plus text-lg text-gray-600 group-hover:text-indigo-600 transition-colors duration-150"></i>
+                                    <span>Register</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('studentattendancereport') }}"
+                                    class="group flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('studentattendancereport') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }} pl-10">
+                                    <i
+                                        class="bi bi-file-earmark-text text-lg text-gray-600 group-hover:text-indigo-600 transition-colors duration-150"></i>
+                                    <span>Records</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Loans dropdown -->
+                    <div class="relative">
+
+                        <button id="loanToggle"
+                            aria-expanded="{{ request()->routeIs('teacher.loans', 'teacher.loans.track') ? 'true' : 'false' }}"
+                            class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.loans', 'teacher.loans.track') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                            <span class="flex items-center gap-3">
+                                <i class="bi bi-journal-text"></i>
+                                Loans
+                            </span>
+                            <i
+                                class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.loans', 'teacher.loans.track') ? 'rotate-180' : '' }}"></i>
+
+                        </button>
+
+                        <ul id="loanMenu"
+                            class="{{ request()->routeIs('teacher.loans', 'teacher.loans.track') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+                            <li>
+                                <a href="{{ route('teacher.loans') }}"
+                                    class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.loans') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
+                                    <i class="bi bi-journal-plus text-lg"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('teacher.loans.track') }}"
+                                    class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.loans.track') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
+                                    <i class="bi bi-calculator text-lg"></i>
+                                    My Loans
+                                </a>
+                            </li>
+
+
+                        </ul>
+                    </div>
+
+                    <div class="relative">
+                        <button id="assignToggle"
+                            aria-expanded="{{ request()->routeIs('teacher.assignroles', 'teacher.assignsubjects', 'teacher.assignclasses') ? 'true' : 'false' }}"
+                            class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.assignroles', 'teacher.assignsubjects', 'teacher.assignclasses') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                            <span class="flex items-center gap-3">
+                                <i class="bi bi-people-fill"></i>
+                                Assign
+                            </span>
+                            <i
+                                class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.assignroles', 'teacher.assignsubjects', 'teacher.assignclasses') ? 'rotate-180' : '' }}"></i>
+                        </button>
+
+                        <ul id="assignMenu"
+                            class="{{ request()->routeIs('teacher.assignroles', 'teacher.assignsubjects', 'teacher.assignclasses') ? 'mt-1 space-y-1' : 'hidden mt-1 space-y-1' }}">
+
+                            <li>
+                                <a href="{{ route('teacher.assignroles') }}"
+                                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.assignroles') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                                    <span class="pl-6 flex items-center gap-3 w-full">
+                                        <i class="bi bi-person-badge text-lg"></i>
+                                        <span>Assign Roles</span>
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('teacher.assignsubjects') }}"
+                                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.assignsubjects') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                                    <span class="pl-6 flex items-center gap-3 w-full">
+                                        <i class="bi bi-journal-bookmark text-lg"></i>
+                                        <span>Assign Subjects</span>
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('teacher.assignclasses') }}"
+                                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.assignclasses') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                                    <span class="pl-6 flex items-center gap-3 w-full">
+                                        <i class="bi bi-journal-bookmark text-lg"></i>
+                                        <span>Assign Classes</span>
+                                    </span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <!--student enrollment dropdown-->
+                    <div class="relative">
+
+                        <button id="enrollmentToogle"
+                            aria-expanded="{{ request()->routeIs('teacher.studentenrollment.settings', 'teacher.studentenrollment.applicants') ? 'true' : 'false' }}"
+                            class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.studentenrollment.settings', 'teacher.studentenrollment.applicants', 'teacher.studentenrollment.analytics') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+
+                            <span class="flex items-center gap-3">
+                                <i class="bi bi-person-plus-fill text-lg"></i>
+                                Student Enrollment
+                            </span>
+
+                            <i
+                                class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('hfvb') ? 'rotate-180' : '' }}"></i>
+
+                        </button>
+
+                        <ul id="enrollmentMenu" class="mt-1 space-y-1 hidden mt-1 space-y-1">
+
+                            <li>
+                                <a href="{{ route('teacher.studentenrollment.analytics') }}"
+                                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.studentenrollment.analytics') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                                    <span class ="pl-6 flex items-center gap-3 w-full">
+                                        <i class="bi bi-graph-up-arrow text-lg"></i>
+                                        <span>Enrollment Analytics</span>
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('teacher.studentenrollment.settings') }}"
+                                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.studentenrollment.settings') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                                    <span class="pl-6 flex items-center gap-3 w-full">
+                                        <i class="bi bi-person-gear text-lg"></i>
+                                        <span>Enrollment Settings</span>
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('teacher.studentenrollment.applicants') }}"
+                                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.studentenrollment.applicants') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                                    <span class="pl-6 flex items-center gap-3 w-full">
+                                        <i class="bi bi-person-lines-fill text-lg"></i>
+                                        <span>Applicants</span>
+                                    </span>
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </nav>
+
+                <!-- logout moved outside the scrollable nav and pinned to bottom -->
+                <div class="mt-auto pt-4 w-full border-t border-gray-100">
+                    <div class="py-3 px-0">
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button
+                                class="w-full text-red-500 flex items-center justify-center gap-2 p-2 rounded-md border border-gray-100 hover:bg-red-50 hover:text-red-700 transition-colors duration-150">
+                                <i class="bi bi-box-arrow-right"></i> Log Out
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
             </div>
-          <div class="relative">
+        </aside>
 
-            <button id="scheduleToggle" aria-expanded="{{ request()->routeIs('teacher.schedule','teacher.generatedtimetable.view','teacher.generateexamtimetable') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.schedule','teacher.generatedtimetable.view','teacher.generateexamtimetable') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-              <span class="flex items-center gap-3">
-                <i class="bi bi-calendar3"></i>
-                 Schedule
-              </span>
-              <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.schedule','teacher.generatedtimetable.view','teacher.generateexamtimetable') ? 'rotate-180' : '' }}"></i>
-            </button>
-
-            <ul id="scheduleMenu" 
-            class="{{ request()->routeIs('teacher.schedule','teacher.generatedtimetable.view','teacher.generateexamtimetable') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
-        
-              <li>
-                <a href="{{ route('teacher.schedule') }}" 
-                class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.schedule') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
-                <i class="bi bi-calendar-week"></i>
-                 View Schedule
-                </a>
-              </li>
-
-              <li>
-                <a href="{{ route('teacher.generatedtimetable.view') }}" 
-                class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.generatedtimetable.view') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
-                  <i class="bi bi-table"></i> 
-                  Generate Timetable
-                </a>
-              </li>
-
-              <li>
-                <a href="{{ route('teacher.generateexamtimetable') }}" 
-                class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.generateexamtimetable') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
-                  <i class="bi bi-calendar-event"></i> 
-                  Generate Exam Timetable
-                </a>
-            </li>
-            </ul>
-
-          </div>
-
-            <a href="./online_classes.html" 
-              class="flex items-center gap-3 p-2 rounded-md {{ request()->is('online_classes*') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-              <i class="bi bi-camera-video"></i> 
-              Online Classes
-            </a>
-            
-            <!-- Attendance dropdown -->
-            <div class="relative">
-              
-              <button id="attendanceToggle" aria-expanded="{{ request()->routeIs('teacher.registerstudentattendance.view','studentattendancereport') ? 'true' : 'false' }}"   class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.registerstudentattendance.view','studentattendancereport') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                <span class="flex items-center gap-3">
-                  <i class="bi bi-calendar-check"></i> 
-                  Attendance
-                </span>
-                <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.registerstudentattendance.view','studentattendancereport') ? 'rotate-180' : '' }}"></i>
-              </button>
-
-              <ul id="attendanceMenu" class="{{ request()->routeIs('teacher.registerstudentattendance.view','studentattendancereport') ? 'mt-1 space-y-1' : 'hidden mt-1 space-y-1' }}">
-
-                <li>
-                  <a href="{{ route('teacher.registerstudentattendance.view') }}" 
-                    class="group flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.registerstudentattendance.view') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }} pl-10">
-                      <i class="bi bi-person-plus text-lg text-gray-600 group-hover:text-indigo-600 transition-colors duration-150"></i>
-                      <span>Register</span>
-                  </a>
-                </li>
-
-                <li>
-                  <a href="{{ route('studentattendancereport') }}" 
-                    class="group flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('studentattendancereport') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }} pl-10">
-                      <i class="bi bi-file-earmark-text text-lg text-gray-600 group-hover:text-indigo-600 transition-colors duration-150"></i>
-                      <span>Records</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div class="relative">
-              <button id="assignToggle" aria-expanded="{{ request()->routeIs('teacher.assignroles','teacher.assignsubjects','teacher.assignclasses') ? 'true' : 'false' }}"     class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.assignroles','teacher.assignsubjects','teacher.assignclasses') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                <span class="flex items-center gap-3">
-                  <i class="bi bi-people-fill"></i> 
-                  Assign
-                </span>
-                <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.assignroles','teacher.assignsubjects','teacher.assignclasses') ? 'rotate-180' : '' }}"></i>
-              </button>
-
-              <ul id="assignMenu" class="{{ request()->routeIs('teacher.assignroles','teacher.assignsubjects','teacher.assignclasses') ? 'mt-1 space-y-1' : 'hidden mt-1 space-y-1' }}">
-
-                <li>
-                  <a href="{{ route('teacher.assignroles') }}" 
-                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.assignroles') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                      <span class="pl-6 flex items-center gap-3 w-full">
-                        <i class="bi bi-person-badge text-lg"></i>
-                        <span>Assign Roles</span>
-                      </span>
-                  </a>
-                </li>
-
-                <li>
-                  <a href="{{ route('teacher.assignsubjects') }}" class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.assignsubjects') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                    <span class="pl-6 flex items-center gap-3 w-full">
-                      <i class="bi bi-journal-bookmark text-lg"></i>
-                      <span>Assign Subjects</span>
-                    </span>
-                  </a>
-                </li>
-
-                <li>
-                  <a href="{{ route('teacher.assignclasses') }}" 
-                  class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.assignclasses') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                    <span class="pl-6 flex items-center gap-3 w-full">
-                      <i class="bi bi-journal-bookmark text-lg"></i>
-                      <span>Assign Classes</span>
-                    </span>
-                  </a>
-                </li>
-
-              </ul>
-            </div>
-
-            <!--student enrollment dropdown-->
-            <div class="relative">
-
-              <button id="enrollmentToogle" aria-expanded="{{ request()->routeIs('teacher.studentenrollment.settings','teacher.studentenrollment.applicants') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.studentenrollment.settings','teacher.studentenrollment.applicants','teacher.studentenrollment.analytics') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-
-                <span class="flex items-center gap-3">
-                  <i class="bi bi-person-plus-fill text-lg"></i>
-                  Student Enrollment
-                </span>
-
-                <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('hfvb') ? 'rotate-180' : '' }}"></i>
-
-              </button>
-
-              <ul id="enrollmentMenu" class="mt-1 space-y-1 hidden mt-1 space-y-1">
-
-                <li>
-                  <a href="{{ route('teacher.studentenrollment.analytics') }}" 
-                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.studentenrollment.analytics') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                      <span class ="pl-6 flex items-center gap-3 w-full">
-                        <i class="bi bi-graph-up-arrow text-lg"></i>
-                        <span>Enrollment Analytics</span>
-                      </span>
-                  </a>
-                </li>
-
-                <li>
-                  <a href="{{ route('teacher.studentenrollment.settings') }}" 
-                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.studentenrollment.settings') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                      <span class="pl-6 flex items-center gap-3 w-full">
-                        <i class="bi bi-person-gear text-lg"></i>
-                        <span>Enrollment Settings</span>
-                      </span>
-                  </a>
-                </li>
-
-                <li>
-                  <a href="{{ route('teacher.studentenrollment.applicants') }}" 
-                    class="group block w-full p-2 pl-0 rounded-md {{ request()->routeIs('teacher.studentenrollment.applicants') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
-                      <span class="pl-6 flex items-center gap-3 w-full">
-                        <i class="bi bi-person-lines-fill text-lg"></i>
-                        <span>Applicants</span>
-                      </span>
-                  </a>
-                </li>
-
-              </ul>
-
-            </div>
-
-          </nav>
-
-          <!-- logout moved outside the scrollable nav and pinned to bottom -->
-          <div class="mt-auto pt-4 w-full border-t border-gray-100">
-            <div class="py-3 px-0">
-              <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button class="w-full text-red-500 flex items-center justify-center gap-2 p-2 rounded-md border border-gray-100 hover:bg-red-50 hover:text-red-700 transition-colors duration-150">
-                  <i class="bi bi-box-arrow-right"></i> Log Out
-                </button>
-              </form>
-            </div>
-          </div>
-
-        </div>
-      </aside>
-
-      <!-- Overlay for mobile sidebar -->
-      <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black bg-opacity-40 z-30"></div>
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black bg-opacity-40 z-30"></div>
 
 
-    <!-- Main content area -->
-    {{ $slot }}
+        <!-- Main content area -->
+        {{ $slot }}
 
     </div>
- <script>
-    // Shared JS for sidebar toggle, read-more and tag filtering
-    document.addEventListener('DOMContentLoaded', function () {
-      // Sidebar toggle for mobile
-      const sidebar = document.getElementById('sidebar');
-      const sidebarToggle = document.getElementById('sidebarToggle');
-      const overlay = document.getElementById('sidebarOverlay');
-      if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function () {
-          if (sidebar) sidebar.classList.toggle('hidden');
-          if (overlay) overlay.classList.toggle('hidden');
+    <script>
+        // Shared JS for sidebar toggle, read-more and tag filtering
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar toggle for mobile
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    if (sidebar) sidebar.classList.toggle('hidden');
+                    if (overlay) overlay.classList.toggle('hidden');
+                });
+            }
+            if (overlay) {
+                overlay.addEventListener('click', function() {
+                    if (sidebar) sidebar.classList.add('hidden');
+                    overlay.classList.add('hidden');
+                });
+            }
+
+            // Schedule dropdown (View Schedule, Generate Timetable, Generate Exam Timetable)
+            const scheduleToggle = document.getElementById('scheduleToggle');
+            const scheduleMenu = document.getElementById('scheduleMenu');
+            if (scheduleToggle && scheduleMenu) {
+                const scheduleChevron = scheduleToggle.querySelector('.bi-chevron-down');
+                scheduleToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const open = scheduleMenu.classList.toggle('hidden') === false;
+                    scheduleToggle.setAttribute('aria-expanded', open);
+                    if (scheduleChevron) scheduleChevron.classList.toggle('rotate-180', open);
+                });
+                // close when clicking outside, but do NOT close when clicking a submenu link (so navigation keeps it open)
+                document.addEventListener('click', function(e) {
+                    const target = e.target;
+                    if (scheduleMenu.contains(target) && (target.closest && target.closest('a'))) return;
+                    if (!scheduleToggle.contains(target) && !scheduleMenu.contains(target)) {
+                        scheduleMenu.classList.add('hidden');
+                        scheduleToggle.setAttribute('aria-expanded', 'false');
+                        if (scheduleChevron) scheduleChevron.classList.remove('rotate-180');
+                    }
+                });
+            }
+
+            // Attendance dropdown (used by student + teacher sidebars)
+            const attendanceToggle = document.getElementById('attendanceToggle');
+            const attendanceMenu = document.getElementById('attendanceMenu');
+            if (attendanceToggle && attendanceMenu) {
+                const attendanceChevron = attendanceToggle.querySelector('.bi-chevron-down');
+                attendanceToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const open = attendanceMenu.classList.toggle('hidden') === false;
+                    attendanceToggle.setAttribute('aria-expanded', open);
+                    if (attendanceChevron) attendanceChevron.classList.toggle('rotate-180', open);
+                });
+                document.addEventListener('click', function(e) {
+                    if (!attendanceToggle.contains(e.target) && !attendanceMenu.contains(e.target)) {
+                        attendanceMenu.classList.add('hidden');
+                        attendanceToggle.setAttribute('aria-expanded', 'false');
+                        if (attendanceChevron) attendanceChevron.classList.remove('rotate-180');
+                    }
+                });
+            }
+
+            // Exams dropdown (teacher sidebar)
+            // Loans dropdown (teacher sidebar)
+            const loanToggle = document.getElementById('loanToggle');
+            const loanMenu = document.getElementById('loanMenu');
+            if (loanToggle && loanMenu) {
+                const loanChevron = loanToggle.querySelector('.bi-chevron-down');
+                loanToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const open = loanMenu.classList.toggle('hidden') === false;
+                    loanToggle.setAttribute('aria-expanded', open);
+                    if (loanChevron) loanChevron.classList.toggle('rotate-180', open);
+                });
+                // close when clicking outside, but do NOT close when clicking a submenu link (so navigation keeps it open)
+                document.addEventListener('click', function(e) {
+                    const target = e.target;
+                    if (loanMenu.contains(target) && (target.closest && target.closest('a'))) return;
+                    if (!loanToggle.contains(target) && !loanMenu.contains(target)) {
+                        loanMenu.classList.add('hidden');
+                        loanToggle.setAttribute('aria-expanded', 'false');
+                        if (loanChevron) loanChevron.classList.remove('rotate-180');
+                    }
+                });
+            }
+            const examsToggle = document.getElementById('examsToggle');
+            const examsMenu = document.getElementById('examsMenu');
+            if (examsToggle && examsMenu) {
+                const examsChevron = examsToggle.querySelector('.bi-chevron-down');
+                examsToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const open = examsMenu.classList.toggle('hidden') === false;
+                    examsToggle.setAttribute('aria-expanded', open);
+                    if (examsChevron) examsChevron.classList.toggle('rotate-180', open);
+                });
+            }
+
+            //student enrollment dropdown (teacher sidebar)
+            const enrollmentToogle = document.getElementById('enrollmentToogle');
+            const enrollmentMenu = document.getElementById('enrollmentMenu');
+            if (enrollmentToogle && enrollmentMenu) {
+
+                const enrollmentChevron = enrollmentToogle.querySelector('.bi-chevron-down');
+
+                enrollmentToogle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const open = enrollmentMenu.classList.toggle('hidden') === false;
+                    enrollmentToogle.setAttribute('aria-expanded', open);
+
+                    if (enrollmentChevron) enrollmentChevron.classList.toggle('rotate-180', open);
+
+                });
+
+            }
+
+            // Assign dropdown (Assign Roles + Assign Classes)
+            const assignToggle = document.getElementById('assignToggle');
+            const assignMenu = document.getElementById('assignMenu');
+
+            if (assignToggle && assignMenu) {
+
+                const assignChevron = assignToggle.querySelector('.bi-chevron-down');
+
+                assignToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const open = assignMenu.classList.toggle('hidden') === false;
+                    assignToggle.setAttribute('aria-expanded', open);
+                    if (assignChevron) assignChevron.classList.toggle('rotate-180', open);
+                });
+
+                // close when clicking outside, but do NOT close when clicking a submenu link (so navigation keeps it open)
+                document.addEventListener('click', function(e) {
+
+                    const target = e.target;
+
+                    // if the click was on a submenu anchor inside assignMenu, allow the navigation — do not close here
+                    if (assignMenu.contains(target) && (target.closest && target.closest('a'))) return;
+
+                    if (!assignToggle.contains(target) && !assignMenu.contains(target)) {
+                        assignMenu.classList.add('hidden');
+                        assignToggle.setAttribute('aria-expanded', 'false');
+                        if (assignChevron) assignChevron.classList.remove('rotate-180');
+                    }
+                    
+                });
+            }
+
+            // Initialize lucide icons
+            document.addEventListener('DOMContentLoaded', function() {
+                if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                    window.lucide.createIcons();
+                }
+            });
+
         });
-      }
-      if (overlay) {
-        overlay.addEventListener('click', function () {
-          if (sidebar) sidebar.classList.add('hidden');
-          overlay.classList.add('hidden');
-        });
-      }
-
-    // Schedule dropdown (View Schedule, Generate Timetable, Generate Exam Timetable)
-    const scheduleToggle = document.getElementById('scheduleToggle');
-    const scheduleMenu = document.getElementById('scheduleMenu');
-    if (scheduleToggle && scheduleMenu) {
-      const scheduleChevron = scheduleToggle.querySelector('.bi-chevron-down');
-      scheduleToggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        const open = scheduleMenu.classList.toggle('hidden') === false;
-        scheduleToggle.setAttribute('aria-expanded', open);
-        if (scheduleChevron) scheduleChevron.classList.toggle('rotate-180', open);
-      });
-      // close when clicking outside, but do NOT close when clicking a submenu link (so navigation keeps it open)
-      document.addEventListener('click', function (e) {
-        const target = e.target;
-        if (scheduleMenu.contains(target) && (target.closest && target.closest('a'))) return;
-        if (!scheduleToggle.contains(target) && !scheduleMenu.contains(target)) {
-          scheduleMenu.classList.add('hidden');
-          scheduleToggle.setAttribute('aria-expanded', 'false');
-          if (scheduleChevron) scheduleChevron.classList.remove('rotate-180');
-        }
-      });
-    }
-
-      // Attendance dropdown (used by student + teacher sidebars)
-      const attendanceToggle = document.getElementById('attendanceToggle');
-      const attendanceMenu = document.getElementById('attendanceMenu');
-      if (attendanceToggle && attendanceMenu) {
-        const attendanceChevron = attendanceToggle.querySelector('.bi-chevron-down');
-        attendanceToggle.addEventListener('click', function (e) {
-          e.preventDefault();
-          const open = attendanceMenu.classList.toggle('hidden') === false;
-          attendanceToggle.setAttribute('aria-expanded', open);
-          if (attendanceChevron) attendanceChevron.classList.toggle('rotate-180', open);
-        });
-        document.addEventListener('click', function (e) {
-          if (!attendanceToggle.contains(e.target) && !attendanceMenu.contains(e.target)) {
-            attendanceMenu.classList.add('hidden');
-            attendanceToggle.setAttribute('aria-expanded', 'false');
-            if (attendanceChevron) attendanceChevron.classList.remove('rotate-180');
-          }
-        });
-      }
-
-      // Exams dropdown (teacher sidebar)
-      const examsToggle = document.getElementById('examsToggle');
-      const examsMenu = document.getElementById('examsMenu');
-      if (examsToggle && examsMenu) {
-        const examsChevron = examsToggle.querySelector('.bi-chevron-down');
-        examsToggle.addEventListener('click', function (e) {
-          e.preventDefault();
-          const open = examsMenu.classList.toggle('hidden') === false;
-          examsToggle.setAttribute('aria-expanded', open);
-          if (examsChevron) examsChevron.classList.toggle('rotate-180', open);
-        });
-      }
-
-      //student enrollment dropdown (teacher sidebar)
-      const enrollmentToogle = document.getElementById('enrollmentToogle');
-      const enrollmentMenu = document.getElementById('enrollmentMenu');
-      if(enrollmentToogle && enrollmentMenu) {
-
-        const enrollmentChevron = enrollmentToogle.querySelector('.bi-chevron-down');
-
-        enrollmentToogle.addEventListener('click', function (e){
-          e.preventDefault();
-          const open = enrollmentMenu.classList.toggle('hidden') === false;
-          enrollmentToogle.setAttribute('aria-expanded', open);
-
-          if (enrollmentChevron) enrollmentChevron.classList.toggle('rotate-180', open);
-
-        });
-
-      }
-
-      // Assign dropdown (Assign Roles + Assign Classes)
-      const assignToggle = document.getElementById('assignToggle');
-      const assignMenu = document.getElementById('assignMenu');
-      if (assignToggle && assignMenu) {
-        const assignChevron = assignToggle.querySelector('.bi-chevron-down');
-        assignToggle.addEventListener('click', function (e) {
-          e.preventDefault();
-          const open = assignMenu.classList.toggle('hidden') === false;
-          assignToggle.setAttribute('aria-expanded', open);
-          if (assignChevron) assignChevron.classList.toggle('rotate-180', open);
-        });
-
-        // close when clicking outside, but do NOT close when clicking a submenu link (so navigation keeps it open)
-        document.addEventListener('click', function (e) {
-          const target = e.target;
-          // if the click was on a submenu anchor inside assignMenu, allow the navigation — do not close here
-          if (assignMenu.contains(target) && (target.closest && target.closest('a'))) return;
-          if (!assignToggle.contains(target) && !assignMenu.contains(target)) {
-            assignMenu.classList.add('hidden');
-            assignToggle.setAttribute('aria-expanded', 'false');
-            if (assignChevron) assignChevron.classList.remove('rotate-180');
-          }
-        });
-      }
-
-      // (Removed unused handlers: read-more, tag filters, search, and student form switches)
-    });
     </script>
-  </body>
+</body>
+
 </html>
