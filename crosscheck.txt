@@ -21,6 +21,7 @@ Accountant DASHBOARD
 2)If no nssf or psssf provided by the user then prompts for user to fill in 
 3)show in the setting the passf/nssf also the health insurance as well if set
 4)school fees installment payment setting as well 
+5)add the routes in the middleware as well 
 
 
 
@@ -35,3 +36,4 @@ TEACHER DASHBOARD
 1)The Attendance,assign Roles (all three dropdowns look at it) role based
 2)roless have to be filled in if not then prompt 
 3)new batch the 3 is hard codeed there change that as well
+4)add the loans pages in the middleware as well also the sidebar as well

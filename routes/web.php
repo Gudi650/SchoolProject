@@ -542,3 +542,18 @@ Route::get('/student-enrollment',
 Route::get('/student-enrollment/thanks', function(){
     return view('studentenrollmentThank');
 })->name('studentenrollment.thanks');
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//route to add in the teacher dashboard 
+//routes for loan section in the teacher dashboard
+////////////////////////////////////////////////////////////////////////////////
+
+Route::get('/teacher-loans-dashboard', function () {
+    return view('TeacherPanel.loan.dashboard');
+})->name('teacher.loans');
+
+Route::get('/teacher-loans-progress', function () {
+    return view('TeacherPanel.loan.trackloan');
+})->name('teacher.loans.track');
