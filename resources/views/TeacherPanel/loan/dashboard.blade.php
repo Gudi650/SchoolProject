@@ -1,7 +1,7 @@
-<x-Account-sidebar>
+<x-Teacher-sidebar>
     <x-slot name="title">Loan Application Dashboard</x-slot>
 
-    <main class="p-4 sm:p-6 bg-slate-50 min-h-screen">
+    <main class="p-4 sm:p-6 bg-slate-50 min-h-screen ml-0 md:ml-64">
         <div class="mb-6 rounded-lg border border-indigo-100 bg-indigo-50 px-4 sm:px-6 py-4">
             <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
@@ -227,4 +227,4 @@
         });
     </script>
 
-</x-Account-sidebar>
+</x-Teacher-sidebar>
