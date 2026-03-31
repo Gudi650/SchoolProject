@@ -160,7 +160,200 @@
               </div>
             </div>
 
-            <!-- Health Insurance Section -->
+            <!-- Loan Settings Configuration (Modern UI, Grouped) -->
+            <div id="loan-settings" class="max-w-3xl mx-auto">
+              <div class="bg-white rounded-xl shadow border border-slate-200 p-0 md:p-2">
+                <h2 class="text-2xl font-bold text-slate-900 mb-6 px-6 pt-6">Loan Settings Configuration</h2>
+                <div class="space-y-6 px-0 md:px-6 pb-6">
+                  <!-- 1. General Loan Rules -->
+                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-indigo-600"></i>General Loan Rules</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Loan Multiplier</label>
+                      <input type="number" min="1" max="5" step="0.1" value="3" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                      <p class="text-xs text-slate-500 mt-1">E.g. 3× Basic Salary</p>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Loan Amount (TZS)</label>
+                      <input type="number" min="0" step="10000" value="5000000" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                      <p class="text-xs text-slate-500 mt-1">Absolute cap for any loan</p>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Duration (months)</label>
+                      <input type="number" min="1" max="24" value="12" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                      <p class="text-xs text-slate-500 mt-1">Max 24 months</p>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Grace Period (days)</label>
+                      <input type="number" min="0" max="90" value="30" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                      <p class="text-xs text-slate-500 mt-1">Time before first repayment</p>
+                    </div>
+                  </div>
+                </div>
+
+                  <!-- 2. Interest Settings -->
+                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
+                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="percent" class="w-5 h-5 text-indigo-600"></i>Interest Settings</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Default Interest Rate (%)</label>
+                      <input type="number" min="0" max="100" step="0.01" value="8.00" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                      <p class="text-xs text-slate-500 mt-1">Recommended: 8%</p>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Minimum Interest Rate (BOT Rate)</label>
+                      <input type="number" value="5.75" readonly class="w-full px-4 py-2 border border-slate-300 rounded-lg bg-slate-100 text-slate-500" />
+                      <p class="text-xs text-slate-500 mt-1">Bank of Tanzania minimum rate</p>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex items-center gap-6">
+                    <div class="flex items-center gap-2">
+                      <input type="radio" id="flat-rate" name="interest_type" checked class="accent-indigo-600" />
+                      <label for="flat-rate" class="text-sm text-slate-700">Flat Rate</label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <input type="radio" id="reducing-balance" name="interest_type" class="accent-indigo-600" />
+                      <label for="reducing-balance" class="text-sm text-slate-700">Reducing Balance</label>
+                    </div>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-2">Choose how interest is calculated on loans</p>
+                </div>
+
+                  <!-- 3. Repayment Rules -->
+                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
+                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="repeat" class="w-5 h-5 text-indigo-600"></i>Repayment Rules</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Deduction from Salary (%)</label>
+                      <input type="number" min="0" max="100" value="40" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                      <p class="text-xs text-slate-500 mt-1">Default: 40% of net salary</p>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Repayment Options</label>
+                      <div class="flex items-center gap-3 flex-wrap">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" checked class="accent-indigo-600" />
+                          <span class="text-sm text-slate-700">Allow Early Repayment</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" checked class="accent-indigo-600" />
+                          <span class="text-sm text-slate-700">Allow Multiple Loans per Employee</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" checked class="accent-indigo-600" />
+                          <span class="text-sm text-slate-700">Auto Payroll Deduction</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                  <!-- 4. PAYE & Compliance Rules -->
+                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
+                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5 text-indigo-600"></i>PAYE & Compliance Rules</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">BOT Rate (Reference)</label>
+                      <input type="number" value="5.75" readonly class="w-full px-4 py-2 border border-slate-300 rounded-lg bg-slate-100 text-slate-500" />
+                    </div>
+                    <div class="flex items-center gap-2 mt-6 md:mt-0">
+                      <input type="checkbox" checked class="accent-indigo-600" id="enable-paye" />
+                      <label for="enable-paye" class="text-sm text-slate-700">Enable PAYE Fringe Benefit Calculation</label>
+                    </div>
+                  </div>
+                  <div class="mb-4 p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-sm">
+                    <strong>Rule:</strong> If interest rate is less than BOT rate, PAYE applies to the difference as a fringe benefit.
+                  </div>
+                  <div class="mb-4">
+                    <div class="p-4 rounded-lg bg-yellow-50 border border-yellow-300 text-yellow-900 text-sm flex items-center gap-2 mb-2">
+                      <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                      <span>Warning: Loan amount greater than 3× salary will trigger a compliance warning.</span>
+                    </div>
+                    <div class="p-4 rounded-lg bg-yellow-50 border border-yellow-300 text-yellow-900 text-sm flex items-center gap-2">
+                      <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                      <span>Warning: Loan duration greater than 12 months will trigger a compliance warning.</span>
+                    </div>
+                  </div>
+                </div>
+
+                  <!-- 5. Approval Workflow -->
+                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
+                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="user-check" class="w-5 h-5 text-indigo-600"></i>Approval Workflow</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-center gap-2">
+                      <input type="checkbox" checked class="accent-indigo-600" id="require-approval" />
+                      <label for="require-approval" class="text-sm text-slate-700">Require Approval</label>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Approval Levels</label>
+                      <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option>Accountant</option>
+                        <option>Admin</option>
+                      </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <input type="checkbox" class="accent-indigo-600" id="allow-override" />
+                      <label for="allow-override" class="text-sm text-slate-700">Allow Override for High Loans</label>
+                    </div>
+                  </div>
+                </div>
+
+                  <!-- 6. Notifications Settings -->
+                  <div class="bg-slate-50 rounded-lg border border-slate-100 p-6">
+                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="bell" class="w-5 h-5 text-indigo-600"></i>Notifications Settings</h3>
+                  <div class="flex flex-wrap gap-6">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked class="accent-indigo-600" />
+                      <span class="text-sm text-slate-700">Notify Employee on Approval</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked class="accent-indigo-600" />
+                      <span class="text-sm text-slate-700">Notify on Deduction</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked class="accent-indigo-600" />
+                      <span class="text-sm text-slate-700">Notify on Completion</span>
+                    </label>
+                  </div>
+                </div>
+
+                  <!-- 7. Preview Panel -->
+                  <div class="bg-white rounded-xl border border-slate-200 p-6">
+                  <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="eye" class="w-5 h-5 text-indigo-600"></i>Loan Calculation Preview</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <div class="text-xs text-slate-500 mb-1">Example: Basic Salary</div>
+                      <div class="text-lg font-bold text-slate-900 mb-2">TZS 1,000,000</div>
+                      <div class="text-xs text-slate-500 mb-1">Loan Amount (3× Salary)</div>
+                      <div class="text-lg font-bold text-indigo-700 mb-2">TZS 3,000,000</div>
+                      <div class="text-xs text-slate-500 mb-1">Interest Rate</div>
+                      <div class="text-lg font-bold text-green-700 mb-2">8%</div>
+                      <div class="text-xs text-slate-500 mb-1">Duration</div>
+                      <div class="text-lg font-bold text-slate-900 mb-2">12 months</div>
+                    </div>
+                    <div>
+                      <div class="text-xs text-slate-500 mb-1">Monthly Repayment</div>
+                      <div class="text-lg font-bold text-indigo-700 mb-2">TZS 270,000</div>
+                      <div class="text-xs text-slate-500 mb-1">Total Repayable</div>
+                      <div class="text-lg font-bold text-slate-900 mb-2">TZS 3,240,000</div>
+                      <div class="text-xs text-slate-500 mb-1">Deduction from Salary</div>
+                      <div class="text-lg font-bold text-red-700 mb-2">27%</div>
+                    </div>
+                  </div>
+                  <div class="mt-4 text-xs text-slate-500">This is a sample calculation based on current settings. Actual values may vary.</div>
+                </div>
+
+                  <!-- Save Button -->
+                  <div class="sticky bottom-0 bg-white py-4 flex justify-end border-t border-slate-200 z-10 rounded-b-xl">
+                    <button class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors flex items-center gap-2 text-base font-semibold">
+                      <i data-lucide="save" class="w-5 h-5"></i>
+                      Save Loan Settings
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div id="health-insurance" class="bg-white rounded-xl p-6 border border-slate-200 scroll-mt-6">
               <h3 class="text-lg font-semibold text-slate-900 mb-4">Health Insurance</h3>
 
