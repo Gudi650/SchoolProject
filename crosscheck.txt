@@ -7,7 +7,7 @@ RECOMMENDATIONS TO ADD LATER only
 
 ALL THE DASHBOARD
 1)Error handling in the page
-
+2)UI/UX consitency change as the Teacher and student are so dull as of now
 
 
 

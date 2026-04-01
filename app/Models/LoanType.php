@@ -21,4 +21,10 @@ class LoanType extends Model
     {
         return $this->belongsTo(School::class);
     }
+
+    // Relationship: LoanType has many LoanApplications
+    public function loanApplications()
+    {
+        return $this->hasMany(LoanApplication::class);
+    }
 }

@@ -60,4 +60,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Teacher::class);
     }
+
+    // Relationship: User has many LoanApplications
+    public function loanApplications()
+    {
+        return $this->hasMany(LoanApplication::class);
+    }
 }
