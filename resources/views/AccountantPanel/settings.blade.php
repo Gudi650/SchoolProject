@@ -102,6 +102,7 @@
                     </div>
                   </div>
 
+                <!--NSSF/PSSF configuration section-->
                 <form action="{{ route('accounting.contributionsSettings') }}" method="POST">
                   @csrf
 
@@ -177,28 +178,62 @@
               <div class="bg-white rounded-xl shadow border border-slate-200 p-0 md:p-2">
                 <h2 class="text-2xl font-bold text-slate-900 mb-6 px-6 pt-6">Loan Settings & Types</h2>
                 <div class="space-y-8 px-0 md:px-6 pb-6">
+                  <form action="{{ route('accounting.loanSettings.save') }}" method="POST" id="loanSettingsForm" class="space-y-8">
+                    @csrf
                   <!-- Global Loan Rules Card -->
                   <div class="bg-slate-50 rounded-lg border border-slate-100 p-6 mb-4">
                     <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-indigo-600"></i>Global Loan Rules</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Loan Multiplier</label>
-                        <input type="number" min="1" max="10" step="0.1" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="E.g. 3 (for 3× salary)" />
+                        <input id="maxLoanMultiplier" type="number" name="max_loan_multiplier" min="1" max="10" step="0.1" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="E.g. 3 (for 3× salary)" required />
                         <p class="text-xs text-slate-500 mt-1">Maximum allowed: 3× employee's basic salary.</p>
                       </div>
                       <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Reference Salary for Auto Fill</label>
+                        <input id="referenceSalary" type="number" min="0" step="0.01" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="E.g. 1000000" />
+                        <p class="text-xs text-slate-500 mt-1">Used to auto-calculate max loan amount for each loan type.</p>
+                      </div>
+                      <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Minimum Interest Rate (BOT Rate)</label>
-                        <input type="number" value="5.75" readonly class="w-full px-4 py-2 border border-slate-300 rounded-lg bg-slate-100 text-slate-500" />
+                        <input type="number" name="min_interest_rate" value="5.75" readonly class="w-full px-4 py-2 border border-slate-300 rounded-lg bg-slate-100 text-slate-500" />
                         <p class="text-xs text-slate-500 mt-1">Set by Bank of Tanzania. Loans below this rate trigger PAYE.</p>
                       </div>
+                      <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Default Interest Rate (%)</label>
+                        <input type="number" name="default_interest_rate" min="0" max="100" step="0.01" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="E.g. 8.00" required />
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Interest Type</label>
+                        <select name="interest_type" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                          <option value="flat">Flat</option>
+                          <option value="reducing">Reducing</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Max Duration (months)</label>
+                        <input type="number" name="max_duration_months" min="1" max="60" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="E.g. 24" required />
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Grace Period (days)</label>
+                        <input type="number" name="grace_period_days" min="0" max="365" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="E.g. 7" required />
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Deduction Percent (%)</label>
+                        <input type="number" name="max_deduction_percent" min="1" max="100" step="0.01" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="E.g. 35" required />
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Loan Amount (optional)</label>
+                        <input type="number" name="max_loan_amount" min="0" step="0.01" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="E.g. 5000000" />
+                      </div>
                       <div class="flex items-center gap-2 mt-2">
-                        <input type="checkbox" id="enable-paye" class="accent-indigo-600" />
+                        <input type="checkbox" id="enable-paye" name="enable_paye_calculation" class="accent-indigo-600" />
                         <label for="enable-paye" class="text-sm text-slate-700">Enable PAYE Calculation</label>
                         <span class="ml-2 text-xs text-blue-600 cursor-pointer" title="If enabled, PAYE will be calculated for loans below BOT rate."><i data-lucide="info" class="w-4 h-4"></i></span>
                       </div>
                       <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Approval Levels</label>
-                        <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <select name="approval_levels" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
                           <option value="1">1 (Default)</option>
                           <option value="2">2</option>
                           <option value="3">3</option>
@@ -208,9 +243,25 @@
                         <p class="text-xs text-slate-500 mt-1">Number of approval steps required for loan approval.</p>
                       </div>
                       <div class="flex items-center gap-2 mt-2">
-                        <input type="checkbox" id="allow-override" class="accent-indigo-600" />
+                        <input type="checkbox" id="allow-override" name="allow_override" class="accent-indigo-600" />
                         <label for="allow-override" class="text-sm text-slate-700">Allow Override</label>
                         <span class="ml-2 text-xs text-blue-600 cursor-pointer" title="Allow admin to override loan rules in special cases."><i data-lucide="info" class="w-4 h-4"></i></span>
+                      </div>
+                      <div class="flex items-center gap-2 mt-2">
+                        <input type="checkbox" id="require-approval" name="require_approval" class="accent-indigo-600" checked />
+                        <label for="require-approval" class="text-sm text-slate-700">Require Approval</label>
+                      </div>
+                      <div class="flex items-center gap-2 mt-2">
+                        <input type="checkbox" id="allow-early-repayment" name="allow_early_repayment" class="accent-indigo-600" />
+                        <label for="allow-early-repayment" class="text-sm text-slate-700">Allow Early Repayment</label>
+                      </div>
+                      <div class="flex items-center gap-2 mt-2">
+                        <input type="checkbox" id="allow-multiple-loans" name="allow_multiple_loans" class="accent-indigo-600" />
+                        <label for="allow-multiple-loans" class="text-sm text-slate-700">Allow Multiple Loans</label>
+                      </div>
+                      <div class="flex items-center gap-2 mt-2">
+                        <input type="checkbox" id="auto-payroll-deduction" name="auto_payroll_deduction" class="accent-indigo-600" />
+                        <label for="auto-payroll-deduction" class="text-sm text-slate-700">Auto Payroll Deduction</label>
                       </div>
                     </div>
                   </div>
@@ -231,11 +282,11 @@
                     <h3 class="text-lg font-semibold text-orange-900 mb-4 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5 text-orange-500"></i>Risk & Warning Settings</h3>
                     <div class="flex flex-col gap-3">
                       <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" class="accent-orange-500" />
+                        <input type="checkbox" name="warn_high_loan" class="accent-orange-500" />
                         <span class="text-sm text-orange-900">Warn if loan exceeds 3× salary</span>
                       </label>
                       <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" class="accent-orange-500" />
+                        <input type="checkbox" name="warn_long_duration" class="accent-orange-500" />
                         <span class="text-sm text-orange-900">Warn if duration exceeds 12 months</span>
                       </label>
                       <p class="text-xs text-orange-700 mt-2">These warnings help maintain compliance and reduce risk for the school.</p>
@@ -247,15 +298,15 @@
                     <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="bell" class="w-5 h-5 text-indigo-600"></i>Notifications Settings</h3>
                     <div class="flex flex-wrap gap-6">
                       <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" class="accent-indigo-600" />
+                        <input type="checkbox" name="notify_on_approval" class="accent-indigo-600" />
                         <span class="text-sm text-slate-700">Notify on Loan Approval</span>
                       </label>
                       <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" class="accent-indigo-600" />
+                        <input type="checkbox" name="notify_on_deduction" class="accent-indigo-600" />
                         <span class="text-sm text-slate-700">Notify on Deduction</span>
                       </label>
                       <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" class="accent-indigo-600" />
+                        <input type="checkbox" name="notify_on_completion" class="accent-indigo-600" />
                         <span class="text-sm text-slate-700">Notify on Completion</span>
                       </label>
                     </div>
@@ -299,11 +350,12 @@
                   </div>
                   <!-- Save Button -->
                   <div class="sticky bottom-0 bg-white py-4 flex justify-end border-t border-slate-200 z-10 rounded-b-xl">
-                    <button class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors flex items-center gap-2 text-base font-semibold">
+                    <button type="submit" class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors flex items-center gap-2 text-base font-semibold">
                       <i data-lucide="save" class="w-5 h-5"></i>
                       Save Loan Settings
                     </button>
                   </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -742,18 +794,22 @@
     function createLoanTypeCard() {
       // Create a wrapper div
       const card = document.createElement('div');
-      card.className = 'bg-slate-50 border border-slate-100 rounded-lg p-4 flex flex-col gap-2 relative';
+      card.className = 'loan-type-card bg-slate-50 border border-slate-100 rounded-lg p-4 flex flex-col gap-2 relative';
+
+      // Keep id field for future edit support (blank for new loan type)
+      const itemIndex = loanTypesList ? loanTypesList.children.length : 0;
 
       // Add input fields for loan type details
       card.innerHTML = `
+        <input type="hidden" name="loan_types[${itemIndex}][id]" value="" />
         <div class="flex items-center justify-between">
           <div class="flex flex-col gap-1">
-            <input type="text" name="loan_type_name[]" placeholder="Loan Type Name (e.g. Personal Loan)" class="font-semibold text-slate-900 bg-white border border-slate-300 rounded px-2 py-1 text-sm mb-1" required />
+            <input type="text" name="loan_types[${itemIndex}][name]" placeholder="Loan Type Name (e.g. Personal Loan)" class="font-semibold text-slate-900 bg-white border border-slate-300 rounded px-2 py-1 text-sm mb-1" required />
             <div class="flex gap-2 text-xs text-slate-500">
-              <input type="number" name="loan_type_max_amount[]" placeholder="Max Amount (TZS)" class="w-32 px-2 py-1 border border-slate-300 rounded" min="0" required />
-              <input type="number" name="loan_type_interest[]" placeholder="Interest (%)" class="w-24 px-2 py-1 border border-slate-300 rounded" min="0" step="0.01" required />
-              <input type="number" name="loan_type_duration[]" placeholder="Duration (months)" class="w-24 px-2 py-1 border border-slate-300 rounded" min="1" required />
-              <select name="loan_type_status[]" class="w-24 px-2 py-1 border border-slate-300 rounded">
+              <input type="number" name="loan_types[${itemIndex}][max_amount]" placeholder="Max Amount (TZS)" class="loan-max-amount w-32 px-2 py-1 border border-slate-300 rounded" min="0" step="0.01" required />
+              <input type="number" name="loan_types[${itemIndex}][interest_rate]" placeholder="Interest (%)" class="w-24 px-2 py-1 border border-slate-300 rounded" min="0" step="0.01" required />
+              <input type="number" name="loan_types[${itemIndex}][duration_months]" placeholder="Duration (months)" class="w-24 px-2 py-1 border border-slate-300 rounded" min="1" required />
+              <select name="loan_types[${itemIndex}][status]" class="w-24 px-2 py-1 border border-slate-300 rounded">
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </select>
@@ -766,20 +822,81 @@
       // Add event listener for delete button
       card.querySelector('.delete-loan-type').addEventListener('click', function() {
         card.remove();
+        reindexLoanTypeCards();
       });
 
       return card;
     }
 
+    // Auto-calculate the max amount for each loan type using the global rules
+    // Formula: reference salary × max loan multiplier
+    function updateLoanTypeMaxAmounts() {
+      const multiplierInput = document.getElementById('maxLoanMultiplier');
+      const salaryInput = document.getElementById('referenceSalary');
+
+      const multiplier = parseFloat(multiplierInput?.value || 0);
+      const salary = parseFloat(salaryInput?.value || 0);
+
+      // If either value is missing, do not overwrite the user's input
+      if (!multiplier || !salary) return;
+
+      const calculatedMaxAmount = (multiplier * salary).toFixed(2);
+
+      document.querySelectorAll('.loan-type-card .loan-max-amount').forEach(function(input) {
+        // Only auto-fill if the field is empty or still contains a previous auto-filled value
+        if (!input.value || input.dataset.autofilled === 'yes') {
+          input.value = calculatedMaxAmount;
+          input.dataset.autofilled = 'yes';
+        }
+      });
+    }
+
+    // Keep max amount in sync when the global rule inputs change
+    const maxLoanMultiplierInput = document.getElementById('maxLoanMultiplier');
+    const referenceSalaryInput = document.getElementById('referenceSalary');
+
+    if (maxLoanMultiplierInput) {
+      maxLoanMultiplierInput.addEventListener('input', updateLoanTypeMaxAmounts);
+    }
+
+    if (referenceSalaryInput) {
+      referenceSalaryInput.addEventListener('input', updateLoanTypeMaxAmounts);
+    }
+
+    // Reindex loan type input names after add/remove so backend receives clean loan_types array
+    function reindexLoanTypeCards() {
+      if (!loanTypesList) return;
+
+      const cards = loanTypesList.querySelectorAll('.loan-type-card');
+      cards.forEach(function(card, index) {
+        const idInput = card.querySelector('input[name*="[id]"]');
+        const nameInput = card.querySelector('input[name*="[name]"]');
+        const maxAmountInput = card.querySelector('input[name*="[max_amount]"]');
+        const interestInput = card.querySelector('input[name*="[interest_rate]"]');
+        const durationInput = card.querySelector('input[name*="[duration_months]"]');
+        const statusSelect = card.querySelector('select[name*="[status]"]');
+
+        if (idInput) idInput.name = `loan_types[${index}][id]`;
+        if (nameInput) nameInput.name = `loan_types[${index}][name]`;
+        if (maxAmountInput) maxAmountInput.name = `loan_types[${index}][max_amount]`;
+        if (interestInput) interestInput.name = `loan_types[${index}][interest_rate]`;
+        if (durationInput) durationInput.name = `loan_types[${index}][duration_months]`;
+        if (statusSelect) statusSelect.name = `loan_types[${index}][status]`;
+      });
+    }
+
     // Add a sample loan type card on page load (for demo, can be removed)
     if (loanTypesList && loanTypesList.children.length === 0) {
       loanTypesList.appendChild(createLoanTypeCard());
+      updateLoanTypeMaxAmounts();
     }
 
     // Add new loan type card when button is clicked
     if (addLoanTypeBtn) {
       addLoanTypeBtn.addEventListener('click', function() {
         loanTypesList.appendChild(createLoanTypeCard());
+        reindexLoanTypeCards();
+        updateLoanTypeMaxAmounts();
         // Re-initialize Lucide icons if needed
         if (window.lucide) lucide.createIcons();
       });

@@ -550,6 +550,11 @@ Route::post('/accounting-settings/health-insurance',
 [AccountantSettings::class, 'saveHealthInsuranceSettings'])
 ->name('accounting.healthInsuranceSettings');
 
+//route to handle loan settings form submission
+Route::post('/accounting-settings/loan-settings',
+[AccountantSettings::class, 'saveLoanSettings'])
+->name('accounting.loanSettings.save');
+
 ///////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////

@@ -23,7 +23,7 @@ Accountant DASHBOARD
 4)school fees installment payment setting as well 
 5)add the routes in the middleware as well 
 6)The settings controller uses hardcoded school_id and there is no function that does this as well
-
+7)use diff controller for each section then combine them in one
 
 
 

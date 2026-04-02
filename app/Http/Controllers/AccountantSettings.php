@@ -9,6 +9,7 @@ use App\Models\NSSFPSSF;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class AccountantSettings extends Controller
 {
@@ -214,7 +215,25 @@ class AccountantSettings extends Controller
     public function saveLoanSettings(Request $request)
     {
 
+        // Normalize checkbox values to actual booleans before validation
+        // This prevents validation errors when HTML checkboxes submit "on"
+        $request->merge([
+            'allow_early_repayment' => $request->boolean('allow_early_repayment'),
+            'allow_multiple_loans' => $request->boolean('allow_multiple_loans'),
+            'auto_payroll_deduction' => $request->boolean('auto_payroll_deduction'),
+            'enable_paye_calculation' => $request->boolean('enable_paye_calculation'),
+            'warn_high_loan' => $request->boolean('warn_high_loan'),
+            'warn_long_duration' => $request->boolean('warn_long_duration'),
+            'require_approval' => $request->boolean('require_approval'),
+            'allow_override' => $request->boolean('allow_override'),
+            'notify_on_approval' => $request->boolean('notify_on_approval'),
+            'notify_on_deduction' => $request->boolean('notify_on_deduction'),
+            'notify_on_completion' => $request->boolean('notify_on_completion'),
+        ]);
+
         // Validate the request
+        //do a try and catch for validation to catch any unexpected errors and prompt them to the user using sessions
+        try {
         $validated = $request->validate([
             // GENERAL
             'max_loan_multiplier' => 'required|numeric|min:1|max:10',
@@ -249,6 +268,22 @@ class AccountantSettings extends Controller
             'notify_on_completion' => 'boolean',
         ]);
 
+        }catch (\Illuminate\Validation\ValidationException $exception) {
+            dd([
+                'type'    => 'Validation Error',
+                'errors'  => $exception->errors(),
+                'request' => $request->all(),
+            ]);
+        } catch (\Throwable $exception) {
+            dd([
+                'type'    => 'Unexpected Error',
+                'message' => $exception->getMessage(),
+                'file'    => $exception->getFile(),
+                'line'    => $exception->getLine(),
+                'request' => $request->all(),
+            ]);
+        }
+
         // Handle checkboxes and convert them to boolean values
         $validated['allow_early_repayment'] = $request->has('allow_early_repayment');
         $validated['allow_multiple_loans'] = $request->has('allow_multiple_loans');
@@ -263,7 +298,7 @@ class AccountantSettings extends Controller
         $validated['notify_on_completion'] = $request->has('notify_on_completion');
 
         // Get the school_id from the authenticated user or session (replace with your actual logic)
-        $schoolId = auth()->user()->school_id ?? 1;
+        $schoolId = Auth::user()?->school_id ?? 1;
         $validated['school_id'] = $schoolId;
 
         try {
