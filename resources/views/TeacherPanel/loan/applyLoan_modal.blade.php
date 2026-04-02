@@ -117,9 +117,27 @@
             Cancel
         </button>
 
-        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2">
-          <i data-lucide="send" class="w-4 h-4"></i>
-          Submit Application
+        <button 
+          type="submit" 
+          id="submitBtn"
+          class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 transition-all"
+        >
+          <!-- Loader Icon (Hidden by default) -->
+          <i 
+            data-lucide="loader" 
+            id="loaderIcon"
+            class="w-4 h-4 hidden animate-spin"
+          ></i>
+          
+          <!-- Send Icon (Shown by default) -->
+          <i 
+            data-lucide="send" 
+            id="sendIcon"
+            class="w-4 h-4"
+          ></i>
+          
+          <!-- Button Text -->
+          <span id="submitBtnText">Submit Application</span>
         </button>
       </div>
     </form>
@@ -187,10 +205,40 @@
       `<div><strong>Duration:</strong> ${duration} months</div>` +
       `<div><strong>Purpose:</strong> ${purpose}</div>`;
   });
+
+  // ========== SUBMIT BUTTON LOADER ==========
+
+  // Get the form and submit button elements
+  const loanForm = document.getElementById('loanApplicationForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const loaderIcon = document.getElementById('loaderIcon');
+  const sendIcon = document.getElementById('sendIcon');
+  const submitBtnText = document.getElementById('submitBtnText');
+
+  // Listen for form submission
+  loanForm.addEventListener('submit', function() {
+    // Show the loader icon
+    loaderIcon.classList.remove('hidden');
+    
+    // Hide the send icon
+    sendIcon.classList.add('hidden');
+    
+    // Change button text to "Submitting..."
+    submitBtnText.textContent = 'Submitting...';
+    
+    // Disable the submit button to prevent multiple clicks
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.6';
+    submitBtn.style.cursor = 'not-allowed';
+  });
 </script>
 
 <style>
   /* Modal fade-in animation */
   .animate-fade-in { animation: fadeIn 0.2s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: none; } }
+
+  /* Loader spin animation */
+  .animate-spin { animation: spin 1s linear infinite; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>
