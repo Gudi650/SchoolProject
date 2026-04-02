@@ -3,6 +3,35 @@
 
     <main class="p-2 sm:p-6 bg-slate-50 min-h-screen ml-0 md:ml-64 w-full">
 
+        @if(session('success'))
+            <div class="flash-message mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-800 flex items-start justify-between gap-3">
+                <p class="text-sm font-medium">{{ session('success') }}</p>
+                <button type="button" onclick="this.parentElement.remove()" class="text-green-700 hover:text-green-900" aria-label="Close success message">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="flash-message mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800 flex items-start justify-between gap-3">
+                <p class="text-sm font-medium">{{ session('error') }}</p>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-700 hover:text-red-900" aria-label="Close error message">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="flash-message mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
+                <p class="text-sm font-semibold mb-1">Submission failed. Please fix the following:</p>
+                <ul class="list-disc list-inside text-sm space-y-1">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- Loan Notification Banner (UI/UX Example) -->
         <div id="loan-notification-banner" class="flex items-center gap-3 mb-6 px-4 py-3 rounded-lg border border-yellow-200 bg-yellow-50 text-yellow-900 relative shadow">
             <i class="bi bi-exclamation-circle-fill text-yellow-500 text-xl"></i>
@@ -206,6 +235,14 @@
     <script>
         // Modal open/close logic for new modal
         document.addEventListener('DOMContentLoaded', function() {
+            // Auto-dismiss flash messages after 5 seconds
+            var flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(message) {
+                setTimeout(function() {
+                    message.remove();
+                }, 5000);
+            });
+
             var openBtn = document.getElementById('open-apply-modal');
             var modal = document.getElementById('applyLoanModal');
             if (openBtn && modal) {

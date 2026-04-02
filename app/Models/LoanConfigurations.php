@@ -25,9 +25,15 @@ class LoanConfigurations extends Model
     //realtionship 
 
     //school relationship
-    public function school()
+    public function schools()
     {
         return $this->belongsTo(School::class);
+    }
+
+    //teacher relationship
+    public function teachers()
+    {
+        return $this->belongsTo(Teacher::class, 'teacher_id');
     }
     
 

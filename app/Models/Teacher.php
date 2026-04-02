@@ -49,6 +49,17 @@ class Teacher extends Model
     {
         return $this->hasMany(ExamResults::class);
     }   
+
+    //linking with loan Configurations model
+    public function loanConfigurations()
+    {
+        return $this->hasMany(LoanConfigurations::class, 'teacher_id');
+    }
     
+    //linking with payroll configurations model
+    public function payrollConfigurations()
+    {
+        return $this->hasMany(PayrollConfigurations::class, 'teacher_id');
+    }
 
 }

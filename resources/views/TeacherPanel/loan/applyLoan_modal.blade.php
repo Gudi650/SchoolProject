@@ -56,17 +56,42 @@
       <!-- Amount Requested -->
       <div>
         <label class="block text-sm font-medium text-slate-700 mb-1">Amount Requested <span class="text-red-500">*</span></label>
-        <input type="number" name="amount" min="0" step="0.01" required placeholder="Enter amount" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+
+        <input 
+            type="number" 
+            name="amount" 
+            min="0" 
+            step="0.01" 
+            value="{{ old('amount') }}"
+            required placeholder="Enter amount" 
+            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+        />
+
       </div>
       <!-- Duration -->
       <div>
         <label class="block text-sm font-medium text-slate-700 mb-1">Duration (months) <span class="text-red-500">*</span></label>
-        <input type="number" name="duration" min="1" max="60" required placeholder="e.g. 12" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+
+        <input 
+            type="number" 
+            name="duration_months" 
+            min="1" 
+            max="60" 
+            value="{{ old('duration_months') }}"
+            required placeholder="e.g. 12" 
+            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+        />
+
       </div>
       <!-- Purpose/Reason -->
       <div>
         <label class="block text-sm font-medium text-slate-700 mb-1">Purpose / Reason <span class="text-red-500">*</span></label>
-        <textarea name="purpose" rows="2" required placeholder="Describe the purpose of the loan..." class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        <textarea 
+            name="purpose" 
+            rows="2" 
+            value="{{ old('purpose') }}"
+            required placeholder="Describe the purpose of the loan..." 
+            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
       </div>
       <!-- Attachments -->
       <div>
@@ -80,6 +105,12 @@
           accept=".pdf,.jpg,.jpeg,.png" 
           class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" 
         />
+
+        <!-- File Picker Loader (shows while the file window is opening) -->
+        <div id="filePickerLoader" class="mt-2 hidden items-center gap-2 text-sm text-indigo-600">
+          <i data-lucide="loader" class="w-4 h-4 animate-spin"></i>
+          <span>Opening file window...</span>
+        </div>
         
         <!-- File Display Container (Hidden by default) -->
         <div 
@@ -155,14 +186,25 @@
   
   // Get the file input element
   const attachmentInput = document.getElementById('attachmentInput');
+  const filePickerLoader = document.getElementById('filePickerLoader');
   
   // Get the file display container and elements
   const attachmentDisplay = document.getElementById('attachmentDisplay');
   const fileNameDisplay = document.getElementById('fileName');
   const removeBtn = document.getElementById('removeAttachmentBtn');
 
+  // Show the loader as soon as the user clicks the file input
+  attachmentInput.addEventListener('click', function() {
+    filePickerLoader.classList.remove('hidden');
+    filePickerLoader.classList.add('flex');
+  });
+
   // Listen for file selection changes
   attachmentInput.addEventListener('change', function() {
+    // Hide the loader after the file window closes
+    filePickerLoader.classList.add('hidden');
+    filePickerLoader.classList.remove('flex');
+
     // Check if a file was selected
     if (this.files && this.files.length > 0) {
       // Get the selected file object
@@ -187,6 +229,10 @@
     // Clear the file input value (remove the selected file)
     attachmentInput.value = '';
     
+    // Make sure the loader stays hidden
+    filePickerLoader.classList.add('hidden');
+    filePickerLoader.classList.remove('flex');
+
     // Hide the file display container
     attachmentDisplay.classList.add('hidden');
   });
@@ -202,7 +248,7 @@
     document.getElementById('loanPreview').innerHTML =
       `<div><strong>Type:</strong> ${type}</div>` +
       `<div><strong>Amount:</strong> ${amount}</div>` +
-      `<div><strong>Duration:</strong> ${duration} months</div>` +
+      `<div><strong>Duration:</strong> ${duration_months} months</div>` +
       `<div><strong>Purpose:</strong> ${purpose}</div>`;
   });
 

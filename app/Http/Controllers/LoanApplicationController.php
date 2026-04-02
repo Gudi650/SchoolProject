@@ -93,7 +93,8 @@ class LoanApplicationController extends Controller
         $minRate = $settings->min_interest_rate ?? 5.75; // Fallback to 5.75% if not set
 
         //get user's salary for paye calculation
-        $basicSalary = $user->teachers()->payrollconfigurations()->value('basic_salary') ?? 0;
+        $teacherz = $user->teachers()->first();
+        $basicSalary = $teacherz ? $teacherz->payrollConfigurations()->value('base_salary') : 0;
 
         // DETERMINE IF PAYE (TAX BENEFIT) APPLIES
         // PAYE applies if either trigger condition is true:

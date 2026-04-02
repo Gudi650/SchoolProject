@@ -28,19 +28,19 @@ class PayrollConfigurations extends Model
     //relationships
 
     //teacher table rtnship
-    public function teacher()
+    public function teachers()
     {
         return $this->belongsTo(Teacher::class);
     }
 
     //relationship with school table
-    public function school()
+    public function schools()
     {
         return $this->belongsTo(School::class);
     }
 
     //relationship with employee table
-    public function employee()
+    public function employees()
     {
         return $this->belongsTo(Employee::class);
     }
