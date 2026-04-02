@@ -63,7 +63,7 @@
                     <i class="bi bi-cash-stack text-amber-500 text-2xl"></i>
                 </div>
                 <div class="text-xs text-slate-500 mb-1">Total Outstanding</div>
-                <div class="text-3xl font-bold text-amber-600 mb-1">₹1,20,000</div>
+                <div class="text-3xl font-bold text-amber-600 mb-1">Tsh 1,20,000</div>
                 <div class="text-xs text-slate-500">Across all active loans</div>
             </div>
             <!-- Total Repaid Card -->
@@ -72,11 +72,12 @@
                     <i class="bi bi-check2-circle text-green-600 text-2xl"></i>
                 </div>
                 <div class="text-xs text-slate-500 mb-1">Total Repaid</div>
-                <div class="text-3xl font-bold text-green-700 mb-1">₹80,000</div>
+                <div class="text-3xl font-bold text-green-700 mb-1">Tsh 80,000</div>
                 <div class="text-xs text-slate-500">All time</div>
             </div>
         </div>
         <div class="mb-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 xl:gap-8">
+            
             <!-- Current Application Status Card -->
             <div class="flex flex-col items-center bg-white border border-indigo-100 rounded-xl p-6 shadow-sm h-full">
                 <i data-lucide="file-text" class="w-8 h-8 text-indigo-600 mb-2"></i>
@@ -84,6 +85,7 @@
                 <span class="px-3 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700 mb-2">No Application Yet</span>
                 <p class="text-xs text-slate-500 text-center">You have not started a loan application. Click "Apply for Loan" to begin.</p>
             </div>
+
             <!-- Eligibility Card -->
             <div class="flex flex-col items-center bg-white border border-green-100 rounded-xl p-6 shadow-sm h-full">
                 <i data-lucide="badge-check" class="w-8 h-8 text-green-600 mb-2"></i>
@@ -91,15 +93,28 @@
                 <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 mb-2">Eligible</span>
                 <p class="text-xs text-slate-500 text-center">You meet the basic requirements for staff loan application.</p>
             </div>
+
             <!-- Loan Options Card -->
             <div class="flex flex-col items-center bg-white border border-blue-100 rounded-xl p-6 shadow-sm h-full">
                 <i data-lucide="info" class="w-8 h-8 text-blue-600 mb-2"></i>
                 <p class="text-sm text-slate-600 mb-1">Loan Options</p>
+
                 <ul class="text-xs text-slate-700 list-disc list-inside mb-2">
-                    <li>Personal Loan (up to ₹2,00,000)</li>
-                    <li>Education Loan (up to ₹1,50,000)</li>
-                    <li>Emergency Loan (up to ₹1,00,000)</li>
+
+                    <!--check if the loanTypes variable exists and is not empty before trying to loop through it to avoid errors--->
+                    @if (isset($loanTypes) && $loanTypes->isNotEmpty())
+                    
+                        @foreach ($loanTypes as $loanType)
+                            <li>{{ $loanType->name }} (up to Tsh {{ number_format($loanType->max_amount, 0) }})</li>
+                        @endforeach
+
+                    @else
+
+                        <li>No active loan types available at the moment.</li>
+                    @endif
+
                 </ul>
+
                 <p class="text-xs text-slate-500 text-center">Select a loan type when applying.</p>
             </div>
         </div>

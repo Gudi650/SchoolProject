@@ -26,6 +26,7 @@
         <label class="block text-sm font-medium text-slate-700 mb-1">Loan Type <span class="text-red-500">*</span></label>
 
         <select name="loan_type_id" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="">Select Loan Type</option>
         @if ($loanTypes->isNotEmpty())
 
             <!--if not empty then display the loan types-->
@@ -70,7 +71,37 @@
       <!-- Attachments -->
       <div>
         <label class="block text-sm font-medium text-slate-700 mb-1">Supporting Document (optional)</label>
-        <input type="file" name="attachment" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+        
+        <!-- File Input -->
+        <input 
+          type="file" 
+          name="attachment" 
+          id="attachmentInput"
+          accept=".pdf,.jpg,.jpeg,.png" 
+          class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" 
+        />
+        
+        <!-- File Display Container (Hidden by default) -->
+        <div 
+          id="attachmentDisplay" 
+          class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between hidden"
+        >
+          <!-- File Name Display -->
+          <div class="flex items-center gap-2">
+            <i data-lucide="file" class="w-5 h-5 text-indigo-600"></i>
+            <span id="fileName" class="text-sm text-slate-700 font-medium">filename.pdf</span>
+          </div>
+          
+          <!-- Remove Button -->
+          <button 
+            type="button" 
+            id="removeAttachmentBtn"
+            class="p-1 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg transition-colors"
+            title="Remove file"
+          >
+            <i data-lucide="trash-2" class="w-5 h-5"></i>
+          </button>
+        </div>
       </div>
       <!-- Preview Panel -->
       <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mt-2">
@@ -101,6 +132,48 @@
   document.addEventListener('DOMContentLoaded', function() {
     if (window.lucide) lucide.createIcons();
   });
+
+  // ========== FILE ATTACHMENT HANDLING ==========
+  
+  // Get the file input element
+  const attachmentInput = document.getElementById('attachmentInput');
+  
+  // Get the file display container and elements
+  const attachmentDisplay = document.getElementById('attachmentDisplay');
+  const fileNameDisplay = document.getElementById('fileName');
+  const removeBtn = document.getElementById('removeAttachmentBtn');
+
+  // Listen for file selection changes
+  attachmentInput.addEventListener('change', function() {
+    // Check if a file was selected
+    if (this.files && this.files.length > 0) {
+      // Get the selected file object
+      const selectedFile = this.files[0];
+      
+      // Display the file name in the display container
+      fileNameDisplay.textContent = selectedFile.name;
+      
+      // Show the file display container
+      attachmentDisplay.classList.remove('hidden');
+    } else {
+      // Hide the file display container if no file selected
+      attachmentDisplay.classList.add('hidden');
+    }
+  });
+
+  // Listen for remove button click
+  removeBtn.addEventListener('click', function(e) {
+    // Prevent form submission
+    e.preventDefault();
+    
+    // Clear the file input value (remove the selected file)
+    attachmentInput.value = '';
+    
+    // Hide the file display container
+    attachmentDisplay.classList.add('hidden');
+  });
+
+  // ========== LOAN PREVIEW ==========
 
   // Live preview (basic example, expand as needed)
   document.getElementById('loanApplicationForm')?.addEventListener('input', function() {
