@@ -16,16 +16,31 @@ class LoanApplication extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'loan_reference',
+        'school_id',
         'user_id',
         'loan_type_id',
         'amount',
-        'duration',
+        'duration_months',
         'purpose',
         'attachment',
+        'interest_rate',
+        'total_interest',
+        'total_repayment',
+        'monthly_installment',
+        'paye_applicable',
+        'paye_benefit_monthly',
+        'paye_benefit_annual',
         'status',
         'remarks',
         'approved_by',
         'approved_at',
+        'rejected_by',
+        'rejected_at',
+        'disbursed_at',
+        'disbursed_by',
+        'repayment_start_date',
+        'total_paid'
     ];
 
     /**
@@ -35,7 +50,18 @@ class LoanApplication extends Model
      */
     protected $casts = [
         'amount' => 'decimal:2',
+        'interest_rate' => 'decimal:2',
+        'total_interest' => 'decimal:2',
+        'total_repayment' => 'decimal:2',
+        'monthly_installment' => 'decimal:2',
+        'paye_applicable' => 'boolean',
+        'paye_benefit_monthly' => 'decimal:2',
+        'paye_benefit_annual' => 'decimal:2',
+        'total_paid' => 'decimal:2',
         'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
+        'disbursed_at' => 'datetime',
+        'repayment_start_date' => 'date',
     ];
 
     /**

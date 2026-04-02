@@ -13,6 +13,7 @@ use App\Http\Controllers\FeeOptionsController;
 use App\Http\Controllers\feestructure;
 use App\Http\Controllers\GeneratedTimetableController;
 use App\Http\Controllers\GenerateExamController;
+use App\Http\Controllers\LoanApplicationController;
 use App\Http\Controllers\ParentregistrationController;
 use App\Http\Controllers\PayrollConfigurationsController;
 use App\Http\Controllers\PostExamResults;
@@ -233,6 +234,10 @@ Route::get('/teacher-studentenrollment-analytics',function(){
     Route::get('/teacher-loans-progress', function () {
         return view('TeacherPanel.loan.trackloan');
     })->name('teacher.loans.track');
+
+    //route to store the loan application using controller
+    Route::post('/teacher-loans-apply', [LoanApplicationController::class, 'store'])
+    ->name('teacher.loans.apply.store');
 
     ///////////////////////////////////////////////////////////
     //////register student attendances routes

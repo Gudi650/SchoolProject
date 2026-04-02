@@ -21,6 +21,7 @@ class PayrollConfigurations extends Model
         'allowances_id',
         'deductions_id',
         'gross_salary',
+        'base_salary',
         'net_salary',
     ];
 

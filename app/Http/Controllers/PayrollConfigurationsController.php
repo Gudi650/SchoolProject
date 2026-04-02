@@ -321,6 +321,7 @@ class PayrollConfigurationsController extends Controller
                 'allowances_id' => $allowances->id,
                 'deductions_id' => $deductions->id,
                 'gross_salary' => $grossSalary,
+                'base_salary' => $baseSalary,
                 'net_salary' => $netSalary,
             ]);
 

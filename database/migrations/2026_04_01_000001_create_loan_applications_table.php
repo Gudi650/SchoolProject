@@ -13,23 +13,28 @@ return new class extends Migration
     {
         Schema::create('loan_applications', function (Blueprint $table) {
             $table->id();
-            
-            // Foreign keys
+
+            $table->string('loan_reference')->unique();
+
             $table->foreignId('school_id')->constrained('schools')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('loan_type_id')->constrained('loan_types')->cascadeOnDelete();
-            
-            // Loan application details
-            $table->decimal('amount', 12, 2); // Loan amount requested
+
+            $table->decimal('amount', 12, 2);
+            $table->integer('duration_months');
+            $table->text('purpose')->nullable();
+            $table->string('attachment')->nullable();
+
             $table->decimal('interest_rate', 5, 2);
             $table->decimal('total_interest', 12, 2)->nullable();
             $table->decimal('total_repayment', 12, 2)->nullable();
             $table->decimal('monthly_installment', 12, 2)->nullable();
-            $table->integer('duration'); // Duration in months
-            $table->text('purpose'); // Purpose/reason for loan
-            $table->string('attachment')->nullable(); // File path for supporting documents
-            
-            // Status tracking
+
+
+            $table->boolean('paye_applicable')->default(false);
+            $table->decimal('paye_benefit_monthly', 12, 2)->nullable();
+            $table->decimal('paye_benefit_annual', 12, 2)->nullable();
+
             $table->enum('status', [
                 'pending',
                 'under_review',
@@ -37,24 +42,29 @@ return new class extends Migration
                 'rejected',
                 'disbursed',
                 'active',
-                'completed'
+                'completed',
             ])->default('pending');
-            
-            $table->text('remarks')->nullable(); // Admin remarks or rejection reason
-            
-            // Approval tracking
+
+            $table->text('remarks')->nullable();
+
             $table->foreignId('approved_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('approved_at')->nullable();
+
+            $table->foreignId('rejected_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamp('rejected_at')->nullable();
+
             $table->timestamp('disbursed_at')->nullable();
+            $table->foreignId('disbursed_by')->nullable()->constrained('users')->nullOnDelete();
+
             $table->date('repayment_start_date')->nullable();
-            
+
+            $table->decimal('total_paid', 12, 2)->default(0);
+
             $table->timestamps();
-            
-            // Indexes
-            $table->index('school_id');
-            $table->index('user_id');
-            $table->index('loan_type_id');
+
+            $table->index(['school_id', 'user_id']);
             $table->index('status');
+
         });
     }
 

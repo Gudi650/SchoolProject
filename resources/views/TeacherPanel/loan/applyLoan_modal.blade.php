@@ -10,7 +10,7 @@
       Apply for a Loan
     </h2>
     <p class="text-sm text-slate-600 mb-4">Fill in the details below to submit your loan application. All fields marked with <span class="text-red-500">*</span> are required.</p>
-    <form id="loanApplicationForm" method="POST" enctype="multipart/form-data" class="space-y-4">
+    <form id="loanApplicationForm" action="{{ route('teacher.loans.apply.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
       @csrf
       <!-- Loan Type -->
       <div>
