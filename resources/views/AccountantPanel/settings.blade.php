@@ -13,6 +13,51 @@
             </div>
           </div>
         </div>
+
+        <!-- Global Flash Messages (for all forms) -->
+        @if(session('success'))
+          <div class="mb-6 p-4 rounded-lg border border-green-200 bg-green-50 text-green-700 text-sm flex items-start gap-3 animate-pulse">
+            <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0 mt-0.5"></i>
+            <div class="flex-1">
+              <p class="font-medium">Success</p>
+              <p class="text-sm">{{ session('success') }}</p>
+            </div>
+            <button onclick="this.parentElement.style.display='none'" class="text-green-600 hover:text-green-800">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        @endif
+
+        @if(session('error'))
+          <div class="mb-6 p-4 rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm flex items-start gap-3">
+            <i data-lucide="alert-circle" class="w-5 h-5 flex-shrink-0 mt-0.5"></i>
+            <div class="flex-1">
+              <p class="font-medium">Error</p>
+              <p class="text-sm">{{ session('error') }}</p>
+            </div>
+            <button onclick="this.parentElement.style.display='none'" class="text-red-600 hover:text-red-800">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        @endif
+
+        @if($errors->any())
+          <div class="mb-6 p-4 rounded-lg border border-amber-200 bg-amber-50 text-amber-700 text-sm flex items-start gap-3">
+            <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0 mt-0.5"></i>
+            <div class="flex-1">
+              <p class="font-medium">Validation Errors</p>
+              <ul class="list-disc ml-5 mt-2 space-y-1">
+                @foreach($errors->all() as $error)
+                  <li class="text-xs">{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+            <button onclick="this.parentElement.style.display='none'" class="text-amber-600 hover:text-amber-800">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        @endif
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div class="lg:col-span-1">
             <div class="bg-white rounded-xl p-4 border border-slate-200 sticky top-6">

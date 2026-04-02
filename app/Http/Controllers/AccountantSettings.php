@@ -232,7 +232,7 @@ class AccountantSettings extends Controller
         ]);
 
         // Validate the request
-        //do a try and catch for validation to catch any unexpected errors and prompt them to the user using sessions
+        //do a try and catch for validation to catch any unexpected errors and log the errors
         try {
         $validated = $request->validate([
             // GENERAL
@@ -269,19 +269,29 @@ class AccountantSettings extends Controller
         ]);
 
         }catch (\Illuminate\Validation\ValidationException $exception) {
-            dd([
-                'type'    => 'Validation Error',
-                'errors'  => $exception->errors(),
-                'request' => $request->all(),
-            ]);
-        } catch (\Throwable $exception) {
-            dd([
-                'type'    => 'Unexpected Error',
+            // Log validation errors with details
+            Log::warning('Loan settings validation failed', [
                 'message' => $exception->getMessage(),
-                'file'    => $exception->getFile(),
-                'line'    => $exception->getLine(),
+                'errors' => $exception->errors(),
                 'request' => $request->all(),
             ]);
+
+            // Redirect back with validation errors and old input
+            return redirect()->back()
+                ->withErrors($exception->errors())
+                ->withInput()
+                ->with('error', 'Please correct the errors in the form and try again.');
+        } catch (\Throwable $exception) {
+            // Log unexpected errors
+            Log::error('Unexpected error during loan settings validation', [
+                'message' => $exception->getMessage(),
+                'request' => $request->all(),
+            ]);
+
+            // Redirect back with a generic error message
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'An unexpected error occurred. Please try again.');
         }
 
         // Handle checkboxes and convert them to boolean values
