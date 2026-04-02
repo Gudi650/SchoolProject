@@ -1,26 +1,56 @@
 <!-- Loan Application Modal -->
 <div id="applyLoanModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
   <div class="bg-white rounded-xl shadow-xl w-full max-w-lg mx-2 sm:mx-4 md:mx-0 p-2 sm:p-6 relative animate-fade-in overflow-y-auto max-h-[95vh]">
+
     <!-- Close Button -->
     <button type="button" class="absolute top-4 right-4 text-slate-400 hover:text-red-500" onclick="document.getElementById('applyLoanModal').classList.add('hidden')">
       <i data-lucide="x" class="w-6 h-6"></i>
     </button>
+
     <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
       <i data-lucide="file-text" class="w-6 h-6 text-indigo-600"></i>
       Apply for a Loan
     </h2>
-    <p class="text-sm text-slate-600 mb-4">Fill in the details below to submit your loan application. All fields marked with <span class="text-red-500">*</span> are required.</p>
+
+    <p class="text-sm text-slate-600 mb-4">
+        Fill in the details below to submit your loan application. All fields marked with 
+        <span class="text-red-500">*</span> are required.
+    </p>
+
     <form id="loanApplicationForm" action="{{ route('teacher.loans.apply.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
       @csrf
       <!-- Loan Type -->
       <div>
+        <!--look if there are loan types-->
+
         <label class="block text-sm font-medium text-slate-700 mb-1">Loan Type <span class="text-red-500">*</span></label>
+
+        <select name="loan_type_id" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        @if ($loanTypes->isNotEmpty())
+
+            <!--if not empty then display the loan types-->
+            @foreach ($loanTypes as $loanType)
+                <option value="{{ $loanType->id }}">{{ $loanType->name }}</option>
+            @endforeach
+
+        @else
+
+            <!--if empty then display a message-->
+            <option value="">No active loan types available</option>
+            
+        @endif
+        </select>
+
+        <!--
+
         <select name="loan_type_id" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
           <option value="">Select Loan Type</option>
           <option value="1">Personal Loan</option>
           <option value="2">Education Loan</option>
           <option value="3">Emergency Loan</option>
         </select>
+
+        -->
       </div>
       <!-- Amount Requested -->
       <div>

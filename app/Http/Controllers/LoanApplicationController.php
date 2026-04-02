@@ -11,6 +11,27 @@ use Illuminate\Support\Facades\Auth;
 
 class LoanApplicationController extends Controller
 {
+
+    //function to show the loan application necessecities in the model
+    function show()
+    {
+        $user = Auth::user();
+        $schoolId = $user->school_id ?? $user->teachers()->value('school_id') ?? session('school_id');
+
+        if (!$schoolId) {
+            return back()->with('error', 'School information is missing for this account.');
+        }
+
+        $loanTypes = LoanType::where('school_id', $schoolId)->get() ?? 0;
+
+        return view('TeacherPanel.loan.dashboard', [
+            'loanTypes' => $loanTypes,
+        ]);
+    }
+
+
+
+    //function to store the loan application to the db after the user submits the form
     public function store(Request $request)
     {
         // VALIDATE ALL USER INPUT

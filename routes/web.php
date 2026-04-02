@@ -227,9 +227,13 @@ Route::get('/teacher-studentenrollment-analytics',function(){
     //routes for loan section in the teacher dashboard
     ////////////////////////////////////////////////////////////////////////////////
 
+    /*
     Route::get('/teacher-loans-dashboard', function () {
+        
         return view('TeacherPanel.loan.dashboard');
-    })->name('teacher.loans');
+    })->name('teacher.loans'); */
+
+    Route::get('/teacher-loans-dashboard', [LoanApplicationController::class, 'show'])->name('teacher.loans');
 
     Route::get('/teacher-loans-progress', function () {
         return view('TeacherPanel.loan.trackloan');
@@ -238,7 +242,7 @@ Route::get('/teacher-studentenrollment-analytics',function(){
     //route to store the loan application using controller
     Route::post('/teacher-loans-apply', [LoanApplicationController::class, 'store'])
     ->name('teacher.loans.apply.store');
-
+    
     ///////////////////////////////////////////////////////////
     //////register student attendances routes
 
