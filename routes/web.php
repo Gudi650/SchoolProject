@@ -239,6 +239,10 @@ Route::get('/teacher-studentenrollment-analytics',function(){
         return view('TeacherPanel.loan.trackloan');
     })->name('teacher.loans.track');
 
+    //route to view teacher loan proposals/progress page
+    Route::get('/teacher-loans-proposals', [LoanApplicationController::class, 'proposals'])
+    ->name('teacher.loans.proposals');
+
     //route to store the loan application using controller
     Route::post('/teacher-loans-apply', [LoanApplicationController::class, 'store'])
     ->name('teacher.loans.apply.store');
@@ -444,6 +448,7 @@ Route::get('/loan-proposals', function () {
 Route::get('/loan-list', function () {
     return view('AccountantPanel.Loans.loanprogess');
 })->name('accounting.loanList');
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

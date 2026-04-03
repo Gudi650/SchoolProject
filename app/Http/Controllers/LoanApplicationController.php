@@ -12,6 +12,33 @@ use Illuminate\Support\Facades\Auth;
 class LoanApplicationController extends Controller
 {
 
+    //function to show teacher loan proposals/progress page
+    public function proposals()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return back()->with('error', 'You must be logged in to view loan proposals.');
+        }
+
+        $schoolId = $user->school_id ?? $user->teachers()->value('school_id') ?? session('school_id');
+
+        if (!$schoolId) {
+            return back()->with('error', 'School information is missing for this account.');
+        }
+
+        // Fetch this user's loan applications and include loan type for display
+        $loanApplications = LoanApplication::with('loanType')
+            ->where('user_id', $user->id)
+            ->where('school_id', $schoolId)
+            ->latest()
+            ->get();
+
+        return view('TeacherPanel.loan.loanproposals', [
+            'loanApplications' => $loanApplications,
+        ]);
+    }
+
     //function to show the loan application necessecities in the model
     function show()
     {

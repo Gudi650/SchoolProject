@@ -206,8 +206,8 @@
                     <div class="relative">
 
                         <button id="loanToggle"
-                            aria-expanded="{{ request()->routeIs('teacher.loans', 'teacher.loans.track') ? 'true' : 'false' }}"
-                            class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.loans', 'teacher.loans.track') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                            aria-expanded="{{ request()->routeIs('teacher.loans', 'teacher.loans.track','teacher.loans.proposals') ? 'true' : 'false' }}"
+                            class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.loans', 'teacher.loans.track','teacher.loans.proposals') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                             <span class="flex items-center gap-3 relative">
                                 <i class="bi bi-wallet2"></i>
                                 Loans
@@ -219,7 +219,7 @@
                         </button>
 
                         <ul id="loanMenu"
-                            class="{{ request()->routeIs('teacher.loans', 'teacher.loans.track') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+                            class="{{ request()->routeIs('teacher.loans', 'teacher.loans.track','teacher.loans.proposals') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
                             <li>
                                 <a href="{{ route('teacher.loans') }}"
                                     class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.loans') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
@@ -233,6 +233,14 @@
                                     class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.loans.track') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
                                         <i data-lucide="badge-dollar-sign" class="w-5 h-5"></i>
                                     My Loans
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('teacher.loans.proposals') }}"
+                                    class="flex items-center gap-3 p-2 text-gray-600 hover:text-indigo-600 {{ request()->routeIs('teacher.loans.proposals') ? 'bg-indigo-50 text-indigo-600 rounded-md' : '' }}">
+                                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                                    Loan Applications
                                 </a>
                             </li>
 
