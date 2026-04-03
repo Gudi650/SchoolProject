@@ -62,6 +62,7 @@ class PayrollConfigurationsController extends Controller
         
         // Transform the data to include allowances and deductions as separate arrays for each employee
         $employees->getCollection()->transform(function ($employee) {
+            
             $employee->allowances_data = [
                 'housing_allowance' => $employee->housing_allowance ?? 0,
                 'transport_allowance' => $employee->transportation_allowance ?? 0,

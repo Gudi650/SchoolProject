@@ -135,7 +135,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Name</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Type</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Position</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Base Salary</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Gross Salary</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Allowances</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Deductions</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-indigo-900 uppercase tracking-wider">Net Salary</th>
@@ -167,10 +167,15 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{{ $employee->position }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">${{ number_format($employee->base_salary, 2) }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">${{ number_format($employee->allowances ?? 0, 2) }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">${{ number_format($employee->deductions ?? 0, 2) }}</td>
+
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">Tsh {{ number_format($employee->base_salary, 2) }}</td>
+
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">Tsh {{ number_format($employee->allowances ?? 0, 2) }}</td>
+
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">Tsh {{ number_format($employee->deductions ?? 0, 2) }}</td>
+
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-900">${{ number_format($employee->net_salary, 2) }}</td>
+
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                                 @if($employee->payment_method === 'bank')
                                 <i data-lucide="landmark" class="w-4 h-4 inline mr-1"></i>Bank

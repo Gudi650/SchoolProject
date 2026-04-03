@@ -148,8 +148,8 @@ class LoanApplicationController extends Controller
             $monthlyBenefit = $annualBenefit / 12;
             
             // Store benefits as positive value (safety net: max ensures no negative values)
-            $payeBenefitAnnual = max(0, round($annualBenefit, 2));
-            $payeBenefitMonthly = max(0, round($monthlyBenefit, 2));
+            $payeBenefitAnnual = abs(round($annualBenefit, 2));
+            $payeBenefitMonthly = abs(round($monthlyBenefit, 2));
 
         } else {
             $payeBenefitAnnual = null;

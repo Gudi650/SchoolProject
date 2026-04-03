@@ -408,7 +408,7 @@ Route::get('/expenses-management', function () {
 
 //route for payroll management
 Route::get('/payroll-management', function () {
-    return view('AccountantPanel.payroll');
+    return view('AccountantPanel.payrolls.payroll');
 })->name('accounting.payrollManagement');
 
 //route to show payroll configuration page using controller
