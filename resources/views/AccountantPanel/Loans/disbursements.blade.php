@@ -88,7 +88,6 @@
 					Ready for Disbursement (Approved)
 				</h2>
 				<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
-					@if ($approvedLoans->count() > 0)
 					<table class="w-full text-left text-sm">
 						<thead class="bg-indigo-50 border-b border-indigo-100">
 							<tr>
@@ -102,35 +101,36 @@
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-slate-100">
-							@foreach ($approvedLoans as $loan)
-								<tr class="hover:bg-indigo-50 transition-colors">
-									<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
-									<td class="px-4 py-3">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</td>
-									<td class="px-4 py-3">{{ $loan->loanType->name ?? 'N/A' }}</td>
-									<td class="px-4 py-3 font-semibold text-slate-900">₹{{ number_format($loan->amount, 0) }}</td>
-									<td class="px-4 py-3">{{ optional($loan->approved_at)->format('Y-m-d') ?? $loan->created_at->format('Y-m-d') }}</td>
-									<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Approved</span></td>
-									<td class="px-4 py-3 w-72">
-										<div class="flex items-center justify-start gap-2 whitespace-nowrap">
-											<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium">
-												<i data-lucide="eye" class="w-4 h-4"></i>
-												View
-											</button>
-											<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-cyan-200 text-cyan-700 bg-cyan-50 hover:bg-cyan-100 text-xs font-medium">
-												<i data-lucide="hand-coins" class="w-4 h-4"></i>
-												Disburse
-											</button>
-										</div>
-									</td>
+							@if ($approvedLoans->count() > 0)
+								@foreach ($approvedLoans as $loan)
+									<tr class="hover:bg-indigo-50 transition-colors">
+										<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
+										<td class="px-4 py-3">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</td>
+										<td class="px-4 py-3">{{ $loan->loanType->name ?? 'N/A' }}</td>
+										<td class="px-4 py-3 font-semibold text-slate-900">₹{{ number_format($loan->amount, 0) }}</td>
+										<td class="px-4 py-3">{{ optional($loan->approved_at)->format('Y-m-d') ?? $loan->created_at->format('Y-m-d') }}</td>
+										<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Approved</span></td>
+										<td class="px-4 py-3 w-72">
+											<div class="flex items-center justify-start gap-2 whitespace-nowrap">
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium">
+													<i data-lucide="eye" class="w-4 h-4"></i>
+													View
+												</button>
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-cyan-200 text-cyan-700 bg-cyan-50 hover:bg-cyan-100 text-xs font-medium">
+													<i data-lucide="hand-coins" class="w-4 h-4"></i>
+													Disburse
+												</button>
+											</div>
+										</td>
+									</tr>
+								@endforeach
+							@else
+								<tr>
+									<td colspan="7" class="px-4 py-6 text-center text-sm text-slate-500">No applications</td>
 								</tr>
-							@endforeach
+							@endif
 						</tbody>
 					</table>
-					@else
-						<div class="px-4 py-6 text-center">
-							<p class="text-sm text-slate-500">No approved loans ready for disbursement</p>
-						</div>
-					@endif
 				</div>
 			</div>
 
@@ -140,7 +140,6 @@
 					Recent Disbursements
 				</h2>
 				<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
-					@if ($recentDisbursements->count() > 0)
 					<table class="w-full text-left text-sm">
 						<thead class="bg-indigo-50 border-b border-indigo-100">
 							<tr>
@@ -155,46 +154,47 @@
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-slate-100">
-							@foreach ($recentDisbursements as $loan)
-								<tr class="hover:bg-indigo-50 transition-colors">
-									<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
-									<td class="px-4 py-3">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</td>
-									<td class="px-4 py-3 font-semibold text-slate-900">₹{{ number_format($loan->amount, 0) }}</td>
-									<td class="px-4 py-3">Bank Transfer</td>
-									<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
-									<td class="px-4 py-3">{{ optional($loan->disbursed_at)->format('Y-m-d') ?? '-' }}</td>
-									<td class="px-4 py-3">
-										@if ($loan->status === 'disbursed')
-											<span class="px-2 py-1 text-xs font-medium rounded-full bg-cyan-100 text-cyan-700">Disbursed</span>
-										@elseif ($loan->status === 'active')
-											<span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-700">Active</span>
-										@else
-											<span class="px-2 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-700">Completed</span>
-										@endif
-									</td>
-									<td class="px-4 py-3 w-72">
-										<div class="flex items-center justify-start gap-2 whitespace-nowrap">
-											<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium">
-												<i data-lucide="eye" class="w-4 h-4"></i>
-												View
-											</button>
+							@if ($recentDisbursements->count() > 0)
+								@foreach ($recentDisbursements as $loan)
+									<tr class="hover:bg-indigo-50 transition-colors">
+										<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
+										<td class="px-4 py-3">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</td>
+										<td class="px-4 py-3 font-semibold text-slate-900">₹{{ number_format($loan->amount, 0) }}</td>
+										<td class="px-4 py-3">Bank Transfer</td>
+										<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
+										<td class="px-4 py-3">{{ optional($loan->disbursed_at)->format('Y-m-d') ?? '-' }}</td>
+										<td class="px-4 py-3">
 											@if ($loan->status === 'disbursed')
-												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 text-xs font-medium">
-													<i data-lucide="activity" class="w-4 h-4"></i>
-													Mark Active
-												</button>
+												<span class="px-2 py-1 text-xs font-medium rounded-full bg-cyan-100 text-cyan-700">Disbursed</span>
+											@elseif ($loan->status === 'active')
+												<span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-700">Active</span>
+											@else
+												<span class="px-2 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-700">Completed</span>
 											@endif
-										</div>
-									</td>
+										</td>
+										<td class="px-4 py-3 w-72">
+											<div class="flex items-center justify-start gap-2 whitespace-nowrap">
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium">
+													<i data-lucide="eye" class="w-4 h-4"></i>
+													View
+												</button>
+												@if ($loan->status === 'disbursed')
+													<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 text-xs font-medium">
+														<i data-lucide="activity" class="w-4 h-4"></i>
+														Mark Active
+													</button>
+												@endif
+											</div>
+										</td>
+									</tr>
+								@endforeach
+							@else
+								<tr>
+									<td colspan="8" class="px-4 py-6 text-center text-sm text-slate-500">No applications</td>
 								</tr>
-							@endforeach
+							@endif
 						</tbody>
 					</table>
-					@else
-						<div class="px-4 py-6 text-center">
-							<p class="text-sm text-slate-500">No recent disbursement records</p>
-						</div>
-					@endif
 				</div>
 			</div>
 		</div>
