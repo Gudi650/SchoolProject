@@ -2,6 +2,20 @@
 	<x-slot name="title">Loan Disbursements</x-slot>
 
 	<main class="p-4 sm:p-6 bg-slate-50 min-h-screen">
+		@if (session('success') || session('error'))
+			<div id="loan-action-alert"
+				class="mb-4 rounded-lg border px-4 py-3 text-sm {{ session('success') ? 'border-green-200 bg-green-50 text-green-800' : 'border-red-200 bg-red-50 text-red-800' }}"
+				role="alert">
+				<div class="flex items-start justify-between gap-3">
+					<p>{{ session('success') ?? session('error') }}</p>
+					<button type="button" class="text-current/80 hover:text-current" aria-label="Close alert"
+						onclick="document.getElementById('loan-action-alert')?.remove()">
+						<i data-lucide="x" class="w-4 h-4"></i>
+					</button>
+				</div>
+			</div>
+		@endif
+
 		<div class="mb-6 rounded-lg border border-indigo-100 bg-indigo-50 px-4 sm:px-6 py-4">
 			<div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
 				<div>
@@ -249,6 +263,13 @@
 	</main>
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
+			const alertBox = document.getElementById('loan-action-alert');
+			if (alertBox) {
+				setTimeout(function () {
+					alertBox.remove();
+				}, 4000);
+			}
+
 			document.querySelectorAll('.js-loan-view-toggle').forEach(function (button) {
 				button.addEventListener('click', function () {
 					const targetId = button.getAttribute('data-target');
