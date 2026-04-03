@@ -442,6 +442,9 @@ Route::get('/loans-management', function () {
 //route for proposal management - show all loan applications
 Route::get('/loan-proposals', [LoanApplicationController::class, 'accountantProposals'])->name('accounting.proposalManagement');
 
+//route for moving pending proposals to under review
+Route::post('/loan-proposals/{loan}/under-review', [LoanApplicationController::class, 'moveToUnderReview'])->name('accounting.proposal.moveUnderReview');
+
 //route for loan lists
 Route::get('/loan-list', function () {
     return view('AccountantPanel.Loans.loanprogess');

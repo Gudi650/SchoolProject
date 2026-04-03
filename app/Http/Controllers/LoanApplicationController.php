@@ -243,6 +243,34 @@ class LoanApplicationController extends Controller
         ]);
     }
 
+    // Function to change a pending loan application status to under review
+    public function moveToUnderReview($loanId)
+    {
+        $user = Auth::user();
+        $schoolId = $user->school_id ?? session('school_id') ?? 1;
+
+        if (!$schoolId) {
+            return back()->with('error', 'School information is missing.');
+        }
+
+        $loan = LoanApplication::where('id', $loanId)
+            ->where('school_id', $schoolId)
+            ->first();
+
+        if (!$loan) {
+            return back()->with('error', 'Loan application not found.');
+        }
+
+        if ($loan->status !== 'pending') {
+            return back()->with('error', 'Only pending applications can be moved to under review.');
+        }
+
+        $loan->status = 'under_review';
+        $loan->save();
+
+        return back()->with('success', 'Loan application moved to under review.');
+    }
+
     // Function to show accountant disbursements page
     public function accountantDisbursements()
     {

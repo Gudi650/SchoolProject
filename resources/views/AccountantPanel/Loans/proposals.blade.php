@@ -161,12 +161,15 @@
                                                     <i data-lucide="eye" class="w-4 h-4"></i>
                                                     <span class="js-toggle-label">View</span>
                                                 </button>
-                                                <button
-                                                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 text-xs font-medium"
-                                                    title="Move to under review" aria-label="Move to under review">
-                                                    <i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
-                                                    Under Review
-                                                </button>
+                                                <form method="POST" action="{{ route('accounting.proposal.moveUnderReview', $loan->id) }}">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 text-xs font-medium"
+                                                        title="Move to under review" aria-label="Move to under review">
+                                                        <i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
+                                                        Under Review
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
