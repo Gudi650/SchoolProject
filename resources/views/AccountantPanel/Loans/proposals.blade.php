@@ -195,14 +195,37 @@
                                                     <div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
                                                     <div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
                                                     <div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
-                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->amount, 2) }}</p></div>
                                                     <div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
                                                     <div><p class="text-slate-500">Interest Rate</p><p class="font-semibold text-slate-800">{{ number_format($loan->interest_rate, 2) }}%</p></div>
-                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
-                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
-                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
                                                     <div><p class="text-slate-500">Submitted At</p><p class="font-semibold text-slate-800">{{ optional($loan->created_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
                                                     <div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
+                                                    <div>
+                                                        <p class="text-slate-500 mb-1">Attachment</p>
+                                                        @if ($loan->attachment)
+                                                            @php
+                                                                $attachmentName = $loan->attachment_original_name ?: basename($loan->attachment);
+                                                                $attachmentExtension = strtoupper(pathinfo($loan->attachment, PATHINFO_EXTENSION));
+                                                            @endphp
+                                                            <div class="flex items-center justify-between gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
+                                                                <div class="min-w-0">
+                                                                    <p class="text-[11px] text-slate-500">{{ $attachmentExtension ?: 'FILE' }}</p>
+                                                                    <p class="text-sm font-semibold text-slate-800 truncate" title="{{ $attachmentName }}">{{ $attachmentName }}</p>
+                                                                </div>
+                                                                <a href="{{ asset('storage/' . $loan->attachment) }}" target="_blank" class="inline-flex items-center gap-1 rounded-md border border-indigo-200 bg-white px-2 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-50">
+                                                                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                                                    Open
+                                                                </a>
+                                                            </div>
+                                                        @else
+                                                            <div class="rounded-md border border-dashed border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-500">
+                                                                No attachment uploaded
+                                                            </div>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                                 <div class="mt-3 border-t border-slate-100 pt-3 ">
                                                     <p class="text-slate-500">Purpose</p>
@@ -292,14 +315,37 @@
                                                     <div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
                                                     <div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
                                                     <div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
-                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->amount, 2) }}</p></div>
                                                     <div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
                                                     <div><p class="text-slate-500">Interest Rate</p><p class="font-semibold text-slate-800">{{ number_format($loan->interest_rate, 2) }}%</p></div>
-                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
-                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
-                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
                                                     <div><p class="text-slate-500">Submitted At</p><p class="font-semibold text-slate-800">{{ optional($loan->created_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
                                                     <div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
+                                                    <div>
+                                                        <p class="text-slate-500 mb-1">Attachment</p>
+                                                        @if ($loan->attachment)
+                                                            @php
+                                                                $attachmentName = $loan->attachment_original_name ?: basename($loan->attachment);
+                                                                $attachmentExtension = strtoupper(pathinfo($loan->attachment, PATHINFO_EXTENSION));
+                                                            @endphp
+                                                            <div class="flex items-center justify-between gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
+                                                                <div class="min-w-0">
+                                                                    <p class="text-[11px] text-slate-500">{{ $attachmentExtension ?: 'FILE' }}</p>
+                                                                    <p class="text-sm font-semibold text-slate-800 truncate" title="{{ $attachmentName }}">{{ $attachmentName }}</p>
+                                                                </div>
+                                                                <a href="{{ asset('storage/' . $loan->attachment) }}" target="_blank" class="inline-flex items-center gap-1 rounded-md border border-indigo-200 bg-white px-2 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-50">
+                                                                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                                                    Open
+                                                                </a>
+                                                            </div>
+                                                        @else
+                                                            <div class="rounded-md border border-dashed border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-500">
+                                                                No attachment uploaded
+                                                            </div>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                                 <div class="mt-3 border-t border-slate-100 pt-3 ">
                                                     <p class="text-slate-500">Purpose</p>
@@ -383,14 +429,37 @@
                                                     <div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
                                                     <div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
                                                     <div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
-                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->amount, 2) }}</p></div>
                                                     <div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
                                                     <div><p class="text-slate-500">Interest Rate</p><p class="font-semibold text-slate-800">{{ number_format($loan->interest_rate, 2) }}%</p></div>
-                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
-                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
-                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">Tsh {{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
                                                     <div><p class="text-slate-500">Approved At</p><p class="font-semibold text-slate-800">{{ optional($loan->approved_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
                                                     <div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
+                                                    <div>
+                                                        <p class="text-slate-500 mb-1">Attachment</p>
+                                                        @if ($loan->attachment)
+                                                            @php
+                                                                $attachmentName = $loan->attachment_original_name ?: basename($loan->attachment);
+                                                                $attachmentExtension = strtoupper(pathinfo($loan->attachment, PATHINFO_EXTENSION));
+                                                            @endphp
+                                                            <div class="flex items-center justify-between gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
+                                                                <div class="min-w-0">
+                                                                    <p class="text-[11px] text-slate-500">{{ $attachmentExtension ?: 'FILE' }}</p>
+                                                                    <p class="text-sm font-semibold text-slate-800 truncate" title="{{ $attachmentName }}">{{ $attachmentName }}</p>
+                                                                </div>
+                                                                <a href="{{ asset('storage/' . $loan->attachment) }}" target="_blank" class="inline-flex items-center gap-1 rounded-md border border-indigo-200 bg-white px-2 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-50">
+                                                                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                                                    Open
+                                                                </a>
+                                                            </div>
+                                                        @else
+                                                            <div class="rounded-md border border-dashed border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-500">
+                                                                No attachment uploaded
+                                                            </div>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                                 <div class="mt-3 border-t border-slate-100 pt-3 ">
                                                     <p class="text-slate-500">Purpose</p>
@@ -482,6 +551,29 @@
                                                     <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
                                                     <div><p class="text-slate-500">Rejected At</p><p class="font-semibold text-slate-800">{{ optional($loan->rejected_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
                                                     <div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
+                                                    <div>
+                                                        <p class="text-slate-500 mb-1">Attachment</p>
+                                                        @if ($loan->attachment)
+                                                            @php
+                                                                $attachmentName = $loan->attachment_original_name ?: basename($loan->attachment);
+                                                                $attachmentExtension = strtoupper(pathinfo($loan->attachment, PATHINFO_EXTENSION));
+                                                            @endphp
+                                                            <div class="flex items-center justify-between gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
+                                                                <div class="min-w-0">
+                                                                    <p class="text-[11px] text-slate-500">{{ $attachmentExtension ?: 'FILE' }}</p>
+                                                                    <p class="text-sm font-semibold text-slate-800 truncate" title="{{ $attachmentName }}">{{ $attachmentName }}</p>
+                                                                </div>
+                                                                <a href="{{ asset('storage/' . $loan->attachment) }}" target="_blank" class="inline-flex items-center gap-1 rounded-md border border-indigo-200 bg-white px-2 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-50">
+                                                                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                                                    Open
+                                                                </a>
+                                                            </div>
+                                                        @else
+                                                            <div class="rounded-md border border-dashed border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-500">
+                                                                No attachment uploaded
+                                                            </div>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                                 <div class="mt-3 border-t border-slate-100 pt-3 text-xs">
                                                     <p class="text-slate-500">Purpose</p>

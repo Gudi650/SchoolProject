@@ -24,6 +24,7 @@ class LoanApplication extends Model
         'duration_months',
         'purpose',
         'attachment',
+        'attachment_original_name',
         'interest_rate',
         'total_interest',
         'total_repayment',

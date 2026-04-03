@@ -157,9 +157,14 @@ class LoanApplicationController extends Controller
         }
 
         //HANDLE FILE ATTACHMENT (IF PROVIDED)
-        $attachmentPath = $request->hasFile('attachment')
-            ? $request->file('attachment')->store('loan-applications', 'public')
-            : null;
+        $attachmentPath = null;
+        $attachmentOriginalName = null;
+
+        if ($request->hasFile('attachment')) {
+            $attachmentFile = $request->file('attachment');
+            $attachmentPath = $attachmentFile->store('loan-applications', 'public');
+            $attachmentOriginalName = $attachmentFile->getClientOriginalName();
+        }
 
         //SAVE LOAN APPLICATION TO DATABASE
         LoanApplication::create([
@@ -174,6 +179,7 @@ class LoanApplicationController extends Controller
             'duration_months' => $duration,
             'purpose' => $validated['purpose'] ?? null,
             'attachment' => $attachmentPath,
+            'attachment_original_name' => $attachmentOriginalName,
 
             // Financial Calculations
             'interest_rate' => $interestRate,
