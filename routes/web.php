@@ -449,6 +449,11 @@ Route::get('/loan-list', function () {
     return view('AccountantPanel.Loans.loanprogess');
 })->name('accounting.loanList');
 
+//route for loan disbursements
+Route::get('/loan-disbursements', function () {
+    return view('AccountantPanel.Loans.disbursements');
+})->name('accounting.loanDisbursements');
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
