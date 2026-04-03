@@ -193,4 +193,114 @@ class LoanApplicationController extends Controller
         //RETURN SUCCESS MESSAGE
         return back()->with('success', 'Loan application submitted successfully.');
     }
+
+    // Function to show accountant proposals/management page with all loan applications
+    public function accountantProposals()
+    {
+        /*
+            $user = Auth::user();
+
+            if (!$user) {
+                return back()->with('error', 'You must be logged in.');
+            }
+        */
+
+        $schoolId = $user->school_id ?? session('school_id') ?? 1;
+
+        if (!$schoolId) {
+            return back()->with('error', 'School information is missing.');
+        }
+
+        // Fetch all loan applications for this school, grouped and ordered by status
+        $allLoans = LoanApplication::with(['user', 'loanType'])
+            ->where('school_id', $schoolId)
+            ->orderByRaw("FIELD(status, 'pending', 'under_review', 'approved', 'rejected', 'disbursed', 'active', 'completed')")
+            ->latest('created_at')
+            ->get();
+
+        // Group loans by status for easier counting
+        $pendingCount = $allLoans->where('status', 'pending')->count();
+
+        $underReviewCount = $allLoans->where('status', 'under_review')->count();
+
+        $approvedCount = $allLoans->where('status', 'approved')->count();
+
+        $rejectedCount = $allLoans->where('status', 'rejected')->count();
+
+        // Calculate totals for metric cards
+        $totalApplications = $allLoans->count();
+        
+        $totalApprovedAmount = $allLoans->where('status', 'approved')->sum('amount');
+
+        return view('AccountantPanel.Loans.proposals', [
+            'allLoans' => $allLoans,
+            'pendingCount' => $pendingCount,
+            'underReviewCount' => $underReviewCount,
+            'approvedCount' => $approvedCount,
+            'rejectedCount' => $rejectedCount,
+            'totalApplications' => $totalApplications,
+            'totalApprovedAmount' => $totalApprovedAmount,
+        ]);
+    }
+
+    // Function to show accountant disbursements page
+    public function accountantDisbursements()
+    {
+        /*
+        $user = Auth::user();
+
+        
+        if (!$user) {
+            return back()->with('error', 'You must be logged in.');
+        } 
+            */
+
+        $schoolId = $user->school_id ?? session('school_id')?? 1;
+
+        if (!$schoolId) {
+            return back()->with('error', 'School information is missing.');
+        }
+
+        // Fetch approved loans waiting for disbursement
+        $approvedLoans = LoanApplication::with(['user', 'loanType'])
+            ->where('school_id', $schoolId)
+            ->where('status', 'approved')
+            ->latest('created_at')
+            ->get();
+
+
+        // Fetch recently disbursed loans (disbursed and active)
+        $recentDisbursements = LoanApplication::with(['user', 'loanType'])
+            ->where('school_id', $schoolId)
+            ->whereIn('status', ['disbursed', 'active', 'completed'])
+            ->latest('disbursed_at')
+            ->limit(20)
+            ->get();
+
+        // Calculate metrics
+        $approvedQueue = $approvedLoans->count();
+        $disbursedToday = $recentDisbursements->where('status', 'disbursed')
+            ->filter(function ($loan) {
+                return $loan->disbursed_at && $loan->disbursed_at->isToday();
+            })->count();
+
+        $disbursedTodayAmount = $recentDisbursements->where('status', 'disbursed')
+            ->filter(function ($loan) {
+                return $loan->disbursed_at && $loan->disbursed_at->isToday();
+            })->sum('amount');
+
+        $successfulTransfers = $recentDisbursements->where('status', 'active')->count();
+
+        $pendingConfirmation = $recentDisbursements->where('status', 'disbursed')->count();
+
+        return view('AccountantPanel.Loans.disbursements', [
+            'approvedLoans' => $approvedLoans,
+            'recentDisbursements' => $recentDisbursements,
+            'approvedQueue' => $approvedQueue,
+            'disbursedToday' => $disbursedToday,
+            'disbursedTodayAmount' => $disbursedTodayAmount,
+            'successfulTransfers' => $successfulTransfers,
+            'pendingConfirmation' => $pendingConfirmation,
+        ]);
+    }
 }

@@ -439,20 +439,16 @@ Route::get('/loans-management', function () {
     return view('AccountantPanel.Loans.dashboard');
 })->name('accounting.loansManagement');
 
-//route for propasal management
-Route::get('/loan-proposals', function () {
-    return view('AccountantPanel.Loans.proposals');
-})->name('accounting.proposalManagement');
+//route for proposal management - show all loan applications
+Route::get('/loan-proposals', [LoanApplicationController::class, 'accountantProposals'])->name('accounting.proposalManagement');
 
 //route for loan lists
 Route::get('/loan-list', function () {
     return view('AccountantPanel.Loans.loanprogess');
 })->name('accounting.loanList');
 
-//route for loan disbursements
-Route::get('/loan-disbursements', function () {
-    return view('AccountantPanel.Loans.disbursements');
-})->name('accounting.loanDisbursements');
+//route for loan disbursements - show approved and disbursed loans
+Route::get('/loan-disbursements', [LoanApplicationController::class, 'accountantDisbursements'])->name('accounting.loanDisbursements');
 
 
 

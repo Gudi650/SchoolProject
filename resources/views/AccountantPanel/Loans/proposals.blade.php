@@ -33,8 +33,8 @@
 					</div>
 					<p class="text-xs sm:text-sm text-slate-600">Total Applications</p>
 				</div>
-				<p class="text-xl sm:text-2xl font-bold text-slate-900">126</p>
-				<p class="text-xs sm:text-sm text-slate-600 mt-2">Current month</p>
+				<p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $totalApplications }}</p>
+				<p class="text-xs sm:text-sm text-slate-600 mt-2">All time</p>
 			</div>
 
 			<div class="bg-white rounded-xl p-4 sm:p-6 border border-amber-100 shadow-sm">
@@ -44,7 +44,7 @@
 					</div>
 					<p class="text-xs sm:text-sm text-slate-600">Pending Review</p>
 				</div>
-				<p class="text-xl sm:text-2xl font-bold text-slate-900">18</p>
+				<p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $pendingCount }}</p>
 				<p class="text-xs sm:text-sm text-amber-600 mt-2">Needs action</p>
 			</div>
 
@@ -55,8 +55,8 @@
 					</div>
 					<p class="text-xs sm:text-sm text-slate-600">Approved</p>
 				</div>
-				<p class="text-xl sm:text-2xl font-bold text-slate-900">93</p>
-				<p class="text-xs sm:text-sm text-green-600 mt-2">₹36.8L approved</p>
+				<p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $approvedCount }}</p>
+				<p class="text-xs sm:text-sm text-green-600 mt-2">₹{{ number_format($totalApprovedAmount / 100000, 1) }}L approved</p>
 			</div>
 
 			<div class="bg-white rounded-xl p-4 sm:p-6 border border-red-100 shadow-sm">
@@ -66,8 +66,8 @@
 					</div>
 					<p class="text-xs sm:text-sm text-slate-600">Rejected</p>
 				</div>
-				<p class="text-xl sm:text-2xl font-bold text-slate-900">15</p>
-				<p class="text-xs sm:text-sm text-red-600 mt-2">Policy mismatch</p>
+				<p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $rejectedCount }}</p>
+				<p class="text-xs sm:text-sm text-red-600 mt-2">Not approved</p>
 			</div>
 		</div>
 
@@ -86,7 +86,6 @@
 				<div>
 					<p class="text-sm font-semibold text-slate-900">Status guide</p>
 					<p class="text-xs text-slate-500 mt-1">A quick overview of how loan applications move through the review flow.</p>
-					<p class="text-xs text-indigo-600 mt-1">UI only preview: action buttons are visual for now (backend not connected).</p>
 				</div>
 				<div class="flex flex-wrap gap-2">
 					<span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">pending</span>
@@ -101,173 +100,239 @@
 		</div>
 
 		<div class="space-y-6 mb-6">
+			<!-- Pending Applications -->
+			@php
+				$pendingLoans = $allLoans->where('status', 'pending');
+			@endphp
 			<div>
 				<h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
 					<span class="w-1 h-6 bg-amber-500 rounded"></span>
-					Pending Applications (Not Accepted)
+					Pending Applications ({{ $pendingLoans->count() }})
 				</h2>
 				<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto relative z-0">
-					<table class="w-full text-left text-sm relative z-0">
-						<thead class="bg-indigo-50 border-b border-indigo-100">
-							<tr>
-								<th class="px-4 py-3 font-medium text-indigo-900">Proposal ID</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Applicant</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Department</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Loan Type</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Amount</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Tenure</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Submitted</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Status</th>
-								<th class="px-4 py-3 font-medium text-indigo-900 w-72">Action</th>
-							</tr>
-						</thead>
-						<tbody class="divide-y divide-slate-100">
-							<tr class="hover:bg-indigo-50 transition-colors">
-								<td class="px-4 py-3">PROP-2201</td>
-								<td class="px-4 py-3">Neema Mushi</td>
-								<td class="px-4 py-3">Administration</td>
-								<td class="px-4 py-3">Medical</td>
-								<td class="px-4 py-3 font-semibold text-slate-900">₹1,20,000</td>
-								<td class="px-4 py-3">12 months</td>
-								<td class="px-4 py-3">2026-03-29</td>
-								<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Pending</span></td>
-								<td class="px-4 py-3 w-72">
-									<div class="flex items-center justify-start gap-2 whitespace-nowrap">
-										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
-											<i data-lucide="eye" class="w-4 h-4"></i>
-											View
-										</button>
-										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 text-xs font-medium" title="Move to under review" aria-label="Move to under review">
-											<i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
-											Under Review
-										</button>
-									</div>
-								</td>
-							</tr>
-							<tr class="hover:bg-indigo-50 transition-colors">
-								<td class="px-4 py-3">PROP-2194</td>
-								<td class="px-4 py-3">Kassim John</td>
-								<td class="px-4 py-3">ICT</td>
-								<td class="px-4 py-3">Emergency</td>
-								<td class="px-4 py-3 font-semibold text-slate-900">₹1,50,000</td>
-								<td class="px-4 py-3">15 months</td>
-								<td class="px-4 py-3">2026-03-26</td>
-								<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-700">Under Review</span></td>
-								<td class="px-4 py-3 w-72">
-									<div class="flex items-center justify-start gap-2 whitespace-nowrap">
-										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
-											<i data-lucide="eye" class="w-4 h-4"></i>
-											View
-										</button>
-										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-green-200 text-green-700 bg-green-50 hover:bg-green-100 text-xs font-medium" title="Approve application" aria-label="Approve application">
-											<i data-lucide="badge-check" class="w-4 h-4"></i>
-											Approve
-										</button>
-										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 text-xs font-medium" title="Reject application" aria-label="Reject application">
-											<i data-lucide="x-circle" class="w-4 h-4"></i>
-											Reject
-										</button>
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					@if ($pendingLoans->count() > 0)
+						<table class="w-full text-left text-sm relative z-0">
+							<thead class="bg-indigo-50 border-b border-indigo-100">
+								<tr>
+									<th class="px-4 py-3 font-medium text-indigo-900">Proposal ID</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Applicant</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Loan Type</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Amount</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Tenure</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Submitted</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Status</th>
+									<th class="px-4 py-3 font-medium text-indigo-900 w-72">Action</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-100">
+								@foreach ($pendingLoans as $loan)
+									<tr class="hover:bg-indigo-50 transition-colors">
+										<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
+										<td class="px-4 py-3">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</td>
+										<td class="px-4 py-3">{{ $loan->loanType->name ?? 'N/A' }}</td>
+										<td class="px-4 py-3 font-semibold text-slate-900">₹{{ number_format($loan->amount, 0) }}</td>
+										<td class="px-4 py-3">{{ $loan->duration_months }} months</td>
+										<td class="px-4 py-3">{{ $loan->created_at->format('Y-m-d') }}</td>
+										<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Pending</span></td>
+										<td class="px-4 py-3 w-72">
+											<div class="flex items-center justify-start gap-2 whitespace-nowrap">
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
+													<i data-lucide="eye" class="w-4 h-4"></i>
+													View
+												</button>
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 text-xs font-medium" title="Move to under review" aria-label="Move to under review">
+													<i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
+													Under Review
+												</button>
+											</div>
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
+					@else
+						<div class="px-4 py-6 text-center">
+							<p class="text-sm text-slate-500">No pending applications</p>
+						</div>
+					@endif
 				</div>
 			</div>
 
+			<!-- Under Review Applications -->
+			@php
+				$underReviewLoans = $allLoans->where('status', 'under_review');
+			@endphp
+			<div>
+				<h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+					<span class="w-1 h-6 bg-blue-500 rounded"></span>
+					Under Review ({{ $underReviewLoans->count() }})
+				</h2>
+				<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto relative z-0">
+					@if ($underReviewLoans->count() > 0)
+						<table class="w-full text-left text-sm relative z-0">
+							<thead class="bg-indigo-50 border-b border-indigo-100">
+								<tr>
+									<th class="px-4 py-3 font-medium text-indigo-900">Proposal ID</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Applicant</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Loan Type</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Amount</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Tenure</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Submitted</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Status</th>
+									<th class="px-4 py-3 font-medium text-indigo-900 w-72">Action</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-100">
+								@foreach ($underReviewLoans as $loan)
+									<tr class="hover:bg-indigo-50 transition-colors">
+										<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
+										<td class="px-4 py-3">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</td>
+										<td class="px-4 py-3">{{ $loan->loanType->name ?? 'N/A' }}</td>
+										<td class="px-4 py-3 font-semibold text-slate-900">₹{{ number_format($loan->amount, 0) }}</td>
+										<td class="px-4 py-3">{{ $loan->duration_months }} months</td>
+										<td class="px-4 py-3">{{ $loan->created_at->format('Y-m-d') }}</td>
+										<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-700">Under Review</span></td>
+										<td class="px-4 py-3 w-72">
+											<div class="flex items-center justify-start gap-2 whitespace-nowrap">
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
+													<i data-lucide="eye" class="w-4 h-4"></i>
+													View
+												</button>
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-green-200 text-green-700 bg-green-50 hover:bg-green-100 text-xs font-medium" title="Approve application" aria-label="Approve application">
+													<i data-lucide="badge-check" class="w-4 h-4"></i>
+													Approve
+												</button>
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 text-xs font-medium" title="Reject application" aria-label="Reject application">
+													<i data-lucide="x-circle" class="w-4 h-4"></i>
+													Reject
+												</button>
+											</div>
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
+					@else
+						<div class="px-4 py-6 text-center">
+							<p class="text-sm text-slate-500">No applications under review</p>
+						</div>
+					@endif
+				</div>
+			</div>
+
+			<!-- Approved Applications -->
+			@php
+				$approvedLoans = $allLoans->where('status', 'approved');
+			@endphp
 			<div>
 				<h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
 					<span class="w-1 h-6 bg-green-500 rounded"></span>
-					Accepted Applications
+					Approved Applications ({{ $approvedLoans->count() }})
 				</h2>
 				<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto relative z-0">
-					<table class="w-full text-left text-sm relative z-0">
-						<thead class="bg-indigo-50 border-b border-indigo-100">
-							<tr>
-								<th class="px-4 py-3 font-medium text-indigo-900">Proposal ID</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Applicant</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Department</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Loan Type</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Amount</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Tenure</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Submitted</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Status</th>
-								<th class="px-4 py-3 font-medium text-indigo-900 w-72">Action</th>
-							</tr>
-						</thead>
-						<tbody class="divide-y divide-slate-100">
-							<tr class="hover:bg-indigo-50 transition-colors">
-								<td class="px-4 py-3">PROP-2198</td>
-								<td class="px-4 py-3">Asha Temu</td>
-								<td class="px-4 py-3">Science</td>
-								<td class="px-4 py-3">Education</td>
-								<td class="px-4 py-3 font-semibold text-slate-900">₹2,40,000</td>
-								<td class="px-4 py-3">24 months</td>
-								<td class="px-4 py-3">2026-03-28</td>
-								<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Approved</span></td>
-								<td class="px-4 py-3 w-72">
-									<div class="flex items-center justify-start gap-2 whitespace-nowrap">
-										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
-											<i data-lucide="eye" class="w-4 h-4"></i>
-											View
-										</button>
-										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-cyan-200 text-cyan-700 bg-cyan-50 hover:bg-cyan-100 text-xs font-medium" title="Mark as disbursed" aria-label="Mark as disbursed">
-											<i data-lucide="hand-coins" class="w-4 h-4"></i>
-											Disburse
-										</button>
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					@if ($approvedLoans->count() > 0)
+						<table class="w-full text-left text-sm relative z-0">
+							<thead class="bg-indigo-50 border-b border-indigo-100">
+								<tr>
+									<th class="px-4 py-3 font-medium text-indigo-900">Proposal ID</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Applicant</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Loan Type</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Amount</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Tenure</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Submitted</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Status</th>
+									<th class="px-4 py-3 font-medium text-indigo-900 w-72">Action</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-100">
+								@foreach ($approvedLoans as $loan)
+									<tr class="hover:bg-indigo-50 transition-colors">
+										<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
+										<td class="px-4 py-3">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</td>
+										<td class="px-4 py-3">{{ $loan->loanType->name ?? 'N/A' }}</td>
+										<td class="px-4 py-3 font-semibold text-slate-900">₹{{ number_format($loan->amount, 0) }}</td>
+										<td class="px-4 py-3">{{ $loan->duration_months }} months</td>
+										<td class="px-4 py-3">{{ $loan->created_at->format('Y-m-d') }}</td>
+										<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Approved</span></td>
+										<td class="px-4 py-3 w-72">
+											<div class="flex items-center justify-start gap-2 whitespace-nowrap">
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
+													<i data-lucide="eye" class="w-4 h-4"></i>
+													View
+												</button>
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-cyan-200 text-cyan-700 bg-cyan-50 hover:bg-cyan-100 text-xs font-medium" title="Mark as disbursed" aria-label="Mark as disbursed">
+													<i data-lucide="hand-coins" class="w-4 h-4"></i>
+													Disburse
+												</button>
+											</div>
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
+					@else
+						<div class="px-4 py-6 text-center">
+							<p class="text-sm text-slate-500">No approved applications</p>
+						</div>
+					@endif
 				</div>
 			</div>
 
+			<!-- Rejected Applications -->
+			@php
+				$rejectedLoans = $allLoans->where('status', 'rejected');
+			@endphp
 			<div>
 				<h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
 					<span class="w-1 h-6 bg-red-500 rounded"></span>
-					Declined Applications
+					Rejected Applications ({{ $rejectedLoans->count() }})
 				</h2>
 				<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto relative z-0">
-					<table class="w-full text-left text-sm relative z-0">
-						<thead class="bg-indigo-50 border-b border-indigo-100">
-							<tr>
-								<th class="px-4 py-3 font-medium text-indigo-900">Proposal ID</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Applicant</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Department</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Loan Type</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Amount</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Tenure</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Submitted</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Status</th>
-								<th class="px-4 py-3 font-medium text-indigo-900 w-72">Action</th>
-							</tr>
-						</thead>
-						<tbody class="divide-y divide-slate-100">
-							<tr class="hover:bg-indigo-50 transition-colors">
-								<td class="px-4 py-3">PROP-2196</td>
-								<td class="px-4 py-3">Juma Nyerere</td>
-								<td class="px-4 py-3">Transport</td>
-								<td class="px-4 py-3">Personal</td>
-								<td class="px-4 py-3 font-semibold text-slate-900">₹80,000</td>
-								<td class="px-4 py-3">10 months</td>
-								<td class="px-4 py-3">2026-03-27</td>
-								<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Rejected</span></td>
-								<td class="px-4 py-3 w-72">
-									<div class="flex items-center justify-start gap-2 whitespace-nowrap">
-										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
-											<i data-lucide="eye" class="w-4 h-4"></i>
-											View
-										</button>
-										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-slate-200 text-slate-700 bg-slate-50 hover:bg-slate-100 text-xs font-medium" title="No further action" aria-label="No further action">
-											<i data-lucide="minus-circle" class="w-4 h-4"></i>
-											Closed
-										</button>
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					@if ($rejectedLoans->count() > 0)
+						<table class="w-full text-left text-sm relative z-0">
+							<thead class="bg-indigo-50 border-b border-indigo-100">
+								<tr>
+									<th class="px-4 py-3 font-medium text-indigo-900">Proposal ID</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Applicant</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Loan Type</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Amount</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Tenure</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Submitted</th>
+									<th class="px-4 py-3 font-medium text-indigo-900">Status</th>
+									<th class="px-4 py-3 font-medium text-indigo-900 w-72">Action</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-100">
+								@foreach ($rejectedLoans as $loan)
+									<tr class="hover:bg-indigo-50 transition-colors">
+										<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
+										<td class="px-4 py-3">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</td>
+										<td class="px-4 py-3">{{ $loan->loanType->name ?? 'N/A' }}</td>
+										<td class="px-4 py-3 font-semibold text-slate-900">₹{{ number_format($loan->amount, 0) }}</td>
+										<td class="px-4 py-3">{{ $loan->duration_months }} months</td>
+										<td class="px-4 py-3">{{ $loan->created_at->format('Y-m-d') }}</td>
+										<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Rejected</span></td>
+										<td class="px-4 py-3 w-72">
+											<div class="flex items-center justify-start gap-2 whitespace-nowrap">
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
+													<i data-lucide="eye" class="w-4 h-4"></i>
+													View
+												</button>
+												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-slate-200 text-slate-700 bg-slate-50 hover:bg-slate-100 text-xs font-medium" title="No further action" aria-label="No further action">
+													<i data-lucide="minus-circle" class="w-4 h-4"></i>
+													Closed
+												</button>
+											</div>
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
+					@else
+						<div class="px-4 py-6 text-center">
+							<p class="text-sm text-slate-500">No rejected applications</p>
+						</div>
+					@endif
 				</div>
 			</div>
 		</div>
