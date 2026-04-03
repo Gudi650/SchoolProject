@@ -81,6 +81,25 @@
 			</div>
 		</div>
 
+		<div class="mb-6 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+			<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+				<div>
+					<p class="text-sm font-semibold text-slate-900">Status guide</p>
+					<p class="text-xs text-slate-500 mt-1">A quick overview of how loan applications move through the review flow.</p>
+					<p class="text-xs text-indigo-600 mt-1">UI only preview: action buttons are visual for now (backend not connected).</p>
+				</div>
+				<div class="flex flex-wrap gap-2">
+					<span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">pending</span>
+					<span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">under_review</span>
+					<span class="px-2.5 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">approved</span>
+					<span class="px-2.5 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">rejected</span>
+					<span class="px-2.5 py-1 text-xs font-medium rounded-full bg-cyan-100 text-cyan-700">disbursed</span>
+					<span class="px-2.5 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-700">active</span>
+					<span class="px-2.5 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-700">completed</span>
+				</div>
+			</div>
+		</div>
+
 		<div class="space-y-6 mb-6">
 			<div>
 				<h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
@@ -99,7 +118,7 @@
 								<th class="px-4 py-3 font-medium text-indigo-900">Tenure</th>
 								<th class="px-4 py-3 font-medium text-indigo-900">Submitted</th>
 								<th class="px-4 py-3 font-medium text-indigo-900">Status</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Action</th>
+								<th class="px-4 py-3 font-medium text-indigo-900 w-72">Action</th>
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-slate-100">
@@ -112,16 +131,15 @@
 								<td class="px-4 py-3">12 months</td>
 								<td class="px-4 py-3">2026-03-29</td>
 								<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Pending</span></td>
-								<td class="px-4 py-3">
-									<div class="flex items-center justify-center gap-3 whitespace-nowrap">
-										<button class="inline-flex items-center justify-center w-5 h-5 text-blue-600 hover:text-blue-700" title="View" aria-label="View">
+								<td class="px-4 py-3 w-72">
+									<div class="flex items-center justify-start gap-2 whitespace-nowrap">
+										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
 											<i data-lucide="eye" class="w-4 h-4"></i>
+											View
 										</button>
-										<button class="inline-flex items-center justify-center w-5 h-5 text-amber-500 hover:text-amber-600" title="Accept" aria-label="Accept">
-											<i data-lucide="check" class="w-4 h-4"></i>
-										</button>
-										<button class="inline-flex items-center justify-center w-5 h-5 text-red-500 hover:text-red-600" title="Decline" aria-label="Decline">
-											<i data-lucide="x" class="w-4 h-4"></i>
+										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 text-xs font-medium" title="Move to under review" aria-label="Move to under review">
+											<i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
+											Under Review
 										</button>
 									</div>
 								</td>
@@ -135,16 +153,19 @@
 								<td class="px-4 py-3">15 months</td>
 								<td class="px-4 py-3">2026-03-26</td>
 								<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-700">Under Review</span></td>
-								<td class="px-4 py-3">
-									<div class="flex items-center justify-center gap-3 whitespace-nowrap">
-										<button class="inline-flex items-center justify-center w-5 h-5 text-blue-600 hover:text-blue-700" title="View" aria-label="View">
+								<td class="px-4 py-3 w-72">
+									<div class="flex items-center justify-start gap-2 whitespace-nowrap">
+										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
 											<i data-lucide="eye" class="w-4 h-4"></i>
+											View
 										</button>
-										<button class="inline-flex items-center justify-center w-5 h-5 text-amber-500 hover:text-amber-600" title="Accept" aria-label="Accept">
-											<i data-lucide="check" class="w-4 h-4"></i>
+										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-green-200 text-green-700 bg-green-50 hover:bg-green-100 text-xs font-medium" title="Approve application" aria-label="Approve application">
+											<i data-lucide="badge-check" class="w-4 h-4"></i>
+											Approve
 										</button>
-										<button class="inline-flex items-center justify-center w-5 h-5 text-red-500 hover:text-red-600" title="Decline" aria-label="Decline">
-											<i data-lucide="x" class="w-4 h-4"></i>
+										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 text-xs font-medium" title="Reject application" aria-label="Reject application">
+											<i data-lucide="x-circle" class="w-4 h-4"></i>
+											Reject
 										</button>
 									</div>
 								</td>
@@ -171,7 +192,7 @@
 								<th class="px-4 py-3 font-medium text-indigo-900">Tenure</th>
 								<th class="px-4 py-3 font-medium text-indigo-900">Submitted</th>
 								<th class="px-4 py-3 font-medium text-indigo-900">Status</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Action</th>
+								<th class="px-4 py-3 font-medium text-indigo-900 w-72">Action</th>
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-slate-100">
@@ -184,10 +205,15 @@
 								<td class="px-4 py-3">24 months</td>
 								<td class="px-4 py-3">2026-03-28</td>
 								<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Approved</span></td>
-								<td class="px-4 py-3">
-									<div class="flex items-center justify-center gap-3 whitespace-nowrap">
-										<button class="inline-flex items-center justify-center w-5 h-5 text-blue-600 hover:text-blue-700" title="View" aria-label="View">
+								<td class="px-4 py-3 w-72">
+									<div class="flex items-center justify-start gap-2 whitespace-nowrap">
+										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
 											<i data-lucide="eye" class="w-4 h-4"></i>
+											View
+										</button>
+										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-cyan-200 text-cyan-700 bg-cyan-50 hover:bg-cyan-100 text-xs font-medium" title="Mark as disbursed" aria-label="Mark as disbursed">
+											<i data-lucide="hand-coins" class="w-4 h-4"></i>
+											Disburse
 										</button>
 									</div>
 								</td>
@@ -214,7 +240,7 @@
 								<th class="px-4 py-3 font-medium text-indigo-900">Tenure</th>
 								<th class="px-4 py-3 font-medium text-indigo-900">Submitted</th>
 								<th class="px-4 py-3 font-medium text-indigo-900">Status</th>
-								<th class="px-4 py-3 font-medium text-indigo-900">Action</th>
+								<th class="px-4 py-3 font-medium text-indigo-900 w-72">Action</th>
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-slate-100">
@@ -227,13 +253,15 @@
 								<td class="px-4 py-3">10 months</td>
 								<td class="px-4 py-3">2026-03-27</td>
 								<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Rejected</span></td>
-								<td class="px-4 py-3">
-									<div class="flex items-center justify-center gap-3 whitespace-nowrap">
-										<button class="inline-flex items-center justify-center w-5 h-5 text-blue-600 hover:text-blue-700" title="View" aria-label="View">
+								<td class="px-4 py-3 w-72">
+									<div class="flex items-center justify-start gap-2 whitespace-nowrap">
+										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" title="View details" aria-label="View details">
 											<i data-lucide="eye" class="w-4 h-4"></i>
+											View
 										</button>
-										<button class="inline-flex items-center justify-center w-5 h-5 text-red-500 hover:text-red-600" title="Delete" aria-label="Delete">
-											<i data-lucide="trash-2" class="w-4 h-4"></i>
+										<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-slate-200 text-slate-700 bg-slate-50 hover:bg-slate-100 text-xs font-medium" title="No further action" aria-label="No further action">
+											<i data-lucide="minus-circle" class="w-4 h-4"></i>
+											Closed
 										</button>
 									</div>
 								</td>

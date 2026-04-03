@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\LoanApplication;
 use App\Models\LoanConfigurations;
 use App\Models\LoanType;
-use App\Models\LoanSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -131,7 +130,7 @@ class LoanApplicationController extends Controller
         $payeTriggerB = ($amount > ($basicSalary * 3)) && ($duration > 12);
         $payeApplicable = $payeTriggerA || $payeTriggerB;
 
-        // ✅ STEP 9: CALCULATE PAYE BENEFITS (if applicable)
+        // CALCULATE PAYE BENEFITS (if applicable)
         // PAYE benefit = Difference between minimum rate and actual rate
         if ($payeApplicable) {
 
