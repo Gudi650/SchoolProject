@@ -154,11 +154,12 @@
                                         </td>
                                         <td class="px-4 py-3 w-72">
                                             <div class="flex items-center justify-start gap-2 whitespace-nowrap">
-                                                <button
-                                                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium"
-                                                    title="View details" aria-label="View details">
+                                                <button type="button"
+                                                    class="js-loan-view-toggle inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium"
+                                                    data-target="loan-detail-pending-{{ $loan->id }}"
+                                                    title="View details" aria-label="View details" aria-expanded="false">
                                                     <i data-lucide="eye" class="w-4 h-4"></i>
-                                                    View
+                                                    <span class="js-toggle-label">View</span>
                                                 </button>
                                                 <button
                                                     class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 text-xs font-medium"
@@ -166,6 +167,30 @@
                                                     <i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
                                                     Under Review
                                                 </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="loan-detail-pending-{{ $loan->id }}" class="js-loan-detail-row hidden bg-slate-50/60">
+                                        <td colspan="8" class="px-4 py-4">
+                                            <div class="rounded-lg border border-slate-200 bg-white p-4">
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                                                    <div><p class="text-slate-500">Reference</p><p class="font-semibold text-slate-800">{{ $loan->loan_reference }}</p></div>
+                                                    <div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
+                                                    <div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
+                                                    <div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
+                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
+                                                    <div><p class="text-slate-500">Interest Rate</p><p class="font-semibold text-slate-800">{{ number_format($loan->interest_rate, 2) }}%</p></div>
+                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Submitted At</p><p class="font-semibold text-slate-800">{{ optional($loan->created_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
+                                                    <div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
+                                                </div>
+                                                <div class="mt-3 border-t border-slate-100 pt-3 ">
+                                                    <p class="text-slate-500">Purpose</p>
+                                                    <p class="text-slate-800">{{ $loan->purpose ?: 'No purpose provided' }}</p>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -220,11 +245,12 @@
                                                 Review</span></td>
                                         <td class="px-4 py-3 w-72">
                                             <div class="flex items-center justify-start gap-2 whitespace-nowrap">
-                                                <button
-                                                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium"
-                                                    title="View details" aria-label="View details">
+                                                <button type="button"
+                                                    class="js-loan-view-toggle inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium"
+                                                    data-target="loan-detail-review-{{ $loan->id }}"
+                                                    title="View details" aria-label="View details" aria-expanded="false">
                                                     <i data-lucide="eye" class="w-4 h-4"></i>
-                                                    View
+                                                    <span class="js-toggle-label">View</span>
                                                 </button>
                                                 <button
                                                     class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-green-200 text-green-700 bg-green-50 hover:bg-green-100 text-xs font-medium"
@@ -238,6 +264,30 @@
                                                     <i data-lucide="x-circle" class="w-4 h-4"></i>
                                                     Reject
                                                 </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="loan-detail-review-{{ $loan->id }}" class="js-loan-detail-row hidden bg-slate-50/60">
+                                        <td colspan="8" class="px-4 py-4">
+                                            <div class="rounded-lg border border-slate-200 bg-white p-4">
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                                                    <div><p class="text-slate-500">Reference</p><p class="font-semibold text-slate-800">{{ $loan->loan_reference }}</p></div>
+                                                    <div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
+                                                    <div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
+                                                    <div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
+                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
+                                                    <div><p class="text-slate-500">Interest Rate</p><p class="font-semibold text-slate-800">{{ number_format($loan->interest_rate, 2) }}%</p></div>
+                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Submitted At</p><p class="font-semibold text-slate-800">{{ optional($loan->created_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
+                                                    <div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
+                                                </div>
+                                                <div class="mt-3 border-t border-slate-100 pt-3 ">
+                                                    <p class="text-slate-500">Purpose</p>
+                                                    <p class="text-slate-800">{{ $loan->purpose ?: 'No purpose provided' }}</p>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -292,11 +342,12 @@
                                         </td>
                                         <td class="px-4 py-3 w-72">
                                             <div class="flex items-center justify-start gap-2 whitespace-nowrap">
-                                                <button
-                                                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium"
-                                                    title="View details" aria-label="View details">
+                                                <button type="button"
+                                                    class="js-loan-view-toggle inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium"
+                                                    data-target="loan-detail-approved-{{ $loan->id }}"
+                                                    title="View details" aria-label="View details" aria-expanded="false">
                                                     <i data-lucide="eye" class="w-4 h-4"></i>
-                                                    View
+                                                    <span class="js-toggle-label">View</span>
                                                 </button>
                                                 <button
                                                     class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-cyan-200 text-cyan-700 bg-cyan-50 hover:bg-cyan-100 text-xs font-medium"
@@ -304,6 +355,30 @@
                                                     <i data-lucide="hand-coins" class="w-4 h-4"></i>
                                                     Disburse
                                                 </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="loan-detail-approved-{{ $loan->id }}" class="js-loan-detail-row hidden bg-slate-50/60">
+                                        <td colspan="8" class="px-4 py-4">
+                                            <div class="rounded-lg border border-slate-200 bg-white p-4">
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                                                    <div><p class="text-slate-500">Reference</p><p class="font-semibold text-slate-800">{{ $loan->loan_reference }}</p></div>
+                                                    <div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
+                                                    <div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
+                                                    <div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
+                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
+                                                    <div><p class="text-slate-500">Interest Rate</p><p class="font-semibold text-slate-800">{{ number_format($loan->interest_rate, 2) }}%</p></div>
+                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Approved At</p><p class="font-semibold text-slate-800">{{ optional($loan->approved_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
+                                                    <div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
+                                                </div>
+                                                <div class="mt-3 border-t border-slate-100 pt-3 ">
+                                                    <p class="text-slate-500">Purpose</p>
+                                                    <p class="text-slate-800">{{ $loan->purpose ?: 'No purpose provided' }}</p>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -358,11 +433,12 @@
                                         </td>
                                         <td class="px-4 py-3 w-72">
                                             <div class="flex items-center justify-start gap-2 whitespace-nowrap">
-                                                <button
-                                                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium"
-                                                    title="View details" aria-label="View details">
+                                                <button type="button"
+                                                    class="js-loan-view-toggle inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium"
+                                                    data-target="loan-detail-rejected-{{ $loan->id }}"
+                                                    title="View details" aria-label="View details" aria-expanded="false">
                                                     <i data-lucide="eye" class="w-4 h-4"></i>
-                                                    View
+                                                    <span class="js-toggle-label">View</span>
                                                 </button>
                                                 <button
                                                     class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-slate-200 text-slate-700 bg-slate-50 hover:bg-slate-100 text-xs font-medium"
@@ -370,6 +446,30 @@
                                                     <i data-lucide="minus-circle" class="w-4 h-4"></i>
                                                     Closed
                                                 </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="loan-detail-rejected-{{ $loan->id }}" class="js-loan-detail-row hidden bg-slate-50/60">
+                                        <td colspan="8" class="px-4 py-4">
+                                            <div class="rounded-lg border border-slate-200 bg-white p-4">
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                                                    <div><p class="text-slate-500">Reference</p><p class="font-semibold text-slate-800">{{ $loan->loan_reference }}</p></div>
+                                                    <div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
+                                                    <div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
+                                                    <div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
+                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
+                                                    <div><p class="text-slate-500">Interest Rate</p><p class="font-semibold text-slate-800">{{ number_format($loan->interest_rate, 2) }}%</p></div>
+                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Rejected At</p><p class="font-semibold text-slate-800">{{ optional($loan->rejected_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
+                                                    <div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
+                                                </div>
+                                                <div class="mt-3 border-t border-slate-100 pt-3 text-xs">
+                                                    <p class="text-slate-500">Purpose</p>
+                                                    <p class="text-slate-800">{{ $loan->purpose ?: 'No purpose provided' }}</p>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -386,4 +486,24 @@
         </div>
 
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.js-loan-view-toggle').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const targetId = button.getAttribute('data-target');
+                    const row = document.getElementById(targetId);
+                    if (!row) return;
+
+                    const isHidden = row.classList.contains('hidden');
+                    row.classList.toggle('hidden');
+                    button.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+
+                    const label = button.querySelector('.js-toggle-label');
+                    if (label) {
+                        label.textContent = isHidden ? 'Hide' : 'View';
+                    }
+                });
+            });
+        });
+    </script>
 </x-Account-sidebar>

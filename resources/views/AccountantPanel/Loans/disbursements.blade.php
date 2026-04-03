@@ -112,14 +112,38 @@
 										<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Approved</span></td>
 										<td class="px-4 py-3 w-72">
 											<div class="flex items-center justify-start gap-2 whitespace-nowrap">
-												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium">
+												<button type="button" class="js-loan-view-toggle inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" data-target="disb-detail-approved-{{ $loan->id }}" aria-expanded="false">
 													<i data-lucide="eye" class="w-4 h-4"></i>
-													View
+														<span class="js-toggle-label">View</span>
 												</button>
 												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-cyan-200 text-cyan-700 bg-cyan-50 hover:bg-cyan-100 text-xs font-medium">
 													<i data-lucide="hand-coins" class="w-4 h-4"></i>
 													Disburse
 												</button>
+											</div>
+										</td>
+									</tr>
+									<tr id="disb-detail-approved-{{ $loan->id }}" class="hidden bg-slate-50/60">
+										<td colspan="7" class="px-4 py-4">
+											<div class="rounded-lg border border-slate-200 bg-white p-4">
+												<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 ">
+													<div><p class="text-slate-500">Reference</p><p class="font-semibold text-slate-800">{{ $loan->loan_reference }}</p></div>
+													<div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
+													<div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
+													<div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
+													<div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+													<div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
+													<div><p class="text-slate-500">Approved At</p><p class="font-semibold text-slate-800">{{ optional($loan->approved_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
+													<div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Interest Rate</p><p class="font-semibold text-slate-800">{{ number_format($loan->interest_rate, 2) }}%</p></div>
+													<div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
+												</div>
+												<div class="mt-3 border-t border-slate-100 pt-3 ">
+													<p class="text-slate-500">Purpose</p>
+													<p class="text-slate-800">{{ $loan->purpose ?: 'No purpose provided' }}</p>
+												</div>
 											</div>
 										</td>
 									</tr>
@@ -174,9 +198,9 @@
 										</td>
 										<td class="px-4 py-3 w-72">
 											<div class="flex items-center justify-start gap-2 whitespace-nowrap">
-												<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium">
+												<button type="button" class="js-loan-view-toggle inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" data-target="disb-detail-recent-{{ $loan->id }}" aria-expanded="false">
 													<i data-lucide="eye" class="w-4 h-4"></i>
-													View
+														<span class="js-toggle-label">View</span>
 												</button>
 												@if ($loan->status === 'disbursed')
 													<button class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 text-xs font-medium">
@@ -184,6 +208,30 @@
 														Mark Active
 													</button>
 												@endif
+											</div>
+										</td>
+									</tr>
+									<tr id="disb-detail-recent-{{ $loan->id }}" class="hidden bg-slate-50/60">
+										<td colspan="8" class="px-4 py-4">
+											<div class="rounded-lg border border-slate-200 bg-white p-4">
+												<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+													<div><p class="text-slate-500">Reference</p><p class="font-semibold text-slate-800">{{ $loan->loan_reference }}</p></div>
+													<div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
+													<div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
+													<div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
+													<div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+													<div><p class="text-slate-500">Disbursed At</p><p class="font-semibold text-slate-800">{{ optional($loan->disbursed_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
+													<div><p class="text-slate-500">Approved At</p><p class="font-semibold text-slate-800">{{ optional($loan->approved_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
+													<div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
+													<div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Total Paid</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_paid ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
+												</div>
+												<div class="mt-3 border-t border-slate-100 pt-3 ">
+													<p class="text-slate-500">Purpose</p>
+													<p class="text-slate-800">{{ $loan->purpose ?: 'No purpose provided' }}</p>
+												</div>
 											</div>
 										</td>
 									</tr>
@@ -199,4 +247,24 @@
 			</div>
 		</div>
 	</main>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			document.querySelectorAll('.js-loan-view-toggle').forEach(function (button) {
+				button.addEventListener('click', function () {
+					const targetId = button.getAttribute('data-target');
+					const row = document.getElementById(targetId);
+					if (!row) return;
+
+					const isHidden = row.classList.contains('hidden');
+					row.classList.toggle('hidden');
+					button.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+
+					const label = button.querySelector('.js-toggle-label');
+					if (label) {
+						label.textContent = isHidden ? 'Hide' : 'View';
+					}
+				});
+			});
+		});
+	</script>
 </x-Account-sidebar>
