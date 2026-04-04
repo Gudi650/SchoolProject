@@ -28,6 +28,8 @@ return new class extends Migration
             $table->unsignedBigInteger('deductions_id')->nullable();
             $table->decimal('gross_salary', 15, 2)->nullable();
             $table->decimal('net_salary', 15, 2)->nullable();
+            $table->decimal('base_salary', 15, 2)->nullable();
+            $table->decimal('taxable_income', 15, 2)->nullable();
             //$table->string('Payment_frequency');
             $table->timestamps();
 

@@ -23,6 +23,7 @@ class PayrollConfigurations extends Model
         'gross_salary',
         'base_salary',
         'net_salary',
+        'taxable_income',
     ];
 
     //relationships
@@ -30,19 +31,25 @@ class PayrollConfigurations extends Model
     //teacher table rtnship
     public function teachers()
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsTo(Teacher::class, 'teacher_id');
     }
 
     //relationship with school table
     public function schools()
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class, 'school_id');
     }
 
     //relationship with employee table
     public function employees()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Employee::class, 'employee_id');
+    }
+
+    //singular alias for employee relationship
+    public function employee()
+    {
+        return $this->employees();
     }
 
     //relationship with allowances table
@@ -64,18 +71,18 @@ class PayrollConfigurations extends Model
         parent::boot();
         static::deleting(function ($payrollConfiguration) {
             //delete related allowances record
-            if ($payrollConfiguration->allowances) {
-                $payrollConfiguration->allowances->delete();
+            if ($payrollConfiguration->allowances()->exists()) {
+                $payrollConfiguration->allowances()->delete();
             }
 
             //delete related deductions record
-            if ($payrollConfiguration->deductions) {
-                $payrollConfiguration->deductions->delete();
+            if ($payrollConfiguration->deductions()->exists()) {
+                $payrollConfiguration->deductions()->delete();
             }
 
             //delete the employee record 
-            if($payrollConfiguration->employee){
-                $payrollConfiguration->employee->delete();
+            if ($payrollConfiguration->employee()->exists()) {
+                $payrollConfiguration->employee()->delete();
             }
 
         });

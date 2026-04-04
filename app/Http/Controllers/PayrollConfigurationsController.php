@@ -119,6 +119,10 @@ class PayrollConfigurationsController extends Controller
             'create_new_employee' => $request->boolean('create_new_employee'),
         ]);
 
+        /*dump the data
+        dd($request->all());
+        */
+
         //validate the request data
         $validated = $request->validate([
             'teacher_id' => ['nullable', 'integer', 'exists:teachers,id'],
@@ -144,6 +148,7 @@ class PayrollConfigurationsController extends Controller
             'loan_deduction' => ['nullable', 'numeric', 'min:0'],
             'other_deduction' => ['nullable', 'numeric', 'min:0'],
             'heslb_deduction' => ['nullable', 'numeric', 'min:0'],
+            'taxable_income' => ['nullable', 'numeric', 'min:0'],
 
             'payment_method' => ['required', 'in:bank,cash,check'],
             'status' => ['required', 'in:active,inactive,on_leave'],
@@ -299,6 +304,7 @@ class PayrollConfigurationsController extends Controller
             $baseSalary = (float) $validated['base_salary'];
             $grossSalary = $baseSalary + $totalAllowances;
             $netSalary = $grossSalary - $totalDeductions;
+            $taxableIncome = (float) ($validated['taxable_income'] ?? 0);
 
             //check the if the bank number already exists in the database for another employee, if it exists then return an error message to the user
             if (!$this->isBankAccountNumberUnique($validated['account_number'] ?? null, $validated['bank_name'] ?? null)) {
@@ -324,6 +330,7 @@ class PayrollConfigurationsController extends Controller
                 'gross_salary' => $grossSalary,
                 'base_salary' => $baseSalary,
                 'net_salary' => $netSalary,
+                'taxable_income' => $taxableIncome,
             ]);
 
             DB::commit();
@@ -374,6 +381,7 @@ class PayrollConfigurationsController extends Controller
             'loan_deduction' => ['nullable', 'numeric', 'min:0'],
             'other_deduction' => ['nullable', 'numeric', 'min:0'],
             'heslb_deduction' => ['nullable', 'numeric', 'min:0'],
+            'taxable_income' => ['nullable', 'numeric', 'min:0'],
 
             'payment_method' => ['required', 'in:bank,cash,check'],
             'status' => ['required', 'in:active,inactive,on_leave'],
@@ -457,6 +465,7 @@ class PayrollConfigurationsController extends Controller
             $baseSalary = (float) $validated['base_salary'];
             $grossSalary = $baseSalary + $totalAllowances;
             $netSalary = $grossSalary - $totalDeductions;
+            $taxableIncome = (float) ($validated['taxable_income'] ?? 0);
 
             //check if the bank number is unique (excluding current record)
             if (!empty($validated['account_number']) && !empty($validated['bank_name'])) {
@@ -496,6 +505,7 @@ class PayrollConfigurationsController extends Controller
                 'notes' => $validated['notes'] ?? null,
                 'gross_salary' => $grossSalary,
                 'net_salary' => $netSalary,
+                'taxable_income' => $taxableIncome,
             ]);
 
             DB::commit();

@@ -274,6 +274,7 @@
                 @csrf
                 <input type="hidden" id="payrollConfigId" name="payroll_config_id" value="">
                 <input type="hidden" id="formMethod" name="_method" value="">
+                <input type="hidden" id="taxable_income" name="taxable_income" value="{{ old('taxable_income', 0) }}">
                 <div class="flex-1 overflow-y-auto px-6 py-5">
                     
                     <!-- Teacher Search Section -->
@@ -1030,6 +1031,12 @@
                 if (healthInsuranceInput) {
                     const calculatedHealthInsurance = Number(payload.healthInsuranceDeduction ?? 0);
                     healthInsuranceInput.value = calculatedHealthInsurance.toFixed(2);
+                }
+
+                const taxableIncomeInput = document.getElementById('taxable_income');
+                if (taxableIncomeInput) {
+                    const calculatedTaxableIncome = Number(payload.taxableIncome ?? 0);
+                    taxableIncomeInput.value = calculatedTaxableIncome.toFixed(2);
                 }
 
                 calculateNetSalary();

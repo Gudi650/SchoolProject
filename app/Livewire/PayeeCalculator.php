@@ -148,17 +148,17 @@ class PayeeCalculator extends Component
     }
 
     /**
-     * HESLB = Gross - 15% of gross
+     * HESLB = 15% of basic salary
      * HEslb percentage is fixed at 15% as per HESLB guidelines
      */
     private function calculateHESLBDeduction(): float
     {
-        $gross = $this->calculateGrossSalary();
         if (!$this->heslbEnabled) {
             return (float) $this->heslbDeduction = 0;
         }
 
-        return (float) $this->heslbDeduction = $gross * 0.15;
+        return (float) $this->heslbDeduction = $this->baseSalary * 0.15;
+        
     }
 
     /**
