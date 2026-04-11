@@ -412,12 +412,15 @@
                                                     <i data-lucide="eye" class="w-4 h-4"></i>
                                                     <span class="js-toggle-label">View</span>
                                                 </button>
-                                                <button
-                                                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-cyan-200 text-cyan-700 bg-cyan-50 hover:bg-cyan-100 text-xs font-medium"
-                                                    title="Mark as disbursed" aria-label="Mark as disbursed">
-                                                    <i data-lucide="hand-coins" class="w-4 h-4"></i>
-                                                    Disburse
-                                                </button>
+                                                <form method="POST" action="{{ route('accounting.loanDisburse', $loan->id) }}">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-cyan-200 text-cyan-700 bg-cyan-50 hover:bg-cyan-100 text-xs font-medium"
+                                                        title="Mark as disbursed" aria-label="Mark as disbursed">
+                                                        <i data-lucide="hand-coins" class="w-4 h-4"></i>
+                                                        Disburse
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

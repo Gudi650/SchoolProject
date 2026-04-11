@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\LoanApplication;
 use App\Models\LoanConfigurations;
+use App\Models\PayrollChange;
+use App\Models\PayrollConfigurations;
 use App\Models\LoanType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,7 +59,7 @@ class LoanApplicationController extends Controller
 
 
 
-    //function to store the loan application to the db after the user submits the form
+    //function to store the loan application to the db after the user submits the loan application form
     public function store(Request $request)
     {
         // VALIDATE ALL USER INPUT
@@ -206,10 +208,8 @@ class LoanApplicationController extends Controller
         /*
             $user = Auth::user();
 
-            if (!$user) {
-                return back()->with('error', 'You must be logged in.');
-            }
         */
+
 
         $schoolId = $user->school_id ?? session('school_id') ?? 1;
 
@@ -249,7 +249,7 @@ class LoanApplicationController extends Controller
         ]);
     }
 
-    // Function to change a pending loan application status to under review
+    // Function to change a pending loan application status to under review in the accountant panel
     public function moveToUnderReview($loanId)
     {
         $user = Auth::user();
@@ -280,14 +280,10 @@ class LoanApplicationController extends Controller
     // Function to show accountant disbursements page
     public function accountantDisbursements()
     {
-        /*
-        $user = Auth::user();
-
-        
-        if (!$user) {
-            return back()->with('error', 'You must be logged in.');
-        } 
-            */
+        /**
+         * as of now use a
+         * $user = Auth::user();
+         */
 
         $schoolId = $user->school_id ?? session('school_id')?? 1;
 
@@ -337,4 +333,96 @@ class LoanApplicationController extends Controller
             'pendingConfirmation' => $pendingConfirmation,
         ]);
     }
+
+    // Function to disburse an approved loan and create payroll change entry
+    public function moveToDisbursed($loanId)
+    {
+        $user = Auth::user();
+        $schoolId = $user->school_id ?? session('school_id') ?? 1;
+
+        if (!$schoolId) {
+            return back()->with('error', 'School information is missing.');
+        }
+
+        $loan = LoanApplication::with('user')
+            ->where('id', $loanId)
+            ->where('school_id', $schoolId)
+            ->first();
+
+        if (!$loan) {
+            return back()->with('error', 'Loan application not found.');
+        }
+
+        if ($loan->status !== 'approved') {
+            return back()->with('error', 'Only approved loans can be disbursed.');
+        }
+
+        $teacher = $loan->user?->teachers()->where('school_id', $schoolId)->latest('id')->first();
+
+        if (!$teacher) {
+            return back()->with('error', 'No teacher profile found for this loan applicant.');
+        }
+
+        $payrollConfig = PayrollConfigurations::where('school_id', $schoolId)
+            ->where('teacher_id', $teacher->id)
+            ->latest('id')
+            ->first();
+
+        if (!$payrollConfig) {
+            return back()->with('error', 'No payroll configuration found for this loan applicant.');
+        }
+
+        if (!$loan->repayment_start_date) {
+            $loan->repayment_start_date = now()->toDateString();
+        }
+
+        $fringeBenefitValue = (float) ($loan->paye_benefit_monthly ?? 0);
+        $fringeBenefitAmount = abs($fringeBenefitValue);
+        $fringeBenefitEffect = null;
+
+        if ($loan->paye_applicable && $fringeBenefitAmount > 0) {
+            $fringeBenefitEffect = $fringeBenefitValue < 0 ? 'deduction' : 'allowance';
+        }
+
+        $remainingBalance = max(0, round((float) ($loan->total_repayment ?? 0) - (float) ($loan->total_paid ?? 0), 2));
+
+        PayrollChange::updateOrCreate(
+            [
+                'loan_application_id' => $loan->id,
+            ],
+            [
+                'school_id' => $schoolId,
+                'payroll_configuration_id' => $payrollConfig->id,
+                'adjustment_type' => 'loan_repayment',
+                'loan_installment_amount' => (float) ($loan->monthly_installment ?? 0),
+                'loan_remaining_balance' => $remainingBalance,
+                'loan_total_applied' => (float) ($loan->total_paid ?? 0),
+                'has_fringe_benefit' => (bool) ($loan->paye_applicable && $fringeBenefitAmount > 0),
+                'fringe_benefit_amount' => $fringeBenefitAmount,
+                'fringe_benefit_effect' => $fringeBenefitEffect,
+                'calculation_mode' => 'fixed_amount',
+                'manual_amount' => 0,
+                'manual_rate' => null,
+                'manual_effect' => null,
+                'start_date' => $loan->repayment_start_date,
+                'end_date' => null,
+                'stop_on_zero_balance' => true,
+                'priority' => 100,
+                'status' => 'active',
+                'last_applied_at' => null,
+                'source_reference' => $loan->loan_reference,
+                'notes' => 'Auto-created on loan disbursement.',
+                'created_by' => $user?->id,
+            ]
+        );
+
+        $loan->status = 'disbursed';
+        $loan->disbursed_at = now();
+        $loan->disbursed_by = $user?->id;
+        $loan->save();
+
+        return back()->with('success', 'Loan disbursed and payroll change created successfully.');
+    }
+
+
 }

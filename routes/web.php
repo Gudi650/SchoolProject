@@ -452,6 +452,7 @@ Route::get('/loan-list', function () {
 
 //route for loan disbursements - show approved and disbursed loans
 Route::get('/loan-disbursements', [LoanApplicationController::class, 'accountantDisbursements'])->name('accounting.loanDisbursements');
+Route::post('/loan-disbursements/{loan}/disburse', [LoanApplicationController::class, 'moveToDisbursed'])->name('accounting.loanDisburse');
 
 
 
