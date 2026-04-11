@@ -152,7 +152,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-slate-100">
                         @forelse($employees ?? [] as $employee)
-                        <tr class="hover:bg-indigo-50 transition-colors">
+                        <tr id="employeeRow{{ $employee->id }}" class="hover:bg-indigo-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{{ $employee->employee_id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
@@ -197,7 +197,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                <button onclick="viewEmployee({{ $employee->id }})" class="text-indigo-600 hover:text-indigo-900 mx-1" title="View">
+                                <button id="viewEmployeeBtn{{ $employee->id }}" onclick="viewEmployee({{ $employee->id }})" class="text-indigo-600 hover:text-indigo-900 mx-1" title="View">
                                     <i data-lucide="eye" class="w-4 h-4"></i>
                                 </button>
 
@@ -246,6 +246,45 @@
                                 <button onclick="deleteEmployee(this)" data-employee-id="{{ $employee->id }}" data-employee-name="{{ $employee->name }}" class="text-red-600 hover:text-red-900 mx-1" title="Delete">
                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                                 </button>
+                            </td>
+                        </tr>
+                        <tr id="employeeDetailsRow{{ $employee->id }}" class="hidden bg-indigo-50/40 border-b border-indigo-100">
+                            <td colspan="11" class="px-6 py-4">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="rounded-lg border border-slate-200 bg-white p-4">
+                                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Allowances Breakdown</p>
+                                        <div class="space-y-1 text-sm text-slate-700">
+                                            <p>Housing: <span class="font-medium">Tsh {{ number_format($employee->allowances_data['housing_allowance'] ?? 0, 2) }}</span></p>
+                                            <p>Transport: <span class="font-medium">Tsh {{ number_format($employee->allowances_data['transport_allowance'] ?? 0, 2) }}</span></p>
+                                            <p>Meal: <span class="font-medium">Tsh {{ number_format($employee->allowances_data['meal_allowance'] ?? 0, 2) }}</span></p>
+                                            <p>Medical: <span class="font-medium">Tsh {{ number_format($employee->allowances_data['medical_allowance'] ?? 0, 2) }}</span></p>
+                                            <p>Extra Time: <span class="font-medium">Tsh {{ number_format($employee->allowances_data['extra_time'] ?? 0, 2) }}</span></p>
+                                            <p>Other: <span class="font-medium">Tsh {{ number_format($employee->allowances_data['other_allowances'] ?? 0, 2) }}</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="rounded-lg border border-slate-200 bg-white p-4">
+                                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Deductions Breakdown</p>
+                                        <div class="space-y-1 text-sm text-slate-700">
+                                            <p>PAYE: <span class="font-medium">Tsh {{ number_format($employee->deductions_data['PAYE'] ?? 0, 2) }}</span></p>
+                                            <p>NHIF: <span class="font-medium">Tsh {{ number_format($employee->deductions_data['NHIF_contribution'] ?? 0, 2) }}</span></p>
+                                            <p>NSSF: <span class="font-medium">Tsh {{ number_format($employee->deductions_data['NSSF_contribution'] ?? 0, 2) }}</span></p>
+                                            <p>Loan: <span class="font-medium">Tsh {{ number_format($employee->deductions_data['loan_deductions'] ?? 0, 2) }}</span></p>
+                                            <p>Other: <span class="font-medium">Tsh {{ number_format($employee->deductions_data['other_deductions'] ?? 0, 2) }}</span></p>
+                                            <p>HESLB: <span class="font-medium">Tsh {{ number_format($employee->deductions_data['heslb_deduction'] ?? 0, 2) }}</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="rounded-lg border border-slate-200 bg-white p-4">
+                                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Payroll Snapshot</p>
+                                        <div class="space-y-1 text-sm text-slate-700">
+                                            <p>Employee: <span class="font-medium">{{ $employee->name }}</span></p>
+                                            <p>Type: <span class="font-medium">{{ ucfirst($employee->type) }}</span></p>
+                                            <p>Position: <span class="font-medium">{{ $employee->position }}</span></p>
+                                            <p>Payment Method: <span class="font-medium">{{ ucfirst($employee->payment_method) }}</span></p>
+                                            <p>Gross Salary: <span class="font-medium">Tsh {{ number_format($employee->base_salary, 2) }}</span></p>
+                                            <p>Net Salary: <span class="font-medium">Tsh {{ number_format($employee->net_salary, 2) }}</span></p>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         @empty
@@ -986,7 +1025,31 @@
 
         // Placeholder functions for backend (Laravel will handle)
         function viewEmployee(id) {
-            console.log('View employee:', id);
+            const detailRow = document.getElementById(`employeeDetailsRow${id}`);
+            const triggerBtn = document.getElementById(`viewEmployeeBtn${id}`);
+
+            if (!detailRow) {
+                return;
+            }
+
+            const isCurrentlyHidden = detailRow.classList.contains('hidden');
+
+            document.querySelectorAll('[id^="employeeDetailsRow"]').forEach(row => {
+                row.classList.add('hidden');
+            });
+
+            document.querySelectorAll('[id^="viewEmployeeBtn"]').forEach(button => {
+                button.classList.remove('text-indigo-900');
+                button.classList.add('text-indigo-600');
+            });
+
+            if (isCurrentlyHidden) {
+                detailRow.classList.remove('hidden');
+                if (triggerBtn) {
+                    triggerBtn.classList.remove('text-indigo-600');
+                    triggerBtn.classList.add('text-indigo-900');
+                }
+            }
         }
 
         function editEmployee(buttonElement) {
