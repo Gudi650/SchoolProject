@@ -17,10 +17,13 @@
                 <i data-lucide="download" class="w-4 h-4"></i>
                 Export
               </button>
-              <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
-                <i data-lucide="plus" class="w-4 h-4"></i>
-                Process Payroll
-              </button>
+              <form method="POST" action="{{ route('accounting.payrollRuns.process') }}">
+                @csrf
+                <button type="submit" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
+                  <i data-lucide="plus" class="w-4 h-4"></i>
+                  Process Payroll
+                </button>
+              </form>
             </div>
           </div>
         </div>

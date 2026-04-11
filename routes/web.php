@@ -411,6 +411,11 @@ Route::get('/payroll-management', function () {
     return view('AccountantPanel.payrolls.payroll');
 })->name('accounting.payrollManagement');
 
+//route to process payroll runs for current period
+Route::post('/payroll-management/process',
+[PayrollConfigurationsController::class, 'processPayrollRuns'])
+->name('accounting.payrollRuns.process');
+
 //route to show payroll configuration page using controller
 Route::get('/payroll-configuration', 
 [PayrollConfigurationsController::class, 'showPayrollConfiguration'])
@@ -430,6 +435,11 @@ Route::put('/payroll-configuration/{id}',
 Route::delete('/payroll-configuration/{id}',
 [PayrollConfigurationsController::class, 'deletePayrollConfiguration'])
 ->name('accounting.payrollSettings.delete');
+
+//route to store temporary payroll allowance/deduction changes
+Route::post('/payroll-configuration/temporary-change',
+[PayrollConfigurationsController::class, 'storeTemporaryPayrollChange'])
+->name('accounting.payrollChanges.storeTemporary');
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////

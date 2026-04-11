@@ -33,10 +33,16 @@
                     <h2 class="text-2xl font-bold text-slate-900">Payroll Management</h2>
                     <p class="text-xs sm:text-sm text-slate-700 mt-1">Manage staff and teacher payroll settings</p>
                 </div>
-                <button type="button" onclick="openAddModal()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 text-xs sm:text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-150 w-full sm:w-auto">
-                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
-                    Add New Employee
-                </button>
+                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <button type="button" onclick="openTemporaryChangeModal()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 text-xs sm:text-sm bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 font-medium rounded-lg shadow-sm transition-colors duration-150 w-full sm:w-auto">
+                        <i data-lucide="sliders-horizontal" class="w-4 h-4 mr-2"></i>
+                        Temporary Adjustment
+                    </button>
+                    <button type="button" onclick="openAddModal()" class="inline-flex items-center justify-center px-3 sm:px-4 py-2 text-xs sm:text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-150 w-full sm:w-auto">
+                        <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                        Add New Employee
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -193,6 +199,14 @@
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                 <button onclick="viewEmployee({{ $employee->id }})" class="text-indigo-600 hover:text-indigo-900 mx-1" title="View">
                                     <i data-lucide="eye" class="w-4 h-4"></i>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onclick="openTemporaryChangeModal('{{ $employee->id }}', '{{ addslashes($employee->name) }}')"
+                                    class="text-indigo-600 hover:text-indigo-900 mx-1"
+                                    title="Add Temporary Adjustment">
+                                    <i data-lucide="calendar-plus" class="w-4 h-4"></i>
                                 </button>
 
                                 <!--add form with method post and action to the route for deleting an employee record, the form should be hidden and should be submitted when the delete button is clicked-->
@@ -590,14 +604,98 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row justify-end gap-3 px-6 py-4 border-t border-slate-200 bg-slate-50 flex-shrink-0">
-                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 text-slate-700 bg-white border border-slate-300 font-semibold rounded-lg transition-colors text-sm hover:bg-red-300 hover:border-red-400">
-                        <i data-lucide="x" class="w-4 h-4 inline mr-2"></i>
+                    <button type="button" id="payrollCancelBtn" onclick="handlePayrollCancel()" class="px-5 py-2.5 text-slate-700 bg-white border border-slate-300 font-semibold rounded-lg transition-colors text-sm hover:bg-red-300 hover:border-red-400 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i id="payrollCancelIcon" data-lucide="x" class="w-4 h-4 inline mr-2"></i>
+                        <i id="payrollCancelLoader" data-lucide="loader" class="w-4 h-4 inline mr-2 hidden animate-spin"></i>
                         Cancel
                     </button>
                     <button type="submit" id="submitBtn" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors shadow-md text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                         <i id="submitIcon" data-lucide="save" class="w-4 h-4 inline mr-2"></i>
                         <i id="submitLoader" data-lucide="loader" class="w-4 h-4 inline mr-2 hidden animate-spin"></i>
                         <span id="submitText">Save Employee</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Temporary Payroll Change Modal -->
+    <div id="temporaryChangeModal" class="hidden fixed inset-0 bg-black/50 z-[10000] flex items-center justify-center p-4" style="margin-left: 280px !important; left: 0;" onclick="if(event.target === this) closeTemporaryChangeModal()">
+        <div class="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="flex justify-between items-center px-6 py-4 border-b border-indigo-100 bg-indigo-50">
+                <h3 class="text-lg font-bold text-slate-900">
+                    <i data-lucide="sliders-horizontal" class="w-5 h-5 inline mr-2"></i>
+                    Add Temporary Payroll Adjustment
+                </h3>
+                <button type="button" onclick="closeTemporaryChangeModal()" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-2 rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="temporaryChangeForm" method="POST" action="{{ route('accounting.payrollChanges.storeTemporary') }}" class="px-6 py-5 space-y-4">
+                @csrf
+
+                <div>
+                    <label for="temporary_payroll_configuration_id" class="block text-sm font-semibold text-slate-700 mb-2">Employee Payroll Record <span class="text-red-600">*</span></label>
+                    <select id="temporary_payroll_configuration_id" name="payroll_configuration_id" required class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                        <option value="">Select employee payroll record...</option>
+                        @foreach($employees ?? [] as $employee)
+                            <option value="{{ $employee->id }}">{{ $employee->name }} ({{ $employee->employee_id }})</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="temporary_adjustment_type" class="block text-sm font-semibold text-slate-700 mb-2">Adjustment Type <span class="text-red-600">*</span></label>
+                        <select id="temporary_adjustment_type" name="adjustment_type" required class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                            <option value="manual_deduction">Temporary Deduction</option>
+                            <option value="manual_allowance">Temporary Allowance</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="temporary_manual_amount" class="block text-sm font-semibold text-slate-700 mb-2">Amount <span class="text-red-600">*</span></label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">$</span>
+                            <input type="number" id="temporary_manual_amount" name="manual_amount" step="0.01" min="0.01" required class="w-full pl-8 pr-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm" placeholder="0.00">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="temporary_start_date" class="block text-sm font-semibold text-slate-700 mb-2">Start Date <span class="text-red-600">*</span></label>
+                        <input type="date" id="temporary_start_date" name="start_date" required class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label for="temporary_end_date" class="block text-sm font-semibold text-slate-700 mb-2">End Date</label>
+                        <input type="date" id="temporary_end_date" name="end_date" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="temporary_status" class="block text-sm font-semibold text-slate-700 mb-2">Status <span class="text-red-600">*</span></label>
+                    <select id="temporary_status" name="status" required class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm">
+                        <option value="active">Active (apply now)</option>
+                        <option value="scheduled">Scheduled (apply by dates)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="temporary_notes" class="block text-sm font-semibold text-slate-700 mb-2">Notes</label>
+                    <textarea id="temporary_notes" name="notes" rows="3" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm" placeholder="e.g. Temporary transport allowance for April and May"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2 border-t border-slate-200">
+                    <button type="button" id="temporaryCancelBtn" onclick="handleTemporaryCancel()" class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i id="temporaryCancelIcon" data-lucide="x" class="w-4 h-4 inline mr-2"></i>
+                        <i id="temporaryCancelLoader" data-lucide="loader" class="w-4 h-4 inline mr-2 hidden animate-spin"></i>
+                        Cancel
+                    </button>
+                    <button type="submit" id="temporarySubmitBtn" class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-700 hover:border-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i id="temporarySubmitIcon" data-lucide="save" class="w-4 h-4 inline mr-2"></i>
+                        <i id="temporarySubmitLoader" data-lucide="loader" class="w-4 h-4 inline mr-2 hidden animate-spin"></i>
+                        <span id="temporarySubmitText">Save Temporary Change</span>
                     </button>
                 </div>
             </form>
@@ -694,6 +792,97 @@
 
         function closeModal() {
             document.getElementById('payrollModal').classList.add('hidden');
+
+            const cancelBtn = document.getElementById('payrollCancelBtn');
+            const cancelIcon = document.getElementById('payrollCancelIcon');
+            const cancelLoader = document.getElementById('payrollCancelLoader');
+
+            if (cancelBtn && cancelIcon && cancelLoader) {
+                cancelBtn.disabled = false;
+                cancelIcon.classList.remove('hidden');
+                cancelLoader.classList.add('hidden');
+            }
+        }
+
+        function handlePayrollCancel() {
+            const cancelBtn = document.getElementById('payrollCancelBtn');
+            const cancelIcon = document.getElementById('payrollCancelIcon');
+            const cancelLoader = document.getElementById('payrollCancelLoader');
+
+            if (cancelBtn && cancelIcon && cancelLoader) {
+                cancelBtn.disabled = true;
+                cancelIcon.classList.add('hidden');
+                cancelLoader.classList.remove('hidden');
+            }
+
+            setTimeout(() => {
+                closeModal();
+            }, 200);
+        }
+
+        function openTemporaryChangeModal(payrollConfigId = '', employeeName = '') {
+            const modal = document.getElementById('temporaryChangeModal');
+            const form = document.getElementById('temporaryChangeForm');
+            const payrollSelect = document.getElementById('temporary_payroll_configuration_id');
+            const startDateInput = document.getElementById('temporary_start_date');
+
+            if (form) {
+                form.reset();
+            }
+
+            if (payrollSelect && payrollConfigId) {
+                payrollSelect.value = payrollConfigId;
+            }
+
+            if (startDateInput) {
+                startDateInput.value = new Date().toISOString().split('T')[0];
+            }
+
+            modal?.classList.remove('hidden');
+            initLucideIcons();
+        }
+
+        function closeTemporaryChangeModal() {
+            const modal = document.getElementById('temporaryChangeModal');
+            modal?.classList.add('hidden');
+
+            const submitBtn = document.getElementById('temporarySubmitBtn');
+            const submitIcon = document.getElementById('temporarySubmitIcon');
+            const submitLoader = document.getElementById('temporarySubmitLoader');
+            const submitText = document.getElementById('temporarySubmitText');
+
+            if (submitBtn && submitIcon && submitLoader && submitText) {
+                submitBtn.disabled = false;
+                submitIcon.classList.remove('hidden');
+                submitLoader.classList.add('hidden');
+                submitText.textContent = 'Save Temporary Change';
+            }
+
+            const cancelBtn = document.getElementById('temporaryCancelBtn');
+            const cancelIcon = document.getElementById('temporaryCancelIcon');
+            const cancelLoader = document.getElementById('temporaryCancelLoader');
+
+            if (cancelBtn && cancelIcon && cancelLoader) {
+                cancelBtn.disabled = false;
+                cancelIcon.classList.remove('hidden');
+                cancelLoader.classList.add('hidden');
+            }
+        }
+
+        function handleTemporaryCancel() {
+            const cancelBtn = document.getElementById('temporaryCancelBtn');
+            const cancelIcon = document.getElementById('temporaryCancelIcon');
+            const cancelLoader = document.getElementById('temporaryCancelLoader');
+
+            if (cancelBtn && cancelIcon && cancelLoader) {
+                cancelBtn.disabled = true;
+                cancelIcon.classList.add('hidden');
+                cancelLoader.classList.remove('hidden');
+            }
+
+            setTimeout(() => {
+                closeTemporaryChangeModal();
+            }, 200);
         }
 
         // Calculate Net Salary in real-time
@@ -1209,6 +1398,23 @@
                         submitIcon.classList.add('hidden');
                         submitLoader.classList.remove('hidden');
                         submitBtn.disabled = true;
+                        submitText.textContent = 'Saving...';
+                    }
+                });
+            }
+
+            const temporaryChangeForm = document.getElementById('temporaryChangeForm');
+            if (temporaryChangeForm) {
+                temporaryChangeForm.addEventListener('submit', function() {
+                    const submitBtn = document.getElementById('temporarySubmitBtn');
+                    const submitIcon = document.getElementById('temporarySubmitIcon');
+                    const submitLoader = document.getElementById('temporarySubmitLoader');
+                    const submitText = document.getElementById('temporarySubmitText');
+
+                    if (submitBtn && submitIcon && submitLoader && submitText) {
+                        submitBtn.disabled = true;
+                        submitIcon.classList.add('hidden');
+                        submitLoader.classList.remove('hidden');
                         submitText.textContent = 'Saving...';
                     }
                 });

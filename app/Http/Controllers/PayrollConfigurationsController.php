@@ -5,8 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Allowances;
 use App\Models\Deductions;
 use App\Models\Employee;
+use App\Models\LoanApplication;
+use App\Models\NSSFPSSF;
+use App\Models\PayeeRanges;
+use App\Models\PayrollChange;
 use App\Models\PayrollConfigurations;
+use App\Models\PayrollRun;
 use App\Models\Teacher;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +22,234 @@ use Throwable;
 
 class PayrollConfigurationsController extends Controller
 {
+    //process payroll runs for a period using baseline payroll + active payroll changes
+    public function processPayrollRuns(Request $request)
+    {
+
+        // 1) Validate optional period inputs from request.
+        $validated = $request->validate([
+            'pay_period_start' => ['nullable', 'date'],
+            'pay_period_end' => ['nullable', 'date', 'after_or_equal:pay_period_start'],
+        ]);
+
+        // 2) Resolve school/user context for this run.
+        $schoolId = $this->getSchoolId();
+
+        /**
+         * get the userId
+         * 
+         */
+        $userId = Auth::id()?? 100;
+        
+
+        // 3) Resolve processing window (default: current month).
+        $periodStart = isset($validated['pay_period_start'])
+            ? Carbon::parse($validated['pay_period_start'])->startOfDay()
+            : now()->startOfMonth()->startOfDay();
+
+        $periodEnd = isset($validated['pay_period_end'])
+            ? Carbon::parse($validated['pay_period_end'])->endOfDay()
+            : now()->endOfMonth()->endOfDay();
+
+        $payPeriodLabel = $periodStart->format('M Y');
+
+        // 4) Load baseline payroll configs (employees with/without loans are all included).
+        $payrollConfigs = PayrollConfigurations::with(['allowances', 'deductions'])
+            ->where('school_id', $schoolId)
+            ->get();
+
+        if ($payrollConfigs->isEmpty()) {
+            return redirect()->route('accounting.payrollManagement')
+                ->with('error', 'No payroll configurations found for processing.');
+        }
+
+        // 5) Load PAYE rules + NSSF/PSSSF contribution setup used in calculations.
+        $payeeRules = PayeeRanges::whereYear('effective_year', '>=', now()->subYear()->year)
+            ->orderBy('lower_bound', 'asc')
+            ->get();
+
+        $contributions = $this->resolveNssfPsssfContributions($schoolId);
+
+        DB::transaction(function () use (
+            
+            $payrollConfigs,
+            $schoolId,
+            $userId,
+            $periodStart,
+            $periodEnd,
+            $payPeriodLabel,
+            $payeeRules,
+            $contributions,
+        ) {
+            // 6) Process each employee payroll configuration independently.
+            foreach ($payrollConfigs as $config) {
+                // Baseline payroll figures from payroll_configurations + linked tables.
+                $baseSalary = (float) ($config->base_salary ?? 0);
+                $standardAllowances = (float) optional($config->allowances)->total_allowance;
+                $standardNhif = (float) optional($config->deductions)->NHIF_contribution;
+                $standardOtherDeductions = (float) optional($config->deductions)->other_deductions;
+                $standardLoanDeductions = (float) optional($config->deductions)->loan_deductions;
+
+                // 7) Load active payroll changes valid for this pay period.
+                $activeChanges = PayrollChange::where('school_id', $schoolId)
+                    ->where('payroll_configuration_id', $config->id)
+                    ->whereIn('status', ['scheduled', 'active'])
+                    ->whereDate('start_date', '<=', $periodEnd->toDateString())
+                    ->where(function ($query) use ($periodStart) {
+                        $query->whereNull('end_date')
+                            ->orWhereDate('end_date', '>=', $periodStart->toDateString());
+                    })
+                    ->orderBy('priority')
+                    ->orderBy('id')
+                    ->get();
+
+                $loanDeductionsFromChanges = 0.0;
+                $fringeDeductions = 0.0;
+                $fringeAllowances = 0.0;
+                $taxableFringeAmount = 0.0;
+                $manualDeductions = 0.0;
+                $manualAllowances = 0.0;
+                $appliedLoanInstallments = [];
+
+                // 8) Aggregate adjustments (loan installments, fringe, manual items).
+                foreach ($activeChanges as $change) {
+                    $appliedLoanInstallment = 0.0;
+
+                    if ($change->adjustment_type === 'loan_repayment') {
+                        $remaining = (float) ($change->loan_remaining_balance ?? 0);
+                        $installment = (float) ($change->loan_installment_amount ?? 0);
+
+                        $appliedLoanInstallment = $remaining > 0
+                            ? min($installment, $remaining)
+                            : 0;
+
+                        $loanDeductionsFromChanges += $appliedLoanInstallment;
+                    }
+
+                    if ((bool) $change->has_fringe_benefit) {
+                        $fringeAmount = (float) ($change->fringe_benefit_amount ?? 0);
+                        $taxableFringeAmount += $fringeAmount;
+                        if ($change->fringe_benefit_effect === 'allowance') {
+                            //as of now just add zero
+                            //$fringeAllowances += $fringeAmount;
+                            $fringeAllowances += 0;
+                        } elseif ($change->fringe_benefit_effect === 'deduction') {
+                            //as of now just deduct zero
+                            //$fringeAllowances += $fringeAmount;
+                            $fringeDeductions += 0;
+                        }
+                    }
+
+                    $manualAmount = (float) ($change->manual_amount ?? 0);
+                    if ($manualAmount > 0) {
+                        if ($change->manual_effect === 'allowance') {
+                            $manualAllowances += $manualAmount;
+                        } elseif ($change->manual_effect === 'deduction') {
+                            $manualDeductions += $manualAmount;
+                        }
+                    }
+
+                    $appliedLoanInstallments[$change->id] = $appliedLoanInstallment;
+                }
+
+                // 9) Build gross salary from base + computed allowances.
+                $totalAllowances = round($standardAllowances + $fringeAllowances + $manualAllowances, 2);
+                $grossSalary = round($baseSalary + $totalAllowances, 2);
+
+                // 10) Compute statutory contributions + taxable income + PAYE.
+                $nssfAmount = round($grossSalary * $contributions['nssf'], 2);
+                $psssfAmount = round($grossSalary * $contributions['psssf'], 2);
+
+                // Taxable income is gross salary less employee pension contributions.
+                // Fringe benefit is added separately before PAYE is calculated.
+                $taxableIncome = max(0, round($grossSalary - $nssfAmount - $psssfAmount, 2));
+                $taxableIncomeForPaye = max(0, round($taxableIncome + $taxableFringeAmount, 2));
+                $payeAmount = round($this->calculatePayeAmount($taxableIncomeForPaye, $payeeRules), 2);
+
+                // 11) Compute final deductions and net salary for this pay period.
+                $totalDeductions = round(
+                    $payeAmount
+                    + $nssfAmount
+                    + $psssfAmount
+                    + $standardNhif
+                    + $standardLoanDeductions
+                    + $standardOtherDeductions
+                    + $loanDeductionsFromChanges
+                    + $fringeDeductions
+                    + $manualDeductions,
+                    2
+                );
+
+                $netSalary = max(0, round($grossSalary - $totalDeductions, 2));
+
+                // 12) Persist payroll snapshot row for this employee + period.
+                PayrollRun::updateOrCreate(
+                    [
+                        'school_id' => $schoolId,
+                        'payroll_configuration_id' => $config->id,
+                        'pay_period_start' => $periodStart->toDateString(),
+                        'pay_period_end' => $periodEnd->toDateString(),
+                    ],
+                    [
+                        'created_by' => $userId,
+                        'pay_period_label' => $payPeriodLabel,
+                        'base_salary' => $baseSalary,
+                        'total_allowances' => $totalAllowances,
+                        'taxable_income' => $taxableIncomeForPaye,
+                        'total_deductions' => $totalDeductions,
+                        'net_salary' => $netSalary,
+                        'loan_deductions_total' => round($standardLoanDeductions + $loanDeductionsFromChanges, 2),
+                        'fringe_benefit_total' => round($fringeAllowances - $fringeDeductions, 2),
+                        'other_deductions_total' => round($standardOtherDeductions + $manualDeductions, 2),
+                        'other_allowances_total' => round($manualAllowances, 2),
+                        'status' => 'processed',
+                        'notes' => 'Auto-processed payroll run.',
+                        'processed_at' => now(),
+                    ]
+                );
+
+                // 13) Update payroll_changes progress and linked loan balances/status.
+                foreach ($activeChanges as $change) {
+                    $appliedInstallment = $appliedLoanInstallments[$change->id] ?? 0.0;
+                    $nextStatus = $change->status === 'scheduled' ? 'active' : $change->status;
+
+                    if ($change->adjustment_type === 'loan_repayment' && $appliedInstallment > 0) {
+                        $updatedRemaining = max(0, round((float) ($change->loan_remaining_balance ?? 0) - $appliedInstallment, 2));
+                        $updatedApplied = round((float) ($change->loan_total_applied ?? 0) + $appliedInstallment, 2);
+
+                        if ((bool) $change->stop_on_zero_balance && $updatedRemaining <= 0) {
+                            $nextStatus = 'completed';
+                        }
+
+                        $change->loan_remaining_balance = $updatedRemaining;
+                        $change->loan_total_applied = $updatedApplied;
+
+                        if ($change->loan_application_id) {
+                            $loan = LoanApplication::find($change->loan_application_id);
+                            if ($loan) {
+                                $loan->total_paid = round((float) ($loan->total_paid ?? 0) + $appliedInstallment, 2);
+                                if ($nextStatus === 'completed') {
+                                    $loan->status = 'completed';
+                                } elseif ($loan->status === 'disbursed') {
+                                    $loan->status = 'active';
+                                }
+                                $loan->save();
+                            }
+                        }
+                    }
+
+                    $change->status = $nextStatus;
+                    $change->last_applied_at = $periodEnd->toDateString();
+                    $change->save();
+                }
+            }
+        });
+
+        // 14) Return with processing outcome message.
+        return redirect()->route('accounting.payrollManagement')
+            ->with('success', 'Payroll processed successfully for ' . $payPeriodLabel . '.');
+    }
+
     //show the payroll configuration page
     public function showPayrollConfiguration()
     {
@@ -524,6 +758,64 @@ class PayrollConfigurationsController extends Controller
         }
     }
 
+    //save a temporary manual payroll change (allowance or deduction)
+    public function storeTemporaryPayrollChange(Request $request)
+    {
+        $validated = $request->validate([
+            'payroll_configuration_id' => ['required', 'integer', 'exists:payroll_configurations,id'],
+            'adjustment_type' => ['required', 'in:manual_allowance,manual_deduction'],
+            'manual_amount' => ['required', 'numeric', 'gt:0'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'status' => ['required', 'in:scheduled,active'],
+            'notes' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $schoolId = $this->getSchoolId();
+
+        $payrollConfiguration = PayrollConfigurations::where('id', $validated['payroll_configuration_id'])
+            ->where('school_id', $schoolId)
+            ->first();
+
+        if (!$payrollConfiguration) {
+            return redirect()->route('accounting.payrollSettings')
+                ->with('error', 'Selected payroll record was not found for your school.');
+        }
+
+        $manualEffect = $validated['adjustment_type'] === 'manual_allowance' ? 'allowance' : 'deduction';
+
+        PayrollChange::create([
+            'school_id' => $schoolId,
+            'payroll_configuration_id' => $payrollConfiguration->id,
+            'loan_application_id' => null,
+            'adjustment_type' => $validated['adjustment_type'],
+            'loan_installment_amount' => 0,
+            'loan_remaining_balance' => null,
+            'loan_total_applied' => 0,
+            'has_fringe_benefit' => false,
+            'fringe_benefit_amount' => 0,
+            'fringe_benefit_effect' => null,
+            'calculation_mode' => 'fixed_amount',
+            'manual_amount' => round((float) $validated['manual_amount'], 2),
+            'manual_rate' => null,
+            'manual_effect' => $manualEffect,
+            'start_date' => Carbon::parse($validated['start_date'])->toDateString(),
+            'end_date' => isset($validated['end_date'])
+                ? Carbon::parse($validated['end_date'])->toDateString()
+                : null,
+            'stop_on_zero_balance' => false,
+            'priority' => 120,
+            'status' => $validated['status'],
+            'last_applied_at' => null,
+            'source_reference' => 'manual-temp',
+            'notes' => $validated['notes'] ?? null,
+            'created_by' => Auth::id(),
+        ]);
+
+        return redirect()->route('accounting.payrollSettings')
+            ->with('success', 'Temporary payroll change saved successfully.');
+    }
+
     //function to delete the payroll configuration data from the database
     public function deletePayrollConfiguration(int $id)
     {
@@ -589,6 +881,42 @@ class PayrollConfigurationsController extends Controller
 
 
         return !$query->exists();
+    }
+
+    protected function resolveNssfPsssfContributions(int $schoolId): array
+    {
+        $config = NSSFPSSF::where('school_id', $schoolId)->first();
+
+        if (!$config) {
+            return ['nssf' => 0.1, 'psssf' => 0.0];
+        }
+
+        $normalize = function ($value) {
+            $number = (float) $value;
+            return $number > 1 ? $number / 100 : $number;
+        };
+
+        if ($config->contribution_type === 'psssf') {
+            return ['nssf' => 0.0, 'psssf' => $normalize($config->psssf_contribution)];
+        }
+
+        return ['nssf' => $normalize($config->nssf_contribution), 'psssf' => 0.0];
+    }
+
+    protected function calculatePayeAmount(float $taxableIncome, $payeeRules): float
+    {
+        foreach ($payeeRules as $rule) {
+            $lower = (float) $rule->lower_bound;
+            $upper = $rule->upper_bound !== null ? (float) $rule->upper_bound : null;
+            $withinLower = $taxableIncome >= $lower;
+            $withinUpper = $upper === null || $taxableIncome <= $upper;
+
+            if ($withinLower && $withinUpper) {
+                return (float) $rule->added_amount + (($taxableIncome - $lower) * (float) $rule->percentage);
+            }
+        }
+
+        return 0.0;
     }
 
 }
