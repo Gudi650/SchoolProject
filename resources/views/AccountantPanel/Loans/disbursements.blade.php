@@ -125,11 +125,14 @@
 										<td class="px-4 py-3">{{ optional($loan->approved_at)->format('Y-m-d') ?? $loan->created_at->format('Y-m-d') }}</td>
 										<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Approved</span></td>
 										<td class="px-4 py-3 w-72">
+
 											<div class="flex items-center justify-start gap-2 whitespace-nowrap">
+
 												<button type="button" class="js-loan-view-toggle inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 text-xs font-medium" data-target="disb-detail-approved-{{ $loan->id }}" aria-expanded="false">
 													<i data-lucide="eye" class="w-4 h-4"></i>
 														<span class="js-toggle-label">View</span>
 												</button>
+
 												<form method="POST" action="{{ route('accounting.loanDisburse', $loan->id) }}">
 													@csrf
 													<button type="submit" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-cyan-200 text-cyan-700 bg-cyan-50 hover:bg-cyan-100 text-xs font-medium">
@@ -137,7 +140,9 @@
 														Disburse
 													</button>
 												</form>
+                                                
 											</div>
+
 										</td>
 									</tr>
 									<tr id="disb-detail-approved-{{ $loan->id }}" class="hidden bg-slate-50/60">

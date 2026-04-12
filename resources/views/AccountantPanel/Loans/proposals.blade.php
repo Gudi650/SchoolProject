@@ -292,18 +292,24 @@
                                                     <i data-lucide="eye" class="w-4 h-4"></i>
                                                     <span class="js-toggle-label">View</span>
                                                 </button>
-                                                <button
-                                                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-green-200 text-green-700 bg-green-50 hover:bg-green-100 text-xs font-medium"
-                                                    title="Approve application" aria-label="Approve application">
-                                                    <i data-lucide="badge-check" class="w-4 h-4"></i>
-                                                    Approve
-                                                </button>
-                                                <button
-                                                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 text-xs font-medium"
-                                                    title="Reject application" aria-label="Reject application">
-                                                    <i data-lucide="x-circle" class="w-4 h-4"></i>
-                                                    Reject
-                                                </button>
+                                                <form method="POST" action="{{ route('accounting.proposal.approve', $loan->id) }}">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-green-200 text-green-700 bg-green-50 hover:bg-green-100 text-xs font-medium"
+                                                        title="Approve application" aria-label="Approve application">
+                                                        <i data-lucide="badge-check" class="w-4 h-4"></i>
+                                                        Approve
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ route('accounting.proposal.reject', $loan->id) }}">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 text-xs font-medium"
+                                                        title="Reject application" aria-label="Reject application">
+                                                        <i data-lucide="x-circle" class="w-4 h-4"></i>
+                                                        Reject
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
@@ -412,6 +418,7 @@
                                                     <i data-lucide="eye" class="w-4 h-4"></i>
                                                     <span class="js-toggle-label">View</span>
                                                 </button>
+												<!--
                                                 <form method="POST" action="{{ route('accounting.loanDisburse', $loan->id) }}">
                                                     @csrf
                                                     <button type="submit"
@@ -421,6 +428,7 @@
                                                         Disburse
                                                     </button>
                                                 </form>
+											-->
                                             </div>
                                         </td>
                                     </tr>

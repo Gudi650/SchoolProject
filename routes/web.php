@@ -455,6 +455,10 @@ Route::get('/loan-proposals', [LoanApplicationController::class, 'accountantProp
 //route for moving pending proposals to under review
 Route::post('/loan-proposals/{loan}/under-review', [LoanApplicationController::class, 'moveToUnderReview'])->name('accounting.proposal.moveUnderReview');
 
+//route for approving and rejecting under review proposals
+Route::post('/loan-proposals/{loan}/approve', [LoanApplicationController::class, 'moveToApproved'])->name('accounting.proposal.approve');
+Route::post('/loan-proposals/{loan}/reject', [LoanApplicationController::class, 'moveToRejected'])->name('accounting.proposal.reject');
+
 //route for loan lists
 Route::get('/loan-list', function () {
     return view('AccountantPanel.Loans.loanprogess');

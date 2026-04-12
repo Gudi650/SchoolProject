@@ -222,9 +222,11 @@ class LoanApplicationController extends Controller
             ->where('school_id', $schoolId)
             ->orderByRaw("FIELD(status, 'pending', 'under_review', 'approved', 'rejected', 'disbursed', 'active', 'completed')")
             ->latest('created_at')
-            ->get();
+           ->get();
 
-        // Group loans by status for easier counting
+        // Group loans by status// for easier counting
+        //$us-> = 100;
+
         $pendingCount = $allLoans->where('status', 'pending')->count();
 
         $underReviewCount = $allLoans->where('status', 'under_review')->count();
@@ -238,7 +240,7 @@ class LoanApplicationController extends Controller
         
         $totalApprovedAmount = $allLoans->where('status', 'approved')->sum('amount');
 
-        return view('AccountantPanel.Loans.proposals', [
+        return view('AccountantPanel.Loans//.proposals', [
             'allLoans' => $allLoans,
             'pendingCount' => $pendingCount,
             'underReviewCount' => $underReviewCount,
@@ -275,6 +277,70 @@ class LoanApplicationController extends Controller
         $loan->save();
 
         return back()->with('success', 'Loan application moved to under review.');
+    }
+
+    // Function to approve an under review loan application in the accountant panel
+    public function moveToApproved($loanId)
+    {
+        //$user = Auth::user();
+        $schoolId = $user->school_id ?? session('school_id') ?? 1;
+
+        if (!$schoolId) {
+            return back()->with('error', 'School information is missing.');
+        }
+
+        $loan = LoanApplication::where('id', $loanId)
+            ->where('school_id', $schoolId)
+            ->first();
+
+        if (!$loan) {
+            return back()->with('error', 'Loan application not found.');
+        }
+
+        if ($loan->status !== 'under_review') {
+            return back()->with('error', 'Only under review applications can be approved.');
+        }
+
+        $loan->status = 'approved';
+        //$loan->approved_by = $user?->id;
+        $loan->approved_at = now();
+        $loan->rejected_by = null;
+        $loan->rejected_at = null;
+        $loan->save();
+
+        return back()->with('success', 'Loan application approved successfully.');
+    }
+
+    // Function to reject an under review loan application in the accountant panel
+    public function moveToRejected($loanId)
+    {
+        $user = Auth::user();
+        $schoolId = $user->school_id ?? session('school_id') ?? 1;
+
+        if (!$schoolId) {
+            return back()->with('error', 'School information is missing.');
+        }
+
+        $loan = LoanApplication::where('id', $loanId)
+            ->where('school_id', $schoolId)
+            ->first();
+
+        if (!$loan) {
+            return back()->with('error', 'Loan application not found.');
+        }
+
+        if ($loan->status !== 'under_review') {
+            return back()->with('error', 'Only under review applications can be rejected.');
+        }
+
+        $loan->status = 'rejected';
+        //$loan->rejected_by = $user?->id;
+        $loan->rejected_at = now();
+        $loan->approved_by = null;
+        $loan->approved_at = null;
+        $loan->save();
+
+        return back()->with('success', 'Loan application rejected successfully.');
     }
 
     // Function to show accountant disbursements page
