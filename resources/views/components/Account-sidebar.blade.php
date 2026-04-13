@@ -92,11 +92,34 @@
           </li>
 
           <li>
-            <a href="{{ route('accounting.incomeManagement') }}" 
-            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.incomeManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
-              <i data-lucide="trending-up" class="w-5 h-5"></i>
-              <span class="flex-1 text-left text-sm font-medium nav-label">Income</span>
-            </a>
+            <div class="relative">
+              <button id="incomeToggle" aria-expanded="{{ request()->routeIs('accounting.incomeManagement', 'accounting.enrollmentIncome') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.incomeManagement', 'accounting.enrollmentIncome') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                <span class="flex items-center gap-3">
+                  <i data-lucide="trending-up" class="w-5 h-5"></i>
+                  <span class="text-sm font-medium nav-label">Income</span>
+                </span>
+                <span id="incomeChevron" class="transition-transform duration-200 {{ request()->routeIs('accounting.incomeManagement', 'accounting.enrollmentIncome') ? 'rotate-180' : '' }}">
+                  <i data-lucide="chevron-down" class="w-4 h-4 text-sm"></i>
+                </span>
+              </button>
+
+              <ul id="incomeMenu" class="{{ request()->routeIs('accounting.incomeManagement', 'accounting.enrollmentIncome') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+                <li>
+                  <a href="{{ route('accounting.incomeManagement') }}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.incomeManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                    Income Overview
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ route('accounting.enrollmentIncome') }}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.enrollmentIncome') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="user-check" class="w-4 h-4"></i>
+                    Enrollment Income
+                  </a>
+                </li>
+              </ul>
+            </div>
           </li>
 
           <li>
@@ -398,6 +421,35 @@
         }
 
         // Payroll dropdown toggle
+        const incomeToggle = document.getElementById('incomeToggle');
+        const incomeMenu = document.getElementById('incomeMenu');
+        const incomeChevron = document.getElementById('incomeChevron');
+
+        if (incomeToggle && incomeMenu && incomeChevron) {
+          incomeToggle.addEventListener('click', () => {
+            const open = incomeMenu.classList.toggle('hidden') === false;
+            incomeToggle.setAttribute('aria-expanded', open);
+            incomeChevron.classList.toggle('rotate-180', open);
+          });
+          // keep chevron in sync when a child link is clicked
+          incomeMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+              incomeMenu.classList.remove('hidden');
+              incomeToggle.setAttribute('aria-expanded', 'true');
+              incomeChevron.classList.add('rotate-180');
+            });
+          });
+          // Close dropdown when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!incomeToggle.contains(e.target) && !incomeMenu.contains(e.target)) {
+              incomeMenu.classList.add('hidden');
+              incomeToggle.setAttribute('aria-expanded', 'false');
+              incomeChevron.classList.remove('rotate-180');
+            }
+          });
+        }
+
+        // Payroll dropdown toggle
         const payrollToggle = document.getElementById('payrollToggle');
         const payrollMenu = document.getElementById('payrollMenu');
         const payrollChevron = document.getElementById('payrollChevron');
@@ -542,6 +594,14 @@
             }
             
             // Toggle payroll toggle button
+            if (incomeToggle) {
+              incomeToggle.classList.toggle('justify-center', isExpanded);
+              incomeToggle.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+
+            // Toggle payroll toggle button
             if (payrollToggle) {
               payrollToggle.classList.toggle('justify-center', isExpanded);
               payrollToggle.querySelectorAll('.nav-label').forEach(label => {
@@ -583,6 +643,16 @@
               feeChevron.classList.remove('hidden');
             }
             
+            // Hide payroll menu chevron and dropdown when collapsed
+            if (isExpanded && incomeMenu && incomeToggle && incomeChevron) {
+              incomeMenu.classList.add('hidden');
+              incomeToggle.setAttribute('aria-expanded', 'false');
+              incomeChevron.classList.remove('rotate-180');
+              incomeChevron.classList.add('hidden');
+            } else if (!isExpanded && incomeChevron) {
+              incomeChevron.classList.remove('hidden');
+            }
+
             // Hide payroll menu chevron and dropdown when collapsed
             if (isExpanded && payrollMenu && payrollToggle && payrollChevron) {
               payrollMenu.classList.add('hidden');
@@ -630,6 +700,13 @@
               });
             }
             
+            // Hide payroll menu labels
+            if (incomeMenu) {
+              incomeMenu.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+
             // Hide payroll menu labels
             if (payrollMenu) {
               payrollMenu.querySelectorAll('.nav-label').forEach(label => {

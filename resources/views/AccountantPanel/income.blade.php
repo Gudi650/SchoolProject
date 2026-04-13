@@ -78,6 +78,41 @@
       </div>
     </div>
 
+    <div class="mb-6 rounded-xl border border-indigo-100 bg-white shadow-sm p-4 sm:p-5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <h2 class="text-base sm:text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <span class="w-1 h-6 bg-indigo-600 rounded"></span>
+            Enrollment Income Snapshot
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">Student-wise enrollment collections are managed in a dedicated tracker and rolled up here.</p>
+        </div>
+        <a href="{{ route('accounting.enrollmentIncome') }}" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
+          <i data-lucide="external-link" class="w-4 h-4"></i>
+          Open Enrollment Income
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 mt-4">
+        <div class="rounded-lg border border-slate-200 p-3">
+          <p class="text-xs text-slate-500">Collected (Cycle)</p>
+          <p class="text-lg font-semibold text-slate-900 mt-1">INR 23.8L</p>
+        </div>
+        <div class="rounded-lg border border-slate-200 p-3">
+          <p class="text-xs text-slate-500">Fully Paid Students</p>
+          <p class="text-lg font-semibold text-slate-900 mt-1">182</p>
+        </div>
+        <div class="rounded-lg border border-slate-200 p-3">
+          <p class="text-xs text-slate-500">Pending Enrollment Dues</p>
+          <p class="text-lg font-semibold text-amber-600 mt-1">INR 5.1L</p>
+        </div>
+        <div class="rounded-lg border border-slate-200 p-3">
+          <p class="text-xs text-slate-500">Overdue Cases</p>
+          <p class="text-lg font-semibold text-red-600 mt-1">41 Students</p>
+        </div>
+      </div>
+    </div>
+
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-5 mb-6">
       <div class="flex items-center justify-between gap-3 mb-4">
         <h2 class="text-base sm:text-lg font-semibold text-slate-900 flex items-center gap-2">
@@ -162,10 +197,17 @@
           </div>
           <div>
             <div class="flex items-center justify-between mb-1">
-              <span class="text-slate-600">Other Income</span>
-              <span class="font-semibold text-slate-900">10%</span>
+              <span class="text-slate-600">Enrollment Fee</span>
+              <span class="font-semibold text-slate-900">7%</span>
             </div>
-            <div class="w-full h-2 bg-slate-100 rounded-full"><div class="h-2 bg-indigo-500 rounded-full" style="width:10%"></div></div>
+            <div class="w-full h-2 bg-slate-100 rounded-full"><div class="h-2 bg-indigo-500 rounded-full" style="width:7%"></div></div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-slate-600">Other Income</span>
+              <span class="font-semibold text-slate-900">3%</span>
+            </div>
+            <div class="w-full h-2 bg-slate-100 rounded-full"><div class="h-2 bg-indigo-500 rounded-full" style="width:3%"></div></div>
           </div>
         </div>
       </div>
@@ -329,6 +371,16 @@
               <td class="px-4 py-3">Online</td>
               <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Collected</span></td>
               <td class="px-4 py-3"><button class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100">View</button></td>
+            </tr>
+            <tr class="hover:bg-indigo-50 transition-colors">
+              <td class="px-4 py-3">INC1119</td>
+              <td class="px-4 py-3">2026-04-11</td>
+              <td class="px-4 py-3">Admissions Desk</td>
+              <td class="px-4 py-3">Enrollment Fee</td>
+              <td class="px-4 py-3 font-semibold text-green-600">INR 2,10,000</td>
+              <td class="px-4 py-3">Online</td>
+              <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Collected</span></td>
+              <td class="px-4 py-3"><a href="{{ route('accounting.enrollmentIncome') }}" class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100 inline-flex">View</a></td>
             </tr>
             <tr class="hover:bg-indigo-50 transition-colors">
               <td class="px-4 py-3">INC1118</td>

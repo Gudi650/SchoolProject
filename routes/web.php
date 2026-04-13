@@ -398,6 +398,11 @@ Route::get('/income-management', function () {
     return view('AccountantPanel.income');
 })->name('accounting.incomeManagement');
 
+//route for enrollment income management
+Route::get('/enrollment-income', function () {
+    return view('AccountantPanel.enrollmentIncome');
+})->name('accounting.enrollmentIncome');
+
 //route for expenses management
 Route::get('/expenses-management', function () {
     return view('AccountantPanel.expenses');
