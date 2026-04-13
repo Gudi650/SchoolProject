@@ -8,16 +8,16 @@
           <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Enrollment Income Tracker</h1>
           <p class="text-xs sm:text-sm text-slate-700 mt-1">Track per-student enrollment payments while keeping school-level income summaries clean</p>
         </div>
-        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-3 pt-3">
-          <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
+        <div class="flex flex-col sm:flex-row lg:flex-nowrap sm:items-center gap-2 sm:gap-3 lg:justify-end">
+          <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center whitespace-nowrap">
             <i data-lucide="calendar-range" class="w-4 h-4"></i>
             Current Admissions Cycle
           </button>
-          <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
+          <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center whitespace-nowrap">
             <i data-lucide="download" class="w-4 h-4"></i>
             Export Student Ledger
           </button>
-          <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
+          <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center whitespace-nowrap">
             <i data-lucide="plus" class="w-4 h-4"></i>
             Record Enrollment Payment
           </button>
