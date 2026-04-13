@@ -543,10 +543,11 @@ Route::controller(BudgetDepartmentController::class)->group(function () {
 
 });
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 //route for reports management
 Route::get('/reports-management', function () {
-    return view('AccountantPanel.report');
+    return view('AccountantPanel.reports.report');
 })->name('accounting.reportsManagement');
 
 //route for balance sheet
