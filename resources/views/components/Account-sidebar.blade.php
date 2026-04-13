@@ -303,10 +303,55 @@
           </li>
 
           <li>
-            <a href="{{ route('accounting.reportsManagement') }}" 
-            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.reportsManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
-            <i data-lucide="file-text" class="w-5 h-5"></i><span class="flex-1 text-left text-sm font-medium nav-label">Reports</span>
-            </a>
+            <div class="relative">
+              <button id="reportsToggle" aria-expanded="{{ request()->routeIs('accounting.reportsManagement', 'accounting.reports.balanceSheet', 'accounting.reports.trialBalance', 'accounting.reports.cashFlow', 'accounting.reports.profitLoss') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.reportsManagement', 'accounting.reports.balanceSheet', 'accounting.reports.trialBalance', 'accounting.reports.cashFlow', 'accounting.reports.profitLoss') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                <span class="flex items-center gap-3">
+                  <i data-lucide="file-text" class="w-5 h-5"></i>
+                  <span class="text-sm font-medium nav-label">Reports</span>
+                </span>
+                <span id="reportsChevron" class="transition-transform duration-200 {{ request()->routeIs('accounting.reportsManagement', 'accounting.reports.balanceSheet', 'accounting.reports.trialBalance', 'accounting.reports.cashFlow', 'accounting.reports.profitLoss') ? 'rotate-180' : '' }}">
+                  <i data-lucide="chevron-down" class="w-4 h-4 text-sm"></i>
+                </span>
+              </button>
+
+              <ul id="reportsMenu" class="{{ request()->routeIs('accounting.reportsManagement', 'accounting.reports.balanceSheet', 'accounting.reports.trialBalance', 'accounting.reports.cashFlow', 'accounting.reports.profitLoss') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+                <li>
+                  <a href="{{ route('accounting.reportsManagement') }}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.reportsManagement') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    Reports Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ route('accounting.reports.balanceSheet') }}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.reports.balanceSheet') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="scale" class="w-4 h-4"></i>
+                    Balance Sheet
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ route('accounting.reports.trialBalance') }}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.reports.trialBalance') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="list-checks" class="w-4 h-4"></i>
+                    Trial Balance
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ route('accounting.reports.cashFlow') }}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.reports.cashFlow') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="arrow-left-right" class="w-4 h-4"></i>
+                    Cash Flow
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ route('accounting.reports.profitLoss') }}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.reports.profitLoss') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="line-chart" class="w-4 h-4"></i>
+                    Profit & Loss
+                  </a>
+                </li>
+              </ul>
+            </div>
           </li>
 
           <li>
@@ -565,6 +610,35 @@
           });
         }
 
+        // reports dropdown toggle
+        const reportsToggle = document.getElementById('reportsToggle');
+        const reportsMenu = document.getElementById('reportsMenu');
+        const reportsChevron = document.getElementById('reportsChevron');
+
+        if (reportsToggle && reportsMenu && reportsChevron) {
+          reportsToggle.addEventListener('click', () => {
+            const open = reportsMenu.classList.toggle('hidden') === false;
+            reportsToggle.setAttribute('aria-expanded', open);
+            reportsChevron.classList.toggle('rotate-180', open);
+          });
+          // keep chevron in sync when a child link is clicked
+          reportsMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+              reportsMenu.classList.remove('hidden');
+              reportsToggle.setAttribute('aria-expanded', 'true');
+              reportsChevron.classList.add('rotate-180');
+            });
+          });
+          // Close dropdown when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!reportsToggle.contains(e.target) && !reportsMenu.contains(e.target)) {
+              reportsMenu.classList.add('hidden');
+              reportsToggle.setAttribute('aria-expanded', 'false');
+              reportsChevron.classList.remove('rotate-180');
+            }
+          });
+        }
+
         // mobile toggle
         if (mobileBtn && overlay && sidebar){
           mobileBtn.addEventListener('click', ()=>{ overlay.classList.toggle('hidden'); sidebar.classList.toggle('-translate-x-full'); mobileBtn.querySelector('.menu-icon')?.classList.toggle('hidden'); mobileBtn.querySelector('.close-icon')?.classList.toggle('hidden'); });
@@ -632,6 +706,14 @@
                 label.classList.toggle('hidden', isExpanded);
               });
             }
+
+            // Toggle reports toggle button
+            if (reportsToggle) {
+              reportsToggle.classList.toggle('justify-center', isExpanded);
+              reportsToggle.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
             
             // Hide fee menu chevron and dropdown when collapsed
             if (isExpanded && feeMenu && feeToggle && feeChevron) {
@@ -692,6 +774,16 @@
             } else if (!isExpanded && budgetChevron) {
               budgetChevron.classList.remove('hidden');
             }
+
+            // Hide reports menu chevron and dropdown when collapsed
+            if (isExpanded && reportsMenu && reportsToggle && reportsChevron) {
+              reportsMenu.classList.add('hidden');
+              reportsToggle.setAttribute('aria-expanded', 'false');
+              reportsChevron.classList.remove('rotate-180');
+              reportsChevron.classList.add('hidden');
+            } else if (!isExpanded && reportsChevron) {
+              reportsChevron.classList.remove('hidden');
+            }
             
             // Hide fee menu labels
             if (feeMenu) {
@@ -731,6 +823,13 @@
             // Hide budget menu labels
             if (budgetMenu) {
               budgetMenu.querySelectorAll('.nav-label').forEach(label => {
+                label.classList.toggle('hidden', isExpanded);
+              });
+            }
+
+            // Hide reports menu labels
+            if (reportsMenu) {
+              reportsMenu.querySelectorAll('.nav-label').forEach(label => {
                 label.classList.toggle('hidden', isExpanded);
               });
             }

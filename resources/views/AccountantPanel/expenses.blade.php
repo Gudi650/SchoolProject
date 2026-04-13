@@ -9,16 +9,16 @@
               <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Expense Management</h1>
               <p class="text-xs sm:text-sm text-slate-700 mt-1">Track and manage all school expenses</p>
             </div>
-            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 pt-3">
-              <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
+            <div class="flex flex-col sm:flex-row lg:flex-nowrap sm:items-center gap-2 sm:gap-3 lg:justify-end">
+              <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center whitespace-nowrap">
                 <i data-lucide="alert-circle" class="w-4 h-4"></i>
                 Pending Approvals
               </button>
-              <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
+              <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center whitespace-nowrap">
                 <i data-lucide="download" class="w-4 h-4"></i>
                 Export
               </button>
-              <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
+              <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center whitespace-nowrap">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 Record Expense
               </button>
@@ -70,6 +70,63 @@
           </div>
         </div>
 
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-5 mb-6">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <h2 class="text-base sm:text-lg font-semibold text-slate-900 flex items-center gap-2">
+              <span class="w-1 h-6 bg-indigo-600 rounded"></span>
+              Expense Filters & Controls
+            </h2>
+            <button class="text-xs sm:text-sm px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50">Reset</button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-4">
+            <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
+              <option>Academic Year: 2026-27</option>
+              <option>Academic Year: 2025-26</option>
+            </select>
+            <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
+              <option>All Branches</option>
+              <option>Main Campus</option>
+              <option>City Campus</option>
+            </select>
+            <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
+              <option>All Categories</option>
+              <option>Salary & Wages</option>
+              <option>Utilities</option>
+              <option>Maintenance</option>
+              <option>Supplies</option>
+            </select>
+            <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
+              <option>All Status</option>
+              <option>Paid</option>
+              <option>Pending</option>
+              <option>Needs Approval</option>
+            </select>
+            <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
+              <option>All Vendors</option>
+              <option>Payroll</option>
+              <option>State Electricity Board</option>
+              <option>ABC Furniture</option>
+            </select>
+            <input type="text" placeholder="Search expense ID / vendor / note" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100" />
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center">
+              <i data-lucide="filter" class="w-4 h-4"></i>
+              Apply Filters
+            </button>
+            <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-2 justify-center">
+              <i data-lucide="clock" class="w-4 h-4"></i>
+              Open Pending Payments
+            </button>
+            <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-2 justify-center">
+              <i data-lucide="file-down" class="w-4 h-4"></i>
+              Download Expense Ledger
+            </button>
+          </div>
+        </div>
+
         <!-- Budget Utilization -->
         <div class="mb-6">
           <h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
@@ -112,9 +169,10 @@
                 </tbody>
               </table>
             </div>
+        </div>
 
         <!-- Recent Expenses -->
-        <div>
+        <div class="mb-6">
           <h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
             <span class="w-1 h-6 bg-indigo-600 rounded"></span>
             Recent Expenses
@@ -167,7 +225,6 @@
                 </tbody>
               </table>
             </div>
-          </div>
         </div>
       </main>
 

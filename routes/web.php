@@ -395,13 +395,17 @@ Route::post('/fee-settings' ,
 
 //route for income management
 Route::get('/income-management', function () {
-    return view('AccountantPanel.income');
+    return view('AccountantPanel.income.income');
 })->name('accounting.incomeManagement');
 
 //route for enrollment income management
 Route::get('/enrollment-income', function () {
-    return view('AccountantPanel.enrollmentIncome');
+    return view('AccountantPanel.income.enrollmentIncome');
 })->name('accounting.enrollmentIncome');
+
+
+////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 //route for expenses management
 Route::get('/expenses-management', function () {
@@ -544,6 +548,26 @@ Route::controller(BudgetDepartmentController::class)->group(function () {
 Route::get('/reports-management', function () {
     return view('AccountantPanel.report');
 })->name('accounting.reportsManagement');
+
+//route for balance sheet
+Route::get('/reports/balance-sheet', function () {
+    return view('AccountantPanel.reports.balanceSheet');
+})->name('accounting.reports.balanceSheet');
+
+//route for trial balance
+Route::get('/reports/trial-balance', function () {
+    return view('AccountantPanel.reports.trialBalance');
+})->name('accounting.reports.trialBalance');
+
+//route for cash flow
+Route::get('/reports/cash-flow', function () {
+    return view('AccountantPanel.reports.cashFlow');
+})->name('accounting.reports.cashFlow');
+
+//route for profit and loss
+Route::get('/reports/profit-loss', function () {
+    return view('AccountantPanel.reports.profitLoss');
+})->name('accounting.reports.profitLoss');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
