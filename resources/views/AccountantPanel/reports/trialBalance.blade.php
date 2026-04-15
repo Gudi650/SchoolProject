@@ -25,15 +25,15 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          <tr><td class="px-4 py-3">Cash & Bank</td><td class="px-4 py-3 text-right">INR 2,84,00,000</td><td class="px-4 py-3 text-right">-</td></tr>
-          <tr><td class="px-4 py-3">Accounts Receivable</td><td class="px-4 py-3 text-right">INR 1,12,00,000</td><td class="px-4 py-3 text-right">-</td></tr>
-          <tr><td class="px-4 py-3">Revenue</td><td class="px-4 py-3 text-right">-</td><td class="px-4 py-3 text-right">INR 6,74,00,000</td></tr>
-          <tr><td class="px-4 py-3">Operating Expenses</td><td class="px-4 py-3 text-right">INR 2,19,00,000</td><td class="px-4 py-3 text-right">-</td></tr>
-          <tr><td class="px-4 py-3">Accounts Payable</td><td class="px-4 py-3 text-right">-</td><td class="px-4 py-3 text-right">INR 98,00,000</td></tr>
+          <tr><td class="px-4 py-3">Cash & Bank</td><td class="px-4 py-3 text-right">Tsh 2,84,00,000</td><td class="px-4 py-3 text-right">-</td></tr>
+          <tr><td class="px-4 py-3">Accounts Receivable</td><td class="px-4 py-3 text-right">Tsh 1,12,00,000</td><td class="px-4 py-3 text-right">-</td></tr>
+          <tr><td class="px-4 py-3">Revenue</td><td class="px-4 py-3 text-right">-</td><td class="px-4 py-3 text-right">Tsh 6,74,00,000</td></tr>
+          <tr><td class="px-4 py-3">Operating Expenses</td><td class="px-4 py-3 text-right">Tsh 2,19,00,000</td><td class="px-4 py-3 text-right">-</td></tr>
+          <tr><td class="px-4 py-3">Accounts Payable</td><td class="px-4 py-3 text-right">-</td><td class="px-4 py-3 text-right">Tsh 98,00,000</td></tr>
           <tr class="bg-slate-50">
             <td class="px-4 py-3 font-semibold text-slate-900">Total</td>
-            <td class="px-4 py-3 text-right font-semibold text-slate-900">INR 9,89,00,000</td>
-            <td class="px-4 py-3 text-right font-semibold text-slate-900">INR 9,89,00,000</td>
+            <td class="px-4 py-3 text-right font-semibold text-slate-900">Tsh 9,89,00,000</td>
+            <td class="px-4 py-3 text-right font-semibold text-slate-900">Tsh 9,89,00,000</td>
           </tr>
         </tbody>
       </table>
