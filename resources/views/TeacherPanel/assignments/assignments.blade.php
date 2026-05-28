@@ -52,8 +52,8 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1" for="class_id">Class</label>
                             <select id="class_id" name="class_id" class="w-full rounded-md border border-gray-200 px-3 py-2 text-sm bg-white">
                                 <option value="">Select class</option>
-                                @foreach ($classes as $class)
-                                    <option value="{{ $class->id }}" @selected(old('class_id') == $class->id)>{{ $class->name }}</option>
+                                @foreach ($subjects as $subject)
+                                    <option value="{{ $subject->classAvailable->id }}" @selected(old('class_id') == $subject->classAvailable->id)>{{ $subject->classAvailable->name }}</option>
                                 @endforeach
                             </select>
                             @error('class_id')<div class="mt-1 text-xs text-red-600">{{ $message }}</div>@enderror
@@ -64,7 +64,7 @@
                             <select id="subject_id" name="subject_id" class="w-full rounded-md border border-gray-200 px-3 py-2 text-sm bg-white">
                                 <option value="">Select subject</option>
                                 @foreach ($subjects as $subject)
-                                    <option value="{{ $subject->id }}" @selected(old('subject_id') == $subject->id)>{{ $subject->subject_name }}</option>
+                                    <option value="{{ $subject->availablesubject->id }}" @selected(old('subject_id') == $subject->availablesubject->id)>{{ $subject->availablesubject->subject_name }}</option>
                                 @endforeach
                             </select>
                             @error('subject_id')<div class="mt-1 text-xs text-red-600">{{ $message }}</div>@enderror

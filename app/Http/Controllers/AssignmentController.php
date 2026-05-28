@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssignedSubject;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use Illuminate\Http\Request;
@@ -21,10 +22,13 @@ class AssignmentController extends Controller
             ->orderBy('name')
             ->get();
 
+        /*
         $subjects = DB::table('availablesubjects')
             ->where('school_id', $teacher->school_id)
             ->orderBy('subject_name')
-            ->get();
+            ->get(); */
+        
+        $subjects = $this->getassignedsubjects($teacher);
 
         $assignments = Assignment::with(['classAvailable', 'subject'])
             ->where('school_id', $teacher->school_id)
@@ -123,5 +127,18 @@ class AssignmentController extends Controller
             'selectedAssignmentId' => $selectedAssignmentId,
             'submissions' => $submissions,
         ]);
+    }
+
+    //function to get the asigned subjects and clases of the teacher
+    protected function getassignedsubjects($teacher)
+    {
+
+        $subjects = AssignedSubject::with('classAvailable')
+            ->where('school_id',$teacher->school_id)
+            ->where('teacher_id', $teacher->school_id)
+            ->get();
+
+        return $subjects;
+
     }
 }
