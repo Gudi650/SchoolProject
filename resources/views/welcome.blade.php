@@ -33,7 +33,7 @@
             <div class="leftContent flex-1 space-y-4">
 
               <p class="text-indigo-600 font-medium">
-                Personal Information
+                Student's Information
               </p>
 
               <!-- Each item enclosed separately to match original PHP layout -->
@@ -80,7 +80,7 @@
             </div>
 
             <div class="rightContent flex-1 space-y-4">
-              <p class="text-indigo-600 font-medium">Parents Information</p>
+              <p class="text-indigo-600 font-medium">Parent's Information</p>
               <div class="space-y-3">
                 <div class="flex items-center gap-4 p-4 bg-gray-50 rounded border">
                   <i class="bi bi-person text-indigo-600 text-2xl p-2 rounded-full bg-blue-50 flex-shrink-0"></i>
@@ -97,9 +97,9 @@
                 <div class="flex items-center gap-4 p-4 bg-gray-50 rounded border">
                   <i class="bi bi-person text-indigo-600 text-2xl p-2 rounded-full bg-blue-50 flex-shrink-0"></i>
                   <div>
-                    <p class="text-sm text-gray-500">Gender</p>
+                    <p class="text-sm text-gray-500">Relatioinship</p>
                     <p class="font-medium">
-                      {{ optional($parent)->gender ?: 'Not given' }}
+                      {{ optional($parent)->rtnship ?: 'Not given' }}
                     </p>
                   </div>
                 </div>
