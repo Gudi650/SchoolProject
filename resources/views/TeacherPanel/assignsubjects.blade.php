@@ -1,7 +1,7 @@
 <x-Teacher-sidebar>
 
     <main class="flex-1 md:ml-64 p-6 md:p-10 min-w-0 overflow-x-auto">
-        <div class="max-w-7xl mx-auto min-w-0">
+      <div class="w-full min-w-0">
           <header class="relative bg-white p-4 md:p-6 rounded-lg shadow-sm mb-6">
 
             <div class="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg bg-indigo-800 opacity-25"></div>

@@ -15,12 +15,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('teacher_id'); // Link to teachers table
             $table->unsignedBigInteger('availablesubject_id'); // Link to availablesubjects table
+            $table->unsignedBigInteger('class_id'); // Link to class_availables table
             $table->unsignedBigInteger('school_id'); // Link to schools table
             $table->timestamps();
 
             // Foreign key constraints
             $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade'); //referencing the teachers table
             $table->foreign('availablesubject_id')->references('id')->on('availablesubjects')->onDelete('cascade'); //referencing the availablesubjects table
+            $table->foreign('class_id')->references('id')->on('class_availables')->onDelete('cascade'); //referencing the class_availables table
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade'); //referencing the schools table
         });
     }
