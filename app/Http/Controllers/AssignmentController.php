@@ -31,7 +31,7 @@ class AssignmentController extends Controller
             ->latest()
             ->get();
 
-        return view('TeacherPanel.assignments', [
+        return view('TeacherPanel.assignments.assignments', [
             'teacher' => $teacher,
             'classes' => $classes,
             'subjects' => $subjects,
@@ -71,7 +71,7 @@ class AssignmentController extends Controller
             'attachment' => $attachmentPath,
         ]);
 
-        return redirect()->route('teacher.assignments')->with('success', 'Assignment published successfully.');
+        return redirect()->route('teacher.assignments.assignments')->with('success', 'Assignment published successfully.');
     }
 
     public function showStudentAssignments()
