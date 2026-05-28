@@ -165,12 +165,51 @@
                         Online Classes
                     </a>
 
-                     <!-- Assignments link -->
+                    <!-- Assignments link 
                     <a href="{{ route('teacher.assignments') }}"
                         class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.assignments') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
                         <i class="bi bi-file-earmark-text"></i>
                         Assignments
                     </a>
+                    -->
+
+                    <!--Assignments dropdown-->
+                    <div class="relative">
+
+                        <button id="assignmentsToggle"
+                            aria-expanded="{{ request()->routeIs('teacher.assignments', 'teacher.assignments.delivered') ? 'true' : 'false' }}"
+                            class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('teacher.assignments', 'teacher.assignments.delivered') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                            <span class="flex items-center gap-3">
+                                <i class="bi bi-file-earmark-text"></i>
+                                Assignments
+                            </span>
+                            <i
+                                class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('teacher.assignments', 'teacher.assignments.delivered') ? 'rotate-180' : '' }}"></i>
+                        </button>
+
+                        <ul id="assignmentsMenu"
+                            class="{{ request()->routeIs('teacher.assignments', 'teacher.assignments.delivered') ? 'mt-1 space-y-1' : 'hidden mt-1 space-y-1' }}">
+
+                            <li>
+                                <!-- Assignments link -->
+                                <a href="{{ route('teacher.assignments') }}"
+                                    class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.assignments') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                    Create Assignments
+                                </a>
+                            </li>
+
+                            <li>
+                                <!-- Delivered assignments link -->
+                                <a href="{{ route('teacher.assignments.delivered') }}"
+                                    class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.assignments.delivered') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                                    <i class="bi bi-folder-check"></i>
+                                    Submitted Assignments
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
 
 
                     <!-- Attendance dropdown -->
@@ -526,6 +565,38 @@
                         assignMenu.classList.add('hidden');
                         assignToggle.setAttribute('aria-expanded', 'false');
                         if (assignChevron) assignChevron.classList.remove('rotate-180');
+                    }
+                    
+                });
+            }
+
+            // Student Assignment dropdown (Teacher sidebar)
+            const assignmentsToggle = document.getElementById('assignmentsToggle');
+            const assignmentsMenu = document.getElementById('assignmentsMenu');
+
+            if (assignmentsToggle && assignmentsMenu) {
+
+                const assignmentsChevron = assignmentsToggle.querySelector('.bi-chevron-down');
+
+                assignmentsToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const open = assignmentsMenu.classList.toggle('hidden') === false;
+                    assignmentsToggle.setAttribute('aria-expanded', open);
+                    if (assignmentsChevron) assignmentsChevron.classList.toggle('rotate-180', open);
+                });
+
+                // close when clicking outside, but do NOT close when clicking a submenu link (so navigation keeps it open)
+                document.addEventListener('click', function(e) {
+
+                    const target = e.target;
+
+                    // if the click was on a submenu anchor inside assignmentsMenu, allow the navigation — do not close here
+                    if (assignmentsMenu.contains(target) && (target.closest && target.closest('a'))) return;
+
+                    if (!assignmentsToggle.contains(target) && !assignmentsMenu.contains(target)) {
+                        assignmentsMenu.classList.add('hidden');
+                        assignmentsToggle.setAttribute('aria-expanded', 'false');
+                        if (assignmentsChevron) assignmentsChevron.classList.remove('rotate-180');
                     }
                     
                 });
