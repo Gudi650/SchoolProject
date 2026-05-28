@@ -13,6 +13,7 @@ class Assignment extends Model
         'school_id',
         'teacher_id',
         'class-available_id',
+        'subject_id',
         'attachment',
     ];
 
@@ -24,5 +25,10 @@ class Assignment extends Model
     public function classAvailable()
     {
         return $this->belongsTo(ClassAvailable::class, 'class-available_id');
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(availablesubject::class, 'subject_id');
     }
 }

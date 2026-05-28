@@ -60,6 +60,17 @@
                         </div>
 
                         <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="subject_id">Subject</label>
+                            <select id="subject_id" name="subject_id" class="w-full rounded-md border border-gray-200 px-3 py-2 text-sm bg-white">
+                                <option value="">Select subject</option>
+                                @foreach ($subjects as $subject)
+                                    <option value="{{ $subject->id }}" @selected(old('subject_id') == $subject->id)>{{ $subject->subject_name }}</option>
+                                @endforeach
+                            </select>
+                            @error('subject_id')<div class="mt-1 text-xs text-red-600">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" for="due_date">Due date</label>
                             <input id="due_date" name="due_date" type="date" value="{{ old('due_date') }}" class="w-full rounded-md border border-gray-200 px-3 py-2 text-sm bg-white">
                             @error('due_date')<div class="mt-1 text-xs text-red-600">{{ $message }}</div>@enderror
@@ -100,6 +111,7 @@
                                         <h3 class="text-base font-semibold text-gray-800 truncate">{{ $assignment->title }}</h3>
                                         <div class="mt-1 text-sm text-gray-500 flex flex-wrap gap-x-3 gap-y-1">
                                             <span>Class: {{ $assignment->classAvailable->name ?? 'N/A' }}</span>
+                                            <span>Subject: {{ $assignment->subject->subject_name ?? 'N/A' }}</span>
                                             <span>Due: {{ \Carbon\Carbon::parse($assignment->due_date)->format('M d, Y') }}</span>
                                         </div>
                                     </div>

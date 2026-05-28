@@ -3,25 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assignment;
-use App\Models\ClassAvailable;
-use App\Models\Student;
-use App\Models\Teacher;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AssignmentController extends Controller
 {
     public function showTeacherAssignments()
     {
-        $teacher = Teacher::where('user_id', auth()->id())->first();
+        $teacher = DB::table('teachers')->where('user_id', Auth::id())->first();
 
         abort_if(!$teacher, 403);
 
-        $classes = ClassAvailable::where('school_id', $teacher->school_id)
+        $classes = DB::table('class_availables')
+            ->where('school_id', $teacher->school_id)
             ->orderBy('name')
             ->get();
 
-        $assignments = Assignment::with(['classAvailable'])
+        $subjects = DB::table('availablesubjects')
+            ->where('school_id', $teacher->school_id)
+            ->orderBy('subject_name')
+            ->get();
+
+        $assignments = Assignment::with(['classAvailable', 'subject'])
             ->where('school_id', $teacher->school_id)
             ->where('teacher_id', $teacher->id)
             ->latest()
@@ -30,13 +34,14 @@ class AssignmentController extends Controller
         return view('TeacherPanel.assignments', [
             'teacher' => $teacher,
             'classes' => $classes,
+            'subjects' => $subjects,
             'assignments' => $assignments,
         ]);
     }
 
     public function storeTeacherAssignment(Request $request)
     {
-        $teacher = Teacher::where('user_id', auth()->id())->first();
+        $teacher = DB::table('teachers')->where('user_id', Auth::id())->first();
 
         abort_if(!$teacher, 403);
 
@@ -45,6 +50,7 @@ class AssignmentController extends Controller
             'description' => ['required', 'string'],
             'due_date' => ['required', 'date'],
             'class_id' => ['required', 'exists:class_availables,id'],
+            'subject_id' => ['nullable', 'exists:availablesubjects,id'],
             'attachment' => ['nullable', 'file', 'max:10240', 'mimes:pdf,doc,docx,zip,png,jpg,jpeg'],
         ]);
 
@@ -61,6 +67,7 @@ class AssignmentController extends Controller
             'school_id' => $teacher->school_id,
             'teacher_id' => $teacher->id,
             'class-available_id' => $validated['class_id'],
+            'subject_id' => $validated['subject_id'] ?? null,
             'attachment' => $attachmentPath,
         ]);
 
@@ -69,11 +76,11 @@ class AssignmentController extends Controller
 
     public function showStudentAssignments()
     {
-        $student = auth()->user()->students;
+        $student = DB::table('students')->where('user_id', Auth::id())->first();
         $assignments = collect();
 
         if ($student) {
-            $assignments = Assignment::with(['teacher', 'classAvailable'])
+            $assignments = Assignment::with(['teacher', 'classAvailable', 'subject'])
                 ->where('school_id', $student->school_id)
                 ->where('class-available_id', $student->class_id)
                 ->latest()
