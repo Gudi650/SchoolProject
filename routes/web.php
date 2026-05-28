@@ -305,11 +305,19 @@ Route::get('/teacher-studentenrollment-analytics',function(){
     //assign classes route to handle form submission
     Route::post('/teacher-assignclasses', [AssignClasses::class, 'assignClasses'])->name('teacher.assignclasses.submit');
 
+
+
+////////////////////////////////////////////////////////////////////////////
+////////teachers assignments pages
+
     // teacher assignments page
     Route::get('/teacher-assignments', [AssignmentController::class, 'showTeacherAssignments'])->name('teacher.assignments');
 
     // submit teacher assignments
     Route::post('/teacher-assignments', [AssignmentController::class, 'storeTeacherAssignment'])->name('teacher.assignments.submit');
+
+    // view student submissions for teacher assignments
+    Route::get('/teacher-delivered-assignments', [AssignmentController::class, 'showDeliveredAssignments'])->name('teacher.assignments.delivered');
 
 
 

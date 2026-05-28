@@ -31,4 +31,9 @@ class Assignment extends Model
     {
         return $this->belongsTo(availablesubject::class, 'subject_id');
     }
+
+    public function submissions()
+    {
+        return $this->hasMany(AssignmentSubmission::class, 'assignment_id');
+    }
 }

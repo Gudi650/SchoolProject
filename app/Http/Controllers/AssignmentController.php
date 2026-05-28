@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assignment;
+use App\Models\AssignmentSubmission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -90,6 +91,37 @@ class AssignmentController extends Controller
         return view('StudentPanel.assignments-live', [
             'student' => $student,
             'assignments' => $assignments,
+        ]);
+    }
+
+    public function showDeliveredAssignments(Request $request)
+    {
+        $teacher = DB::table('teachers')->where('user_id', Auth::id())->first();
+
+        abort_if(!$teacher, 403);
+
+        $assignments = Assignment::query()
+            ->where('teacher_id', $teacher->id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        $selectedAssignmentId = $request->integer('assignment_id') ?: $assignments->first()?->id;
+
+        $submissions = AssignmentSubmission::with(['assignment', 'student'])
+            ->whereHas('assignment', function ($query) use ($teacher) {
+                $query->where('teacher_id', $teacher->id);
+            })
+            ->when($selectedAssignmentId, function ($query, $assignmentId) {
+                $query->where('assignment_id', $assignmentId);
+            })
+            ->orderByDesc('submitted_at')
+            ->get();
+
+        return view('TeacherPanel.assignments.deliveredAssignments', [
+            'teacher' => $teacher,
+            'assignments' => $assignments,
+            'selectedAssignmentId' => $selectedAssignmentId,
+            'submissions' => $submissions,
         ]);
     }
 }
