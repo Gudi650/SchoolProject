@@ -9,52 +9,57 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
   <div class="flex">
+  @php
+    $navBase = 'flex items-center gap-3 p-2 rounded-md transition-colors duration-150';
+    $navActive = 'bg-indigo-50 text-indigo-600';
+    $navInactive = 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50';
+  @endphp
   <aside id="sidebar" class="hidden md:block fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 p-4">
       <h1 class="text-indigo-600 text-xl font-semibold mb-2">Student Portal</h1>
       <div class="w-full border-b border-gray-200 mb-4"></div>
       <nav class="space-y-2">
 
-        <a id="active" href="{{ route('student.homepage') }}" class="flex items-center gap-3 p-2 rounded-md bg-indigo-50 text-indigo-600">
+    <a href="{{ route('student.homepage') }}" class="{{ $navBase }} {{ request()->routeIs('student.homepage') ? $navActive : $navInactive }}">
             <i class="bi bi-person"></i> Profile
         </a>
 
-        <a href="{{ route('student.exams') }}" class="flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+    <a href="{{ route('student.exams') }}" class="{{ $navBase }} {{ request()->routeIs('student.exams') ? $navActive : $navInactive }}">
             <i class="bi bi-mortarboard"></i> Exam Results
         </a>
 
-        <a href="{{ route('student.timetable') }}" class="flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+    <a href="{{ route('student.timetable') }}" class="{{ $navBase }} {{ request()->routeIs('student.timetable') ? $navActive : $navInactive }}">
             <i class="bi bi-calendar3"></i> Timetable
         </a>
 
-        <a href="{{ route('student.library') }}" class="flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+    <a href="{{ route('student.library') }}" class="{{ $navBase }} {{ request()->routeIs('student.library') ? $navActive : $navInactive }}">
             <i class="bi bi-book"></i> Library
         </a>
 
-        <a href="student/health.html" class="flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+    <a href="student/health.html" class="{{ $navBase }} {{ request()->is('student/health.html') ? $navActive : $navInactive }}">
             <i class="bi bi-heart-pulse"></i> Health Status
         </a>
 
-        <a href="{{ route('student.feespayment') }}" class="flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+    <a href="{{ route('student.feespayment') }}" class="{{ $navBase }} {{ request()->routeIs('student.feespayment') ? $navActive : $navInactive }}">
             <i class="bi bi-cash-coin"></i> Fees Payment
         </a>
 
         <!-- Attendance dropdown -->
         <div class="relative">
-          <button id="attendanceToggle" aria-expanded="false" class="w-full flex items-center justify-between gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+          <button id="attendanceToggle" aria-expanded="{{ request()->routeIs('student.attendance.*') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 p-2 rounded-md {{ request()->routeIs('student.attendance.*') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
             <span class="flex items-center gap-3"><i class="bi bi-calendar-check"></i> Attendance</span>
-            <i class="bi bi-chevron-down text-sm transition-transform duration-200"></i>
+            <i class="bi bi-chevron-down text-sm transition-transform duration-200 {{ request()->routeIs('student.attendance.*') ? 'rotate-180' : '' }}"></i>
           </button>
 
           <!-- inline submenu: appears like other sidebar links but indented -->
-          <ul id="attendanceMenu" class="hidden mt-1 space-y-1">
+          <ul id="attendanceMenu" class="{{ request()->routeIs('student.attendance.*') ? 'mt-1 space-y-1' : 'hidden mt-1 space-y-1' }}">
       <li>
-        <a href="{{ route('student.attendance.checkin') }}" class="group flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 pl-10">
+        <a href="{{ route('student.attendance.checkin') }}" class="group flex items-center gap-3 p-2 rounded-md pl-10 {{ request()->routeIs('student.attendance.checkin') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
           <i class="bi bi-person-check text-lg text-gray-600 group-hover:text-indigo-600 transition-colors duration-150"></i>
           <span>Check In</span>
         </a>
       </li>
       <li>
-        <a href="{{ route('student.attendance.report') }}" class="group flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 pl-10">
+        <a href="{{ route('student.attendance.report') }}" class="group flex items-center gap-3 p-2 rounded-md pl-10 {{ request()->routeIs('student.attendance.report') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
 
           <i class="bi bi-file-earmark-text text-lg text-gray-600 group-hover:text-indigo-600 transition-colors duration-150"></i>
 
@@ -63,11 +68,11 @@
       </li>
           </ul>
         </div>
-        <a href="{{ route('student.announcements') }}" class="flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+        <a href="{{ route('student.announcements') }}" class="{{ $navBase }} {{ request()->routeIs('student.announcements') ? $navActive : $navInactive }}">
           <i class="bi bi-bell"></i> Announcement
         </a>
         
-        <a href="{{ route('student.assignments') }}" class="flex items-center gap-3 p-2 rounded-md text-gray-600 hover:text-indigo-600 hover:bg-indigo-50">
+        <a href="{{ route('student.assignments') }}" class="{{ $navBase }} {{ request()->routeIs('student.assignments') ? $navActive : $navInactive }}">
           <i class="bi bi-journal-check"></i> Assignments
         </a>
       </nav>
