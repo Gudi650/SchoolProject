@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountantSettings;
 use App\Http\Controllers\Announcements\AnnouncementController;
 use App\Http\Controllers\Announcements\StudentController;
 use App\Http\Controllers\AssignClasses;
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AssignedSubjectController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
@@ -53,7 +54,7 @@ Route::middleware('auth')->group(function () {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Route::view('/student-panel/assignments', 'StudentPanel.assignment')->name('student.assignments');
+    Route::get('/student-panel/assignments', [AssignmentController::class, 'showStudentAssignments'])->name('student.assignments');
 
     Route::view('/student-panel/attendance/checkin', 'StudentPanel.attendance.checkin')->name('student.attendance.checkin');
 
@@ -303,6 +304,12 @@ Route::get('/teacher-studentenrollment-analytics',function(){
 
     //assign classes route to handle form submission
     Route::post('/teacher-assignclasses', [AssignClasses::class, 'assignClasses'])->name('teacher.assignclasses.submit');
+
+    // teacher assignments page
+    Route::get('/teacher-assignments', [AssignmentController::class, 'showTeacherAssignments'])->name('teacher.assignments');
+
+    // submit teacher assignments
+    Route::post('/teacher-assignments', [AssignmentController::class, 'storeTeacherAssignment'])->name('teacher.assignments.submit');
 
 
 

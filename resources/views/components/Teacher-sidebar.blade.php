@@ -165,6 +165,14 @@
                         Online Classes
                     </a>
 
+                     <!-- Assignments link -->
+                    <a href="{{ route('teacher.assignments') }}"
+                        class="flex items-center gap-3 p-2 rounded-md {{ request()->routeIs('teacher.assignments') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50' }}">
+                        <i class="bi bi-file-earmark-text"></i>
+                        Assignments
+                    </a>
+
+
                     <!-- Attendance dropdown -->
                     <div class="relative">
 
