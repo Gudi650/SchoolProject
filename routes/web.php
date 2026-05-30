@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     Route::get('/student-panel/assignments', [AssignmentController::class, 'showStudentAssignments'])->name('student.assignments');
+    Route::post('/student-panel/assignments', [AssignmentController::class, 'storeStudentAssignmentSubmission'])->name('student.assignments.submit');
 
     Route::view('/student-panel/attendance/checkin', 'StudentPanel.attendance.checkin')->name('student.attendance.checkin');
 

@@ -76,13 +76,15 @@ class AssignmentController extends Controller
             'attachment' => $attachmentPath,
         ]);
 
-        return redirect()->route('teacher.assignments.assignments')->with('success', 'Assignment published successfully.');
+        return redirect()->route('teacher.assignments')->with('success', 'Assignment published successfully.');
     }
 
     public function showStudentAssignments()
     {
         $student = DB::table('students')->where('user_id', Auth::id())->first();
         $assignments = collect();
+        $submissions = collect();
+        $pendingCount = 0;
 
         if ($student) {
             $assignments = Assignment::with(['teacher', 'classAvailable', 'subject'])
@@ -90,12 +92,62 @@ class AssignmentController extends Controller
                 ->where('class-available_id', $student->class_id)
                 ->latest()
                 ->get();
+
+            $submissions = DB::table('assignment_submissions')
+                ->where('student_id', $student->id)
+                ->get()
+                ->keyBy('assignment_id');
+
+            $pendingCount = $assignments->reject(function ($assignment) use ($submissions) {
+                return $submissions->has($assignment->id);
+            })->count();
         }
 
-        return view('StudentPanel.assignments-live', [
+        return view('StudentPanel.assignment', [
             'student' => $student,
             'assignments' => $assignments,
+            'submissions' => $submissions,
+            'pendingCount' => $pendingCount,
         ]);
+    }
+
+    public function storeStudentAssignmentSubmission(Request $request)
+    {
+        $student = DB::table('students')->where('user_id', Auth::id())->first();
+
+        abort_if(!$student, 403);
+
+        $validated = $request->validate([
+            'assignment_id' => ['required', 'exists:assignments,id'],
+            'attachment' => ['required', 'file', 'max:10240', 'mimes:pdf,doc,docx,zip,png,jpg,jpeg'],
+            'remarks' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $assignment = DB::table('assignments')
+            ->where('id', $validated['assignment_id'])
+            ->where('school_id', $student->school_id)
+            ->where('class-available_id', $student->class_id)
+            ->first();
+
+        abort_if(!$assignment, 404);
+
+        $attachmentPath = $request->file('attachment')->store('assignment-submissions', 'public');
+
+        DB::table('assignment_submissions')->updateOrInsert(
+            [
+                'assignment_id' => $assignment->id,
+                'student_id' => $student->id,
+            ],
+            [
+                'attachment' => $attachmentPath,
+                'remarks' => $validated['remarks'] ?? null,
+                'submitted_at' => now(),
+                'updated_at' => now(),
+                'created_at' => now(),
+            ]
+        );
+
+        return redirect()->route('student.assignments')->with('success', 'Your assignment was submitted successfully.');
     }
 
     public function showDeliveredAssignments(Request $request)
