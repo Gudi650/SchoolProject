@@ -54,8 +54,11 @@ class GeneratedTimetableController extends Controller
 
         $data = $this->centralised_data();
 
+        //get assigned subjects for the school and include relations
+        $assignedSubjects = \App\Models\AssignedSubject::where('school_id', $data['schoolId'])->with(['teacher', 'availablesubject'])->get();
+
         //call the service to generate the timetable
-        $timetable = $this->generateTimetableService->generateTimetable($validatedData , $data);
+        $timetable = $this->generateTimetableService->generateTimetable($validatedData , array_merge($data, ['assignedSubjects' => $assignedSubjects]));
         $timetables = $this->formatTimetablesForView($timetable, $data['classes']);
 
         /*dump 
@@ -73,7 +76,7 @@ class GeneratedTimetableController extends Controller
     protected function formatTimetablesForView(array $timetable, $classes): array
     {
         $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-        $classNamesById = $classes->pluck('class_name', 'id')->toArray();
+        $classNamesById = $classes->pluck('name', 'id')->toArray();
         $formatted = [];
 
         foreach ($timetable as $classId => $days) {

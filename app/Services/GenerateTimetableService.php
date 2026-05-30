@@ -7,6 +7,8 @@ use Carbon\Carbon;
 
 class GenerateTimetableService
 {
+    private const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    private const DEFAULT_MAX_APPEARANCES = 2;
 
     /**
      * Calculate the total number of hours in a school day.
@@ -39,170 +41,287 @@ class GenerateTimetableService
     //function to auto generate timetable
     public function generateTimetable(array $validatedData , array $data)
     {
+        // Main entry point for timetable generation.
+        // - $validatedData contains the user inputs from the form
+        // - $data contains the centralised school data from the controller
+        // The method creates a timetable per class while avoiding teacher clashes.
+
         $classes = $data['classes'];
-        $schoolId = $data['schoolId'];
         $subjects = $data['subjects'];
+        $assignedSubjects = $data['assignedSubjects'] ?? collect();
 
-        // maximum times a subject may appear per week (for testing)
-        $max_periods_times = 2;
+        // Build a fast lookup structure for assigned subjects and teachers.
+        $classAssignments = $this->buildAssignedSubjectMap($assignedSubjects);
+        $prioritySubjects = array_map('intval', $validatedData['priority_subjects'] ?? []);
+        $exceptionsDays = $this->normalizeDayExceptions($validatedData['days_exceptions'] ?? []);
+        $exceptionsPeriods = $this->normalizePeriodsExceptions($validatedData['periods_days_exceptions'] ?? []);
+        $defaultPeriodsPerDay = (int) ($validatedData['PeriodPerDay'] ?? $validatedData['periods_per_day'] ?? 0);
 
-        // times a subject appeared array (per class)
-        $appearence_per_subject = [];
-
-        // days of the week we will generate (simple 5-day week)
-        $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-
-        // get day exceptions from validated data (allow entries like "Friday" or "Friday: 09:00 - 12:00")
-        $exceptions_input = $validatedData['days_exceptions'] ?? [];
-        $exceptions_days = [];
-        foreach ($exceptions_input as $entry) {
-            // if user supplied "Day: times" keep only the day name
-            $parts = explode(':', $entry, 2);
-            $exceptions_days[] = trim($parts[0]);
+        if ($defaultPeriodsPerDay <= 0) {
+            throw new \InvalidArgumentException('Invalid periods per day value');
         }
 
-        //get the exceptions periods per day from validated data
-        $exceptions_periods = $validatedData['periods_days_exceptions'] ?? [];
-
-        // build associative map for periods-per-day exceptions, e.g. ['Friday' => 4]
-        $exceptions_periods_assoc = [];
-        foreach ($exceptions_periods as $exception) {
-            $parts = explode(':', $exception, 2);
-            if (count($parts) === 2) {
-                $day = trim($parts[0]);
-                $periods = (int) trim($parts[1]);
-                $exceptions_periods_assoc[$day] = $periods;
-            }
-        }
-
+        // Total teaching hours available in one school day.
+        $totalHours = $this->calculateHours($validatedData);
+        $teacherBusy = [];
+        $subjectAppearance = [];
         $timetable = [];
-
-        // priority subject ids (optional)
-        $prioritySubjects_id = $validatedData['priority_subjects'] ?? [];
 
         // loop classes
         foreach ($classes as $class) {
-            // ensure appearance tracking for this class exists
-            $appearence_per_subject[$class->id] = $appearence_per_subject[$class->id] ?? [];
+            $subjectAppearance[$class->id] = $subjectAppearance[$class->id] ?? [];
+            // Candidate pool contains assigned subjects first, then any remaining subjects.
+            $classCandidatePool = $this->buildCandidatePool($class->id, $classAssignments, $subjects);
 
-            // loop days
-            foreach ($daysOfWeek as $day) {
+            foreach (self::DAYS_OF_WEEK as $dayIndex => $day) {
+                $periodsPerDay = $exceptionsDays[$day] ?? $defaultPeriodsPerDay;
 
-
-                // Basic time calculation for the day
-                $totalHours = $this->calculateHours($validatedData);
-                // Accept either `PeriodPerDay` (form field) or `periods_per_day` (alternate key)
-                $periodsPerDay = (int) ($validatedData['PeriodPerDay'] ?? $validatedData['periods_per_day'] ?? 0);
                 if ($periodsPerDay <= 0) {
-                    throw new \InvalidArgumentException('Invalid periods per day value');
+                    throw new \InvalidArgumentException('Invalid periods per day value for ' . $day);
                 }
-                // duration per period in hours (could be float, e.g. 0.75)
+
+                // Recalculate period duration for this day based on the number of periods.
                 $durationPerPeriod = $totalHours / $periodsPerDay;
+
+                // Rotate priority subjects so the order changes by day.
+                $dayPriority = $this->rotatePrioritySubjects($prioritySubjects, $dayIndex);
+
+                // Prevent the same subject from repeating too often in the same day.
+                $usedSubjectIds = [];
+
+                // Randomize candidate order to spread subjects more evenly.
+                $shuffledCandidates = $this->shuffleCandidates($classCandidatePool);
 
                 $timetable[$class->id][$day] = [];
 
-                // reset per-day used subjects so the same subject doesn't repeat in the same day
-                $used_subjects = [];
-
-                // randomize subject order each day (subjects is an Eloquent Collection)
-                $shuffledSubjects = $subjects->shuffle();
-
-                // build a per-day priority order by rotating the priority list
-                // this makes priority subjects appear first but in a different order each day
-                // build a rotated priority list for this day so priority subjects change order each day
-                $dayIndex = array_search($day, $daysOfWeek);
-                $dayPriority = $prioritySubjects_id;
-                if (!empty($dayPriority)) {
-                    $countP = count($dayPriority);
-                    $offset = ($dayIndex === false) ? 0 : ($dayIndex % $countP);
-                    $dayPriority = array_merge(
-                        array_slice($dayPriority, $offset),
-                        array_slice($dayPriority, 0, $offset)
+                for ($periodIndex = 0; $periodIndex < $periodsPerDay; $periodIndex++) {
+                    // Choose the best candidate that does not break any rule.
+                    $selected = $this->selectCandidate(
+                        $shuffledCandidates,
+                        $dayPriority,
+                        $periodIndex,
+                        $usedSubjectIds,
+                        $day,
+                        $periodIndex,
+                        $teacherBusy,
+                        $subjectAppearance,
+                        $class->id,
+                        self::DEFAULT_MAX_APPEARANCES
                     );
-                }
 
-                // If this day is an exception, adjust the periods for the day
-                if (in_array($day, $exceptions_days)) {
-                    $periodsPerDay = $exceptions_periods_assoc[$day] ?? $periodsPerDay;
-                    if ($periodsPerDay <= 0) {
-                        throw new \InvalidArgumentException('Invalid periods per day value for exception day: ' . $day);
-                    }
-                    // recalc duration for this day's periods
-                    $durationPerPeriod = $totalHours / $periodsPerDay;
-                }
-                
-                for ($period = 1; $period <= $periodsPerDay; $period++) {
-                    $assigned = null;
-                   
-                    // helper: find first subject satisfying conditions
-                    // helper: find the first available subject object that hasn't exceeded max weekly appearances
-                    $findAvailable = function($excludeUsed = true) use ($shuffledSubjects, &$appearence_per_subject, $class, $max_periods_times, $used_subjects) {
-                        foreach ($shuffledSubjects as $subj) {
-                            $count = $appearence_per_subject[$class->id][$subj->id] ?? 0;
-                            if ($count >= $max_periods_times) {
-                                continue; // subject exhausted for this class
-                            }
-                            if ($excludeUsed && in_array($subj->id, $used_subjects)) {
-                                continue; // already scheduled earlier this day
-                            }
-                            return $subj;
-                        }
-                        return null;
-                    };
-                    
-                    // if priority exists and this period is within priority count, attempt to use that priority subject
-                    if (!empty($dayPriority) && $period <= count($dayPriority)) {
-                        // use the rotated per-day priority order
-                        $priorityId = $dayPriority[$period - 1] ?? null;
-
-                            if ($priorityId) {
-                                // try to select the priority subject object from the shuffled list
-                                $prioritySub = $shuffledSubjects->firstWhere('id', $priorityId);
-                                $priorityCount = $appearence_per_subject[$class->id][$priorityId] ?? 0;
-                                if ($prioritySub && $priorityCount < $max_periods_times && !in_array($priorityId, $used_subjects)) {
-                                    $assigned = $prioritySub;
-                                } else {
-                                    // fallback to any available subject
-                                    $assigned = $findAvailable(true) ?: $findAvailable(false);
-                                }
-                            }
-                    } else {
-                        // normal period: pick any available subject not used today and under max
-                        $assigned = $findAvailable(true);
-                        if (! $assigned) {
-                            //allow reuse within day if still under max
-                            $assigned = $findAvailable(false);
-                        }
-                    }
-
-                    // if still nothing available -> assign null for this period
-                    if (! $assigned) {
-                        $timetable[$class->id][$day][] = [
-                            'period' => $period,
-                            'subject_id' => null,
-                            'duration' => $durationPerPeriod,
-                        ];
+                    // If nothing fits, store an empty slot so the table still keeps its structure.
+                    if ($selected === null) {
+                        $timetable[$class->id][$day][] = $this->buildEmptySlot($periodIndex + 1, $durationPerPeriod);
                         continue;
                     }
 
-                    // record assignment and increment appearance counters
-                    $timetable[$class->id][$day][] = [
-                        'period' => $period,
-                        'subject_id' => $assigned->id,
-                        'duration' => $durationPerPeriod,
-                        'subject_name' => $assigned->subject_name ?? $assigned->name ?? null,
-                    ];
+                    $timetable[$class->id][$day][] = $this->buildSlot($selected, $periodIndex + 1, $durationPerPeriod);
 
-                    // mark subject as used this day (prevents immediate repeat)
-                    $used_subjects[] = $assigned->id;
+                    $usedSubjectIds[] = $selected['subject_id'];
+                    $subjectAppearance[$class->id][$selected['subject_id']] = ($subjectAppearance[$class->id][$selected['subject_id']] ?? 0) + 1;
 
-                    // increment the weekly appearance counter for this class
-                    $appearence_per_subject[$class->id][$assigned->id] = ($appearence_per_subject[$class->id][$assigned->id] ?? 0) + 1;
+                    // Mark the teacher as occupied for this day/period.
+                    if (!empty($selected['teacher_id'])) {
+                        $teacherBusy[$day][$periodIndex][$selected['teacher_id']] = $class->id;
+                    }
                 }
             }
         }
 
         return $timetable;
+    }
+
+    protected function buildAssignedSubjectMap($assignedSubjects): array
+    {
+        $indexed = [];
+
+        foreach ($assignedSubjects as $assignment) {
+            $classId = $assignment->class_id;
+            $subjectId = $assignment->availablesubject_id;
+
+            // Store the teacher and subject info together for quick access during scheduling.
+            $indexed[$classId][$subjectId] = [
+                'class_id' => $classId,
+                'subject_id' => $subjectId,
+                'subject_name' => $assignment->availablesubject->name ?? $assignment->availablesubject->subject_name ?? null,
+                'teacher_id' => $assignment->teacher_id,
+                'teacher_name' => $this->formatTeacherName($assignment->teacher),
+            ];
+        }
+
+        return $indexed;
+    }
+
+    protected function buildCandidatePool(int $classId, array $classAssignments, $subjects): array
+    {
+        // Begin with subjects already assigned to this class.
+        $pool = array_values($classAssignments[$classId] ?? []);
+        $assignedSubjectIds = array_column($pool, 'subject_id');
+
+        // Add the remaining school subjects as fallback candidates.
+        foreach ($subjects as $subject) {
+            if (in_array($subject->id, $assignedSubjectIds, true)) {
+                continue;
+            }
+
+            $pool[] = [
+                'class_id' => $classId,
+                'subject_id' => $subject->id,
+                'subject_name' => $subject->name ?? $subject->subject_name ?? null,
+                'teacher_id' => null,
+                'teacher_name' => null,
+            ];
+        }
+
+        return $pool;
+    }
+
+    protected function shuffleCandidates(array $candidates): array
+    {
+        shuffle($candidates);
+
+        return $candidates;
+    }
+
+    protected function rotatePrioritySubjects(array $prioritySubjects, int $dayIndex): array
+    {
+        if (empty($prioritySubjects)) {
+            return [];
+        }
+
+        $count = count($prioritySubjects);
+        $offset = $count > 0 ? ($dayIndex % $count) : 0;
+
+        return array_merge(
+            array_slice($prioritySubjects, $offset),
+            array_slice($prioritySubjects, 0, $offset)
+        );
+    }
+
+    protected function selectCandidate(
+        array $candidates,
+        array $prioritySubjects,
+        int $periodNumber,
+        array $usedSubjectIds,
+        string $day,
+        int $periodIndex,
+        array &$teacherBusy,
+        array &$subjectAppearance,
+        int $classId,
+        int $maxAppearances
+    ): ?array {
+        $orderedCandidates = $this->prioritizeCandidates($candidates, $prioritySubjects, $periodNumber);
+
+        foreach ($orderedCandidates as $candidate) {
+            $subjectId = $candidate['subject_id'];
+            $teacherId = $candidate['teacher_id'];
+
+            if (in_array($subjectId, $usedSubjectIds, true)) {
+                continue;
+            }
+
+            if (($subjectAppearance[$classId][$subjectId] ?? 0) >= $maxAppearances) {
+                continue;
+            }
+
+            if ($teacherId !== null && isset($teacherBusy[$day][$periodIndex][$teacherId])) {
+                continue;
+            }
+
+            return $candidate;
+        }
+
+        return null;
+    }
+
+    protected function prioritizeCandidates(array $candidates, array $prioritySubjects, int $periodNumber): array
+    {
+        if (empty($prioritySubjects)) {
+            return $candidates;
+        }
+
+        $prioritySet = [];
+        if ($periodNumber < count($prioritySubjects)) {
+            $prioritySet[] = $prioritySubjects[$periodNumber];
+        }
+
+        $priority = [];
+        $rest = [];
+
+        foreach ($candidates as $candidate) {
+            if (in_array($candidate['subject_id'], $prioritySet, true)) {
+                $priority[] = $candidate;
+                continue;
+            }
+
+            $rest[] = $candidate;
+        }
+
+        return array_merge($priority, $rest);
+    }
+
+    protected function buildSlot(array $candidate, int $periodNumber, float $durationPerPeriod): array
+    {
+        return [
+            'period' => $periodNumber,
+            'subject_id' => $candidate['subject_id'],
+            'duration' => $durationPerPeriod,
+            'subject_name' => $candidate['subject_name'],
+            'teacher_id' => $candidate['teacher_id'],
+            'teacher_name' => $candidate['teacher_name'],
+        ];
+    }
+
+    protected function buildEmptySlot(int $periodNumber, float $durationPerPeriod): array
+    {
+        return [
+            'period' => $periodNumber,
+            'subject_id' => null,
+            'duration' => $durationPerPeriod,
+            'subject_name' => null,
+            'teacher_id' => null,
+            'teacher_name' => null,
+        ];
+    }
+
+    protected function normalizeDayExceptions(array $exceptions): array
+    {
+        $normalized = [];
+
+        foreach ($exceptions as $entry) {
+            $parts = explode(':', $entry, 2);
+            $normalized[trim($parts[0])] = true;
+        }
+
+        return $normalized;
+    }
+
+    protected function normalizePeriodsExceptions(array $exceptions): array
+    {
+        $normalized = [];
+
+        foreach ($exceptions as $entry) {
+            $parts = explode(':', $entry, 2);
+
+            if (count($parts) === 2) {
+                $normalized[trim($parts[0])] = (int) trim($parts[1]);
+            }
+        }
+
+        return $normalized;
+    }
+
+    protected function formatTeacherName($teacher): ?string
+    {
+        if (! $teacher) {
+            return null;
+        }
+
+        return trim(implode(' ', array_filter([
+            $teacher->fname ?? null,
+            $teacher->mname ?? null,
+            $teacher->lname ?? null,
+        ])));
     }
 
 
