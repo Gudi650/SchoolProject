@@ -26,10 +26,13 @@ class GeneratedTimetableController extends Controller
 
         //get the centralised data
         $data = $this->centralised_data();
+        $classes = $data['classes'];
         $subjects = $data['subjects'];
 
         return view('TeacherPanel.generatetimetable', [
+            'classes' => $classes,
             'subjects' => $subjects,
+            'timetables' => [],
         ]);
     }
 
@@ -52,12 +55,53 @@ class GeneratedTimetableController extends Controller
         $data = $this->centralised_data();
 
         //call the service to generate the timetable
-        $timetable = $this->generateTimetableService->generateTimetable($validatedData , $data); 
+        $timetable = $this->generateTimetableService->generateTimetable($validatedData , $data);
+        $timetables = $this->formatTimetablesForView($timetable, $data['classes']);
+
+        /*dump 
+        dd($timetable); */
 
 
-        //dump the data
-        dd($timetable);
-        
+        return view('TeacherPanel.generatetimetable', [
+            'classes' => $data['classes'],
+            'subjects' => $data['subjects'],
+            'timetables' => $timetables,
+        ]);
+    }
+
+
+    protected function formatTimetablesForView(array $timetable, $classes): array
+    {
+        $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+        $classNamesById = $classes->pluck('class_name', 'id')->toArray();
+        $formatted = [];
+
+        foreach ($timetable as $classId => $days) {
+            $className = $classNamesById[$classId] ?? 'Class ' . $classId;
+            $maxPeriods = 0;
+
+            foreach ($daysOfWeek as $day) {
+                $maxPeriods = max($maxPeriods, count($days[$day] ?? []));
+            }
+
+            $rows = [];
+            for ($periodIndex = 0; $periodIndex < $maxPeriods; $periodIndex++) {
+                $row = ['time' => 'Period ' . ($periodIndex + 1)];
+
+                foreach ($daysOfWeek as $day) {
+                    $entry = $days[$day][$periodIndex] ?? null;
+                    $row[strtolower($day)] = [
+                        'subject' => $entry['subject_name'] ?? '-',
+                    ];
+                }
+
+                $rows[] = $row;
+            }
+
+            $formatted[$className] = $rows;
+        }
+
+        return $formatted;
     }
 
 

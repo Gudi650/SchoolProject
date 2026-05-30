@@ -236,139 +236,42 @@
         <section class="bg-white p-6 rounded shadow">
           <h2 class="text-xl font-bold mb-6 text-indigo-700 flex items-center gap-2"><i class="bi bi-table"></i> Weekly Timetables for All Classes</h2>
           <div class="flex flex-col gap-8">
-            <!-- Example for 3 classes, you can add more as needed -->
-            <div class="border border-gray-200 rounded-lg shadow-sm overflow-x-auto bg-gray-50">
-              <div class="bg-indigo-100 px-4 py-2 rounded-t-lg flex items-center gap-2">
-                <i class="bi bi-journal-bookmark text-indigo-600"></i>
-                <span class="font-semibold text-indigo-700">Grade 1</span>
-              </div>
-              <table class="min-w-full table-auto">
-                <thead class="bg-indigo-50">
-                  <tr>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Period</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Monday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Tuesday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Wednesday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Thursday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Friday</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="px-2 py-2 font-semibold text-gray-600">09:00 - 10:00</td>
-                    <td class="px-2 py-2">Mathematics<br><span class="text-xs text-gray-500">Mr. Smith</span></td>
-                    <td class="px-2 py-2">English<br><span class="text-xs text-gray-500">Ms. Johnson</span></td>
-                    <td class="px-2 py-2">Science<br><span class="text-xs text-gray-500">Mrs. Lee</span></td>
-                    <td class="px-2 py-2">Mathematics<br><span class="text-xs text-gray-500">Mr. Smith</span></td>
-                    <td class="px-2 py-2">Art<br><span class="text-xs text-gray-500">Ms. Patel</span></td>
-                  </tr>
-                  <tr class="bg-white">
-                    <td class="px-2 py-2 font-semibold text-gray-600">10:00 - 11:00</td>
-                    <td class="px-2 py-2">English<br><span class="text-xs text-gray-500">Ms. Johnson</span></td>
-                    <td class="px-2 py-2">Mathematics<br><span class="text-xs text-gray-500">Mr. Smith</span></td>
-                    <td class="px-2 py-2">Social Studies<br><span class="text-xs text-gray-500">Mr. Brown</span></td>
-                    <td class="px-2 py-2">Science<br><span class="text-xs text-gray-500">Mrs. Lee</span></td>
-                    <td class="px-2 py-2">Physical Ed.<br><span class="text-xs text-gray-500">Mr. Brown</span></td>
-                  </tr>
-                  <tr>
-                    <td class="px-2 py-2 font-semibold text-gray-600">11:00 - 12:00</td>
-                    <td class="px-2 py-2">Science<br><span class="text-xs text-gray-500">Mrs. Lee</span></td>
-                    <td class="px-2 py-2">Art<br><span class="text-xs text-gray-500">Ms. Patel</span></td>
-                    <td class="px-2 py-2">Mathematics<br><span class="text-xs text-gray-500">Mr. Smith</span></td>
-                    <td class="px-2 py-2">English<br><span class="text-xs text-gray-500">Ms. Johnson</span></td>
-                    <td class="px-2 py-2">Social Studies<br><span class="text-xs text-gray-500">Mr. Brown</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="border border-gray-200 rounded-lg shadow-sm overflow-x-auto bg-gray-50">
-              <div class="bg-indigo-100 px-4 py-2 rounded-t-lg flex items-center gap-2">
-                <i class="bi bi-journal-bookmark text-indigo-600"></i>
-                <span class="font-semibold text-indigo-700">Grade 2</span>
-              </div>
-              <table class="min-w-full table-auto">
-                <thead class="bg-indigo-50">
-                  <tr>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Period</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Monday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Tuesday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Wednesday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Thursday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Friday</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="px-2 py-2 font-semibold text-gray-600">09:00 - 10:00</td>
-                    <td class="px-2 py-2">Science<br><span class="text-xs text-gray-500">Mrs. Lee</span></td>
-                    <td class="px-2 py-2">Mathematics<br><span class="text-xs text-gray-500">Mr. Smith</span></td>
-                    <td class="px-2 py-2">English<br><span class="text-xs text-gray-500">Ms. Johnson</span></td>
-                    <td class="px-2 py-2">Social Studies<br><span class="text-xs text-gray-500">Mr. Brown</span></td>
-                    <td class="px-2 py-2">Physical Ed.<br><span class="text-xs text-gray-500">Mr. Brown</span></td>
-                  </tr>
-                  <tr class="bg-white">
-                    <td class="px-2 py-2 font-semibold text-gray-600">10:00 - 11:00</td>
-                    <td class="px-2 py-2">Mathematics<br><span class="text-xs text-gray-500">Mr. Smith</span></td>
-                    <td class="px-2 py-2">Science<br><span class="text-xs text-gray-500">Mrs. Lee</span></td>
-                    <td class="px-2 py-2">Art<br><span class="text-xs text-gray-500">Ms. Patel</span></td>
-                    <td class="px-2 py-2">English<br><span class="text-xs text-gray-500">Ms. Johnson</span></td>
-                    <td class="px-2 py-2">Mathematics<br><span class="text-xs text-gray-500">Mr. Smith</span></td>
-                  </tr>
-                  <tr>
-                    <td class="px-2 py-2 font-semibold text-gray-600">11:00 - 12:00</td>
-                    <td class="px-2 py-2">English<br><span class="text-xs text-gray-500">Ms. Johnson</span></td>
-                    <td class="px-2 py-2">Social Studies<br><span class="text-xs text-gray-500">Mr. Brown</span></td>
-                    <td class="px-2 py-2">Mathematics<br><span class="text-xs text-gray-500">Mr. Smith</span></td>
-                    <td class="px-2 py-2">Science<br><span class="text-xs text-gray-500">Mrs. Lee</span></td>
-                    <td class="px-2 py-2">Art<br><span class="text-xs text-gray-500">Ms. Patel</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="border border-gray-200 rounded-lg shadow-sm overflow-x-auto bg-gray-50">
-              <div class="bg-indigo-100 px-4 py-2 rounded-t-lg flex items-center gap-2">
-                <i class="bi bi-journal-bookmark text-indigo-600"></i>
-                <span class="font-semibold text-indigo-700">Grade 3</span>
-              </div>
-              <table class="min-w-full table-auto">
-                <thead class="bg-indigo-50">
-                  <tr>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Period</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Monday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Tuesday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Wednesday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Thursday</th>
-                    <th class="px-2 py-2 text-xs font-bold text-gray-700">Friday</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="px-2 py-2 font-semibold text-gray-600">09:00 - 10:00</td>
-                    <td class="px-2 py-2">Art<br><span class="text-xs text-gray-500">Ms. Patel</span></td>
-                    <td class="px-2 py-2">Science<br><span class="text-xs text-gray-500">Mrs. Lee</span></td>
-                    <td class="px-2 py-2">Mathematics<br><span class="text-xs text-gray-500">Mr. Smith</span></td>
-                    <td class="px-2 py-2">English<br><span class="text-xs text-gray-500">Ms. Johnson</span></td>
-                    <td class="px-2 py-2">Social Studies<br><span class="text-xs text-gray-500">Mr. Brown</span></td>
-                  </tr>
-                  <tr class="bg-white">
-                    <td class="px-2 py-2 font-semibold text-gray-600">10:00 - 11:00</td>
-                    <td class="px-2 py-2">Mathematics<br><span class="text-xs text-gray-500">Mr. Smith</span></td>
-                    <td class="px-2 py-2">English<br><span class="text-xs text-gray-500">Ms. Johnson</span></td>
-                    <td class="px-2 py-2">Science<br><span class="text-xs text-gray-500">Mrs. Lee</span></td>
-                    <td class="px-2 py-2">Art<br><span class="text-xs text-gray-500">Ms. Patel</span></td>
-                    <td class="px-2 py-2">Mathematics<br><span class="text-xs text-gray-500">Mr. Smith</span></td>
-                  </tr>
-                  <tr>
-                    <td class="px-2 py-2 font-semibold text-gray-600">11:00 - 12:00</td>
-                    <td class="px-2 py-2">English<br><span class="text-xs text-gray-500">Ms. Johnson</span></td>
-                    <td class="px-2 py-2">Social Studies<br><span class="text-xs text-gray-500">Mr. Brown</span></td>
-                    <td class="px-2 py-2">Physical Ed.<br><span class="text-xs text-gray-500">Mr. Brown</span></td>
-                    <td class="px-2 py-2">Science<br><span class="text-xs text-gray-500">Mrs. Lee</span></td>
-                    <td class="px-2 py-2">Art<br><span class="text-xs text-gray-500">Ms. Patel</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            @if(isset($timetables) && count($timetables))
+              @foreach($timetables as $className => $timetable)
+                <div class="border border-gray-200 rounded-lg shadow-sm overflow-x-auto bg-gray-50">
+                  <div class="bg-indigo-100 px-4 py-2 rounded-t-lg flex items-center gap-2">
+                    <i class="bi bi-journal-bookmark text-indigo-600"></i>
+                    <span class="font-semibold text-indigo-700">{{ $className }}</span>
+                  </div>
+                  <table class="min-w-full table-auto">
+                    <thead class="bg-indigo-50">
+                      <tr>
+                        <th class="px-2 py-2 text-xs font-bold text-gray-700">Period</th>
+                        <th class="px-2 py-2 text-xs font-bold text-gray-700">Monday</th>
+                        <th class="px-2 py-2 text-xs font-bold text-gray-700">Tuesday</th>
+                        <th class="px-2 py-2 text-xs font-bold text-gray-700">Wednesday</th>
+                        <th class="px-2 py-2 text-xs font-bold text-gray-700">Thursday</th>
+                        <th class="px-2 py-2 text-xs font-bold text-gray-700">Friday</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach($timetable as $period)
+                        <tr @if($loop->iteration % 2 == 0) class="bg-white" @endif>
+                          <td class="px-2 py-2 font-semibold text-gray-600">{{ $period['time'] ?? '-' }}</td>
+                          <td class="px-2 py-2">{{ $period['monday']['subject'] ?? '-' }}</td>
+                          <td class="px-2 py-2">{{ $period['tuesday']['subject'] ?? '-' }}</td>
+                          <td class="px-2 py-2">{{ $period['wednesday']['subject'] ?? '-' }}</td>
+                          <td class="px-2 py-2">{{ $period['thursday']['subject'] ?? '-' }}</td>
+                          <td class="px-2 py-2">{{ $period['friday']['subject'] ?? '-' }}</td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              @endforeach
+            @else
+              <div class="text-center text-gray-500 py-8">No timetables available. Use the generator above to create timetables.</div>
+            @endif
           </div>
           <div class="flex flex-col md:flex-row md:justify-between gap-4 mt-8">
             <button class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded shadow transition w-full md:w-auto flex items-center gap-2 justify-center"><i class="bi bi-download"></i> Export All Timetables</button>
