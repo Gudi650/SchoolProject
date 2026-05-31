@@ -115,35 +115,37 @@
 
         <!--navigations-->
         <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4 text-sm">
-          <a href="./index.html" class="flex items-center gap-3 rounded-lg bg-brand-50 px-3 py-2.5 font-medium text-brand-700">
+          <a href="{{ route('library.dashboard') }}" class="flex items-center gap-3 rounded-lg bg-brand-50 px-3 py-2.5 font-medium text-brand-700">
             <span>⌂</span><span class="label-text">Dashboard</span>
           </a>
 
-          <a href="./catalog.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
+          <a href="{{ route('library.catalog') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
             <span>◫</span><span class="label-text">Catalog</span>
           </a>
 
-          <a href="./inventory.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
+          <a href="{{ route('library.inventory') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
             <span>▦</span><span class="label-text">Inventory</span>
           </a>
           
-          <a href="./members.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
+          {{-- 
+          <a href="{{ route('library.me') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
             <span>◎</span><span class="label-text">Members</span>
           </a>
+           --}}
 
-          <a href="./loans.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
+          <a href="{{ route('library.loans') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
             <span>⇄</span><span class="label-text">Loans</span>
           </a>
 
-          <a href="./reservations.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
+          <a href="{{ route('library.reservations') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
             <span>◷</span><span class="label-text">Reservations</span>
           </a>
 
-          <a href="./reports.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
+          <a href="{{ route('library.reports') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
             <span>▤</span><span class="label-text">Reports</span>
           </a>
 
-          <a href="./settings.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
+          <a href="{{ route('library.settings') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
             <span>⚙</span><span class="label-text">Settings</span>
           </a>
 
