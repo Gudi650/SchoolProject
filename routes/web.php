@@ -627,6 +627,11 @@ Route::post('/accounting-settings/loan-settings',
 
 ///////////////////////////////////////////////////////////////////////
 
+//ROUTES FOR THE LIBRARY PANEL AS WELL
+Route::get('/library-dashboard',function(){
+    return view('LibraryPanel.dashboard');
+})->name('library.dashboard');
+
 //////////////////////////////////////////////////////////////////////
 //route for studentEnrollment
 
