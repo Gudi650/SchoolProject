@@ -648,6 +648,16 @@ Route::get('/library-reservations',function(){
     return view('LibraryPanel.reservations');
 })->name('library.reservations');
 
+Route::get('/library-reports',function(){
+    return view('LibraryPanel.reports');
+})->name('library.reports');
+
+Route::get('/library-settings',function(){
+    return view('LibraryPanel.settings');
+})->name('library.settings');
+
+
+
 
 
 
