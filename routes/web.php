@@ -632,6 +632,16 @@ Route::get('/library-dashboard',function(){
     return view('LibraryPanel.dashboard');
 })->name('library.dashboard');
 
+Route::get('/library-inventory',function(){
+    return view('LibraryPanel.inventory');
+})->name('library.inventory');
+
+Route::get('/library-loans',function(){
+    return view('LibraryPanel.loans');
+})->name('library.loans');
+
+
+
 //////////////////////////////////////////////////////////////////////
 //route for studentEnrollment
 
