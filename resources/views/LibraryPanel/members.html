@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Scholaria Members</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body class="bg-slate-50 text-slate-900">
+    <div class="fixed inset-0 z-40 bg-slate-900/40 hidden lg:hidden" data-sidebar-overlay></div>
+    <div class="app-shell flex min-h-screen">
+      <aside class="app-sidebar fixed inset-y-0 left-0 z-50 flex flex-col border-r border-slate-200 bg-white">
+        <div class="flex h-16 items-center justify-between border-b border-slate-200 px-4"><div class="flex items-center gap-3"><div class="grid h-10 w-10 place-items-center rounded-lg bg-indigo-600 text-white">L</div><span class="label-text text-xl font-bold">Scholaria</span></div><button class="rounded-lg p-2 lg:hidden" data-close-mobile>✕</button></div>
+        <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4 text-sm">
+          <a href="./index.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100"><span>⌂</span><span class="label-text">Dashboard</span></a>
+          <a href="./catalog.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100"><span>◫</span><span class="label-text">Catalog</span></a>
+          <a href="./inventory.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100"><span>▦</span><span class="label-text">Inventory</span></a>
+          <a href="./members.html" class="flex items-center gap-3 rounded-lg bg-indigo-50 px-3 py-2.5 font-medium text-indigo-700"><span>◎</span><span class="label-text">Members</span></a>
+          <a href="./loans.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100"><span>⇄</span><span class="label-text">Loans</span></a>
+          <a href="./reservations.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100"><span>◷</span><span class="label-text">Reservations</span></a>
+          <a href="./reports.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100"><span>▤</span><span class="label-text">Reports</span></a>
+          <a href="./settings.html" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100"><span>⚙</span><span class="label-text">Settings</span></a>
+        </nav>
+        <button class="absolute -right-3 top-20 hidden h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-sm lg:flex" data-toggle-collapse>⇆</button>
+      </aside>
+      <div class="app-main flex min-h-screen flex-1 flex-col">
+        <header class="sticky top-0 z-30 flex h-16 items-center border-b border-slate-200 bg-white px-4 lg:px-8"><button class="rounded-lg p-2 lg:hidden" data-open-mobile>☰</button></header>
+        <main class="page-fade w-full max-w-7xl flex-1 p-4 lg:mx-auto lg:p-8">
+          <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><h1 class="text-2xl font-bold">Members</h1><p class="text-sm text-slate-500">Manage students, faculty, and staff</p></div><button class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white">+ Register Member</button></div>
+          <section class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <article class="rounded-xl border border-slate-200 bg-white p-5"><p class="text-sm text-slate-500">Total Members</p><p class="text-2xl font-bold">1,204</p></article>
+            <article class="rounded-xl border border-slate-200 bg-white p-5"><p class="text-sm text-slate-500">Students</p><p class="text-2xl font-bold">1,089</p></article>
+            <article class="rounded-xl border border-slate-200 bg-white p-5"><p class="text-sm text-slate-500">Faculty & Staff</p><p class="text-2xl font-bold">115</p></article>
+            <article class="rounded-xl border border-slate-200 bg-white p-5"><p class="text-sm text-slate-500">With Overdue</p><p class="text-2xl font-bold text-red-700">15</p></article>
+          </section>
+          <section class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <table class="min-w-full text-left text-sm">
+              <thead class="bg-slate-50 text-slate-500"><tr><th class="px-4 py-3">Member</th><th class="px-4 py-3">Role</th><th class="px-4 py-3">ID</th><th class="px-4 py-3">Loans</th><th class="px-4 py-3">Joined</th><th class="px-4 py-3">Status</th></tr></thead>
+              <tbody>
+                <tr class="border-t"><td class="px-4 py-3">Alex Johnson</td><td class="px-4 py-3">Student · Grade 10</td><td class="px-4 py-3">STU-1024</td><td class="px-4 py-3">2</td><td class="px-4 py-3">Sep 2022</td><td class="px-4 py-3"><span class="rounded bg-emerald-50 px-2 py-1 text-emerald-700">Active</span></td></tr>
+                <tr class="border-t"><td class="px-4 py-3">Sarah Williams</td><td class="px-4 py-3">Student · Grade 12</td><td class="px-4 py-3">STU-1056</td><td class="px-4 py-3">3</td><td class="px-4 py-3">Sep 2020</td><td class="px-4 py-3"><span class="rounded bg-emerald-50 px-2 py-1 text-emerald-700">Active</span></td></tr>
+                <tr class="border-t"><td class="px-4 py-3">Noah Brown</td><td class="px-4 py-3">Student · Grade 7</td><td class="px-4 py-3">STU-1289</td><td class="px-4 py-3">0</td><td class="px-4 py-3">Sep 2024</td><td class="px-4 py-3"><span class="rounded bg-slate-100 px-2 py-1 text-slate-600">Inactive</span></td></tr>
+                <tr class="border-t"><td class="px-4 py-3">Dr. Robert Hayes</td><td class="px-4 py-3">Faculty</td><td class="px-4 py-3">FAC-0042</td><td class="px-4 py-3">5</td><td class="px-4 py-3">Aug 2018</td><td class="px-4 py-3"><span class="rounded bg-emerald-50 px-2 py-1 text-emerald-700">Active</span></td></tr>
+              </tbody>
+            </table>
+          </section>
+        </main>
+      </div>
+    </div>
+    <script src="./assets/app.js"></script>
+  </body>
+</html>

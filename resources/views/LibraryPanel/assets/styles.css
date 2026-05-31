@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --sidebar-expanded: 16rem;
+  --sidebar-collapsed: 5rem;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  width: var(--sidebar-expanded);
+  transition: width 0.25s ease, transform 0.25s ease;
+}
+
+.app-main {
+  margin-left: var(--sidebar-expanded);
+  transition: margin-left 0.25s ease;
+}
+
+body.sidebar-collapsed .app-sidebar {
+  width: var(--sidebar-collapsed);
+}
+
+body.sidebar-collapsed .app-main {
+  margin-left: var(--sidebar-collapsed);
+}
+
+body.sidebar-collapsed .label-text {
+  display: none;
+}
+
+body.sidebar-collapsed .sidebar-collapse-label {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .app-sidebar {
+    transform: translateX(-100%);
+    width: var(--sidebar-expanded);
+  }
+
+  body.mobile-sidebar-open .app-sidebar {
+    transform: translateX(0);
+  }
+
+  .app-main {
+    margin-left: 0;
+  }
+}
+
+.page-fade {
+  animation: pageFade 350ms ease-out both;
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
