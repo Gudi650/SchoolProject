@@ -644,6 +644,11 @@ Route::get('/library-catalog',function(){
     return view('LibraryPanel.catalog');
 })->name('library.catalog');
 
+Route::get('/library-reservations',function(){
+    return view('LibraryPanel.reservations');
+})->name('library.reservations');
+
+
 
 
 //////////////////////////////////////////////////////////////////////
