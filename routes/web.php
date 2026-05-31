@@ -640,6 +640,10 @@ Route::get('/library-loans',function(){
     return view('LibraryPanel.loans');
 })->name('library.loans');
 
+Route::get('/library-catalog',function(){
+    return view('LibraryPanel.catalog');
+})->name('library.catalog');
+
 
 
 //////////////////////////////////////////////////////////////////////
