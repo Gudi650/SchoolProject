@@ -7,6 +7,8 @@
             <p class="text-sm text-slate-500 mt-1">Track copies, conditions, and locations</p>
         </div>
         <button
+            type="button"
+            data-open-add-stock-modal
             class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -264,8 +266,67 @@
         </section>
     </div>
 
+    @include('LibraryPanel.inventory.modals.add-stocks')
+
     <script>
         (function () {
+            var openAddStockButton = document.querySelector('[data-open-add-stock-modal]');
+            var addStockModal = document.querySelector('[data-add-stock-modal]');
+            var addStockDialog = document.querySelector('[data-add-stock-dialog]');
+
+            function openAddStockModal() {
+                if (!addStockModal) {
+                    return;
+                }
+
+                addStockModal.classList.remove('hidden');
+                addStockModal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+
+                var firstField = addStockModal.querySelector('input, select, textarea, button');
+                if (firstField) {
+                    firstField.focus();
+                }
+            }
+
+            function closeAddStockModal() {
+                if (!addStockModal) {
+                    return;
+                }
+
+                addStockModal.classList.add('hidden');
+                addStockModal.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            if (openAddStockButton) {
+                openAddStockButton.addEventListener('click', openAddStockModal);
+            }
+
+            if (addStockModal) {
+                addStockModal.querySelectorAll('[data-close-add-stock-modal]').forEach(function (button) {
+                    button.addEventListener('click', closeAddStockModal);
+                });
+
+                addStockModal.addEventListener('click', function (event) {
+                    if (event.target === addStockModal) {
+                        closeAddStockModal();
+                    }
+                });
+            }
+
+            if (addStockDialog) {
+                addStockDialog.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                });
+            }
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && addStockModal && !addStockModal.classList.contains('hidden')) {
+                    closeAddStockModal();
+                }
+            });
+
             var tabButtons = document.querySelectorAll('[data-tab-button]');
             var tabPanels = document.querySelectorAll('[data-tab-panel]');
 
