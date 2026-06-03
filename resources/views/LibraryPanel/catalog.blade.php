@@ -7,6 +7,8 @@
             <p class="text-sm text-slate-500 mt-1">Browse and manage your library's collection</p>
         </div>
         <button
+            type="button"
+            data-open-add-book-modal
             class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-brand-600 text-white text-sm font-medium rounded-lg hover:bg-brand-700 transition-colors shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -177,5 +179,61 @@
             </div>
         </article>
     </section>
+
+    @include('LibraryPanel.Catalog.modals.add-catalog')
+
+    <script>
+        (function () {
+            var openButton = document.querySelector('[data-open-add-book-modal]');
+            var modal = document.querySelector('[data-add-book-modal]');
+
+            if (!openButton || !modal) {
+                return;
+            }
+
+            var closeButtons = modal.querySelectorAll('[data-close-add-book-modal]');
+            var dialog = modal.querySelector('[data-add-book-dialog]');
+
+            function openModal() {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+                var firstField = modal.querySelector('input, select, textarea, button');
+                if (firstField) {
+                    firstField.focus();
+                }
+            }
+
+            function closeModal() {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            openButton.addEventListener('click', openModal);
+
+            closeButtons.forEach(function (button) {
+                button.addEventListener('click', closeModal);
+            });
+
+            modal.addEventListener('click', function (event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+
+            if (dialog) {
+                dialog.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                });
+            }
+        })();
+    </script>
 
 </x-Libray-sidebar>
