@@ -8,7 +8,7 @@
     <title>{{ $title ?? '' }}</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/lucide.min.js"></script>
+    <script src="https://unpkg.com/lucide@0.292.0"></script>
     <script>
       tailwind.config = {
         theme: {
@@ -249,8 +249,24 @@
       })();
     </script>
     <script>
-      if (window.lucide && typeof lucide.createIcons === 'function') {
-        lucide.createIcons();
+      // Initialize Lucide icons
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.lucide && typeof lucide.createIcons === 'function') {
+          lucide.createIcons();
+        }
+      });
+      
+      // Also initialize immediately in case DOM is already loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          if (window.lucide && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+          }
+        });
+      } else {
+        if (window.lucide && typeof lucide.createIcons === 'function') {
+          lucide.createIcons();
+        }
       }
     </script>
   </body>
