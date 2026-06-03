@@ -87,16 +87,25 @@
 
     <section class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="border-b border-slate-200 flex">
-            <button class="px-5 py-3 text-sm font-medium border-b-2 border-indigo-600 text-indigo-700">All</button>
             <button
+                type="button"
+                data-loan-tab-button="all"
+                class="px-5 py-3 text-sm font-medium border-b-2 border-indigo-600 text-indigo-700">All</button>
+            <button
+                type="button"
+                data-loan-tab-button="active"
                 class="px-5 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700">Active</button>
             <button
+                type="button"
+                data-loan-tab-button="overdue"
                 class="px-5 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700">Overdue</button>
             <button
+                type="button"
+                data-loan-tab-button="returned"
                 class="px-5 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700">Returned</button>
         </div>
 
-        <div class="p-4 border-b border-slate-200">
+        <div class="p-4 border-b border-slate-200" data-loan-tab-panel="all">
             <div class="relative max-w-md">
                 <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -108,7 +117,7 @@
             </div>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto" data-loan-tab-panel="all">
             <table class="w-full text-left">
                 <thead>
                     <tr
@@ -264,6 +273,47 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="hidden" data-loan-tab-panel="active">
+            @include('LibraryPanel.loans.active')
+        </div>
+
+        <div class="hidden p-6 text-sm text-slate-500" data-loan-tab-panel="overdue">
+            Overdue loans will appear here.
+        </div>
+
+        <div class="hidden p-6 text-sm text-slate-500" data-loan-tab-panel="returned">
+            Returned loans will appear here.
+        </div>
     </section>
+
+    <script>
+        (function () {
+            var tabButtons = document.querySelectorAll('[data-loan-tab-button]');
+            var tabPanels = document.querySelectorAll('[data-loan-tab-panel]');
+
+            function activateTab(tabName) {
+                tabButtons.forEach(function (button) {
+                    var isActive = button.getAttribute('data-loan-tab-button') === tabName;
+                    button.classList.toggle('border-indigo-600', isActive);
+                    button.classList.toggle('text-indigo-700', isActive);
+                    button.classList.toggle('border-transparent', !isActive);
+                    button.classList.toggle('text-slate-500', !isActive);
+                });
+
+                tabPanels.forEach(function (panel) {
+                    panel.classList.toggle('hidden', panel.getAttribute('data-loan-tab-panel') !== tabName);
+                });
+            }
+
+            tabButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    activateTab(button.getAttribute('data-loan-tab-button'));
+                });
+            });
+
+            activateTab('all');
+        })();
+    </script>
 
 </x-Libray-sidebar>
