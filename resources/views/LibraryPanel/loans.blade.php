@@ -278,12 +278,12 @@
             @include('LibraryPanel.loans.active')
         </div>
 
-        <div class="hidden p-6 text-sm text-slate-500" data-loan-tab-panel="overdue">
-            Overdue loans will appear here.
+        <div class="hidden" data-loan-tab-panel="overdue">
+            @include('LibraryPanel.loans.overdue')
         </div>
 
-        <div class="hidden p-6 text-sm text-slate-500" data-loan-tab-panel="returned">
-            Returned loans will appear here.
+        <div class="hidden" data-loan-tab-panel="returned">
+            @include('LibraryPanel.loans.returned')
         </div>
     </section>
 
