@@ -25,6 +25,8 @@
             <div class="flex-1">
                 <p class="text-sm font-medium text-amber-900">3 titles are running low on stock</p>
                 <button
+                    type="button"
+                    data-tab-button="low-stock"
                     class="text-xs font-medium text-amber-700 hover:text-amber-900 underline underline-offset-2 mt-0.5">View
                     low stock items</button>
             </div>
@@ -92,20 +94,28 @@
         <section class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             <div class="border-b border-slate-200 flex overflow-x-auto">
                 <button
+                    type="button"
+                    data-tab-button="all"
                     class="px-5 py-3 text-sm font-medium border-b-2 border-indigo-600 text-indigo-700 whitespace-nowrap">All
                     Stock <span class="ml-1 text-xs text-slate-400">(12)</span></button>
                 <button
+                    type="button"
+                    data-tab-button="low-stock"
                     class="px-5 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 whitespace-nowrap">Low
                     Stock <span class="ml-1 text-xs text-slate-400">(3)</span></button>
                 <button
+                    type="button"
+                    data-tab-button="damaged"
                     class="px-5 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 whitespace-nowrap">Damaged
                     <span class="ml-1 text-xs text-slate-400">(2)</span></button>
                 <button
+                    type="button"
+                    data-tab-button="repair"
                     class="px-5 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 whitespace-nowrap">In
                     Repair <span class="ml-1 text-xs text-slate-400">(2)</span></button>
             </div>
 
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto" data-tab-panel="all">
                 <table class="w-full text-left">
                     <thead>
                         <tr
@@ -239,7 +249,48 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="hidden" data-tab-panel="low-stock">
+                @include('LibraryPanel.inventory.low-stock')
+            </div>
+
+            <div class="hidden p-6 text-sm text-slate-500" data-tab-panel="damaged">
+                Damaged stock items will appear here.
+            </div>
+
+            <div class="hidden p-6 text-sm text-slate-500" data-tab-panel="repair">
+                Items sent for repair will appear here.
+            </div>
         </section>
     </div>
+
+    <script>
+        (function () {
+            var tabButtons = document.querySelectorAll('[data-tab-button]');
+            var tabPanels = document.querySelectorAll('[data-tab-panel]');
+
+            function activateTab(tabName) {
+                tabButtons.forEach(function (button) {
+                    var isActive = button.getAttribute('data-tab-button') === tabName;
+                    button.classList.toggle('border-indigo-600', isActive);
+                    button.classList.toggle('text-indigo-700', isActive);
+                    button.classList.toggle('border-transparent', !isActive);
+                    button.classList.toggle('text-slate-500', !isActive);
+                });
+
+                tabPanels.forEach(function (panel) {
+                    panel.classList.toggle('hidden', panel.getAttribute('data-tab-panel') !== tabName);
+                });
+            }
+
+            tabButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    activateTab(button.getAttribute('data-tab-button'));
+                });
+            });
+
+            activateTab('all');
+        })();
+    </script>
 
 </x-Libray-sidebar>
