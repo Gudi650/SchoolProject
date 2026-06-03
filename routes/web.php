@@ -653,7 +653,7 @@ Route::get('/library-reports',function(){
 })->name('library.reports');
 
 Route::get('/library-settings',function(){
-    return view('LibraryPanel.settings');
+    return view('LibraryPanel.settings.library');
 })->name('library.settings');
 
 
