@@ -8,6 +8,7 @@
     <title>{{ $title ?? '' }}</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/lucide.min.js"></script>
     <script>
       tailwind.config = {
         theme: {
@@ -110,21 +111,24 @@
             <div class="grid h-10 w-10 place-items-center rounded-lg bg-brand-600 text-white">L</div>
             <span class="label-text whitespace-nowrap text-xl font-bold">Scholaria</span>
           </div>
-          <button class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden" data-close-mobile>✕</button>
+          <button class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden" data-close-mobile>
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
         </div>
 
         <!--navigations-->
         <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4 text-sm">
-          <a href="{{ route('library.dashboard') }}" class="flex items-center gap-3 rounded-lg bg-brand-50 px-3 py-2.5 font-medium text-brand-700">
-            <span>⌂</span><span class="label-text">Dashboard</span>
+            
+          <a href="{{ route('library.dashboard') }}" @class(['flex items-center gap-3 rounded-lg px-3 py-2.5', 'bg-brand-50 font-medium text-brand-700' => Route::is('library.dashboard'), 'text-slate-600 hover:bg-slate-100' => !Route::is('library.dashboard')])>
+            <i data-lucide="home" class="w-4 h-4"></i><span class="label-text">Dashboard</span>
           </a>
 
-          <a href="{{ route('library.catalog') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
-            <span>◫</span><span class="label-text">Catalog</span>
+          <a href="{{ route('library.catalog') }}" @class(['flex items-center gap-3 rounded-lg px-3 py-2.5', 'bg-brand-50 font-medium text-brand-700' => Route::is('library.catalog'), 'text-slate-600 hover:bg-slate-100' => !Route::is('library.catalog')])>
+            <i data-lucide="book-open" class="w-4 h-4"></i><span class="label-text">Catalog</span>
           </a>
 
-          <a href="{{ route('library.inventory') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
-            <span>▦</span><span class="label-text">Inventory</span>
+          <a href="{{ route('library.inventory') }}" @class(['flex items-center gap-3 rounded-lg px-3 py-2.5', 'bg-brand-50 font-medium text-brand-700' => Route::is('library.inventory'), 'text-slate-600 hover:bg-slate-100' => !Route::is('library.inventory')])>
+            <i data-lucide="package" class="w-4 h-4"></i><span class="label-text">Inventory</span>
           </a>
           
           {{-- 
@@ -133,20 +137,20 @@
           </a>
            --}}
 
-          <a href="{{ route('library.loans') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
-            <span>⇄</span><span class="label-text">Loans</span>
+          <a href="{{ route('library.loans') }}" @class(['flex items-center gap-3 rounded-lg px-3 py-2.5', 'bg-brand-50 font-medium text-brand-700' => Route::is('library.loans'), 'text-slate-600 hover:bg-slate-100' => !Route::is('library.loans')])>
+            <i data-lucide="repeat" class="w-4 h-4"></i><span class="label-text">Loans</span>
           </a>
 
-          <a href="{{ route('library.reservations') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
-            <span>◷</span><span class="label-text">Reservations</span>
+          <a href="{{ route('library.reservations') }}" @class(['flex items-center gap-3 rounded-lg px-3 py-2.5', 'bg-brand-50 font-medium text-brand-700' => Route::is('library.reservations'), 'text-slate-600 hover:bg-slate-100' => !Route::is('library.reservations')])>
+            <i data-lucide="calendar" class="w-4 h-4"></i><span class="label-text">Reservations</span>
           </a>
 
-          <a href="{{ route('library.reports') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
-            <span>▤</span><span class="label-text">Reports</span>
+          <a href="{{ route('library.reports') }}" @class(['flex items-center gap-3 rounded-lg px-3 py-2.5', 'bg-brand-50 font-medium text-brand-700' => Route::is('library.reports'), 'text-slate-600 hover:bg-slate-100' => !Route::is('library.reports')])>
+            <i data-lucide="bar-chart-2" class="w-4 h-4"></i><span class="label-text">Reports</span>
           </a>
 
-          <a href="{{ route('library.settings') }}" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-100">
-            <span>⚙</span><span class="label-text">Settings</span>
+          <a href="{{ route('library.settings') }}" @class(['flex items-center gap-3 rounded-lg px-3 py-2.5', 'bg-brand-50 font-medium text-brand-700' => Route::is('library.settings'), 'text-slate-600 hover:bg-slate-100' => !Route::is('library.settings')])>
+            <i data-lucide="settings" class="w-4 h-4"></i><span class="label-text">Settings</span>
           </a>
 
         </nav>
@@ -160,7 +164,9 @@
             </div>
           </div>
         </div>
-        <button class="absolute -right-3 top-20 hidden h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-sm hover:bg-slate-50 lg:flex" data-toggle-collapse>⇆</button>
+        <button class="absolute -right-3 top-20 hidden h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-sm hover:bg-slate-50 lg:flex" data-toggle-collapse>
+          <i data-lucide="chevrons-left" class="w-3 h-3"></i>
+        </button>
       </aside>
 
       <div class="app-main flex min-h-screen flex-1 flex-col">
@@ -241,6 +247,11 @@
           });
         });
       })();
+    </script>
+    <script>
+      if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+      }
     </script>
   </body>
 </html>
