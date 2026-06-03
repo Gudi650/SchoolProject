@@ -8,6 +8,8 @@
         </div>
         <div class="flex gap-2">
             <button
+                type="button"
+                data-open-return-modal
                 class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor">
@@ -17,6 +19,8 @@
                 Return Book
             </button>
             <button
+                type="button"
+                data-open-checkout-modal
                 class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor">
@@ -287,10 +291,17 @@
         </div>
     </section>
 
+    @include('LibraryPanel.loans.modal.returnbook')
+    @include('LibraryPanel.loans.modal.checkout')
+
     <script>
         (function () {
             var tabButtons = document.querySelectorAll('[data-loan-tab-button]');
             var tabPanels = document.querySelectorAll('[data-loan-tab-panel]');
+            var openReturnButton = document.querySelector('[data-open-return-modal]');
+            var returnModal = document.querySelector('[data-return-modal]');
+            var openCheckoutButton = document.querySelector('[data-open-checkout-modal]');
+            var checkoutModal = document.querySelector('[data-checkout-modal]');
 
             function activateTab(tabName) {
                 tabButtons.forEach(function (button) {
@@ -306,11 +317,93 @@
                 });
             }
 
+            function openCheckoutModal() {
+                if (!checkoutModal) {
+                    return;
+                }
+
+                checkoutModal.classList.remove('hidden');
+                checkoutModal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+
+                var firstField = checkoutModal.querySelector('input, select, textarea, button');
+                if (firstField) {
+                    firstField.focus();
+                }
+            }
+
+            function openReturnModal() {
+                if (!returnModal) {
+                    return;
+                }
+
+                returnModal.classList.remove('hidden');
+                returnModal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+
+                var firstField = returnModal.querySelector('input, select, textarea, button');
+                if (firstField) {
+                    firstField.focus();
+                }
+            }
+
+            function closeReturnModal() {
+                if (!returnModal) {
+                    return;
+                }
+
+                returnModal.classList.add('hidden');
+                returnModal.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            function closeCheckoutModal() {
+                if (!checkoutModal) {
+                    return;
+                }
+
+                checkoutModal.classList.add('hidden');
+                checkoutModal.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+
             tabButtons.forEach(function (button) {
                 button.addEventListener('click', function () {
                     activateTab(button.getAttribute('data-loan-tab-button'));
                 });
             });
+
+            if (openCheckoutButton && checkoutModal) {
+                var closeButtons = checkoutModal.querySelectorAll('[data-close-checkout-modal]');
+
+                openCheckoutButton.addEventListener('click', openCheckoutModal);
+
+                closeButtons.forEach(function (button) {
+                    button.addEventListener('click', closeCheckoutModal);
+                });
+
+                checkoutModal.addEventListener('click', function (event) {
+                    if (event.target === checkoutModal) {
+                        closeCheckoutModal();
+                    }
+                });
+            }
+
+            if (openReturnButton && returnModal) {
+                var closeReturnButtons = returnModal.querySelectorAll('[data-close-return-modal]');
+
+                openReturnButton.addEventListener('click', openReturnModal);
+
+                closeReturnButtons.forEach(function (button) {
+                    button.addEventListener('click', closeReturnModal);
+                });
+
+                returnModal.addEventListener('click', function (event) {
+                    if (event.target === returnModal) {
+                        closeReturnModal();
+                    }
+                });
+            }
 
             activateTab('all');
         })();
