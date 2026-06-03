@@ -254,8 +254,8 @@
                 @include('LibraryPanel.inventory.low-stock')
             </div>
 
-            <div class="hidden p-6 text-sm text-slate-500" data-tab-panel="damaged">
-                Damaged stock items will appear here.
+            <div class="hidden" data-tab-panel="damaged">
+                @include('LibraryPanel.inventory.damaged')
             </div>
 
             <div class="hidden p-6 text-sm text-slate-500" data-tab-panel="repair">
