@@ -28,61 +28,60 @@
 			</button>
 		</div>
 
-		<form class="max-h-[80vh] overflow-y-auto px-6 py-6">
+		<form method="POST" action="{{ route('library.catalog.store') }}" class="max-h-[80vh] overflow-y-auto px-6 py-6" enctype="multipart/form-data">
+			@csrf
 			<div class="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
 				<div class="space-y-6">
 					<div class="grid gap-4 md:grid-cols-2">
 						<div>
 							<label class="mb-2 block text-sm font-medium text-slate-700" for="book-title">Book title</label>
-							<input id="book-title" type="text" placeholder="Enter book title" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
+							<input id="book-title" name="title" type="text" placeholder="Enter book title" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
 						</div>
 
 						<div>
 							<label class="mb-2 block text-sm font-medium text-slate-700" for="book-author">Author</label>
-							<input id="book-author" type="text" placeholder="Enter author name" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
+							<input id="book-author" name="author" type="text" placeholder="Enter author name" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
 						</div>
 
 						<div>
 							<label class="mb-2 block text-sm font-medium text-slate-700" for="book-isbn">ISBN</label>
-							<input id="book-isbn" type="text" placeholder="978-0-00-000000-0" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
+							<input id="book-isbn" name="isbn" type="text" placeholder="978-0-00-000000-0" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
 						</div>
 
 						<div>
 							<label class="mb-2 block text-sm font-medium text-slate-700" for="book-category">Category</label>
-							<select id="book-category" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100">
+							<select id="book-category" name="category_id" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100">
 								<option value="">Select category</option>
-								<option>Fiction</option>
-								<option>Science</option>
-								<option>History</option>
-								<option>Biography</option>
-								<option>Reference</option>
+								@foreach (($categories ?? []) as $category)
+									<option value="{{ $category->id }}">{{ $category->name }}</option>
+								@endforeach
 							</select>
 						</div>
 
 						<div>
 							<label class="mb-2 block text-sm font-medium text-slate-700" for="book-publisher">Publisher</label>
-							<input id="book-publisher" type="text" placeholder="Publisher name" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
+							<input id="book-publisher" name="publisher" type="text" placeholder="Publisher name" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
 						</div>
 
 						<div>
 							<label class="mb-2 block text-sm font-medium text-slate-700" for="book-year">Publication year</label>
-							<input id="book-year" type="number" min="1500" max="2100" placeholder="2026" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
+							<input id="book-year" name="publication_year" type="number" min="1500" max="2100" placeholder="2026" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
 						</div>
 
 						<div>
 							<label class="mb-2 block text-sm font-medium text-slate-700" for="book-shelf">Shelf / location</label>
-							<input id="book-shelf" type="text" placeholder="Shelf A-12" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
+							<input id="book-shelf" name="shelf_location" type="text" placeholder="Shelf A-12" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
 						</div>
 
 						<div>
 							<label class="mb-2 block text-sm font-medium text-slate-700" for="book-quantity">Copies</label>
-							<input id="book-quantity" type="number" min="1" value="1" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
+							<input id="book-quantity" name="total_copies" type="number" min="1" value="1" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100" />
 						</div>
 					</div>
 
 					<div>
 						<label class="mb-2 block text-sm font-medium text-slate-700" for="book-description">Description</label>
-						<textarea id="book-description" rows="5" placeholder="Write a short summary of the book..." class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"></textarea>
+						<textarea id="book-description" name="description" rows="5" placeholder="Write a short summary of the book..." class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"></textarea>
 					</div>
 				</div>
 
@@ -102,8 +101,8 @@
 
 					<div>
 						<label class="mb-2 block text-sm font-medium text-slate-700" for="book-status">Status</label>
-						<select id="book-status" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100">
-							<option value="available">Available</option>
+						<select id="book-status" name="status" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100">
+							<option value="available" selected>Available</option>
 							<option value="reference">Reference only</option>
 							<option value="checked-out">Checked out</option>
 						</select>
@@ -125,7 +124,7 @@
 					Cancel
 				</button>
 				<button
-					type="button"
+					type="submit"
 					class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">

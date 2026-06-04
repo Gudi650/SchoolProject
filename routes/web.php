@@ -25,6 +25,7 @@ use App\Http\Controllers\studentEnrollment;
 use App\Http\Controllers\Teacherprofile;
 use App\Http\Controllers\TeacherregistrationController;
 use App\Http\Controllers\TeacherRoleController;
+use App\Http\Controllers\LibraryCatalogController;
 use App\Models\PayrollConfigurations;
 use Illuminate\Support\Facades\Route;
 
@@ -640,9 +641,10 @@ Route::get('/library-loans',function(){
     return view('LibraryPanel.loans');
 })->name('library.loans');
 
-Route::get('/library-catalog',function(){
-    return view('LibraryPanel.catalog');
-})->name('library.catalog');
+Route::get('/library-catalog', [LibraryCatalogController::class, 'index'])->name('library.catalog');
+Route::post('/library-catalog', [LibraryCatalogController::class, 'store'])->name('library.catalog.store');
+Route::put('/library-catalog/{book}', [LibraryCatalogController::class, 'update'])->name('library.catalog.update');
+Route::delete('/library-catalog/{book}', [LibraryCatalogController::class, 'destroy'])->name('library.catalog.destroy');
 
 Route::get('/library-reservations',function(){
     return view('LibraryPanel.reservations');
