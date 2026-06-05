@@ -643,6 +643,7 @@ Route::get('/library-loans',function(){
 
 Route::get('/library-catalog', [LibraryCatalogController::class, 'index'])->name('library.catalog');
 Route::post('/library-catalog', [LibraryCatalogController::class, 'store'])->name('library.catalog.store');
+Route::post('/library-categories', [LibraryCatalogController::class, 'storeCategory'])->name('library.categories.store');
 Route::put('/library-catalog/{book}', [LibraryCatalogController::class, 'update'])->name('library.catalog.update');
 Route::delete('/library-catalog/{book}', [LibraryCatalogController::class, 'destroy'])->name('library.catalog.destroy');
 

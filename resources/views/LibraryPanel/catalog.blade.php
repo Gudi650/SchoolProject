@@ -6,15 +6,26 @@
             <h1 class="text-2xl font-bold">Book Catalog</h1>
             <p class="text-sm text-slate-500 mt-1">Browse and manage your library's collection</p>
         </div>
-        <button
-            type="button"
-            data-open-add-book-modal
-            class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-brand-600 text-white text-sm font-medium rounded-lg hover:bg-brand-700 transition-colors shadow-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-            Add Book
-        </button>
+        <div class="flex flex-col gap-2 sm:flex-row">
+            <button
+                type="button"
+                data-open-add-book-modal
+                class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-brand-600 text-white text-sm font-medium rounded-lg hover:bg-brand-700 transition-colors shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Add Book
+            </button>
+            <button
+                type="button"
+                data-open-add-category-modal
+                class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white text-sm font-medium text-slate-700 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Add Category
+            </button>
+        </div>
     </div>
 
     @if (session('status'))
@@ -107,6 +118,7 @@
     </div>
 
     @include('LibraryPanel.Catalog.modals.add-catalog', ['categories' => $categories])
+    @include('LibraryPanel.Catalog.modals.add-category')
 
     <script>
         (function () {
