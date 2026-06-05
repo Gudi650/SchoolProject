@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LibraryBook;
 use App\Models\LibraryBookCategory;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -59,6 +60,9 @@ class LibraryCatalogController extends Controller
     public function store(Request $request)
     {
 
+        //get the school_id of the librarian
+        $schoolId = $this->getSchoolId();
+
         // put a try and catch block as well
         try {
 
@@ -77,6 +81,8 @@ class LibraryCatalogController extends Controller
             ]);
 
             $validated['available_copies'] = $validated['total_copies'];
+
+            $validated['school_id'] = $this->getSchoolId();
 
             try {
 
@@ -136,6 +142,8 @@ class LibraryCatalogController extends Controller
 
         $validated['available_copies'] = min($book->available_copies, $validated['total_copies']);
 
+        $validated['school_id'] = $this->getSchoolId();
+
         $book->update($validated);
 
         return redirect()->route('library.catalog')->with('status', 'Book updated successfully.');
@@ -156,9 +164,13 @@ class LibraryCatalogController extends Controller
             'category_name' => ['required', 'string', 'max:255', 'unique:library_book_categories,name'],
         ]);
 
+        //add validated school_id to the validated data array
+        $validated['school_id'] = $this->getSchoolId();
+
         LibraryBookCategory::create([
             'name' => $validated['category_name'],
             'slug' => str()->slug($validated['category_name']),
+            'school_id' => $validated['school_id'],
         ]);
 
         return redirect()->route('library.catalog')->with('status', 'Category added successfully.');
@@ -178,8 +190,29 @@ class LibraryCatalogController extends Controller
         foreach ($defaults as $categoryName) {
             LibraryBookCategory::firstOrCreate(
                 ['slug' => str()->slug($categoryName)],
-                ['name' => $categoryName]
+                ['name' => $categoryName, 'school_id' => $this->getSchoolId()]
             );
         }
+    }
+
+    //get the school_id of the librarian
+    private function getSchoolId()
+    {
+        // Assuming you have a way to get the currently authenticated librarian
+        $userId = auth()->id();
+
+        //get the teacher with id
+        $librarian = Teacher::where('user_id', $userId)->first();
+
+        //gt the school_id of the librarian
+        $schoolId = $librarian ? $librarian->school_id : null;
+
+        // If the librarian is associated with a school, return the school_id
+        if ($librarian && $librarian->school_id) {
+            return $librarian->school_id;
+        }
+
+        // If no librarian or school association is found, return null or handle as needed
+        return null;
     }
 }

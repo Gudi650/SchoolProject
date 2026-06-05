@@ -23,6 +23,7 @@ class LibraryBook extends Model
         'description',
         'cover_url',
         'status',
+        'school_id',
     ];
 
     protected $casts = [

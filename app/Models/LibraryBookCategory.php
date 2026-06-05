@@ -14,6 +14,7 @@ class LibraryBookCategory extends Model
     protected $fillable = [
         'name',
         'slug',
+        'school_id',
     ];
 
     public function books(): HasMany

@@ -12,12 +12,14 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('slug')->unique();
+            $table->foreignId('school_id')->constrained('schools')->cascadeOnDelete();
             $table->timestamps();
         });
 
         Schema::create('library_books', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained('library_book_categories')->cascadeOnDelete();
+            $table->foreignId('school_id')->constrained('schools')->cascadeOnDelete();
             $table->string('title');
             $table->string('author')->nullable();
             $table->string('isbn')->unique()->nullable();
@@ -31,8 +33,9 @@ return new class extends Migration
             $table->enum('status', ['available', 'reference', 'checked-out'])->default('available');
             $table->timestamps();
 
-            $table->index(['title', 'author']);
+            $table->index(['title', 'author', 'isbn']);
             $table->index('status');
+
         });
     }
 
