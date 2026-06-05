@@ -121,6 +121,7 @@
     @include('LibraryPanel.Catalog.modals.add-category')
 
     <script>
+        
         (function () {
             var openButton = document.querySelector('[data-open-add-book-modal]');
             var modal = document.querySelector('[data-add-book-modal]');
@@ -171,6 +172,42 @@
                     event.stopPropagation();
                 });
             }
+        })();
+    </script>
+
+    <script>
+        (function () {
+            // Fallback / extra wiring for the Add Category button in case the included modal script
+            // didn't attach (keeps behavior robust across render orders).
+            var openCategory = document.querySelector('[data-open-add-category-modal]');
+            var categoryModal = document.querySelector('[data-add-category-modal]');
+
+            if (!openCategory || !categoryModal) {
+                return;
+            }
+
+            var closeButtons = categoryModal.querySelectorAll('[data-close-add-category-modal]');
+            var dialog = categoryModal.querySelector('[data-add-category-dialog]');
+
+            function openCategoryModal() {
+                categoryModal.classList.remove('hidden');
+                categoryModal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+                var firstField = categoryModal.querySelector('input, select, textarea, button');
+                if (firstField) firstField.focus();
+            }
+
+            function closeCategoryModal() {
+                categoryModal.classList.add('hidden');
+                categoryModal.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            openCategory.addEventListener('click', openCategoryModal);
+            closeButtons.forEach(function (b) { b.addEventListener('click', closeCategoryModal); });
+            categoryModal.addEventListener('click', function (e) { if (e.target === categoryModal) closeCategoryModal(); });
+            if (dialog) dialog.addEventListener('click', function (e) { e.stopPropagation(); });
+            document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && !categoryModal.classList.contains('hidden')) closeCategoryModal(); });
         })();
     </script>
 

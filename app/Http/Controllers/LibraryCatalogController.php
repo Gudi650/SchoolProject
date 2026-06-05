@@ -148,6 +148,23 @@ class LibraryCatalogController extends Controller
         return redirect()->route('library.catalog')->with('status', 'Book removed successfully.');
     }
 
+    //store category
+    public function storeCategory(Request $request)
+    {
+
+        $validated = $request->validate([
+            'category_name' => ['required', 'string', 'max:255', 'unique:library_book_categories,name'],
+        ]);
+
+        LibraryBookCategory::create([
+            'name' => $validated['category_name'],
+            'slug' => str()->slug($validated['category_name']),
+        ]);
+
+        return redirect()->route('library.catalog')->with('status', 'Category added successfully.');
+    }
+
+    //saving the default categories to the database if they do not exist
     private function ensureDefaultCategories(): void
     {
         $defaults = [
