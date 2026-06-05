@@ -18,10 +18,14 @@ class TeacherregistrationController extends Controller
         //now fetch the available subjects in the school of the user and pass it to the view to show in the subject specialization dropdown
         $subjects = $this->getSubjectsForSchool();
 
+        //get the role of the user to show the appropriate form
+        $role = $this->checkRoleAndShowForm();
+
         //return view
         return view('teacherregistration', [
             'personalInfo' => $personalInfo,
             'subjects' => $subjects,
+            'role' => $role,
         ]);
     }
 
@@ -36,7 +40,7 @@ class TeacherregistrationController extends Controller
             'email' => 'required|string|email|max:255|unique:teachers',
             'phone' => 'required|string|max:15|unique:teachers',
             'gender' => 'required|string|max:10',
-            'subject_specialization' => 'required|string|max:255',
+            'subject_specialization' => 'nullable|string|max:255',
             'qualification' => 'required|string|max:255',
         ]);
 
@@ -67,7 +71,7 @@ class TeacherregistrationController extends Controller
                 'email' => $validatedData['email'],
                 'phone' => $validatedData['phone'],
                 'gender' => $validatedData['gender'],
-                'subject_specialization' => $validatedData['subject_specialization'],
+                'subject_specialization' => isset($validatedData['subject_specialization']) ? $validatedData['subject_specialization'] : null,
                 'qualification' => $validatedData['qualification'],
             ]
         );  
@@ -82,7 +86,7 @@ class TeacherregistrationController extends Controller
                 'email' => $validatedData['email'],
                 'phone' => $validatedData['phone'],
                 'gender' => $validatedData['gender'],
-                'subject_specialization' => $validatedData['subject_specialization'],
+                'subject_specialization' => isset($validatedData['subject_specialization']) ? $validatedData['subject_specialization'] : null,
                 'qualification' => $validatedData['qualification'],
             ]
         );  
@@ -90,7 +94,18 @@ class TeacherregistrationController extends Controller
 
         //redirect to the teacher panel dashboard with success message
 
+        //again check the role to redirect to the appropriate dashboard
+        if($user->roles === 'teacher'){
+
+        
+
         return redirect()->route('teacher.dashboard')->with('success', 'Teacher registration completed successfully.');
+
+        }else if($user->roles === 'librarian'){
+
+            return redirect()->route('library.dashboard')->with('success', 'Librarian registration completed successfully.');
+
+        }
 
 
     }
@@ -126,6 +141,25 @@ class TeacherregistrationController extends Controller
         $subjects = availablesubject::where('school_id', $schoolId)->get();
 
         return $subjects;
+    }
+
+    //check to see if the role is teacher or librarian 
+    //if the role is teacher, show the teacher registration form
+    //if the role is librarian, show the same registration form but toogle the words and hide somethings
+    protected function checkRoleAndShowForm(){
+        $user = Auth::user();
+
+        if($user->roles === 'teacher'){
+            //variable to hold the role
+            $role = 'teacher';
+            return $role;
+        }
+
+        if($user->roles === 'librarian'){
+            $role = 'librarian';
+            return $role;
+        }
+
     }
 
 }

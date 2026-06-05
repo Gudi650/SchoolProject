@@ -51,6 +51,8 @@
             <option value="">Select Your Role:</option>
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
+            <option value="librarian">Librarian</option>
+            <option value="accountant">Accountant</option>
           </select>
 
           <!--check school from database-->

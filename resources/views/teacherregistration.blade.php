@@ -24,8 +24,17 @@
     <div class="max-w-3xl mx-auto p-6">
       <div class="bg-white rounded-lg shadow p-6">
 
+        {{-- 
+            check the role of the user  
+            if the role is teacher show the teacher registration wprds
+            if the role is librarian show the librarian registration words
+        --}}
         <h1 class="text-2xl font-semibold mb-2 text-indigo-700">
-          Teacher Registration
+          @if ($role == 'teacher')
+            Teacher Registration
+          @elseif ($role == 'librarian')
+            Librarian Registration
+          @endif
         </h1>
         
         <p class="text-sm text-gray-500 mb-4">
@@ -183,50 +192,55 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="md:col-span-2">
+              @if ($role == 'teacher')
+                <div class="md:col-span-2">
 
-                <label for="subjectsDropdown" 
-                class="block text-sm font-medium text-gray-700">
-                  Subjects / Specialties
-                </label>
+                  <label for="subjectsDropdown" 
+                  class="block text-sm font-medium text-gray-700">
+                    Subjects / Specialties
+                  </label>
 
-                <div id="subjectsDropdown" class="relative mt-1">
+                  <div id="subjectsDropdown" class="relative mt-1">
 
-                  <button id="subjectsToggle" 
-                  type="button" 
-                  class="w-full text-left border border-gray-200 rounded-md px-3 py-2 flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-indigo-400" aria-expanded="false"> 
+                    <button id="subjectsToggle" 
+                    type="button" 
+                    class="w-full text-left border border-gray-200 rounded-md px-3 py-2 flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-indigo-400" aria-expanded="false"> 
 
-                    <span id="subjectsLabel" class="text-sm text-gray-700">Select subjects</span>
-                    <i class="bi bi-chevron-down text-gray-400"></i>
+                      <span id="subjectsLabel" class="text-sm text-gray-700">Select subjects</span>
+                      <i class="bi bi-chevron-down text-gray-400"></i>
 
-                  </button>
+                    </button>
 
-                  <div id="subjectsMenu" 
-                  class="hidden absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-md shadow max-h-48 overflow-auto z-40">
+                    <div id="subjectsMenu" 
+                    class="hidden absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-md shadow max-h-48 overflow-auto z-40">
 
-                    <!--fetch subjects from database and loop through them to show in the dropdown-->
-                    @if ($subjects->count() > 0)
-                      
-                      @foreach ($subjects as $subject)
-                        <label class="flex items-center gap-2 p-2 hover:bg-indigo-50 cursor-pointer">
-                          <input type="checkbox" class="subject-option" 
-                          name = "subject_specialization"
-                          value="{{ $subject->subject_name }}">
-                          <span class="text-sm">
-                            {{ $subject->subject_name }}
-                          </span>
-                        </label>
-                      @endforeach
-                    @else
-                      <div class="p-4 text-sm text-gray-500">No subjects available for your school.</div>
-                    @endif
+                      <!--fetch subjects from database and loop through them to show in the dropdown-->
+                      @if ($subjects->count() > 0)
+                        
+                        @foreach ($subjects as $subject)
+                          <label class="flex items-center gap-2 p-2 hover:bg-indigo-50 cursor-pointer">
+                            <input type="checkbox" class="subject-option" 
+                            name = "subject_specialization"
+                            value="{{ $subject->subject_name }}">
+                            <span class="text-sm">
+                              {{ $subject->subject_name }}
+                            </span>
+                          </label>
+                        @endforeach
+                      @else
+                        <div class="p-4 text-sm text-gray-500">No subjects available for your school.</div>
+                      @endif
+                    </div>
                   </div>
+
+                  <div id="selectedSubjects" class="mt-2 flex flex-wrap gap-2"></div>
+                  {{-- errors --}}
+                  @error('subject_specialization')
+                    <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
+                  @enderror
+
                 </div>
-                <div id="selectedSubjects" class="mt-2 flex flex-wrap gap-2"></div>
-                @error('subject_specialization')
-                  <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
-                @enderror
-              </div>
+              @endif
 
               <div>
                 <label for="experience" class="block text-sm font-medium text-gray-700">

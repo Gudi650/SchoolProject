@@ -77,7 +77,7 @@ class AuthController extends Controller
         $validatedData = $request->validate([
             'fname' => 'required|string|max:255',
             'lname' => 'required|string|max:255',
-            'role' => 'required|string|in:student,teacher,admin',
+            'role' => 'required|string|in:student,teacher,admin,librarian,accountant',
             'email' => 'required|email|unique:users,email',
             'email_confirmation' => 'required|same:email',
             'password' => 'required|string|min:8|confirmed',
@@ -104,6 +104,9 @@ class AuthController extends Controller
         }
         if($user->roles === 'student'){
             return redirect()->route('studentregistration');
+        }
+        if($user->roles === 'librarian'){
+            return redirect()->route('showteacherregistration');
         }
 
         // default fallback
