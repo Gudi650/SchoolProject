@@ -633,6 +633,8 @@ Route::get('/library-dashboard',function(){
     return view('LibraryPanel.dashboard');
 })->name('library.dashboard');
 
+//dashb
+
 Route::get('/library-inventory',function(){
     return view('LibraryPanel.inventory');
 })->name('library.inventory');

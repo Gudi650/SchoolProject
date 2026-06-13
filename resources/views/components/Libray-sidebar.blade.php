@@ -1,3 +1,14 @@
+
+@php
+  
+  use App\Models\Teacher;
+
+  //get the authenticated user
+  $user = auth()->user();
+  $librarian = Teacher::where('user_id', $user->id)->first();
+
+@endphp
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -159,8 +170,8 @@
           <div class="flex items-center gap-3">
             <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Profile" class="h-10 w-10 rounded-full border border-slate-200" />
             <div class="label-text">
-              <p class="text-sm font-semibold">Ms. Carter</p>
-              <p class="text-xs text-slate-500">Head Librarian</p>
+              <p class="text-sm font-semibold">Hello, {{ $librarian->fname ?? $user->name }}</p>
+              <p class="text-xs text-slate-500">{{ $user->roles }}</p>
             </div>
           </div>
         </div>
