@@ -37,9 +37,7 @@ Route::middleware('auth')->group(function () {
     //routes for homepage student panel
     Route::get('/', [Student::class, 'index'])->name('student.homepage');
 
-    Route::get('/student-panel/exams-results', function () {
-        return view('StudentPanel.exams-results');
-    })->name('student.exams');
+    Route::get('/student-panel/exams-results', [Student::class, 'showExamResults'])->name('student.exams');
 
     Route::get('/student-panel/timetable', [Student::class, 'showTimetable'])->name('student.timetable');
 
@@ -61,7 +59,7 @@ Route::middleware('auth')->group(function () {
 
     Route::view('/student-panel/attendance/checkin', 'StudentPanel.attendance.checkin')->name('student.attendance.checkin');
 
-    Route::view('/student-panel/attendance/attendancereport', 'StudentPanel.attendance.attendancereport')->name('student.attendance.report');
+    Route::get('/student-panel/attendance/attendancereport', [Student::class, 'showAttendanceReport'])->name('student.attendance.report');
 
 
     ///////////////////////////////////////////////////////////

@@ -1,122 +1,121 @@
 <x-Student-sidebar>
 
-    <main class="flex-1 md:ml-64 p-6 md:p-10" id="report">
-      <header class="flex items-center justify-between bg-white p-4 rounded-lg shadow mb-6">
-        <div class="flex items-center gap-4">
-          <button id="sidebarToggle" class="md:hidden p-2 bg-indigo-600 text-white rounded"> <i class="bi bi-list"></i> </button>
-          <h1 class="text-xl font-medium">Attendance Report</h1>
-        </div>
-        <div class="flex items-center gap-3">
-          <!-- static CSV download using data URI (hardcoded sample data) -->
-          <a id="exportCsv" href="data:text/csv;charset=utf-8,date,time,name,adm,status,note\n2025-10-08,07:45,Student Name,123456,present,On time\n2025-10-07,07:58,Student Name,123456,late,Traffic" download="attendance.csv" class="bg-indigo-600 text-white px-4 py-2 rounded inline-flex items-center gap-2"><i class="bi bi-download"></i> Export CSV</a>
-        </div>
-      </header>
+    @php
+      $className = $student?->classAvailables?->name ?? 'N/A';
+      $csv = "date,status\n";
+      foreach ($records as $r) {
+          $csv .= $r->date . ',' . ($r->status == '1' ? 'present' : 'absent') . "\n";
+      }
+    @endphp
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <section class="lg:col-span-2 space-y-6">
-          <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-start gap-4">
-              <div class="w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center text-2xl">S</div>
+    <main class="flex-1 md:ml-64 p-6 md:p-10 min-w-0">
+      <div class="space-y-6">
+        <header class="relative bg-white p-4 md:p-6 rounded-lg shadow-sm">
+          <div class="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg bg-indigo-800 opacity-25"></div>
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative pl-3 md:pl-4">
+            <div class="flex items-center gap-3">
+              <button id="sidebarToggle" class="md:hidden p-2 bg-indigo-600 text-white rounded"><i class="bi bi-list"></i></button>
               <div>
-                <h2 id="studentName" class="text-lg font-semibold">Student Name</h2>
-                <p id="studentMeta" class="text-sm text-gray-500">Grade • Admission</p>
+                <h1 class="text-lg md:text-2xl font-bold text-indigo-800">Attendance Report</h1>
+                <p class="text-sm text-gray-500 mt-1">Your attendance history</p>
               </div>
-              <div class="ml-auto text-sm text-gray-500" id="lastSync">Last sync: --</div>
             </div>
-            <p class="mt-4 text-sm text-gray-600">Overview of attendance — percentage, trends and recent activity. Use the date selectors to narrow the range.</p>
+            @if ($records->isNotEmpty())
+              <a href="data:text/csv;charset=utf-8,{{ rawurlencode($csv) }}" download="attendance.csv" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded text-sm">
+                <i class="bi bi-download"></i> Export CSV
+              </a>
+            @endif
           </div>
+        </header>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-white rounded-lg shadow p-4">
-              <p class="text-sm text-gray-500">Total Records</p>
-              <div id="totalRecords" class="text-2xl font-semibold mt-2">42</div>
+        @if (!$student)
+          <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-lg">No student profile linked to your account.</div>
+        @else
+          <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-5 flex items-start gap-4">
+            <div class="w-14 h-14 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xl font-semibold">
+              {{ strtoupper(substr($student->fname, 0, 1)) }}
             </div>
-            <div class="bg-white rounded-lg shadow p-4">
-              <p class="text-sm text-gray-500">Present</p>
-              <div id="presentCount" class="text-2xl font-semibold mt-2">30</div>
-            </div>
-            <div class="bg-white rounded-lg shadow p-4">
-              <p class="text-sm text-gray-500">Attendance %</p>
-              <div id="attendancePct" class="text-2xl font-semibold mt-2">71%</div>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="font-semibold">Trend (last 30 entries)</h3>
-              <div class="text-sm text-gray-500">Sparkline</div>
-            </div>
-            <div id="sparklineWrap" class="w-full h-24">
-              <!-- static sparkline -->
-              <svg viewBox="0 0 600 60" preserveAspectRatio="none" class="w-full h-24"><path d="M0 50 L50 30 L100 20 L150 25 L200 15 L250 30 L300 10 L350 20 L400 18 L450 28 L500 12 L550 24 L600 10" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div>
+              <h2 class="text-lg font-semibold text-gray-900">{{ $student->fname }} {{ $student->lname }}</h2>
+              <p class="text-sm text-gray-500">{{ $className }} · ID {{ $student->id }}</p>
             </div>
           </div>
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <h3 class="font-semibold mb-3">Monthly Summary (last 6 months)</h3>
-            <div id="bars" class="flex items-end gap-3 h-40">
-              <!-- static bars for last 6 months -->
-              <div class="flex-1 flex flex-col items-center"><div class="w-full bg-indigo-100 rounded-t" style="height:40%"></div><div class="text-xs mt-2 text-gray-600">May</div></div>
-              <div class="flex-1 flex flex-col items-center"><div class="w-full bg-indigo-100 rounded-t" style="height:60%"></div><div class="text-xs mt-2 text-gray-600">Jun</div></div>
-              <div class="flex-1 flex flex-col items-center"><div class="w-full bg-indigo-100 rounded-t" style="height:80%"></div><div class="text-xs mt-2 text-gray-600">Jul</div></div>
-              <div class="flex-1 flex flex-col items-center"><div class="w-full bg-indigo-100 rounded-t" style="height:50%"></div><div class="text-xs mt-2 text-gray-600">Aug</div></div>
-              <div class="flex-1 flex flex-col items-center"><div class="w-full bg-indigo-100 rounded-t" style="height:70%"></div><div class="text-xs mt-2 text-gray-600">Sep</div></div>
-              <div class="flex-1 flex flex-col items-center"><div class="w-full bg-indigo-100 rounded-t" style="height:30%"></div><div class="text-xs mt-2 text-gray-600">Oct</div></div>
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+              <p class="text-xs text-gray-500 uppercase">Total Records</p>
+              <p class="text-2xl font-bold text-indigo-800 mt-1">{{ $stats['total'] }}</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+              <p class="text-xs text-gray-500 uppercase">Present</p>
+              <p class="text-2xl font-bold text-green-600 mt-1">{{ $stats['present'] }}</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+              <p class="text-xs text-gray-500 uppercase">Absent</p>
+              <p class="text-2xl font-bold text-red-600 mt-1">{{ $stats['absent'] }}</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+              <p class="text-xs text-gray-500 uppercase">Attendance %</p>
+              <p class="text-2xl font-bold text-indigo-800 mt-1">{{ $stats['pct'] }}%</p>
             </div>
           </div>
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center gap-3 mb-4">
-              <label class="text-sm text-gray-600">From</label>
-              <input id="fromDate" type="date" class="border border-gray-200 rounded p-2" />
-              <label class="text-sm text-gray-600">To</label>
-              <input id="toDate" type="date" class="border border-gray-200 rounded p-2" />
-              <button id="applyFilter" class="ml-auto bg-indigo-600 text-white px-3 py-2 rounded">Apply</button>
-              <button id="clearFilter" class="ml-2 border px-3 py-2 rounded">Clear</button>
+          @if ($monthly->isNotEmpty())
+            <section class="bg-white rounded-lg shadow-sm border border-gray-100 p-5">
+              <h3 class="text-sm font-semibold text-indigo-800 mb-4">Monthly attendance %</h3>
+              <div class="flex items-end gap-3 h-32">
+                @foreach ($monthly as $month => $pct)
+                  <div class="flex-1 flex flex-col items-center">
+                    <div class="w-full bg-indigo-100 rounded-t" style="height: {{ max($pct, 5) }}%"></div>
+                    <div class="text-xs mt-2 text-gray-600">{{ $month }}</div>
+                    <div class="text-xs text-indigo-600 font-medium">{{ $pct }}%</div>
+                  </div>
+                @endforeach
+              </div>
+            </section>
+          @endif
+
+          <section class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+            <div class="px-4 py-3 border-b border-gray-100">
+              <h3 class="text-sm font-semibold text-indigo-800">Attendance log</h3>
             </div>
+            @if ($records->isEmpty())
+              <p class="p-8 text-center text-gray-500">No attendance records yet.</p>
+            @else
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                  <thead class="bg-indigo-50 text-indigo-800">
+                    <tr>
+                      <th class="px-4 py-3">Date</th>
+                      <th class="px-4 py-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100">
+                    @foreach ($records as $record)
+                      <tr class="hover:bg-indigo-50/50">
+                        <td class="px-4 py-3">{{ \Carbon\Carbon::parse($record->date)->format('M d, Y') }}</td>
+                        <td class="px-4 py-3">
+                          @if ($record->status == '1')
+                            <span class="text-xs font-semibold uppercase px-2 py-1 rounded-full bg-green-50 text-green-700">Present</span>
+                          @else
+                            <span class="text-xs font-semibold uppercase px-2 py-1 rounded-full bg-red-50 text-red-700">Absent</span>
+                          @endif
+                        </td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            @endif
+          </section>
 
-            <div class="overflow-x-auto">
-              <table class="w-full text-left">
-                <thead class="bg-gray-100"><tr><th class="p-2">Date</th><th class="p-2">Time</th><th class="p-2">Status</th><th class="p-2">Note</th></tr></thead>
-                <tbody>
-                  <tr class="border-b"><td class="p-2">2025-10-08</td><td class="p-2">07:45</td><td class="p-2">present</td><td class="p-2">On time</td></tr>
-                  <tr class="border-b"><td class="p-2">2025-10-07</td><td class="p-2">07:58</td><td class="p-2">late</td><td class="p-2">Traffic</td></tr>
-                  <tr class="border-b"><td class="p-2">2025-10-06</td><td class="p-2">07:50</td><td class="p-2">present</td><td class="p-2">-</td></tr>
-                  <tr class="border-b"><td class="p-2">2025-10-05</td><td class="p-2">08:05</td><td class="p-2">late</td><td class="p-2">Appointment</td></tr>
-                  <tr class="border-b"><td class="p-2">2025-10-04</td><td class="p-2">07:46</td><td class="p-2">present</td><td class="p-2">-</td></tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="flex gap-3">
+            <a href="{{ route('student.attendance.checkin') }}" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded text-sm">
+              <i class="bi bi-person-check-fill"></i> Check In
+            </a>
           </div>
-        </section>
-
-        <aside class="space-y-6">
-          <div class="bg-white rounded-lg shadow p-4">
-            <h4 class="font-semibold mb-2">Quick Stats</h4>
-            <div class="text-sm text-gray-600">Late: <span id="lateCount">0</span></div>
-            <div class="text-sm text-gray-600">Excused: <span id="excusedCount">0</span></div>
-            <div class="text-sm text-gray-600 mt-2">Last Check-in: <div id="lastCheckin" class="font-medium">--</div></div>
-          </div>
-
-          <div class="bg-white rounded-lg shadow p-4">
-            <h4 class="font-semibold mb-2">Actions</h4>
-            <div class="flex flex-col gap-2">
-
-              <a href="{{ route('student.attendance.checkin') }}" class="inline-flex items-center gap-2 justify-center bg-indigo-600 text-white px-3 py-2 rounded">
-                <i class="bi bi-person-check-fill"></i>
-                 Quick Check In</a>
-
-              <button id="refreshBtn" class="inline-flex items-center gap-2 justify-center border px-3 py-2 rounded"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
-            </div>
-          </div>
-        </aside>
+        @endif
       </div>
     </main>
-  </div>
-
-  <!-- Overlay for mobile sidebar -->
-  <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black bg-opacity-40 z-30"></div>
-
-</body>
 
 </x-Student-sidebar>
