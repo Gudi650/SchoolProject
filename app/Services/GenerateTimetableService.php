@@ -53,7 +53,6 @@ class GenerateTimetableService
         // Build a fast lookup structure for assigned subjects and teachers.
         $classAssignments = $this->buildAssignedSubjectMap($assignedSubjects);
         $prioritySubjects = array_map('intval', $validatedData['priority_subjects'] ?? []);
-        $exceptionsDays = $this->normalizeDayExceptions($validatedData['days_exceptions'] ?? []);
         $exceptionsPeriods = $this->normalizePeriodsExceptions($validatedData['periods_days_exceptions'] ?? []);
         $defaultPeriodsPerDay = (int) ($validatedData['PeriodPerDay'] ?? $validatedData['periods_per_day'] ?? 0);
 
@@ -74,7 +73,7 @@ class GenerateTimetableService
             $classCandidatePool = $this->buildCandidatePool($class->id, $classAssignments, $subjects);
 
             foreach (self::DAYS_OF_WEEK as $dayIndex => $day) {
-                $periodsPerDay = $exceptionsDays[$day] ?? $defaultPeriodsPerDay;
+                $periodsPerDay = $exceptionsPeriods[$day] ?? $defaultPeriodsPerDay;
 
                 if ($periodsPerDay <= 0) {
                     throw new \InvalidArgumentException('Invalid periods per day value for ' . $day);

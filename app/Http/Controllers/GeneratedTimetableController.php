@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\availablesubject;
 use App\Models\ClassAvailable;
+use App\Models\GeneratedTimetable;
 use App\Models\Teacher;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Services\GenerateTimetableService;
@@ -59,6 +61,7 @@ class GeneratedTimetableController extends Controller
 
         //call the service to generate the timetable
         $timetable = $this->generateTimetableService->generateTimetable($validatedData , array_merge($data, ['assignedSubjects' => $assignedSubjects]));
+        $this->persistTimetables($timetable, $data['schoolId'], $validatedData);
         $timetables = $this->formatTimetablesForView($timetable, $data['classes']);
 
         /*dump 
@@ -107,6 +110,45 @@ class GeneratedTimetableController extends Controller
         return $formatted;
     }
 
+
+    protected function persistTimetables(array $rawTimetable, int $schoolId, array $validatedData): void
+    {
+        GeneratedTimetable::where('school_id', $schoolId)->delete();
+
+        $parts = explode('-', $validatedData['class_times']);
+        $dayStart = Carbon::createFromFormat('H:i', trim($parts[0]));
+        $totalHours = $this->generateTimetableService->calculateHours($validatedData);
+
+        foreach ($rawTimetable as $classId => $days) {
+            foreach ($days as $day => $periods) {
+                $slotCount = count($periods);
+                if ($slotCount <= 0) {
+                    continue;
+                }
+
+                $durationMinutes = ($totalHours / $slotCount) * 60;
+
+                foreach ($periods as $index => $slot) {
+                    if (empty($slot['subject_id']) || empty($slot['teacher_id'])) {
+                        continue;
+                    }
+
+                    $start = $dayStart->copy()->addMinutes((int) round($index * $durationMinutes));
+                    $end = $start->copy()->addMinutes((int) round($durationMinutes));
+
+                    GeneratedTimetable::create([
+                        'class_id' => $classId,
+                        'school_id' => $schoolId,
+                        'subject_id' => $slot['subject_id'],
+                        'teacher_id' => $slot['teacher_id'],
+                        'start_time' => $start->format('H:i:s'),
+                        'end_time' => $end->format('H:i:s'),
+                        'day_of_week' => $day,
+                    ]);
+                }
+            }
+        }
+    }
 
     //retrive the centralised data to be re-used in multiple areas
     protected function centralised_data()

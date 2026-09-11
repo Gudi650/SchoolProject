@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GeneratedTimetable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,6 +29,29 @@ class Student extends Controller
 
         // return the view with student data (may be null)
         return view('welcome', compact('student', 'parent'));
+    }
+
+    public function showTimetable()
+    {
+        $student = Auth::user()?->students;
+        $className = $student?->classAvailables?->name;
+        $scheduleByDay = collect();
+        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+        if ($student?->class_id) {
+            $entries = GeneratedTimetable::with(['subject', 'teacher'])
+                ->where('class_id', $student->class_id)
+                ->where('school_id', $student->school_id)
+                ->orderBy('start_time')
+                ->get()
+                ->groupBy('day_of_week');
+
+            foreach ($days as $day) {
+                $scheduleByDay[$day] = $entries->get($day, collect());
+            }
+        }
+
+        return view('StudentPanel.timetable', compact('student', 'className', 'scheduleByDay', 'days'));
     }
 
     /**

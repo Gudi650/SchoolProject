@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
         return view('StudentPanel.exams-results');
     })->name('student.exams');
 
-    Route::view('/student-panel/timetable', 'StudentPanel.timetable')->name('student.timetable');
+    Route::get('/student-panel/timetable', [Student::class, 'showTimetable'])->name('student.timetable');
 
     Route::view('/student-panel/library', 'StudentPanel.library')->name('student.library');
 
