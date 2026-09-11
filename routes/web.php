@@ -22,6 +22,7 @@ use App\Http\Controllers\Student;
 use App\Http\Controllers\StudentApplicants;
 use App\Http\Controllers\StudentAttendanceReport;
 use App\Http\Controllers\studentEnrollment;
+use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Teacherprofile;
 use App\Http\Controllers\TeacherregistrationController;
 use App\Http\Controllers\TeacherRoleController;
@@ -215,9 +216,7 @@ Route::get('/teacher-studentenrollment-analytics',function(){
     })->name('teacher.examanalysis');
 
     //for view schedule
-    Route::get('/teacher-schedule', function () {
-        return view('TeacherPanel.schedule');
-    })->name('teacher.schedule');
+    Route::get('/teacher-schedule', [TeacherController::class, 'showSchedule'])->name('teacher.schedule');
 
     //for exam timetable generation
     Route::get('/teacher-examtimetable', function () {
