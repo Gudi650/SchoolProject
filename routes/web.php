@@ -19,6 +19,7 @@ use App\Http\Controllers\ParentregistrationController;
 use App\Http\Controllers\PayrollConfigurationsController;
 use App\Http\Controllers\PostExamResults;
 use App\Http\Controllers\Student;
+use App\Http\Controllers\StudentHealthController;
 use App\Http\Controllers\StudentApplicants;
 use App\Http\Controllers\StudentAttendanceReport;
 use App\Http\Controllers\studentEnrollment;
@@ -60,6 +61,13 @@ Route::middleware('auth')->group(function () {
     Route::view('/student-panel/attendance/checkin', 'StudentPanel.attendance.checkin')->name('student.attendance.checkin');
 
     Route::get('/student-panel/attendance/attendancereport', [Student::class, 'showAttendanceReport'])->name('student.attendance.report');
+
+    Route::get('/student-panel/health', [StudentHealthController::class, 'index'])->name('student.health');
+    Route::post('/student-panel/health/profile', [StudentHealthController::class, 'updateProfile'])->name('student.health.profile');
+    Route::post('/student-panel/health/appointments', [StudentHealthController::class, 'storeAppointment'])->name('student.health.appointments.store');
+    Route::delete('/student-panel/health/appointments/{appointment}', [StudentHealthController::class, 'destroyAppointment'])->name('student.health.appointments.destroy');
+    Route::post('/student-panel/health/documents', [StudentHealthController::class, 'storeDocument'])->name('student.health.documents.store');
+    Route::delete('/student-panel/health/documents/{document}', [StudentHealthController::class, 'destroyDocument'])->name('student.health.documents.destroy');
 
 
     ///////////////////////////////////////////////////////////

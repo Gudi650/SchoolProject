@@ -35,7 +35,7 @@
             <i class="bi bi-book"></i> Library
         </a>
 
-    <a href="student/health.html" class="{{ $navBase }} {{ request()->is('student/health.html') ? $navActive : $navInactive }}">
+    <a href="{{ route('student.health') }}" class="{{ $navBase }} {{ request()->routeIs('student.health') ? $navActive : $navInactive }}">
             <i class="bi bi-heart-pulse"></i> Health Status
         </a>
 
