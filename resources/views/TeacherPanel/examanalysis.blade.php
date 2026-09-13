@@ -21,7 +21,7 @@
                 <!-- snapshot message intentionally removed on non-homepage pages -->
               </div>
               <div class="flex items-center gap-3 hero-content">
-                <a href="./homepage.html" class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 text-sm"> <i class="bi bi-house-door"></i> Dashboard</a>
+                <a href="{{ route('teacher.dashboard') }}" class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 text-sm"> <i class="bi bi-house-door"></i> Dashboard</a>
               </div>
             </div>
           </header>

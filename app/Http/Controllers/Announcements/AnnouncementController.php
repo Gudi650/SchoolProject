@@ -26,20 +26,20 @@ class AnnouncementController extends Controller
     //the view function for announcements page
     public function viewAnnouncements()
     {
-        //get the user details
         $userDetails = $this->getUserDetails();
 
-        //get the subjects from user details
-        $subjects = $userDetails['subjects'];
+        if (!$userDetails['teacherId']) {
+            return view('TeacherPanel.announcements', [
+                'subjects' => collect(),
+                'announcements' => null,
+                'teacherId' => null,
+            ]);
+        }
 
-        //get the school id
-        $schoolId = $userDetails['schoolId'];
-
-        //get the announcements for teachers
-        $announcements = $this->getTeacherAnnouncements($schoolId);
+        $announcements = $this->getTeacherAnnouncements($userDetails['schoolId'], $userDetails['teacherId']);
 
         return view('TeacherPanel.announcements', [
-            'subjects' => $subjects,
+            'subjects' => $userDetails['subjects'],
             'announcements' => $announcements,
             'teacherId' => $userDetails['teacherId'],
         ]);
@@ -173,7 +173,7 @@ class AnnouncementController extends Controller
         $announcement = Announcement::find($announcementId);
 
         //check if the announcement created_by matches the current user
-        if($announcement->created_by != auth()->id()) {
+        if ($announcement->created_by != $this->getUserDetails()['teacherId']) {
             return redirect()->back()->with('error', 'You are not authorized to update this announcement.');
         }
 
@@ -197,11 +197,6 @@ class AnnouncementController extends Controller
 
         //now redirect back with success message
         return redirect()->back()->with('success', 'Announcement updated successfully.');
-
-
-        //test if the announcement id get to the function
-        dd($data);
-
     }
 
 
@@ -233,16 +228,15 @@ class AnnouncementController extends Controller
 
 
     //get the announcements for teachers-only or everyone
-    protected function getTeacherAnnouncements($schoolId)
+    protected function getTeacherAnnouncements($schoolId, $teacherId)
     {
-        //get the announcements for teachers
-        $announcements = Announcement::where('school_id', $schoolId)
-                    ->whereIn('intended_audience', [0, 3]) // 0 - all, 3 - all_teachers
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(10);
-
-        return $announcements;
-
+        return Announcement::where('school_id', $schoolId)
+            ->where(function ($query) use ($teacherId) {
+                $query->whereIn('intended_audience', [0, 3])
+                    ->orWhere('created_by', $teacherId);
+            })
+            ->orderByDesc('created_at')
+            ->paginate(10);
     }
 
 

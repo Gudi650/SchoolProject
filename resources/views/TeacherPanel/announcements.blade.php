@@ -116,13 +116,8 @@
                   My Posts
                 </button>
                 <button class="tab-btn px-3 py-1 rounded-md text-sm font-medium transition" data-tab="new">
-                  New <span class="ml-1 px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full">3</span>
+                  New <span class="ml-1 px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full">0</span>
                 </button>
-                <span class="w-px h-6 bg-gray-300 mx-1"></span>
-                <!-- Category filters -->
-                <button class="tab-btn px-3 py-1 rounded-md text-sm transition" data-tab="notice">Notices</button>
-                <button class="tab-btn px-3 py-1 rounded-md text-sm transition" data-tab="reminder">Reminders</button>
-                <button class="tab-btn px-3 py-1 rounded-md text-sm transition" data-tab="teacher">Teachers</button>
               </div>
             </div>
 
@@ -145,7 +140,7 @@
 
                 {{-- display the announcements --}}
                 @foreach ($announcements as $announcement)
-                  <article class="bg-white p-4 rounded-md shadow-sm card" data-category="{{ $announcement->type }}" data-tab-type="{{ $announcement->created_by == $teacherId ? 'my-posts' : 'all' }}" data-is-new="{{ $announcement->created_at->gte(now()->subDays(7)) ? '1' : '0' }}">
+                  <article class="bg-white p-4 rounded-md shadow-sm card" data-tab-type="{{ $announcement->created_by == $teacherId ? 'my-posts' : 'all' }}" data-is-new="{{ $announcement->created_at->gte(now()->subDays(7)) ? '1' : '0' }}">
                     <div class="flex items-start justify-between gap-4">
                       <div>
                         <div class="flex items-center gap-2 mb-2">
@@ -187,6 +182,7 @@
                           <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openViewModal" 
                           data-title="{{ $announcement->title }}" 
                           data-body="{{ $announcement->content }}" 
+                          data-note="{{ $announcement->important_note ?? '' }}"
                           data-date="{{ $announcement->created_at->format('M d, Y') }}" 
                           data-time="{{ $announcement->created_at->format('h:i A') }}" 
                           data-audience="@switch($announcement->intended_audience)
@@ -210,6 +206,7 @@
                             @endswitch" 
                           data-attachments="{{ $announcement->attachment_original_name ?? '' }}"
                           data-file-path="{{ $announcement->attachements ? asset('storage/' . $announcement->attachements) : '' }}">View</button>
+                          @if($announcement->created_by == $teacherId)
                           <button class="px-2 py-1 text-sm border rounded text-gray-600 hover:bg-gray-50 openEditModal" 
                             data-id="{{ $announcement->id }}" 
                             data-title="{{ $announcement->title }}" 
@@ -217,12 +214,14 @@
                             data-audience="{{ $announcement->intended_audience }}" 
                             data-attachments="{{ $announcement->attachment_original_name ?? '' }}"
                             data-file-path="{{ $announcement->attachements ? asset('storage/' . $announcement->attachements) : '' }}">Edit</button>
+                          @endif
                         </div>
                       </div>
                     </div>
                   </article>
                 @endforeach
-                
+              @else
+                <div class="bg-white p-8 rounded-md shadow-sm text-center text-gray-500">No announcements found.</div>
               @endif
               
             </div>
@@ -282,6 +281,11 @@
                 <div>
                   <label class="text-sm font-medium text-gray-700">Message</label>
                   <div id="viewBody" class="break-all mt-2 p-3 bg-gray-50 rounded-lg text-gray-700 text-sm leading-relaxed whitespace-pre-wrap"></div>
+                </div>
+
+                <div id="viewNoteWrap" class="hidden">
+                  <label class="text-sm font-medium text-gray-700">Important Note</label>
+                  <div id="viewNote" class="mt-2 p-3 bg-amber-50 rounded-lg text-gray-700 text-sm whitespace-pre-wrap"></div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -841,15 +845,12 @@
         // Filter cards
         cards.forEach(card => {
           const tabType = card.getAttribute('data-tab-type');
-          const category = card.getAttribute('data-category');
           
           if (tab === 'all') {
             card.style.display = '';
           } else if (tab === 'my-posts' && tabType === 'my-posts') {
             card.style.display = '';
           } else if (tab === 'new' && card.getAttribute('data-is-new') === '1') {
-            card.style.display = '';
-          } else if (tab === category) {
             card.style.display = '';
           } else {
             card.style.display = 'none';
@@ -882,9 +883,17 @@
     }
 
     // View modal open/close
-    function showViewModal(title, body, date, time, audience, attachments, filePath){
+    function showViewModal(title, body, note, date, time, audience, attachments, filePath){
       document.getElementById('viewTitle').textContent = title;
       document.getElementById('viewBody').textContent = body;
+      const noteWrap = document.getElementById('viewNoteWrap');
+      const noteEl = document.getElementById('viewNote');
+      if (note && note.trim()) {
+        noteEl.textContent = note;
+        noteWrap.classList.remove('hidden');
+      } else {
+        noteWrap.classList.add('hidden');
+      }
       document.getElementById('viewDate').textContent = date;
       document.getElementById('viewTime').textContent = time;
       document.getElementById('viewAudience').textContent = audience;
@@ -949,12 +958,13 @@
         e.preventDefault();
         const title = btn.getAttribute('data-title');
         const body = btn.getAttribute('data-body');
+        const note = btn.getAttribute('data-note');
         const date = btn.getAttribute('data-date');
         const time = btn.getAttribute('data-time');
         const audience = btn.getAttribute('data-audience');
         const attachments = btn.getAttribute('data-attachments');
         const filePath = btn.getAttribute('data-file-path');
-        showViewModal(title, body, date, time, audience, attachments, filePath);
+        showViewModal(title, body, note, date, time, audience, attachments, filePath);
       });
     });
     if (closeViewBtn) closeViewBtn.addEventListener('click', hideViewModal);

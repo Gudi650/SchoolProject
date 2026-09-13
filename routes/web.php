@@ -72,9 +72,7 @@ Route::middleware('auth')->group(function () {
 
     ///////////////////////////////////////////////////////////
     //for dashboard
-    Route::get('/teacher-dashboard', function () {
-        return view('TeacherPanel.dashboard');
-    })->name('teacher.dashboard');
+    Route::get('/teacher-dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
 
     ///////////////////////////////////////////////////////////
     //for announcements
