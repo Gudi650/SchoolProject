@@ -21,9 +21,9 @@ class StudentApplicants extends Controller
         ]);
     }
 
-    public function RejectApplicant(Request $request)
+    public function RejectApplicant(Request $request, int $id)
     {
-        $applicant = studentEnrollDetails::find($request->id);
+        $applicant = $this->findForSchool($id);
 
         if (!$applicant) {
             return redirect()->back()->with('error', 'Applicant not found.');
@@ -34,9 +34,9 @@ class StudentApplicants extends Controller
         return redirect()->back()->with('success', 'Applicant rejected successfully.');
     }
 
-    public function ApproveApplicant(Request $request)
+    public function ApproveApplicant(Request $request, int $id)
     {
-        $applicant = studentEnrollDetails::find($request->id);
+        $applicant = $this->findForSchool($id);
 
         if (!$applicant) {
             return redirect()->back()->with('error', 'Applicant not found.');
@@ -44,7 +44,7 @@ class StudentApplicants extends Controller
 
         $applicant->update(['status' => 'approved']);
 
-        return redirect()->back()->with('success', 'Applicant approved successfully.');
+        return redirect()->back()->with('success', 'Applicant approved for entrance exam.');
     }
 
     public function GetApplicantsCounts(Request $request)
@@ -60,6 +60,19 @@ class StudentApplicants extends Controller
             'approved' => $this->countApplicants($schoolId, 'approved'),
             'rejected' => $this->countApplicants($schoolId, 'rejected'),
         ]);
+    }
+
+    private function findForSchool(int $id): ?studentEnrollDetails
+    {
+        $schoolId = $this->teacherContext->schoolId();
+
+        if (!$schoolId) {
+            return null;
+        }
+
+        return studentEnrollDetails::where('id', $id)
+            ->whereHas('studentEnrollment', fn ($q) => $q->where('school_id', $schoolId))
+            ->first();
     }
 
     private function applicantsByStatus(string $status)

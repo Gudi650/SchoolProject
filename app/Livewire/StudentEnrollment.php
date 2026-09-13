@@ -514,7 +514,7 @@ class StudentEnrollment extends Component
 
 
         //redirect to the beginning with a thank you message
-        return redirect('studentenrollment.thanks')->with('success', 'Enrollment submitted successfully! Thank you.');
+        return redirect()->route('studentenrollment.thanks')->with('success', 'Enrollment submitted successfully! Thank you.');
 
     }
 
