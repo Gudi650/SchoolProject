@@ -16,17 +16,17 @@ class StudentHealthController extends Controller
         $student = Auth::user()?->students;
 
         if (!$student) {
-            return view('StudentPanel.health', ['student' => null]);
+            return view('StudentPanel.health.index', ['student' => null]);
         }
 
         $profile = StudentHealthProfile::firstOrCreate(['student_id' => $student->id]);
-        
+
         $appointments = StudentHealthAppointment::where('student_id', $student->id)
             ->orderByDesc('appointment_date')->get();
         $documents = StudentHealthDocument::where('student_id', $student->id)
             ->orderByDesc('record_date')->get();
 
-        return view('StudentPanel.health', compact('student', 'profile', 'appointments', 'documents'));
+        return view('StudentPanel.health.index', compact('student', 'profile', 'appointments', 'documents'));
     }
 
     public function updateProfile(Request $request)
