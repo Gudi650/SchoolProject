@@ -5,15 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\StudentHealthAppointment;
 use App\Models\StudentHealthDocument;
 use App\Models\StudentHealthProfile;
+use App\Services\StudentContextService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class StudentHealthController extends Controller
 {
+    public function __construct(private StudentContextService $studentContext)
+    {
+    }
+
     public function index()
     {
-        $student = Auth::user()?->students;
+        $student = $this->studentContext->loggedInStudent();
 
         if (!$student) {
             return view('StudentPanel.health.index', ['student' => null]);
@@ -31,7 +35,7 @@ class StudentHealthController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $student = $this->studentOrAbort();
+        $student = $this->studentContext->requireStudent();
 
         $data = $request->validate([
             'blood_group' => 'nullable|string|max:10',
@@ -50,7 +54,7 @@ class StudentHealthController extends Controller
 
     public function storeAppointment(Request $request)
     {
-        $student = $this->studentOrAbort();
+        $student = $this->studentContext->requireStudent();
 
         $data = $request->validate([
             'provider_name' => 'required|string|max:255',
@@ -66,7 +70,7 @@ class StudentHealthController extends Controller
 
     public function destroyAppointment(StudentHealthAppointment $appointment)
     {
-        $this->authorizeStudent($appointment->student_id);
+        $this->studentContext->authorizeStudent($appointment->student_id);
         $appointment->delete();
 
         return back()->with('success', 'Appointment removed.');
@@ -74,7 +78,7 @@ class StudentHealthController extends Controller
 
     public function storeDocument(Request $request)
     {
-        $student = $this->studentOrAbort();
+        $student = $this->studentContext->requireStudent();
 
         $data = $request->validate([
             'title' => 'required|string|max:255',
@@ -98,23 +102,10 @@ class StudentHealthController extends Controller
 
     public function destroyDocument(StudentHealthDocument $document)
     {
-        $this->authorizeStudent($document->student_id);
+        $this->studentContext->authorizeStudent($document->student_id);
         Storage::disk('public')->delete($document->file_path);
         $document->delete();
 
         return back()->with('success', 'Document removed.');
-    }
-
-    private function studentOrAbort()
-    {
-        $student = Auth::user()?->students;
-        abort_if(!$student, 403);
-
-        return $student;
-    }
-
-    private function authorizeStudent(int $studentId): void
-    {
-        abort_if(Auth::user()?->students?->id !== $studentId, 403);
     }
 }

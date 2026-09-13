@@ -3,14 +3,20 @@
 namespace App\Http\Controllers\Announcements;
 
 use App\Http\Controllers\Controller;
-use App\Models\Announcement;
-use App\Models\Student;
+use App\Services\AnnouncementService;
+use App\Services\StudentContextService;
 
 class StudentController extends Controller
 {
+    public function __construct(
+        private StudentContextService $studentContext,
+        private AnnouncementService $announcements,
+    ) {
+    }
+
     public function viewAnnouncements()
     {
-        $student = Student::where('user_id', auth()->id())->first();
+        $student = $this->studentContext->loggedInStudent();
 
         if (!$student) {
             return view('StudentPanel.announcements', [
@@ -19,14 +25,9 @@ class StudentController extends Controller
             ]);
         }
 
-        $announcements = Announcement::where('school_id', $student->school_id)
-            ->where(function ($query) use ($student) {
-                $query->whereIn('intended_audience', [0, 2])
-                    ->orWhere('class_available_id', $student->class_id);
-            })
-            ->orderByDesc('created_at')
-            ->paginate(10);
-
-        return view('StudentPanel.announcements', compact('student', 'announcements'));
+        return view('StudentPanel.announcements', [
+            'student' => $student,
+            'announcements' => $this->announcements->forStudent($student),
+        ]);
     }
 }

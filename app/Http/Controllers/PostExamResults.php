@@ -5,18 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\ExamResults;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Services\TeacherContextService;
 use Illuminate\Http\Request;
 
 class PostExamResults extends Controller
 {
-    //function to show the post-exam page
+    public function __construct(private TeacherContextService $teacherContext)
+    {
+    }
+
     public function showPostExamPage()
     {
-        // obtain the user id
-        $userId = auth()->id();
-
-        // obtain the teacher using the user id
-        $teacher = Teacher::where('user_id', $userId)->first();
+        $teacher = $this->teacherContext->loggedInTeacher();
 
         //store the teacher data in session
         session()->put('activeTeacher', $teacher);

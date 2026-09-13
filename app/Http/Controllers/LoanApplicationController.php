@@ -7,11 +7,15 @@ use App\Models\LoanConfigurations;
 use App\Models\PayrollChange;
 use App\Models\PayrollConfigurations;
 use App\Models\LoanType;
+use App\Services\TeacherContextService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoanApplicationController extends Controller
 {
+    public function __construct(private TeacherContextService $teacherContext)
+    {
+    }
 
     //function to show teacher loan proposals/progress page
     public function proposals()
@@ -22,7 +26,7 @@ class LoanApplicationController extends Controller
             return back()->with('error', 'You must be logged in to view loan proposals.');
         }
 
-        $schoolId = $user->school_id ?? $user->teachers()->value('school_id') ?? session('school_id');
+        $schoolId = $this->teacherContext->resolveSchoolId($user);
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing for this account.');
@@ -44,7 +48,7 @@ class LoanApplicationController extends Controller
     function show()
     {
         $user = Auth::user();
-        $schoolId = $user->school_id ?? $user->teachers()->value('school_id') ?? session('school_id');
+        $schoolId = $this->teacherContext->resolveSchoolId($user);
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing for this account.');
@@ -79,9 +83,7 @@ class LoanApplicationController extends Controller
 
         // RESOLVE SCHOOL ID
         // Try user->school_id first, then check if user is a teacher and get from teacher table
-        $schoolId = $user->school_id
-            ?? $user->teachers()->value('school_id')
-            ?? session('school_id');
+        $schoolId = $this->teacherContext->resolveSchoolId($user);
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing for this account.')->withInput();
@@ -211,7 +213,7 @@ class LoanApplicationController extends Controller
         */
 
 
-        $schoolId = $user->school_id ?? session('school_id') ?? 1;
+        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');
@@ -255,7 +257,7 @@ class LoanApplicationController extends Controller
     public function moveToUnderReview($loanId)
     {
         $user = Auth::user();
-        $schoolId = $user->school_id ?? session('school_id') ?? 1;
+        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');
@@ -283,7 +285,7 @@ class LoanApplicationController extends Controller
     public function moveToApproved($loanId)
     {
         //$user = Auth::user();
-        $schoolId = $user->school_id ?? session('school_id') ?? 1;
+        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');
@@ -315,7 +317,7 @@ class LoanApplicationController extends Controller
     public function moveToRejected($loanId)
     {
         $user = Auth::user();
-        $schoolId = $user->school_id ?? session('school_id') ?? 1;
+        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');
@@ -351,7 +353,7 @@ class LoanApplicationController extends Controller
          * $user = Auth::user();
          */
 
-        $schoolId = $user->school_id ?? session('school_id')?? 1;
+        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');
@@ -404,7 +406,7 @@ class LoanApplicationController extends Controller
     public function moveToDisbursed($loanId)
     {
         $user = Auth::user();
-        $schoolId = $user->school_id ?? session('school_id') ?? 1;
+        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');

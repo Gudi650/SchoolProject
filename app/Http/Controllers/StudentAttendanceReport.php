@@ -13,23 +13,20 @@ class StudentAttendanceReport extends Controller
 
     public function ViewStudentAttendance()
     {
-        $teacher = $this->teacherContext->loggedInTeacher();
-        $class = $this->teacherContext->classTeacherClass($teacher);
+        $data = $this->teacherContext->attendanceContext();
 
-        if (!$this->teacherContext->isClassTeacher($teacher) || !$class['classId']) {
+        if (!$this->teacherContext->isClassTeacher($data['teacher']) || !$data['classId']) {
             return redirect()->back()->with('error', 'You do not have permission to access this page.');
         }
 
-        $students = Attendance::where('school_id', $teacher->school_id)
-            ->where('class-available_id', $class['classId'])
-            ->with('student')
-            ->latest('date')
-            ->get();
-
         return view('TeacherPanel.studentattendance', [
-            'students' => $students,
-            'schoolId' => $teacher->school_id,
-            'classId' => $class['classId'],
+            'students' => Attendance::where('school_id', $data['schoolId'])
+                ->where('class-available_id', $data['classId'])
+                ->with('student')
+                ->latest('date')
+                ->get(),
+            'schoolId' => $data['schoolId'],
+            'classId' => $data['classId'],
         ]);
     }
 }

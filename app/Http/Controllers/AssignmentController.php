@@ -2,53 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AssignedSubject;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
+use App\Services\StudentContextService;
+use App\Services\TeacherContextService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AssignmentController extends Controller
 {
+    public function __construct(
+        private TeacherContextService $teacherContext,
+        private StudentContextService $studentContext,
+    ) 
+    {
+        
+    }
+
     public function showTeacherAssignments()
     {
-        $teacher = DB::table('teachers')->where('user_id', Auth::id())->first();
-
-        abort_if(!$teacher, 403);
-
-        $classes = DB::table('class_availables')
-            ->where('school_id', $teacher->school_id)
-            ->orderBy('name')
-            ->get();
-
-        /*
-        $subjects = DB::table('availablesubjects')
-            ->where('school_id', $teacher->school_id)
-            ->orderBy('subject_name')
-            ->get(); */
-        
-        $subjects = $this->getassignedsubjects($teacher);
-
-        $assignments = Assignment::with(['classAvailable', 'subject'])
-            ->where('school_id', $teacher->school_id)
-            ->where('teacher_id', $teacher->id)
-            ->latest()
-            ->get();
+        $teacher = $this->teacherContext->requireTeacher();
 
         return view('TeacherPanel.assignments.assignments', [
             'teacher' => $teacher,
-            'classes' => $classes,
-            'subjects' => $subjects,
-            'assignments' => $assignments,
+            'classes' => $this->teacherContext->schoolClasses($teacher->school_id),
+            'subjects' => $this->teacherContext->assignedSubjectsFor($teacher),
+            'assignments' => Assignment::with(['classAvailable', 'subject'])
+                ->where('school_id', $teacher->school_id)
+                ->where('teacher_id', $teacher->id)
+                ->latest()
+                ->get(),
         ]);
     }
 
     public function storeTeacherAssignment(Request $request)
     {
-        $teacher = DB::table('teachers')->where('user_id', Auth::id())->first();
-
-        abort_if(!$teacher, 403);
+        $teacher = $this->teacherContext->requireTeacher();
 
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -59,11 +48,9 @@ class AssignmentController extends Controller
             'attachment' => ['nullable', 'file', 'max:10240', 'mimes:pdf,doc,docx,zip,png,jpg,jpeg'],
         ]);
 
-        $attachmentPath = null;
-
-        if ($request->hasFile('attachment')) {
-            $attachmentPath = $request->file('attachment')->store('assignments', 'public');
-        }
+        $attachmentPath = $request->hasFile('attachment')
+            ? $request->file('attachment')->store('assignments', 'public')
+            : null;
 
         Assignment::create([
             'title' => $validated['title'],
@@ -81,7 +68,7 @@ class AssignmentController extends Controller
 
     public function showStudentAssignments()
     {
-        $student = DB::table('students')->where('user_id', Auth::id())->first();
+        $student = $this->studentContext->loggedInStudent();
         $assignments = collect();
         $submissions = collect();
         $pendingCount = 0;
@@ -98,24 +85,15 @@ class AssignmentController extends Controller
                 ->get()
                 ->keyBy('assignment_id');
 
-            $pendingCount = $assignments->reject(function ($assignment) use ($submissions) {
-                return $submissions->has($assignment->id);
-            })->count();
+            $pendingCount = $assignments->reject(fn ($a) => $submissions->has($a->id))->count();
         }
 
-        return view('StudentPanel.assignment', [
-            'student' => $student,
-            'assignments' => $assignments,
-            'submissions' => $submissions,
-            'pendingCount' => $pendingCount,
-        ]);
+        return view('StudentPanel.assignment', compact('student', 'assignments', 'submissions', 'pendingCount'));
     }
 
     public function storeStudentAssignmentSubmission(Request $request)
     {
-        $student = DB::table('students')->where('user_id', Auth::id())->first();
-
-        abort_if(!$student, 403);
+        $student = $this->studentContext->requireStudent();
 
         $validated = $request->validate([
             'assignment_id' => ['required', 'exists:assignments,id'],
@@ -131,15 +109,10 @@ class AssignmentController extends Controller
 
         abort_if(!$assignment, 404);
 
-        $attachmentPath = $request->file('attachment')->store('assignment-submissions', 'public');
-
         DB::table('assignment_submissions')->updateOrInsert(
+            ['assignment_id' => $assignment->id, 'student_id' => $student->id],
             [
-                'assignment_id' => $assignment->id,
-                'student_id' => $student->id,
-            ],
-            [
-                'attachment' => $attachmentPath,
+                'attachment' => $request->file('attachment')->store('assignment-submissions', 'public'),
                 'remarks' => $validated['remarks'] ?? null,
                 'submitted_at' => now(),
                 'updated_at' => now(),
@@ -152,9 +125,7 @@ class AssignmentController extends Controller
 
     public function showDeliveredAssignments(Request $request)
     {
-        $teacher = DB::table('teachers')->where('user_id', Auth::id())->first();
-
-        abort_if(!$teacher, 403);
+        $teacher = $this->teacherContext->requireTeacher();
 
         $assignments = Assignment::query()
             ->where('teacher_id', $teacher->id)
@@ -164,33 +135,13 @@ class AssignmentController extends Controller
         $selectedAssignmentId = $request->integer('assignment_id') ?: $assignments->first()?->id;
 
         $submissions = AssignmentSubmission::with(['assignment', 'student'])
-            ->whereHas('assignment', function ($query) use ($teacher) {
-                $query->where('teacher_id', $teacher->id);
-            })
-            ->when($selectedAssignmentId, function ($query, $assignmentId) {
-                $query->where('assignment_id', $assignmentId);
-            })
+            ->whereHas('assignment', fn ($q) => $q->where('teacher_id', $teacher->id))
+            ->when($selectedAssignmentId, fn ($q, $id) => $q->where('assignment_id', $id))
             ->orderByDesc('submitted_at')
             ->get();
 
-        return view('TeacherPanel.assignments.deliveredAssignments', [
-            'teacher' => $teacher,
-            'assignments' => $assignments,
-            'selectedAssignmentId' => $selectedAssignmentId,
-            'submissions' => $submissions,
-        ]);
-    }
-
-    //function to get the asigned subjects and clases of the teacher
-    protected function getassignedsubjects($teacher)
-    {
-
-        $subjects = AssignedSubject::with('classAvailable')
-            ->where('school_id',$teacher->school_id)
-            ->where('teacher_id', $teacher->school_id)
-            ->get();
-
-        return $subjects;
-
+        return view('TeacherPanel.assignments.deliveredAssignments', compact(
+            'teacher', 'assignments', 'selectedAssignmentId', 'submissions'
+        ));
     }
 }

@@ -5,12 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\ExamResults;
 use App\Models\GeneratedResults;
-use App\Models\GeneratedTimetable;
+use App\Services\ScheduleService;
+use App\Services\StudentContextService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class Student extends Controller
 {
+    public function __construct(
+        private StudentContextService $studentContext,
+        private ScheduleService $schedule,
+    ) {
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -24,8 +31,7 @@ class Student extends Controller
             return view('welcome');
         }
 
-        // retrieve the student record associated with the user using the defined relation
-        $student = $user->students;
+        $student = $this->studentContext->loggedInStudent();
 
         // retrieve the parents data
         $parent = $student ? $student->parent_data : null;
@@ -36,30 +42,17 @@ class Student extends Controller
 
     public function showTimetable()
     {
-        $student = Auth::user()?->students;
+        $student = $this->studentContext->loggedInStudent();
         $className = $student?->classAvailables?->name;
-        $scheduleByDay = collect();
-        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-
-        if ($student?->class_id) {
-            $entries = GeneratedTimetable::with(['subject', 'teacher'])
-                ->where('class_id', $student->class_id)
-                ->where('school_id', $student->school_id)
-                ->orderBy('start_time')
-                ->get()
-                ->groupBy('day_of_week');
-
-            foreach ($days as $day) {
-                $scheduleByDay[$day] = $entries->get($day, collect());
-            }
-        }
+        $scheduleByDay = $student ? $this->schedule->forClass($student) : collect();
+        $days = $this->schedule->weekdays();
 
         return view('StudentPanel.timetable', compact('student', 'className', 'scheduleByDay', 'days'));
     }
 
     public function showExamResults()
     {
-        $student = Auth::user()?->students;
+        $student = $this->studentContext->loggedInStudent();
         $terms = [];
         $currentTerm = null;
         $previousTerm = null;
@@ -111,7 +104,7 @@ class Student extends Controller
 
     public function showAttendanceReport()
     {
-        $student = Auth::user()?->students;
+        $student = $this->studentContext->loggedInStudent();
         $records = collect();
         $stats = ['total' => 0, 'present' => 0, 'absent' => 0, 'pct' => 0];
         $monthly = collect();

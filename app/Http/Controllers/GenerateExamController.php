@@ -7,19 +7,22 @@ use App\Models\ExamResults;
 use App\Models\GeneratedResults;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Services\TeacherContextService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class GenerateExamController extends Controller
 {
+    public function __construct(private TeacherContextService $teacherContext)
+    {
+    }
+
     /**
      * Show the exam results page with rankings.
      */
     public function generateExamPage()
     {
-        $user = auth()->id();
-        $teacher = Teacher::where('user_id', $user)->first();
-
+        $teacher = $this->teacherContext->loggedInTeacher();
         $dropdownData = $this->getExamDropdownData($teacher);
 
         $subjects = collect();
@@ -27,7 +30,7 @@ class GenerateExamController extends Controller
         $students = collect();
         $rankedSummaries = [];
 
-        if ($filters = session('gen_filters')) {
+        if ($teacher && ($filters = session('gen_filters'))) {
             $school_id = $teacher->school_id;
 
             $examResults = ExamResults::where('school_id', $school_id)
@@ -113,8 +116,7 @@ class GenerateExamController extends Controller
 
     public function saveGeneratedResults(Request $request)
     {
-        $user = auth()->id();
-        $teacher = Teacher::where('user_id', $user)->first();
+        $teacher = $this->teacherContext->requireTeacher();
 
         $filters = session('gen_filters');
         if (!$filters) {
@@ -187,8 +189,12 @@ class GenerateExamController extends Controller
     /**
      * Prepare dropdown data for exam filters.
      */
-    private function getExamDropdownData(Teacher $teacher)
+    private function getExamDropdownData(?Teacher $teacher)
     {
+        if (!$teacher) {
+            return ['classes' => collect(), 'examDates' => collect(), 'examNames' => collect()];
+        }
+
         $school_id = $teacher->school_id;
         $classes = $teacher->schools->classAvailables;
         $exams = ExamResults::where('school_id', $school_id)->get();

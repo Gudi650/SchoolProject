@@ -2,23 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\availablesubject;
-use App\Models\ClassAvailable;
 use App\Models\GeneratedTimetable;
-use App\Models\Teacher;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Services\GenerateTimetableService;
+use App\Services\TeacherContextService;
 
 class GeneratedTimetableController extends Controller
 {
-
-    protected $generateTimetableService;
-
-    public function __construct(GenerateTimetableService $generateTimetableService)
-    {
-        $this->generateTimetableService = $generateTimetableService;
+    public function __construct(
+        private GenerateTimetableService $generateTimetableService,
+        private TeacherContextService $teacherContext,
+    ) {
     }
 
 
@@ -153,32 +149,14 @@ class GeneratedTimetableController extends Controller
     //retrive the centralised data to be re-used in multiple areas
     protected function centralised_data()
     {
-        //retrieve the teacher logged-in
-        //get the id of the teacher
-        $teacherId = auth()->id();
+        $setup = $this->teacherContext->timetableSetup();
 
-        //get the teacher logged in
-        $teacher = Teacher::where('user_id', $teacherId)->first();
-
-        //get the school_id
-        $schoolId = $teacher->school_id;
-
-        //get the classes in the school
-        $classes = ClassAvailable::where('school_id', $schoolId)->get();
-
-        //get the subjects in the school
-        $subjects = availablesubject::where('school_id', $schoolId)->get();
-
-        //return the data
-        
         return [
-            'teacherId' => $teacherId,
-            'schoolId' => $schoolId,
-            'classes' => $classes,
-            'subjects' => $subjects,
+            'teacherId' => auth()->id(),
+            'schoolId' => $setup['schoolId'],
+            'classes' => $setup['classes'],
+            'subjects' => $setup['subjects'],
         ];
-
-
     }
 
 

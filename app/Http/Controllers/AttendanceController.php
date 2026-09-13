@@ -14,7 +14,7 @@ class AttendanceController extends Controller
 
     public function registerStudentAttendance()
     {
-        $data = $this->attendanceContext();
+        $data = $this->teacherContext->attendanceContext();
         $teacher = $data['teacher'];
 
         if (!$this->teacherContext->isClassTeacher($teacher) || !$data['classId']) {
@@ -32,7 +32,7 @@ class AttendanceController extends Controller
 
     public function markAllPresent(Request $request)
     {
-        $data = $this->attendanceContext();
+        $data = $this->teacherContext->attendanceContext();
         $validatedData = $request->validate(['date' => 'required|date']);
         $date = $validatedData['date'];
 
@@ -65,7 +65,7 @@ class AttendanceController extends Controller
             'absent_students.*' => 'integer|exists:students,id',
         ]);
 
-        $data = $this->attendanceContext();
+        $data = $this->teacherContext->attendanceContext();
         $date = $validatedData['date'];
         $absentStudents = $validatedData['absent_students'] ?? [];
         $presentStudents = $data['students']->whereNotIn('id', $absentStudents);
@@ -91,19 +91,5 @@ class AttendanceController extends Controller
         }
 
         return redirect()->back()->with('success', 'Attendance has been recorded. Present students have been marked for the date '.$date.'.');
-    }
-
-    private function attendanceContext(): array
-    {
-        $teacher = $this->teacherContext->loggedInTeacher();
-        $class = $this->teacherContext->classTeacherClass($teacher);
-
-        return [
-            'teacher' => $teacher,
-            'schoolId' => $teacher?->school_id,
-            'classId' => $class['classId'],
-            'className' => $class['className'],
-            'students' => $this->teacherContext->classStudents($class['classId']),
-        ];
     }
 }

@@ -2,81 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Announcement;
-use App\Models\AssignedSubject;
 use App\Models\Assignment;
-use App\Models\GeneratedTimetable;
 use App\Models\Student;
-use App\Models\Teacher;
-use Illuminate\Http\Request;
+use App\Models\AssignedSubject;
+use App\Services\AnnouncementService;
+use App\Services\ScheduleService;
+use App\Services\TeacherContextService;
 
 class TeacherController extends Controller
 {
+    public function __construct(
+        private TeacherContextService $teacherContext,
+        private AnnouncementService $announcements,
+        private ScheduleService $schedule,
+    ) {
+    }
+
     public function dashboard()
     {
-        $teacher = Teacher::where('user_id', auth()->id())->first();
+        $teacher = $this->teacherContext->loggedInTeacher();
 
         if (!$teacher) {
             return view('TeacherPanel.dashboard', ['teacher' => null]);
         }
 
-        $schoolId = $teacher->school_id;
-        $today = now()->format('l');
-
         $stats = [
-            'students' => Student::where('school_id', $schoolId)->count(),
+            'students' => Student::where('school_id', $teacher->school_id)->count(),
             'classes' => AssignedSubject::where('teacher_id', $teacher->id)->distinct('class_id')->count('class_id'),
             'assignments' => Assignment::where('teacher_id', $teacher->id)->count(),
-            'announcements' => Announcement::where('school_id', $schoolId)
-                ->where(function ($q) use ($teacher) {
-                    $q->whereIn('intended_audience', [0, 3])->orWhere('created_by', $teacher->id);
-                })->count(),
+            'announcements' => $this->announcements->countForTeacher($teacher),
         ];
 
-        $recentAnnouncements = Announcement::where('school_id', $schoolId)
-            ->where(function ($q) use ($teacher) {
-                $q->whereIn('intended_audience', [0, 3])->orWhere('created_by', $teacher->id);
-            })
-            ->latest()->limit(3)->get();
-
-        $todaySchedule = GeneratedTimetable::with(['subject', 'classAvailable'])
-            ->where('teacher_id', $teacher->id)
-            ->where('day_of_week', $today)
-            ->orderBy('start_time')
-            ->get();
-
-        $assignedClasses = AssignedSubject::with(['classAvailable', 'availablesubject'])
-            ->where('teacher_id', $teacher->id)
-            ->get()
-            ->groupBy('class_id');
-
-        return view('TeacherPanel.dashboard', compact(
-            'teacher', 'stats', 'recentAnnouncements', 'todaySchedule', 'assignedClasses'
-        ));
+        return view('TeacherPanel.dashboard', [
+            'teacher' => $teacher,
+            'stats' => $stats,
+            'recentAnnouncements' => $this->announcements->recentForTeacher($teacher),
+            'todaySchedule' => $this->schedule->todayForTeacher($teacher),
+            'assignedClasses' => $this->teacherContext->assignedClasses($teacher),
+        ]);
     }
 
     public function showSchedule()
     {
-        $teacher = Teacher::where('user_id', auth()->id())->first();
-        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-        $scheduleByDay = collect(array_fill_keys($days, collect()));
-        $weeklyClassCount = 0;
-        $subjectCount = 0;
+        $teacher = $this->teacherContext->loggedInTeacher();
 
-        if ($teacher) {
-            $entries = GeneratedTimetable::with(['subject', 'classAvailable'])
-                ->where('teacher_id', $teacher->id)
-                ->orderBy('start_time')
-                ->get();
-
-            $weeklyClassCount = $entries->count();
-            $subjectCount = $entries->pluck('subject_id')->unique()->count();
-
-            foreach ($days as $day) {
-                $scheduleByDay[$day] = $entries->where('day_of_week', $day)->values();
-            }
+        if (!$teacher) {
+            return view('TeacherPanel.schedule', [
+                'scheduleByDay' => collect(array_fill_keys($this->schedule->weekdays(), collect())),
+                'days' => $this->schedule->weekdays(),
+                'weeklyClassCount' => 0,
+                'subjectCount' => 0,
+            ]);
         }
 
-        return view('TeacherPanel.schedule', compact('scheduleByDay', 'days', 'weeklyClassCount', 'subjectCount'));
+        return view('TeacherPanel.schedule', $this->schedule->forTeacher($teacher));
     }
 }
