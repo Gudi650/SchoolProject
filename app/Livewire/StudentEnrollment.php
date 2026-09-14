@@ -39,6 +39,7 @@ class StudentEnrollment extends Component
     public $gender;
     public $school_id;
     public $student_profile_picture;
+    public $profilePicturePath;
 
     //step 2: Contact Information
     public $ward;
@@ -227,8 +228,8 @@ class StudentEnrollment extends Component
             ]);
 
             //save the profile picture if uploaded
-            if($this->student_profile_picture){
-                $path = $this->student_profile_picture->store('student_profiles', 'public');
+            if ($this->student_profile_picture) {
+                $this->profilePicturePath = $this->student_profile_picture->store('student_profiles', 'public');
             }
 
             //create a unique student enrollment id
@@ -458,7 +459,7 @@ class StudentEnrollment extends Component
                     'previous_school_name' => $this->previous_school_name,
                     'student_enrollment_id' => $this->student_enrollment_id,
                     'parent_enrollment_id' => $parentEnrollment->id,
-                    'profile_picture' => $this->student_profile_picture ? $this->student_profile_picture->getClientOriginalName() : null,
+                    'profile_picture' => $this->profilePicturePath,
                 ]
 
             ); 

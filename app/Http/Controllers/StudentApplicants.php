@@ -21,6 +21,19 @@ class StudentApplicants extends Controller
         ]);
     }
 
+    public function ViewAnalytics()
+    {
+        $schoolId = $this->teacherContext->schoolId();
+
+        $stats = $schoolId ? [
+            'pending' => $this->countApplicants($schoolId, 'pending'),
+            'approved' => $this->countApplicants($schoolId, 'approved'),
+            'rejected' => $this->countApplicants($schoolId, 'rejected'),
+        ] : ['pending' => 0, 'approved' => 0, 'rejected' => 0];
+
+        return view('TeacherPanel.studentenrollment.analytics', compact('stats'));
+    }
+
     public function RejectApplicant(Request $request, int $id)
     {
         $applicant = $this->findForSchool($id);

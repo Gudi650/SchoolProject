@@ -16,40 +16,13 @@
         }
     </style>
     
-    <!-- Fallback university color utilities -->
-    <style>
-        :root{
-            --univ-burgundy: #5B4BFF;
-            --univ-gold: #B8860B;
-            --univ-cream: #FDFBF7;
-            --univ-gray: #F4F4F4;
-            --univ-text: #2D2D2D;
-        }
-        .bg-university-cream{ background-color:var(--univ-cream) !important; }
-        .text-university-text{ color:var(--univ-text) !important; }
-        .bg-university-burgundy{ background-color:var(--univ-burgundy) !important; }
-        .text-university-burgundy{ color:var(--univ-burgundy) !important; }
-        .bg-university-gray{ background-color:var(--univ-gray) !important; }
-        .border-university-gold{ border-color:var(--univ-gold) !important; }
-        .bg-university-gold\/10{ background-color: rgba(184,134,11,0.10) !important; }
-        .bg-university-burgundy\/10{ background-color: rgba(91,75,255,0.10) !important; }
-        .bg-university-burgundy\/50{ background-color: rgba(91,75,255,0.50) !important; }
-        .font-sans { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial !important; }
-        .bg-gray-50{ background-color:#F9FAFB !important; }
-        /* fallback for red button styles */
-        .bg-red-100{ background-color:#FEE2E2 !important; }
-        .bg-red-200{ background-color:#FECACA !important; }
-        .text-red-700{ color:#B91C1C !important; }
-
-    </style>
-
         <!-- Main Content -->
         <main class="flex-1 w-full overflow-y-auto h-screen md:ml-64 p-6 md:p-10 min-w-0 overflow-x-auto">
             <div class="w-full max-w-7xl mx-auto">
                 <div class="w-full">
                     <!-- Page Header (styled banner like example) -->
                     <div class="mb-8">
-                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex items-center justify-between gap-4 border-l-4 border-university-burgundy">
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex items-center justify-between gap-4 border-l-4 border-indigo-600">
 
                             <!--toogle sidebar button-->
                             <button id="sidebarToggle" aria-label="Open sidebar" class="md:hidden p-2 bg-indigo-600 text-white rounded"> 
@@ -58,7 +31,7 @@
 
                             <div>
 
-                                <h1 class="text-2xl font-serif font-bold text-university-burgundy">Settings</h1>
+                                <h1 class="text-2xl font-bold text-indigo-800">Enrollment Settings</h1>
                                 <p class="text-sm text-gray-500 mt-1">Manage academic parameters, tuition structures, and enrollment capacities.</p>
 
                             </div>
@@ -70,31 +43,30 @@
                                         {{ now()->format('M j, Y') }}
                                     </p>
                                 </div>
-                                <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-university-burgundy text-white font-medium shadow-sm">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 20c0-3.31 2.69-6 6-6s6 2.69 6 6" />
-                                    </svg>
-                                    Profile
-                                </button>
+                                <a href="{{ route('teacher.profile') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-medium shadow-sm text-sm">
+                                    <i class="bi bi-person-circle"></i> Profile
+                                </a>
                             </div>
                         </div>
                     </div>
 
                     <!-- Settings Form (mirrors html/settings.html) -->
+                    <div class="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+                        <i class="bi bi-info-circle mr-1"></i> Settings are saved locally in this session only — database sync coming later.
+                    </div>
                     <form id="settings-form" class="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-6">
                         <!-- Enrollment -->
                         <div>
-                            <h2 class="text-lg font-semibold text-university-text mb-4">Enrollment Capacity</h2>
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Enrollment Capacity</h2>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-sm font-medium text-university-text mb-1">Maximum Student Capacity</label>
-                                    <input id="capacity" type="number" value="1500" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                                    <label class="block text-sm font-medium text-gray-800 mb-1">Maximum Student Capacity</label>
+                                    <input id="capacity" type="number" value="1500" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
                                     <p class="mt-1 text-xs text-gray-500">Total headcount including all departments.</p>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-university-text mb-1">Waitlist Buffer (%)</label>
-                                    <input id="waitlist" type="number" value="15" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                                    <label class="block text-sm font-medium text-gray-800 mb-1">Waitlist Buffer (%)</label>
+                                    <input id="waitlist" type="number" value="15" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
                                 </div>
                             </div>
                         </div>
@@ -103,20 +75,20 @@
 
                         <!-- Application Submission Pricing -->
                         <div>
-                            <h2 class="text-lg font-semibold text-university-text mb-4">Application Submission</h2>
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Application Submission</h2>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="require-payment" class="block text-sm font-medium text-university-text mb-1">Require Payment Before Submission</label>
+                                    <label for="require-payment" class="block text-sm font-medium text-gray-800 mb-1">Require Payment Before Submission</label>
                                     <div class="flex items-center gap-3">
-                                        <input id="require-payment" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-university-burgundy focus:ring-university-burgundy" checked>
+                                        <input id="require-payment" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-800 focus:ring-indigo-500" checked>
                                         <span class="text-sm text-gray-600">Applicants must pay before submitting applications.</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="submission-fee" class="block text-sm font-medium text-university-text mb-1">Submission Fee per Student</label>
+                                    <label for="submission-fee" class="block text-sm font-medium text-gray-800 mb-1">Submission Fee per Student</label>
                                     <div class="relative rounded-md shadow-sm">
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span class="text-gray-500 sm:text-sm">$</span></div>
-                                        <input id="submission-fee" type="number" min="0" step="1" value="50" class="w-full pl-7 rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                                        <input id="submission-fee" type="number" min="0" step="1" value="50" class="w-full pl-7 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
                                     </div>
                                     <p class="mt-1 text-xs text-gray-500">Amount charged per student to submit an application.</p>
                                 </div>
@@ -125,20 +97,20 @@
 
                         <!-- Academic Calendar -->
                         <div class="pt-6">
-                            <h2 class="text-lg font-semibold text-university-text mb-4">Academic Calendar</h2>
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Academic Calendar</h2>
 
                             <!-- Hidden JSON payload -->
                             <input type="hidden" name="academic_calendar" id="academic-calendar-json" />
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-sm font-medium text-university-text mb-1">Academic Year</label>
-                                    <input id="academic-year" type="text" placeholder="2025-2026" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                                    <label class="block text-sm font-medium text-gray-800 mb-1">Academic Year</label>
+                                    <input id="academic-year" type="text" placeholder="2025-2026" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
                                     <p class="mt-1 text-xs text-gray-500">Example: 2025-2026</p>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-university-text mb-1">Default Timezone</label>
-                                    <input id="academic-timezone" type="text" value="UTC" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                                    <label class="block text-sm font-medium text-gray-800 mb-1">Default Timezone</label>
+                                    <input id="academic-timezone" type="text" value="UTC" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
                                 </div>
                             </div>
 
@@ -159,7 +131,7 @@
                                 </div>
                             </div>
                             <div>
-                                <button id="save-btn" type="submit" class="inline-flex items-center justify-center bg-university-burgundy hover:bg-university-burgundy/90 text-white px-6 py-2 rounded-md shadow-sm font-medium gap-2 transition-colors">
+                                <button id="save-btn" type="submit" class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md shadow-sm font-medium gap-2 transition-colors">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                             d="M17 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V7l-4-4z" />
@@ -196,15 +168,15 @@
             <div class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end border border-gray-200 rounded-md p-3">
                 <div class="md:col-span-2">
                     <label class="block text-xs text-gray-600 mb-1">Term Name</label>
-                    <input type="text" data-type="term" data-field="name" data-index="${i}" value="${t.name || ''}" placeholder="e.g., Fall" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                    <input type="text" data-type="term" data-field="name" data-index="${i}" value="${t.name || ''}" placeholder="e.g., Fall" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
                 </div>
                 <div>
                     <label class="block text-xs text-gray-600 mb-1">Start Date</label>
-                    <input type="date" data-type="term" data-field="start" data-index="${i}" value="${t.start || ''}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                    <input type="date" data-type="term" data-field="start" data-index="${i}" value="${t.start || ''}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
                 </div>
                 <div>
                     <label class="block text-xs text-gray-600 mb-1">End Date</label>
-                    <input type="date" data-type="term" data-field="end" data-index="${i}" value="${t.end || ''}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                    <input type="date" data-type="term" data-field="end" data-index="${i}" value="${t.end || ''}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
                 </div>
                 <div class="flex md:justify-end">
                     <button type="button" class="px-3 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-md text-sm" onclick="removeTerm(${i})">Remove</button>
@@ -218,15 +190,15 @@
             <div class="grid grid-cols-1 md:grid-cols-6 gap-3 items-end border border-gray-200 rounded-md p-3">
                 <div class="md:col-span-2">
                     <label class="block text-xs text-gray-600 mb-1">Title</label>
-                    <input type="text" data-type="event" data-field="title" data-index="${i}" value="${e.title || ''}" placeholder="e.g., Winter Break" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                    <input type="text" data-type="event" data-field="title" data-index="${i}" value="${e.title || ''}" placeholder="e.g., Winter Break" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
                 </div>
                 <div>
                     <label class="block text-xs text-gray-600 mb-1">Date</label>
-                    <input type="date" data-type="event" data-field="date" data-index="${i}" value="${e.date || ''}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                    <input type="date" data-type="event" data-field="date" data-index="${i}" value="${e.date || ''}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
                 </div>
                 <div>
                     <label class="block text-xs text-gray-600 mb-1">Type</label>
-                    <select data-type="event" data-field="type" data-index="${i}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border">
+                    <select data-type="event" data-field="type" data-index="${i}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
                         <option ${e.type==='Holiday'?'selected':''}>Holiday</option>
                         <option ${e.type==='Break'?'selected':''}>Break</option>
                         <option ${e.type==='Exam'?'selected':''}>Exam</option>
@@ -236,7 +208,7 @@
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs text-gray-600 mb-1">Notes</label>
-                    <input type="text" data-type="event" data-field="notes" data-index="${i}" value="${e.notes || ''}" placeholder="Optional details" class="w-full rounded-md border-gray-300 shadow-sm focus:border-university-burgundy focus:ring-university-burgundy sm:text-sm p-2 border" />
+                    <input type="text" data-type="event" data-field="notes" data-index="${i}" value="${e.notes || ''}" placeholder="Optional details" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
                 </div>
                 <div class="flex md:justify-end">
                     <button type="button" class="px-3 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-md text-sm" onclick="removeEvent(${i})">Remove</button>

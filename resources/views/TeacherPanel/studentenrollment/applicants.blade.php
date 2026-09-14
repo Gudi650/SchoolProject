@@ -9,28 +9,6 @@
         }
     </style>
     
-    <!-- Fallback university color utilities -->
-    <style>
-        :root{
-            --univ-burgundy: #5B4BFF;
-            --univ-gold: #B8860B;
-            --univ-cream: #FDFBF7;
-            --univ-gray: #F4F4F4;
-            --univ-text: #2D2D2D;
-        }
-        .bg-university-cream{ background-color:var(--univ-cream) !important; }
-        .text-university-text{ color:var(--univ-text) !important; }
-        .bg-university-burgundy{ background-color:var(--univ-burgundy) !important; }
-        .text-university-burgundy{ color:var(--univ-burgundy) !important; }
-        .bg-university-gray{ background-color:var(--univ-gray) !important; }
-        .border-university-gold{ border-color:var(--univ-gold) !important; }
-        .bg-university-gold\/10{ background-color: rgba(184,134,11,0.10) !important; }
-        .bg-university-burgundy\/10{ background-color: rgba(91,75,255,0.10) !important; }
-        .bg-university-burgundy\/50{ background-color: rgba(91,75,255,0.50) !important; }
-        .font-sans { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial !important; }
-        .bg-gray-50{ background-color:#F9FAFB !important; }
-    </style>
-
     <!-- Main Content -->
         <main class="flex-1 w-full overflow-y-auto h-screen md:ml-64 p-6 md:p-10 min-w-0 overflow-x-auto">
             <div class="w-full max-w-7xl mx-auto">
@@ -77,7 +55,7 @@
 
                     <!-- Page Header (styled banner from dashboard) -->
                     <div class="mb-8">
-                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex items-center justify-between gap-4 border-l-4 border-university-burgundy">
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex items-center justify-between gap-4 border-l-4 border-indigo-600">
 
                             <!--toogle sidebar button-->
                             <button id="sidebarToggle" aria-label="Open sidebar" class="md:hidden p-2 bg-indigo-600 text-white rounded"> 
@@ -87,23 +65,23 @@
                             <div class="flex items-center gap-3">
                                 
                                 <div>
-                                    <h1 class="text-2xl font-serif font-bold text-university-burgundy">Student Enrollments</h1>
-                                    <p class="text-sm text-gray-500 mt-1">Manage and process student enrollment applications.</p>
+                                    <h1 class="text-2xl font-bold text-indigo-800">Student Enrollments</h1>
+                                    <p class="text-sm text-gray-500 mt-1">Review applications and approve candidates for entrance exam.</p>
                                 </div>
                             </div>
 
                             <div class="flex items-center gap-4">
                                 <div class="text-right hidden sm:block">
                                     <p class="text-xs text-gray-500 uppercase">Today</p>
-                                    <p class="text-sm font-medium text-gray-600">Dec 22, 2025</p>
+                                    <p class="text-sm font-medium text-gray-600">{{ now()->format('M j, Y') }}</p>
                                 </div>
-                                <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-university-burgundy text-white font-medium shadow-sm">
+                                <a href="{{ route('teacher.profile') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-medium shadow-sm text-sm">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 20c0-3.31 2.69-6 6-6s6 2.69 6 6" />
                                     </svg>
                                     Profile
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -161,7 +139,7 @@
                                                         <!--approve button-->
                                                         <form method="POST" style="display:inline;" action="{{ route('teacher.studentenrollment.approveapplicant', ['id' => $applicant->id]) }}">
                                                             @csrf
-                                                            <button type="submit" class="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors" title="Approve Enrollment">
+                                                            <button type="submit" class="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors" title="Approve for entrance exam">
                                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                                                 </svg>
@@ -193,9 +171,9 @@
                                             <div id="studentModal-{{ $applicant->id }}" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target===this) closeModal('studentModal-{{ $applicant->id }}')">
                                                 <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden m-4">
                                                     <!-- Modal Header -->
-                                                    <div class="p-6 border-b-2 border-university-burgundy flex items-center justify-between bg-gradient-to-r from-university-burgundy/5 to-transparent">
+                                                    <div class="p-6 border-b-2 border-indigo-600 flex items-center justify-between bg-gradient-to-r from-indigo-50 to-transparent">
                                                         <div>
-                                                            <h2 class="text-2xl font-bold text-university-burgundy">Student Enrollment Details</h2>
+                                                            <h2 class="text-2xl font-bold text-indigo-800">Student Enrollment Details</h2>
                                                             <p class="text-sm text-gray-500 mt-1">Review student information and enrollment documents</p>
                                                         </div>
                                                         <button onclick="closeModal('studentModal-{{ $applicant->id }}')" class="text-gray-400 hover:text-gray-600 transition-colors">
@@ -209,7 +187,7 @@
                                                     <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
                                                         <!-- Student Information -->
                                                         <div class="mb-8 pb-6 border-b border-gray-200">
-                                                            <h3 class="text-lg font-semibold text-university-burgundy mb-4">Student Information</h3>
+                                                            <h3 class="text-lg font-semibold text-indigo-800 mb-4">Student Information</h3>
 
                                                             <!--display student details in a grid -->
 
@@ -243,7 +221,7 @@
 
                                                         <!-- Previous School Information -->
                                                         <div class="mb-8 pb-6 border-b border-gray-200">
-                                                            <h3 class="text-lg font-semibold text-university-burgundy mb-4">Previous School</h3>
+                                                            <h3 class="text-lg font-semibold text-indigo-800 mb-4">Previous School</h3>
                                                             <div class="bg-gray-50 p-4 rounded-lg">
                                                                 <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">School Name</label>
                                                                 <p class="text-gray-900 font-semibold text-lg"> {{ $applicant->previous_school_name }} </p>
@@ -252,7 +230,7 @@
 
                                                         <!-- Attached Documents -->
                                                         <div class="mb-4">
-                                                            <h3 class="text-lg font-semibold text-university-burgundy mb-4">Attached Documents</h3>
+                                                            <h3 class="text-lg font-semibold text-indigo-800 mb-4">Attached Documents</h3>
                                                             @php
                                                                 $academicRecords = $applicant->academic_records ? json_decode($applicant->academic_records, true) : [];
                                                                 $transferCertificates = $applicant->transfer_certificate ? json_decode($applicant->transfer_certificate, true) : [];
@@ -383,7 +361,7 @@
                                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                                                 </svg>
-                                                                Approve
+                                                                Approve for Exam
                                                             </button>
 
                                                             </form>
@@ -421,7 +399,7 @@
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                                     </svg>
                                                 </button>
-                                                <a href="#" class="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors" title="Approve Enrollment">
+                                                <a href="#" class="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors" title="Approve for entrance exam">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                                     </svg>
@@ -449,7 +427,7 @@
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between">
                         <div>
                             <h3 class="font-semibold text-blue-900">Processed Enrollments</h3>
-                            <p class="text-sm text-blue-700 mt-1">View approved and rejected student enrollments below</p>
+                            <p class="text-sm text-blue-700 mt-1">Applicants cleared for exam and rejected applications below</p>
                         </div>
                     </div>
 
@@ -457,8 +435,8 @@
                     <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                         <div class="p-6 border-b border-gray-200 flex justify-between items-center">
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-900">Approved Students</h3>
-                                <p class="text-sm text-gray-500 mt-1">Successfully approved student enrollments</p>
+                                <h3 class="text-lg font-semibold text-gray-900">Approved for Exam</h3>
+                                <p class="text-sm text-gray-500 mt-1">Cleared to sit the entrance exam — not enrolled yet</p>
                             </div>
                             <span id="approved-count" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">...</span>
                         </div>
@@ -491,7 +469,7 @@
                                                 <td class="px-6 py-4 text-gray-600">{{ $applicant->created_at->format('Y-m-d') }}</td>
                                                 <td class="px-6 py-4">
                                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                        approved
+                                                        Exam cleared
                                                     </span>
                                                 </td>
                                                 <td class="px-6 py-4 text-right">
@@ -513,7 +491,7 @@
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">No approved enrollment applications.</td>
+                                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">No applicants approved for exam yet.</td>
                                         </tr>
 
                                         
@@ -670,9 +648,9 @@
     <div id="documentViewerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-2 sm:p-4">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
             <!-- Modal Header -->
-            <div class="p-3 sm:p-4 border-b-2 border-university-burgundy flex items-center justify-between bg-gradient-to-r from-university-burgundy/5 to-transparent flex-shrink-0">
+            <div class="p-3 sm:p-4 border-b-2 border-indigo-600 flex items-center justify-between bg-gradient-to-r from-indigo-50 to-transparent flex-shrink-0">
                 <div class="min-w-0 flex-1">
-                    <h2 class="text-lg sm:text-xl font-bold text-university-burgundy truncate">Document Viewer</h2>
+                    <h2 class="text-lg sm:text-xl font-bold text-indigo-800 truncate">Document Viewer</h2>
                     <p id="documentName" class="text-xs sm:text-sm text-gray-500 mt-1 truncate"></p>
                 </div>
                 <button onclick="closeDocumentViewer()" class="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 ml-2">
@@ -686,7 +664,7 @@
             <div class="flex-1 overflow-hidden relative">
                 <div id="loadingIndicator" class="absolute inset-0 flex items-center justify-center bg-white z-10">
                     <div class="text-center p-4">
-                        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-university-burgundy mx-auto"></div>
+                        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-indigo-600 mx-auto"></div>
                         <p class="mt-4 text-sm sm:text-base text-gray-600">Loading document...</p>
                     </div>
                 </div>
@@ -698,7 +676,7 @@
                 <button onclick="closeDocumentViewer()" class="w-32 sm:w-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-md font-medium transition-colors">
                     Close
                 </button>
-                <a id="downloadLink" href="" download class="w-32 sm:w-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-sm sm:text-base bg-university-burgundy text-white hover:bg-university-burgundy/90 rounded-md font-medium transition-colors">
+                <a id="downloadLink" href="" download class="w-32 sm:w-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-sm sm:text-base bg-indigo-600 text-white hover:bg-indigo-700 rounded-md font-medium transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                     </svg>

@@ -145,9 +145,8 @@ Route::get('/serve-pdf/{path}', function($path) {
 
 
 //route for analytics 
-Route::get('/teacher-studentenrollment-analytics',function(){
-    return view('TeacherPanel.studentenrollment.analytics');
-})->name('teacher.studentenrollment.analytics');
+Route::get('/teacher-studentenrollment-analytics', [StudentApplicants::class, 'ViewAnalytics'])
+    ->name('teacher.studentenrollment.analytics');
 
 
 
