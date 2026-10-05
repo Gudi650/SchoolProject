@@ -20,19 +20,25 @@
         <p class="text-sm mt-2 text-slate-600">Sign in with an accountant account linked to a school, or set your school in session.</p>
       </div>
     @else
-      <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 class="text-xl font-bold text-slate-900">Finance overview</h1>
-          <p class="text-sm text-slate-600 mt-1">Live counts from payroll, loans, budget, fees, and enrollment.</p>
+          <h1 class="text-xl font-bold text-slate-900">Welcome{{ $user ? ', ' . trim($user->fname . ' ' . $user->lname) : '' }}</h1>
+          <p class="text-sm text-slate-600 mt-1">{{ $school->name ?? 'Finance overview' }} · {{ now()->format('l, M j, Y') }}</p>
         </div>
-        <p class="text-sm text-slate-500">{{ now()->format('l, M j, Y') }}</p>
       </div>
+      @if(!empty($alerts))
+        <div class="mb-4 flex flex-wrap gap-2">
+          @foreach($alerts as $alert)
+            <span class="text-xs px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200">{{ $alert }}</span>
+          @endforeach
+        </div>
+      @endif
 
       <div class="mb-6">
         <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl p-8 text-white shadow-xl">
           <div class="flex items-start justify-between gap-4">
             <div>
-              <p class="text-indigo-100 text-sm font-medium mb-2">Payroll disbursed this month</p>
+              <p class="text-indigo-100 text-sm font-medium mb-2">Processed payroll this month</p>
               <h2 class="text-4xl font-bold mb-2">{{ $fmt($stats['payrollNetMonth'] ?? 0) }}</h2>
               <p class="text-indigo-100 text-sm">
                 <span class="font-semibold text-white">{{ (int) ($stats['payrollRunsMonth'] ?? 0) }}</span>
@@ -74,7 +80,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-xl p-4 border border-slate-200">
+        <a href="{{ route('accounting.proposalManagement') }}" class="bg-white rounded-xl p-4 border border-slate-200 hover:border-amber-300 block">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
               <i data-lucide="file-clock" class="w-5 h-5 text-amber-600"></i>
@@ -84,9 +90,9 @@
               <p class="text-lg font-semibold">{{ number_format($stats['pendingLoans'] ?? 0) }}</p>
             </div>
           </div>
-        </div>
+        </a>
 
-        <div class="bg-white rounded-xl p-4 border border-slate-200">
+        <a href="{{ route('accounting.loanDisbursements') }}" class="bg-white rounded-xl p-4 border border-slate-200 hover:border-emerald-300 block">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
               <i data-lucide="badge-check" class="w-5 h-5 text-emerald-600"></i>
@@ -96,7 +102,7 @@
               <p class="text-lg font-semibold">{{ number_format($stats['approvedLoans'] ?? 0) }}</p>
             </div>
           </div>
-        </div>
+        </a>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -164,14 +170,14 @@
           <a href="{{ route('accounting.feeStructure') }}" class="inline-block mt-4 text-sm text-indigo-600 hover:text-indigo-800">Open fee structure →</a>
         </div>
 
-        <div class="bg-white rounded-xl p-6 border border-slate-200">
+        <a href="{{ route('accounting.enrollmentIncome') }}" class="bg-white rounded-xl p-6 border border-slate-200 hover:border-purple-300 block">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-sm font-semibold text-slate-900">Enrollment applications</h3>
             <i data-lucide="user-plus" class="w-5 h-5 text-purple-600"></i>
           </div>
           <p class="text-4xl font-bold text-slate-900">{{ number_format($stats['pendingEnrollments'] ?? 0) }}</p>
-          <p class="text-xs text-slate-600 mt-3">Pending applicant details</p>
-        </div>
+          <p class="text-xs text-slate-600 mt-3">Pending · view enrollment income</p>
+        </a>
 
         <div class="bg-white rounded-xl p-6 border border-slate-200">
           <div class="flex items-center justify-between mb-4">
@@ -187,8 +193,12 @@
       </div>
 
       <div class="bg-white rounded-xl p-6 border border-slate-200">
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between mb-4 gap-2 flex-wrap">
           <h3 class="text-sm font-semibold text-slate-900">Recent payroll &amp; loans</h3>
+          <div class="text-xs flex gap-3">
+            <a href="{{ route('accounting.payrollManagement') }}" class="text-indigo-600 hover:text-indigo-800">Payroll</a>
+            <a href="{{ route('accounting.proposalManagement') }}" class="text-indigo-600 hover:text-indigo-800">Loans</a>
+          </div>
         </div>
         <div class="space-y-3">
           @forelse($recentActivity as $item)

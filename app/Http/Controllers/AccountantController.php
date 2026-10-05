@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\FeeStructure;
 use App\Models\LoanApplication;
 use App\Models\PayrollRun;
+use App\Models\School;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\budget;
 use App\Models\studentEnrollDetails;
 use App\Services\AccountantContextService;
+use Illuminate\Support\Facades\Auth;
 class AccountantController extends Controller
 {
     public function __construct(private AccountantContextService $accountantContext)
@@ -27,7 +29,11 @@ class AccountantController extends Controller
         $monthStart = now()->startOfMonth();
 
         $payrollThisMonth = PayrollRun::where('school_id', $schoolId)
-            ->where('created_at', '>=', $monthStart)
+            ->where('status', 'processed')
+            ->where(function ($q) use ($monthStart) {
+                $q->where('paid_at', '>=', $monthStart)
+                    ->orWhere(fn ($q2) => $q2->whereNull('paid_at')->where('created_at', '>=', $monthStart));
+            })
             ->get();
 
         $latestBudget = budget::where('school_id', $schoolId)->latest()->first();
@@ -85,6 +91,15 @@ class AccountantController extends Controller
             ->take(6)
             ->values();
 
-        return view('AccountantPanel.dashboard', compact('schoolId', 'stats', 'payrollTrend', 'recentActivity'));
+        $school = School::find($schoolId);
+        $user = Auth::user();
+        $alerts = array_filter([
+            ($stats['pendingLoans'] ?? 0) > 0 ? $stats['pendingLoans'] . ' loan(s) need review' : null,
+            ($stats['approvedLoans'] ?? 0) > 0 ? $stats['approvedLoans'] . ' loan(s) ready to disburse' : null,
+            ($stats['pendingEnrollments'] ?? 0) > 0 ? $stats['pendingEnrollments'] . ' enrollment application(s) pending' : null,
+            $budgetTotal <= 0 ? 'No budget set for this school' : null,
+        ]);
+
+        return view('AccountantPanel.dashboard', compact('schoolId', 'stats', 'payrollTrend', 'recentActivity', 'school', 'user', 'alerts'));
     }
 }
