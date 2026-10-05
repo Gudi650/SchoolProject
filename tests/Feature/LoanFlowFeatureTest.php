@@ -30,6 +30,15 @@ class LoanFlowFeatureTest extends TestCase
             'roles' => 'accountant',
         ]);
 
+        Teacher::create([
+            'fname' => 'Flow',
+            'lname' => 'Accountant',
+            'email' => 'flow-accountant-staff@example.com',
+            'gender' => 'female',
+            'school_id' => $school->id,
+            'user_id' => $accountant->id,
+        ]);
+
         $borrower = User::create([
             'fname' => 'Flow',
             'lname' => 'Borrower',

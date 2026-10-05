@@ -6,12 +6,15 @@ use App\Models\ClassFeeOptions;
 use App\Models\FeeOptions;
 use App\Models\FeeStructure;
 use App\Models\Teacher;
+use App\Services\AccountantContextService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class FeeOptionsController extends Controller
 {
-    //
+    public function __construct(private AccountantContextService $accountantContext)
+    {
+    }
 
     //view the fee settings page
     public function viewFeeSettings()
@@ -33,13 +36,12 @@ class FeeOptionsController extends Controller
         */
 
         //temporarily require the data
-        $feeStructures = $this->getFeeStructures(1); 
-        $customFeeStructures = $this->getCustomFeeStructures(1);
-
+        $currentSchoolId = $this->accountantContext->requireSchoolId();
+        $feeStructures = $this->getFeeStructures($currentSchoolId);
+        $customFeeStructures = $this->getCustomFeeStructures($currentSchoolId);
 
         //return the fee settings view
         // Fetch saved settings using the dedicated function
-        $currentSchoolId = 1; // TODO: Use auth()->user()->school_id
         $savedSettings = $this->getSavedFeeSettings($currentSchoolId);
 
         $feeOptions = $savedSettings['feeOptions'];
@@ -87,8 +89,7 @@ class FeeOptionsController extends Controller
 
         // Save the settings to database
         try {
-            // Get the current school ID (hardcoded for now, will use auth later)
-            $currentSchoolId = 1; // TODO: Change to auth()->user()->school_id
+            $currentSchoolId = $this->accountantContext->requireSchoolId();
             
             // Get the validated data (all fields that passed validation)
             $validatedSettings = $validator->validated();

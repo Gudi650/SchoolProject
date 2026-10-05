@@ -47,7 +47,7 @@
               </div>
               <p class="text-xs sm:text-sm text-slate-600">Total Payables</p>
             </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">₹3.05L</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 3.05L</p>
             <p class="text-xs sm:text-sm text-amber-600 mt-2 font-medium">Outstanding amount</p>
           </div>
           <div class="bg-white rounded-xl p-4 sm:p-6 border border-green-100 shadow-sm">
@@ -57,7 +57,7 @@
               </div>
               <p class="text-xs sm:text-sm text-slate-600">Paid This Month</p>
             </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">₹8.5L</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 8.5L</p>
             <p class="text-xs sm:text-sm text-green-600 mt-2 font-medium">24 payments</p>
           </div>
           <div class="bg-white rounded-xl p-4 sm:p-6 border border-red-100 shadow-sm">
@@ -67,7 +67,7 @@
               </div>
               <p class="text-xs sm:text-sm text-slate-600">Pending Payments</p>
             </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">₹1.53L</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 1.53L</p>
             <p class="text-xs sm:text-sm text-red-600 mt-2 font-medium">2 pending</p>
           </div>
         </div>
@@ -100,8 +100,8 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Furniture</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">+91 98765 43210</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">contact@abcfurniture.com</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">₹4,50,000</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm text-red-600 font-medium">₹28,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">Tsh 4,50,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm text-red-600 font-medium">Tsh 28,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-13</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Active</span></td>
                   </tr>
@@ -111,8 +111,8 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Laboratory</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">+91 98765 43211</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">sales@scisupplies.com</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">₹8,50,000</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm text-red-600 font-medium">₹1,25,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">Tsh 8,50,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm text-red-600 font-medium">Tsh 1,25,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-10</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Active</span></td>
                   </tr>
@@ -122,7 +122,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Stationery</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">+91 98765 43212</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">info@officemart.com</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">₹2,80,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">Tsh 2,80,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm text-green-600 font-medium">Cleared</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-12</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Active</span></td>
@@ -133,8 +133,8 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Books</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">+91 98765 43213</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">orders@bookdist.com</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">₹5,20,000</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm text-red-600 font-medium">₹42,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">Tsh 5,20,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm text-red-600 font-medium">Tsh 42,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-10</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Active</span></td>
                   </tr>
@@ -168,7 +168,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">2024-01-14</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">State Electricity Board</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">INV-2024-045</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">₹45,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">Tsh 45,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">Online</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Paid</span></td>
                   </tr>
@@ -177,7 +177,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">2024-01-13</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">ABC Furniture</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">INV-2024-038</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">₹28,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">Tsh 28,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">Cheque</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Pending</span></td>
                   </tr>
@@ -186,7 +186,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">2024-01-12</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Office Mart</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">INV-2024-032</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">₹15,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">Tsh 15,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">Bank Transfer</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Paid</span></td>
                   </tr>

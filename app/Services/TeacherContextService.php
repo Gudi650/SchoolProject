@@ -73,15 +73,7 @@ class TeacherContextService
 
     public function resolveSchoolId($user = null): ?int
     {
-        $user ??= Auth::user();
-
-        if (!$user) {
-            return session('school_id');
-        }
-
-        return $user->school_id
-            ?? Teacher::where('user_id', $user->id)->value('school_id')
-            ?? session('school_id');
+        return app(AccountantContextService::class)->resolveSchoolIdForUser($user ?? Auth::user());
     }
 
     public function timetableSetup(?Teacher $teacher = null): array

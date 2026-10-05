@@ -12,6 +12,7 @@ use App\Models\PayrollChange;
 use App\Models\PayrollConfigurations;
 use App\Models\PayrollRun;
 use App\Models\Teacher;
+use App\Services\AccountantContextService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,10 @@ use Throwable;
 
 class PayrollConfigurationsController extends Controller
 {
+    public function __construct(private AccountantContextService $accountantContext)
+    {
+    }
+
     //process payroll runs for a period using baseline payroll + active payroll changes
     public function processPayrollRuns(Request $request)
     {
@@ -39,7 +44,8 @@ class PayrollConfigurationsController extends Controller
          * get the userId
          * 
          */
-        $userId = Auth::id()?? 100;
+        $userId = Auth::id();
+        abort_unless($userId, 403);
         
 
         // 3) Resolve processing window (default: current month).
@@ -849,8 +855,7 @@ class PayrollConfigurationsController extends Controller
     //function to get the school id from the authenticated user
     protected function getSchoolId(): int
     {
-        // In a real application, you would typically get the school ID from the authenticated user's session or profile
-        return (int) (Auth::user()?->school_id ?? 1);
+        return $this->accountantContext->requireSchoolId();
     }
 
 

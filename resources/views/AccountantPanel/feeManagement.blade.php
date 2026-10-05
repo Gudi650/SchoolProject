@@ -39,7 +39,7 @@
               </div>
               <p class="text-xs sm:text-sm text-slate-600">Total Collected (This Month)</p>
             </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">₹52.5L</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 52.5L</p>
             <p class="text-xs sm:text-sm text-green-600 mt-2">+15.3% from last month</p>
           </div>
           <div class="bg-white rounded-xl p-4 sm:p-6 border border-amber-100 shadow-sm">
@@ -49,7 +49,7 @@
               </div>
               <p class="text-xs sm:text-sm text-slate-600">Pending Fees</p>
             </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">₹7.5L</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 7.5L</p>
             <p class="text-xs sm:text-sm text-amber-600 mt-2">30 students</p>
           </div>
           <div class="bg-white rounded-xl p-4 sm:p-6 border border-red-100 shadow-sm">
@@ -59,7 +59,7 @@
               </div>
               <p class="text-xs sm:text-sm text-slate-600">Overdue Payments</p>
             </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">₹2.8L</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 2.8L</p>
             <p class="text-xs sm:text-sm text-red-600 mt-2">12 students</p>
           </div>
           <div class="bg-white rounded-xl p-4 sm:p-6 border border-indigo-100 shadow-sm">
@@ -109,8 +109,8 @@
                   <td class="px-4 py-3">Rahul Sharma</td>
                   <td class="px-4 py-3">10-A</td>
                   <td class="px-4 py-3">Tuition</td>
-                  <td class="px-4 py-3">₹15,000</td>
-                  <td class="px-4 py-3 text-green-600 font-medium">₹15,000</td>
+                  <td class="px-4 py-3">Tsh 15,000</td>
+                  <td class="px-4 py-3 text-green-600 font-medium">Tsh 15,000</td>
                   <td class="px-4 py-3"><span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Paid</span></td>
                   <td class="px-4 py-3">2024-01-15</td>
                 </tr>
@@ -119,8 +119,8 @@
                   <td class="px-4 py-3">Sneha Reddy</td>
                   <td class="px-4 py-3">8-C</td>
                   <td class="px-4 py-3">Hostel + Tuition</td>
-                  <td class="px-4 py-3">₹35,000</td>
-                  <td class="px-4 py-3 text-green-600 font-medium">₹35,000</td>
+                  <td class="px-4 py-3">Tsh 35,000</td>
+                  <td class="px-4 py-3 text-green-600 font-medium">Tsh 35,000</td>
                   <td class="px-4 py-3"><span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Paid</span></td>
                   <td class="px-4 py-3">2024-01-12</td>
                 </tr>
@@ -156,9 +156,9 @@
                   <td class="px-4 py-3">Priya Patel</td>
                   <td class="px-4 py-3">9-B</td>
                   <td class="px-4 py-3">Tuition + Transport</td>
-                  <td class="px-4 py-3">₹20,000</td>
-                  <td class="px-4 py-3 text-green-600 font-medium">₹10,000</td>
-                  <td class="px-4 py-3 text-red-600 font-medium">₹10,000</td>
+                  <td class="px-4 py-3">Tsh 20,000</td>
+                  <td class="px-4 py-3 text-green-600 font-medium">Tsh 10,000</td>
+                  <td class="px-4 py-3 text-red-600 font-medium">Tsh 10,000</td>
                   <td class="px-4 py-3"><span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full">Partial</span></td>
                   <td class="px-4 py-3">2024-01-14</td>
                 </tr>
@@ -167,9 +167,9 @@
                   <td class="px-4 py-3">Amit Kumar</td>
                   <td class="px-4 py-3">10-A</td>
                   <td class="px-4 py-3">Tuition</td>
-                  <td class="px-4 py-3">₹15,000</td>
-                  <td class="px-4 py-3">₹0</td>
-                  <td class="px-4 py-3 text-red-600 font-medium">₹15,000</td>
+                  <td class="px-4 py-3">Tsh 15,000</td>
+                  <td class="px-4 py-3">Tsh 0</td>
+                  <td class="px-4 py-3 text-red-600 font-medium">Tsh 15,000</td>
                   <td class="px-4 py-3"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs rounded-full">Pending</span></td>
                   <td class="px-4 py-3">2024-01-10</td>
                 </tr>

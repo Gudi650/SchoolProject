@@ -33,7 +33,7 @@
 					</div>
 					<p class="text-xs sm:text-sm text-slate-600">Total Loan Portfolio</p>
 				</div>
-				<p class="text-xl sm:text-2xl font-bold text-slate-900">₹28.4L</p>
+				<p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 28.4L</p>
 				<p class="text-xs sm:text-sm text-slate-600 mt-2">64 active loans</p>
 			</div>
 
@@ -44,7 +44,7 @@
 					</div>
 					<p class="text-xs sm:text-sm text-slate-600">Repayment Collected</p>
 				</div>
-				<p class="text-xl sm:text-2xl font-bold text-slate-900">₹4.9L</p>
+				<p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 4.9L</p>
 				<p class="text-xs sm:text-sm text-green-600 mt-2">This month</p>
 			</div>
 
@@ -55,7 +55,7 @@
 					</div>
 					<p class="text-xs sm:text-sm text-slate-600">Due This Week</p>
 				</div>
-				<p class="text-xl sm:text-2xl font-bold text-slate-900">₹1.2L</p>
+				<p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 1.2L</p>
 				<p class="text-xs sm:text-sm text-amber-600 mt-2">18 installments</p>
 			</div>
 
@@ -66,7 +66,7 @@
 					</div>
 					<p class="text-xs sm:text-sm text-slate-600">Overdue Amount</p>
 				</div>
-				<p class="text-xl sm:text-2xl font-bold text-slate-900">₹2.1L</p>
+				<p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 2.1L</p>
 				<p class="text-xs sm:text-sm text-red-600 mt-2">11 accounts overdue</p>
 			</div>
 		</div>
@@ -126,13 +126,13 @@
 					<div class="p-3 rounded-lg border border-amber-200 bg-amber-50">
 						<p class="text-sm font-medium text-slate-900">Pending Approval</p>
 						<p class="text-2xl font-bold text-amber-700 mt-1">9</p>
-						<p class="text-xs text-slate-600 mt-1">₹3.6L requested</p>
+						<p class="text-xs text-slate-600 mt-1">Tsh 3.6L requested</p>
 					</div>
 
 					<div class="p-3 rounded-lg border border-green-200 bg-green-50">
 						<p class="text-sm font-medium text-slate-900">Approved Today</p>
 						<p class="text-2xl font-bold text-green-700 mt-1">3</p>
-						<p class="text-xs text-slate-600 mt-1">₹1.1L disbursed</p>
+						<p class="text-xs text-slate-600 mt-1">Tsh 1.1L disbursed</p>
 					</div>
 
 					<div class="p-3 rounded-lg border border-red-200 bg-red-50">
@@ -246,9 +246,9 @@
 							<td class="px-4 py-3">LOAN-1042</td>
 							<td class="px-4 py-3">Priya Sharma</td>
 							<td class="px-4 py-3">Education</td>
-							<td class="px-4 py-3">₹2,40,000</td>
-							<td class="px-4 py-3 text-amber-600 font-semibold">₹1,08,000</td>
-							<td class="px-4 py-3">₹12,000</td>
+							<td class="px-4 py-3">Tsh 2,40,000</td>
+							<td class="px-4 py-3 text-amber-600 font-semibold">Tsh 1,08,000</td>
+							<td class="px-4 py-3">Tsh 12,000</td>
 							<td class="px-4 py-3">2026-04-04</td>
 							<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Current</span></td>
 						</tr>
@@ -256,9 +256,9 @@
 							<td class="px-4 py-3">LOAN-1031</td>
 							<td class="px-4 py-3">Rohan Gupta</td>
 							<td class="px-4 py-3">Emergency</td>
-							<td class="px-4 py-3">₹95,000</td>
-							<td class="px-4 py-3 text-red-600 font-semibold">₹57,000</td>
-							<td class="px-4 py-3">₹9,500</td>
+							<td class="px-4 py-3">Tsh 95,000</td>
+							<td class="px-4 py-3 text-red-600 font-semibold">Tsh 57,000</td>
+							<td class="px-4 py-3">Tsh 9,500</td>
 							<td class="px-4 py-3">2026-03-30</td>
 							<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Overdue</span></td>
 						</tr>
@@ -266,9 +266,9 @@
 							<td class="px-4 py-3">LOAN-1024</td>
 							<td class="px-4 py-3">Ananya Das</td>
 							<td class="px-4 py-3">Medical</td>
-							<td class="px-4 py-3">₹1,20,000</td>
-							<td class="px-4 py-3 text-amber-600 font-semibold">₹24,000</td>
-							<td class="px-4 py-3">₹8,000</td>
+							<td class="px-4 py-3">Tsh 1,20,000</td>
+							<td class="px-4 py-3 text-amber-600 font-semibold">Tsh 24,000</td>
+							<td class="px-4 py-3">Tsh 8,000</td>
 							<td class="px-4 py-3">2026-04-02</td>
 							<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Due Soon</span></td>
 						</tr>
@@ -276,9 +276,9 @@
 							<td class="px-4 py-3">LOAN-1017</td>
 							<td class="px-4 py-3">Amit Patel</td>
 							<td class="px-4 py-3">Personal</td>
-							<td class="px-4 py-3">₹1,80,000</td>
-							<td class="px-4 py-3 text-amber-600 font-semibold">₹72,000</td>
-							<td class="px-4 py-3">₹15,000</td>
+							<td class="px-4 py-3">Tsh 1,80,000</td>
+							<td class="px-4 py-3 text-amber-600 font-semibold">Tsh 72,000</td>
+							<td class="px-4 py-3">Tsh 15,000</td>
 							<td class="px-4 py-3">2026-04-06</td>
 							<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Current</span></td>
 						</tr>
@@ -300,21 +300,21 @@
 							<p class="text-sm font-medium text-slate-900">Kavya Iyer • LOAN-1009</p>
 							<p class="text-xs text-slate-500">Due on 2026-03-31</p>
 						</div>
-						<span class="text-sm font-semibold text-slate-900">₹11,000</span>
+						<span class="text-sm font-semibold text-slate-900">Tsh 11,000</span>
 					</div>
 					<div class="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
 						<div>
 							<p class="text-sm font-medium text-slate-900">Arjun Singh • LOAN-1028</p>
 							<p class="text-xs text-slate-500">Due on 2026-04-01</p>
 						</div>
-						<span class="text-sm font-semibold text-slate-900">₹9,000</span>
+						<span class="text-sm font-semibold text-slate-900">Tsh 9,000</span>
 					</div>
 					<div class="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
 						<div>
 							<p class="text-sm font-medium text-slate-900">Sneha Reddy • LOAN-1035</p>
 							<p class="text-xs text-slate-500">Due on 2026-04-03</p>
 						</div>
-						<span class="text-sm font-semibold text-slate-900">₹13,500</span>
+						<span class="text-sm font-semibold text-slate-900">Tsh 13,500</span>
 					</div>
 				</div>
 			</div>
@@ -331,7 +331,7 @@
 							<p class="text-sm font-medium text-slate-900">Disbursement • LOAN-1048</p>
 							<p class="text-xs text-slate-500">Today • To: N. Mushi</p>
 						</div>
-						<span class="text-sm font-semibold text-green-700">+₹75,000</span>
+						<span class="text-sm font-semibold text-green-700">+Tsh 75,000</span>
 					</div>
 
 					<div class="flex items-center justify-between p-3 rounded-lg bg-indigo-50 border border-indigo-100">
@@ -339,7 +339,7 @@
 							<p class="text-sm font-medium text-slate-900">Repayment • LOAN-1031</p>
 							<p class="text-xs text-slate-500">Today • From payroll deduction</p>
 						</div>
-						<span class="text-sm font-semibold text-indigo-700">₹9,500</span>
+						<span class="text-sm font-semibold text-indigo-700">Tsh 9,500</span>
 					</div>
 
 					<div class="flex items-center justify-between p-3 rounded-lg bg-red-50 border border-red-100">
@@ -347,7 +347,7 @@
 							<p class="text-sm font-medium text-slate-900">Penalty Applied • LOAN-1019</p>
 							<p class="text-xs text-slate-500">Yesterday • 7 days overdue</p>
 						</div>
-						<span class="text-sm font-semibold text-red-700">₹1,200</span>
+						<span class="text-sm font-semibold text-red-700">Tsh 1,200</span>
 					</div>
 				</div>
 			</div>

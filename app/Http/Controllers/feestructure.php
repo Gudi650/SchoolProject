@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\FeeStructure as ModelsFeeStructure;
 use App\Models\Teacher;
+use App\Services\AccountantContextService;
 use Illuminate\Http\Request;
 
 class feestructure extends Controller
 {
-    //
+    public function __construct(private AccountantContextService $accountantContext)
+    {
+    }
 
     //display the fee structure management page
     public function viewFeeStructure()
@@ -38,8 +41,9 @@ class feestructure extends Controller
 
 
         //temporarily require the data
-        $feeStructures = $this->getFeeStructures(1); 
-        $customFeeStructures = $this->getCustomFeeStructures(1);
+        $schoolId = $this->accountantContext->requireSchoolId();
+        $feeStructures = $this->getFeeStructures($schoolId);
+        $customFeeStructures = $this->getCustomFeeStructures($schoolId);
 
 
 
@@ -53,6 +57,7 @@ class feestructure extends Controller
             'feeStructures' => $feeStructures,
             'customFeeStructures' => $customFeeStructures,
             'totalFees' => $totalFees,
+            'schoolId' => $schoolId,
         ]);
     }
     
@@ -63,6 +68,8 @@ class feestructure extends Controller
 
         try
         {
+            $schoolId = $this->accountantContext->requireSchoolId();
+
             //validate the request
             $validated = $request->validate([
                 'currency' => 'required|string|max:3',
@@ -83,22 +90,14 @@ class feestructure extends Controller
                 'specific_components.*.name' => 'required_with:specific_components|string|max:100',
                 'specific_components.*.amount' => 'required_with:specific_components|numeric|min:0',
             
-                //for specific scope
-                'school_id' => 'nullable|integer|exists:schools,id',
-
-
             ]);
 
             $classes = $request->input('classes');
             $validated['all_components'] = $request->input('all_components'); // null when missing
             $validated['specific_components'] = $request->input('specific_components'); // null when missing
             $validated['for'] = (!empty($classes) && is_array($classes)) ? 'specific' : 'general';
-
-            //add a default school id if not provided
-            if (empty($validated['school_id']))
-            {
-                $validated['school_id'] = '1';
-            }
+            $validated['school_id'] = $schoolId;
+            $validated['currency'] = $validated['currency'] ?? config('currency.code', 'TSH');
 
             try{
 

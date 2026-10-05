@@ -4,19 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\budgetDepartment;
 use App\Models\Teacher;
+use App\Services\AccountantContextService;
 use Illuminate\Http\Request;
 
 class BudgetDepartmentController extends Controller
 {
-    //
+    public function __construct(private AccountantContextService $accountantContext)
+    {
+    }
 
     //function to view the page
     public function viewbudgetdepartments()
     {
-
-        //get the departments for a specific school
-        
-        $departments = $this->fetchbudgetdepartments(1); //hardcoded for now
+        $schoolId = $this->accountantContext->requireSchoolId();
+        $departments = $this->fetchbudgetdepartments($schoolId);
 
         //dd($departments);
         
@@ -48,7 +49,7 @@ class BudgetDepartmentController extends Controller
             as of now do it manually
         */
 
-            $school_id = 1; //hardcoded for now
+        $school_id = $this->accountantContext->requireSchoolId();
 
         //store the data in the budget_departments table
         //put try and catch block to handle errors
@@ -81,10 +82,12 @@ class BudgetDepartmentController extends Controller
             'description' => 'nullable|string|max:1000',
         ]);
 
+        $schoolId = $this->accountantContext->requireSchoolId();
+
         //update the department
         try{
 
-            $department = budgetDepartment::where('school_id', 1)->findOrFail($id); //hardcoded school id for now
+            $department = budgetDepartment::where('school_id', $schoolId)->findOrFail($id);
             $department->update([
                 'department_name' => $validatedData['department_name'],
                 'description' => $validatedData['description'] ?? null,
@@ -103,10 +106,12 @@ class BudgetDepartmentController extends Controller
     public function deletebudgetdepartment($id)
     {
 
+        $schoolId = $this->accountantContext->requireSchoolId();
+
         //delete the department
         try{
 
-            $department = budgetDepartment::where('school_id', 1)->findOrFail($id); //hardcoded school id for now
+            $department = budgetDepartment::where('school_id', $schoolId)->findOrFail($id);
             $department->delete();
             
         }catch(\Exception $e){

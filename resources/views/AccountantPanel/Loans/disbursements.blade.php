@@ -59,7 +59,7 @@
 					<p class="text-xs sm:text-sm text-slate-600">Disbursed Today</p>
 				</div>
 				<p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $disbursedToday }}</p>
-				<p class="text-xs sm:text-sm text-cyan-600 mt-2">₹{{ number_format($disbursedTodayAmount / 100000, 1) }}L released</p>
+				<p class="text-xs sm:text-sm text-cyan-600 mt-2">{{ money_format_app($disbursedTodayAmount / 100000, 1) }}L released</p>
 			</div>
 
 			<div class="bg-white rounded-xl p-4 sm:p-6 border border-green-100 shadow-sm">
@@ -121,7 +121,7 @@
 										<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
 										<td class="px-4 py-3">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</td>
 										<td class="px-4 py-3">{{ $loan->loanType->name ?? 'N/A' }}</td>
-										<td class="px-4 py-3 font-semibold text-slate-900">₹{{ number_format($loan->amount, 0) }}</td>
+										<td class="px-4 py-3 font-semibold text-slate-900">{{ money_format_app($loan->amount, 0) }}</td>
 										<td class="px-4 py-3">{{ optional($loan->approved_at)->format('Y-m-d') ?? $loan->created_at->format('Y-m-d') }}</td>
 										<td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Approved</span></td>
 										<td class="px-4 py-3 w-72">
@@ -153,13 +153,13 @@
 													<div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
 													<div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
 													<div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
-													<div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+													<div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->amount, 2) }}</p></div>
 													<div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
 													<div><p class="text-slate-500">Approved At</p><p class="font-semibold text-slate-800">{{ optional($loan->approved_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
-													<div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->monthly_installment ?? 0, 2) }}</p></div>
 													<div><p class="text-slate-500">Interest Rate</p><p class="font-semibold text-slate-800">{{ number_format($loan->interest_rate, 2) }}%</p></div>
-													<div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
-													<div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->total_interest ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->total_repayment ?? 0, 2) }}</p></div>
 													<div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
 													<div>
 														<p class="text-slate-500 mb-1">Attachment</p>
@@ -228,7 +228,7 @@
 									<tr class="hover:bg-indigo-50 transition-colors">
 										<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
 										<td class="px-4 py-3">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</td>
-										<td class="px-4 py-3 font-semibold text-slate-900">₹{{ number_format($loan->amount, 0) }}</td>
+										<td class="px-4 py-3 font-semibold text-slate-900">{{ money_format_app($loan->amount, 0) }}</td>
 										<td class="px-4 py-3">Bank Transfer</td>
 										<td class="px-4 py-3">{{ $loan->loan_reference }}</td>
 										<td class="px-4 py-3">{{ optional($loan->disbursed_at)->format('Y-m-d') ?? '-' }}</td>
@@ -264,13 +264,13 @@
 													<div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
 													<div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
 													<div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
-													<div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+													<div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->amount, 2) }}</p></div>
 													<div><p class="text-slate-500">Disbursed At</p><p class="font-semibold text-slate-800">{{ optional($loan->disbursed_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
 													<div><p class="text-slate-500">Approved At</p><p class="font-semibold text-slate-800">{{ optional($loan->approved_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
 													<div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
-													<div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
-													<div><p class="text-slate-500">Total Paid</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_paid ?? 0, 2) }}</p></div>
-													<div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->monthly_installment ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Total Paid</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->total_paid ?? 0, 2) }}</p></div>
+													<div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->total_repayment ?? 0, 2) }}</p></div>
 													<div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
 													<div>
 														<p class="text-slate-500 mb-1">Attachment</p>

@@ -50,7 +50,7 @@
               </div>
               <p class="text-xs sm:text-sm text-slate-600">Paid Invoices</p>
             </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">₹52.5L</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 52.5L</p>
             <p class="text-xs sm:text-sm text-green-600 mt-2">1,092 invoices</p>
           </div>
           <div class="bg-white rounded-xl p-4 sm:p-6 border border-amber-100 shadow-sm">
@@ -60,7 +60,7 @@
               </div>
               <p class="text-xs sm:text-sm text-slate-600">Pending Amount</p>
             </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">₹7.5L</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 7.5L</p>
             <p class="text-xs sm:text-sm text-amber-600 mt-2">126 invoices</p>
           </div>
           <div class="bg-white rounded-xl p-4 sm:p-6 border border-red-100 shadow-sm">
@@ -70,7 +70,7 @@
               </div>
               <p class="text-xs sm:text-sm text-slate-600">Overdue Amount</p>
             </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">₹2.8L</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 2.8L</p>
             <p class="text-xs sm:text-sm text-red-600 mt-2">30 invoices</p>
           </div>
         </div>
@@ -123,7 +123,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">2024-01-15</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Rahul Sharma (Class 10-A)</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">Tuition Fee - Q4</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">₹15,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">Tsh 15,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-20</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700 font-medium">Paid</span></td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">2024-01-15</td>
@@ -133,7 +133,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">2024-01-14</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Priya Patel (Class 9-B)</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">Tuition + Transport</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">₹20,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">Tsh 20,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-19</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs rounded-full bg-amber-100 text-amber-700 font-medium">Partial</span></td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">-</td>
@@ -143,7 +143,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">2024-01-14</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Amit Kumar (Class 10-A)</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">Tuition Fee - Q4</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">₹15,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">Tsh 15,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-14</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-700 font-medium">Overdue</span></td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">-</td>
@@ -153,7 +153,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">2024-01-13</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Sneha Reddy (Class 8-C)</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">Hostel + Tuition</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">₹35,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">Tsh 35,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-18</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700 font-medium">Paid</span></td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">2024-01-13</td>
@@ -163,7 +163,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">2024-01-12</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Arjun Singh (Class 9-A)</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">Tuition Fee - Q4</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">₹15,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">Tsh 15,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-17</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-700 font-medium">Pending</span></td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">-</td>
@@ -173,7 +173,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">2024-01-12</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Kavya Iyer (Class 10-B)</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">Tuition + Library</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">₹16,500</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">Tsh 16,500</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-17</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700 font-medium">Paid</span></td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">2024-01-12</td>
@@ -183,7 +183,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">2024-01-11</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Rohan Gupta (Class 7-A)</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">Tuition Fee - Q4</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">₹12,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">Tsh 12,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-11</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-700 font-medium">Overdue</span></td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">-</td>
@@ -193,7 +193,7 @@
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm">2024-01-10</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden sm:table-cell">Ananya Das (Class 9-C)</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">Transport Fee</td>
-                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">₹5,000</td>
+                    <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold">Tsh 5,000</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden md:table-cell">2024-01-15</td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700 font-medium">Paid</span></td>
                     <td class="px-2 sm:px-4 py-3 text-xs sm:text-sm hidden lg:table-cell">2024-01-10</td>

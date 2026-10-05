@@ -126,9 +126,9 @@
 										name="currency"
 										class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
 									>
-										<option value="NGN">NGN</option>
+										<option value="TSH" selected>Tsh (TZS)</option>
 										<option value="USD">USD</option>
-										<option value="GBP">GBP</option>
+										<option value="KES">KES</option>
 										<option value="EUR">EUR</option>
 									</select>
 								</div>

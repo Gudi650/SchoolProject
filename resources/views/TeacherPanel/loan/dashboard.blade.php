@@ -194,21 +194,21 @@
 						<p class="text-sm font-medium text-slate-900">Installment Paid • #6</p>
 						<p class="text-xs text-slate-500">2026-03-04 • Payroll deduction</p>
 					</div>
-					<span class="text-sm font-semibold text-green-700">₹12,000</span>
+					<span class="text-sm font-semibold text-green-700">Tsh 12,000</span>
 				</div>
 				<div class="flex items-center justify-between p-3 rounded-lg bg-indigo-50 border border-indigo-100">
 					<div>
 						<p class="text-sm font-medium text-slate-900">Partial Payment</p>
 						<p class="text-xs text-slate-500">2026-02-04 • Manual payment</p>
 					</div>
-					<span class="text-sm font-semibold text-indigo-700">₹5,000</span>
+					<span class="text-sm font-semibold text-indigo-700">Tsh 5,000</span>
 				</div>
 				<div class="flex items-center justify-between p-3 rounded-lg bg-red-50 border border-red-100">
 					<div>
 						<p class="text-sm font-medium text-slate-900">Late Penalty Added</p>
 						<p class="text-xs text-slate-500">2026-02-10 • 6 days late</p>
 					</div>
-					<span class="text-sm font-semibold text-red-700">₹900</span>
+					<span class="text-sm font-semibold text-red-700">Tsh 900</span>
 				</div>
 			</div>
 		</div>

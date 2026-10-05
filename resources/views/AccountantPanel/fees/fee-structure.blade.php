@@ -101,7 +101,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm text-slate-600 mb-1">Highest Fee</p>
-            <p class="text-2xl font-bold text-slate-900">₹43,500</p>
+            <p class="text-2xl font-bold text-slate-900">Tsh 43,500</p>
           </div>
           <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
             <i data-lucide="trending-up" class="w-6 h-6 text-green-600"></i>
@@ -409,7 +409,6 @@
             <option value="TSH">TSH (Tanzanian Shilling)</option>
             <option value="USD">USD (US Dollar)</option>
             <option value="EUR">EUR (Euro)</option>
-            <option value="INR">INR (Indian Rupee)</option>
             <option value="KES">KES (Kenyan Shilling)</option>
           </select>
         </div>
@@ -464,7 +463,7 @@
                   <i data-lucide="calculator" class="w-4 h-4 text-slate-600"></i>
                   Total Fee
                 </label>
-                <div class="w-full bg-indigo-50 border border-indigo-300 rounded-lg px-4 py-2.5 text-lg font-bold text-indigo-900" id="editTotalDisplay">₹0</div>
+                <div class="w-full bg-indigo-50 border border-indigo-300 rounded-lg px-4 py-2.5 text-lg font-bold text-indigo-900" id="editTotalDisplay">{{ config('currency.symbol', 'Tsh') }} 0</div>
               </div>
             </div>
           </div>
@@ -514,7 +513,7 @@
     const calculateTotal = () => {
       const total = ['editTuition', 'editTransport', 'editHostel', 'editLibrary', 'editExam']
         .reduce((sum, id) => sum + (parseInt(document.getElementById(id).value) || 0), 0);
-      document.getElementById('editTotalDisplay').textContent = '₹' + total.toLocaleString('en-IN');
+      document.getElementById('editTotalDisplay').textContent = @json(config('currency.symbol', 'Tsh')) + ' ' + total.toLocaleString('en-US');
     };
 
     // Open edit class modal
@@ -592,6 +591,6 @@
   });
 </script>
 
-@include('AccountantPanel.fees.feeStructureModal')
+@include('AccountantPanel.fees.feeStructureModal', ['schoolId' => $schoolId ?? null])
 
 

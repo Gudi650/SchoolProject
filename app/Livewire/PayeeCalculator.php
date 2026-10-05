@@ -6,8 +6,8 @@ use App\Models\HealthInsurance;
 use App\Models\HealthInsuranceRanges;
 use App\Models\NSSFPSSF;
 use App\Models\PayeeRanges;
+use App\Services\AccountantContextService;
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
 
 class PayeeCalculator extends Component
 {
@@ -46,14 +46,18 @@ class PayeeCalculator extends Component
     /**
      * Load NSSF/PSSSF config for the school (called once in mount)
      */
+    private function resolveSchoolId(): ?int
+    {
+        return app(AccountantContextService::class)->resolveSchoolId();
+    }
+
     private function loadNSSFPSSF(): array
     {
-        $user = Auth::user();
-        $school_id = $user?->school_id
-            ?? $user?->teachers?->first()?->school_id
-            ?? 1;
+        $school_id = $this->resolveSchoolId();
 
-        $config = NSSFPSSF::where('school_id', $school_id)->first();
+        $config = $school_id
+            ? NSSFPSSF::where('school_id', $school_id)->first()
+            : null;
 
         if (!$config) {
             return ['nssfContribution' => 0.1, 'psssfContribution' => 0];
@@ -71,13 +75,11 @@ class PayeeCalculator extends Component
      */
     private function loadHealthInsuranceConfig(): array
     {
-        $user = Auth::user();
-        $school_id = $user?->school_id
-            ?? $user?->teachers?->first()?->school_id
-            ?? 1;
+        $school_id = $this->resolveSchoolId();
 
-
-        $config = HealthInsurance::where('school_id', $school_id)->first();
+        $config = $school_id
+            ? HealthInsurance::where('school_id', $school_id)->first()
+            : null;
         if (!$config) {
             return [
                 'employeeContribution' => 0,

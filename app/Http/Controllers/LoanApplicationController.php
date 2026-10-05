@@ -207,13 +207,7 @@ class LoanApplicationController extends Controller
     // Function to show accountant proposals/management page with all loan applications
     public function accountantProposals()
     {
-        /*
-            $user = Auth::user();
-
-        */
-
-
-        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
+        $schoolId = $this->teacherContext->resolveSchoolId(Auth::user());
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');
@@ -242,7 +236,7 @@ class LoanApplicationController extends Controller
         
         $totalApprovedAmount = $allLoans->where('status', 'approved')->sum('amount');
 
-        return view('AccountantPanel.Loans//.proposals', [
+        return view('AccountantPanel.Loans.proposals', [
             'allLoans' => $allLoans,
             'pendingCount' => $pendingCount,
             'underReviewCount' => $underReviewCount,
@@ -257,7 +251,7 @@ class LoanApplicationController extends Controller
     public function moveToUnderReview($loanId)
     {
         $user = Auth::user();
-        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
+        $schoolId = $this->teacherContext->resolveSchoolId($user);
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');
@@ -284,8 +278,8 @@ class LoanApplicationController extends Controller
     // Function to approve an under review loan application in the accountant panel
     public function moveToApproved($loanId)
     {
-        //$user = Auth::user();
-        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
+        $user = Auth::user();
+        $schoolId = $this->teacherContext->resolveSchoolId($user);
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');
@@ -317,7 +311,7 @@ class LoanApplicationController extends Controller
     public function moveToRejected($loanId)
     {
         $user = Auth::user();
-        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
+        $schoolId = $this->teacherContext->resolveSchoolId($user);
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');
@@ -348,12 +342,7 @@ class LoanApplicationController extends Controller
     // Function to show accountant disbursements page
     public function accountantDisbursements()
     {
-        /**
-         * as of now use a
-         * $user = Auth::user();
-         */
-
-        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
+        $schoolId = $this->teacherContext->resolveSchoolId(Auth::user());
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');
@@ -406,7 +395,7 @@ class LoanApplicationController extends Controller
     public function moveToDisbursed($loanId)
     {
         $user = Auth::user();
-        $schoolId = $this->teacherContext->resolveSchoolId($user) ?? 1;
+        $schoolId = $this->teacherContext->resolveSchoolId($user);
 
         if (!$schoolId) {
             return back()->with('error', 'School information is missing.');

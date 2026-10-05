@@ -19,7 +19,7 @@
 					</div>
 					<p class="text-xs sm:text-sm text-slate-600">Outstanding Balance</p>
 				</div>
-				<p class="text-xl sm:text-2xl font-bold text-slate-900">₹1,08,000</p>
+				<p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 1,08,000</p>
 				<p class="text-xs sm:text-sm text-slate-600 mt-2">1 active loan</p>
 			</div>
 			<div class="bg-white rounded-xl p-4 sm:p-6 border border-green-100 shadow-sm">
@@ -29,7 +29,7 @@
 					</div>
 					<p class="text-xs sm:text-sm text-slate-600">Paid So Far</p>
 				</div>
-				<p class="text-xl sm:text-2xl font-bold text-slate-900">₹1,32,000</p>
+				<p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 1,32,000</p>
 				<p class="text-xs sm:text-sm text-green-600 mt-2">55% repaid</p>
 			</div>
 			<div class="bg-white rounded-xl p-4 sm:p-6 border border-amber-100 shadow-sm">
@@ -39,7 +39,7 @@
 					</div>
 					<p class="text-xs sm:text-sm text-slate-600">Next Installment</p>
 				</div>
-				<p class="text-xl sm:text-2xl font-bold text-slate-900">₹12,000</p>
+				<p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 12,000</p>
 				<p class="text-xs sm:text-sm text-amber-600 mt-2">Due: 2026-04-04</p>
 			</div>
 			<div class="bg-white rounded-xl p-4 sm:p-6 border border-blue-100 shadow-sm">
@@ -77,9 +77,9 @@
 						<tbody class="divide-y divide-slate-100">
 							<tr>
 								<td class="px-4 py-3">LOAN-1042</td>
-								<td class="px-4 py-3">₹2,40,000</td>
-								<td class="px-4 py-3 text-green-700 font-semibold">₹1,32,000</td>
-								<td class="px-4 py-3 text-amber-700 font-semibold">₹1,08,000</td>
+								<td class="px-4 py-3">Tsh 2,40,000</td>
+								<td class="px-4 py-3 text-green-700 font-semibold">Tsh 1,32,000</td>
+								<td class="px-4 py-3 text-amber-700 font-semibold">Tsh 1,08,000</td>
 								<td class="px-4 py-3 w-56">
 									<div class="flex items-center gap-3">
 										<div class="flex-1 bg-slate-100 rounded-full h-2"><div class="h-2 bg-indigo-600 rounded-full" style="width:55%"></div></div>

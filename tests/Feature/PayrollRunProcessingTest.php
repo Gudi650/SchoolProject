@@ -34,6 +34,15 @@ class PayrollRunProcessingTest extends TestCase
             'roles' => 'accountant',
         ]);
 
+        Teacher::create([
+            'fname' => 'Pay',
+            'lname' => 'Accountant',
+            'email' => 'pay-accountant-staff@example.com',
+            'gender' => 'female',
+            'school_id' => $school->id,
+            'user_id' => $accountant->id,
+        ]);
+
         $borrowerUser = User::create([
             'fname' => 'Loan',
             'lname' => 'Teacher',

@@ -33,7 +33,7 @@
           </div>
           <p class="text-xs sm:text-sm text-slate-600">Total Income (YTD)</p>
         </div>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900">₹8.42Cr</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 8.42Cr</p>
         <p class="text-xs sm:text-sm text-green-600 mt-2">+9.8% vs last year</p>
       </div>
       <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
@@ -43,8 +43,8 @@
           </div>
           <p class="text-xs sm:text-sm text-slate-600">Collected (MTD)</p>
         </div>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900">₹72.6L</p>
-        <p class="text-xs sm:text-sm text-slate-600 mt-2">Target: ₹80L</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 72.6L</p>
+        <p class="text-xs sm:text-sm text-slate-600 mt-2">Target: Tsh 80L</p>
       </div>
       <div class="bg-white rounded-xl p-4 border border-green-100 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
@@ -63,8 +63,8 @@
           </div>
           <p class="text-xs sm:text-sm text-slate-600">Pending & Overdue</p>
         </div>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900">₹41.3L</p>
-        <p class="text-xs sm:text-sm text-amber-600 mt-2">₹12.8L overdue</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 41.3L</p>
+        <p class="text-xs sm:text-sm text-amber-600 mt-2">Tsh 12.8L overdue</p>
       </div>
       <div class="bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
@@ -96,7 +96,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 mt-4">
         <div class="rounded-lg border border-slate-200 p-3">
           <p class="text-xs text-slate-500">Collected (Cycle)</p>
-          <p class="text-lg font-semibold text-slate-900 mt-1">INR 23.8L</p>
+          <p class="text-lg font-semibold text-slate-900 mt-1">Tsh 23.8L</p>
         </div>
         <div class="rounded-lg border border-slate-200 p-3">
           <p class="text-xs text-slate-500">Fully Paid Students</p>
@@ -104,7 +104,7 @@
         </div>
         <div class="rounded-lg border border-slate-200 p-3">
           <p class="text-xs text-slate-500">Pending Enrollment Dues</p>
-          <p class="text-lg font-semibold text-amber-600 mt-1">INR 5.1L</p>
+          <p class="text-lg font-semibold text-amber-600 mt-1">Tsh 5.1L</p>
         </div>
         <div class="rounded-lg border border-slate-200 p-3">
           <p class="text-xs text-slate-500">Overdue Cases</p>
@@ -248,26 +248,26 @@
           <tbody class="divide-y divide-slate-100">
             <tr class="hover:bg-indigo-50 transition-colors">
               <td class="px-4 py-3">Main Campus - Secondary</td>
-              <td class="px-4 py-3">₹26,00,000</td>
-              <td class="px-4 py-3 font-semibold">₹24,90,000</td>
+              <td class="px-4 py-3">Tsh 26,00,000</td>
+              <td class="px-4 py-3 font-semibold">Tsh 24,90,000</td>
               <td class="px-4 py-3">95.8%</td>
-              <td class="px-4 py-3 text-amber-600 font-medium">-₹1,10,000</td>
+              <td class="px-4 py-3 text-amber-600 font-medium">-Tsh 1,10,000</td>
               <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Healthy</span></td>
             </tr>
             <tr class="hover:bg-indigo-50 transition-colors">
               <td class="px-4 py-3">City Campus - Primary</td>
-              <td class="px-4 py-3">₹18,00,000</td>
-              <td class="px-4 py-3 font-semibold">₹14,20,000</td>
+              <td class="px-4 py-3">Tsh 18,00,000</td>
+              <td class="px-4 py-3 font-semibold">Tsh 14,20,000</td>
               <td class="px-4 py-3">78.9%</td>
-              <td class="px-4 py-3 text-amber-600 font-medium">-₹3,80,000</td>
+              <td class="px-4 py-3 text-amber-600 font-medium">-Tsh 3,80,000</td>
               <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Needs Follow-up</span></td>
             </tr>
             <tr class="hover:bg-indigo-50 transition-colors">
               <td class="px-4 py-3">Hostel Operations</td>
-              <td class="px-4 py-3">₹9,00,000</td>
-              <td class="px-4 py-3 font-semibold">₹9,45,000</td>
+              <td class="px-4 py-3">Tsh 9,00,000</td>
+              <td class="px-4 py-3 font-semibold">Tsh 9,45,000</td>
               <td class="px-4 py-3">105.0%</td>
-              <td class="px-4 py-3 text-green-600 font-medium">+₹45,000</td>
+              <td class="px-4 py-3 text-green-600 font-medium">+Tsh 45,000</td>
               <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Above Target</span></td>
             </tr>
           </tbody>
@@ -323,19 +323,19 @@
         <div class="space-y-3 text-sm">
           <div class="flex items-center justify-between">
             <span class="text-slate-600">0-15 days</span>
-            <span class="font-semibold text-slate-900">₹15.2L</span>
+            <span class="font-semibold text-slate-900">Tsh 15.2L</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="text-slate-600">16-30 days</span>
-            <span class="font-semibold text-slate-900">₹13.3L</span>
+            <span class="font-semibold text-slate-900">Tsh 13.3L</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="text-slate-600">31+ days</span>
-            <span class="font-semibold text-amber-600">₹12.8L</span>
+            <span class="font-semibold text-amber-600">Tsh 12.8L</span>
           </div>
           <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
             <span class="text-slate-600">Total Pending</span>
-            <span class="font-semibold text-slate-900">₹41.3L</span>
+            <span class="font-semibold text-slate-900">Tsh 41.3L</span>
           </div>
           <button class="w-full px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors">View Defaulter Breakdown</button>
         </div>
@@ -367,7 +367,7 @@
               <td class="px-4 py-3">2026-04-12</td>
               <td class="px-4 py-3">Main Campus</td>
               <td class="px-4 py-3">Tuition Fee</td>
-              <td class="px-4 py-3 font-semibold text-green-600">₹4,80,000</td>
+              <td class="px-4 py-3 font-semibold text-green-600">Tsh 4,80,000</td>
               <td class="px-4 py-3">Online</td>
               <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Collected</span></td>
               <td class="px-4 py-3"><button class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100">View</button></td>
@@ -377,7 +377,7 @@
               <td class="px-4 py-3">2026-04-11</td>
               <td class="px-4 py-3">Admissions Desk</td>
               <td class="px-4 py-3">Enrollment Fee</td>
-              <td class="px-4 py-3 font-semibold text-green-600">INR 2,10,000</td>
+              <td class="px-4 py-3 font-semibold text-green-600">Tsh 2,10,000</td>
               <td class="px-4 py-3">Online</td>
               <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Collected</span></td>
               <td class="px-4 py-3"><a href="{{ route('accounting.enrollmentIncome') }}" class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100 inline-flex">View</a></td>
@@ -387,7 +387,7 @@
               <td class="px-4 py-3">2026-04-11</td>
               <td class="px-4 py-3">City Campus</td>
               <td class="px-4 py-3">Library Fee</td>
-              <td class="px-4 py-3 font-semibold text-green-600">₹45,000</td>
+              <td class="px-4 py-3 font-semibold text-green-600">Tsh 45,000</td>
               <td class="px-4 py-3">Cash</td>
               <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Collected</span></td>
               <td class="px-4 py-3"><button class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100">View</button></td>
@@ -397,7 +397,7 @@
               <td class="px-4 py-3">2026-04-10</td>
               <td class="px-4 py-3">Hostel Block A</td>
               <td class="px-4 py-3">Hostel Fee</td>
-              <td class="px-4 py-3 font-semibold text-amber-600">₹3,20,000</td>
+              <td class="px-4 py-3 font-semibold text-amber-600">Tsh 3,20,000</td>
               <td class="px-4 py-3">Bank Transfer</td>
               <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Pending Receipt</span></td>
               <td class="px-4 py-3"><button class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100">Follow Up</button></td>

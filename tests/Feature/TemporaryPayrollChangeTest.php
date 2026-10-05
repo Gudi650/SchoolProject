@@ -26,7 +26,15 @@ class TemporaryPayrollChangeTest extends TestCase
             'email' => 'temporary-accountant@example.com',
             'password' => bcrypt('password'),
             'roles' => 'accountant',
+        ]);
+
+        Teacher::create([
+            'fname' => 'Account',
+            'lname' => 'Manager',
+            'email' => 'temporary-accountant-staff@example.com',
+            'gender' => 'female',
             'school_id' => $school->id,
+            'user_id' => $accountant->id,
         ]);
 
         $teacherUser = User::create([

@@ -380,7 +380,8 @@
                           id="preferred_currency"
                           name="preferred_currency"
                           type="text"
-                          placeholder="e.g., NGN"
+                          placeholder="e.g., TZS"
+                          value="{{ config('currency.code', 'TSH') }}"
                           class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
                         />
                       </div>

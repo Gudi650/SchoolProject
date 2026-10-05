@@ -37,8 +37,7 @@
       </label>
       <div class="flex gap-3 items-center">
         <select id="currencySelect" name="currency" class="border rounded px-3 py-2 w-56 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-          <option value="" selected>Choose the currency</option>
-          <option value="TSH">TSh (TZS)</option>
+          <option value="TSH" selected>Tsh (TZS)</option>
           <option value="USD">USD ($)</option>
           <option value="KSH">KSh (KES)</option>
           <option value="EUR">EUR (€)</option>
@@ -152,8 +151,7 @@
       <div id="tabSpecific" class="space-y-3 hidden">
         <div class="space-y-3">
           <div>
-            <label class="block text-sm font-medium mb-1">School ID (optional)</label>
-            <input id="specificSchoolId" value="12244" name="school_id" type="text" class="border rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., SCH-001" />
+            <input type="hidden" name="school_id" value="{{ $schoolId ?? '' }}">
           </div>
           <div class="relative">
             <label class="block text-sm font-medium mb-1 flex items-center gap-2">
@@ -366,7 +364,7 @@
 
     // Currency map for preview
     const currencyMap = {
-      'TSH': { label: 'TSh', symbol: 'TSh' },
+      'TSH': { label: 'Tsh', symbol: 'Tsh' },
       'USD': { label: 'USD', symbol: '$' },
       'KSH': { label: 'KSh', symbol: 'KSh' },
       'EUR': { label: 'EUR', symbol: '€' },

@@ -42,4 +42,13 @@ class AccountantContextService
     {
         return $this->resolveSchoolIdForUser(Auth::user());
     }
+
+    public function requireSchoolId(): int
+    {
+        $schoolId = $this->resolveSchoolId();
+
+        abort_unless($schoolId, 403, 'School context is missing for this account.');
+
+        return (int) $schoolId;
+    }
 }

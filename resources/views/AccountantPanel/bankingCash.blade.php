@@ -29,17 +29,17 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
           <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
             <p class="text-blue-100 text-sm mb-1">Total Bank Balance</p>
-            <p class="text-3xl font-bold">₹21.5L</p>
+            <p class="text-3xl font-bold">Tsh 21.5L</p>
             <p class="text-blue-100 text-sm mt-2">Across 3 accounts</p>
           </div>
           <div class="bg-white rounded-xl p-6 border border-slate-200">
             <p class="text-sm text-slate-600 mb-1">Cash in Hand</p>
-            <p class="text-2xl font-bold text-slate-900">₹2.85L</p>
+            <p class="text-2xl font-bold text-slate-900">Tsh 2.85L</p>
             <p class="text-sm text-green-600 mt-2">As of today</p>
           </div>
           <div class="bg-white rounded-xl p-6 border border-slate-200">
             <p class="text-sm text-slate-600 mb-1">Today's Deposits</p>
-            <p class="text-2xl font-bold text-slate-900">₹2.45L</p>
+            <p class="text-2xl font-bold text-slate-900">Tsh 2.45L</p>
             <p class="text-sm text-slate-600 mt-2">3 transactions</p>
           </div>
           <div class="bg-white rounded-xl p-6 border border-slate-200">
@@ -68,21 +68,21 @@
                     <td class="px-4 py-3">State Bank of India</td>
                     <td class="px-4 py-3">****5678</td>
                     <td class="px-4 py-3">Current</td>
-                    <td class="px-4 py-3 font-semibold text-green-600">₹12,50,000</td>
+                    <td class="px-4 py-3 font-semibold text-green-600">Tsh 12,50,000</td>
                     <td class="px-4 py-3">2024-01-15 10:30 AM</td>
                   </tr>
                   <tr class="hover:bg-slate-50">
                     <td class="px-4 py-3">HDFC Bank</td>
                     <td class="px-4 py-3">****9012</td>
                     <td class="px-4 py-3">Savings</td>
-                    <td class="px-4 py-3 font-semibold text-green-600">₹5,80,000</td>
+                    <td class="px-4 py-3 font-semibold text-green-600">Tsh 5,80,000</td>
                     <td class="px-4 py-3">2024-01-15 09:15 AM</td>
                   </tr>
                   <tr class="hover:bg-slate-50">
                     <td class="px-4 py-3">ICICI Bank</td>
                     <td class="px-4 py-3">****3456</td>
                     <td class="px-4 py-3">Current</td>
-                    <td class="px-4 py-3 font-semibold text-green-600">₹3,20,000</td>
+                    <td class="px-4 py-3 font-semibold text-green-600">Tsh 3,20,000</td>
                     <td class="px-4 py-3">2024-01-14 05:45 PM</td>
                   </tr>
                 </tbody>
@@ -115,8 +115,8 @@
                     <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Credit</span></td>
                     <td class="px-4 py-3">Fee Collection Deposit</td>
                     <td class="px-4 py-3">SBI ****5678</td>
-                    <td class="px-4 py-3 font-semibold text-green-600">+₹2,45,000</td>
-                    <td class="px-4 py-3">₹12,50,000</td>
+                    <td class="px-4 py-3 font-semibold text-green-600">+Tsh 2,45,000</td>
+                    <td class="px-4 py-3">Tsh 12,50,000</td>
                     <td class="px-4 py-3">DEP/2024/001</td>
                   </tr>
                   <tr class="hover:bg-slate-50">
@@ -125,8 +125,8 @@
                     <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Debit</span></td>
                     <td class="px-4 py-3">Salary Payment</td>
                     <td class="px-4 py-3">SBI ****5678</td>
-                    <td class="px-4 py-3 font-semibold text-red-600">-₹8,50,000</td>
-                    <td class="px-4 py-3">₹10,05,000</td>
+                    <td class="px-4 py-3 font-semibold text-red-600">-Tsh 8,50,000</td>
+                    <td class="px-4 py-3">Tsh 10,05,000</td>
                     <td class="px-4 py-3">SAL/2024/001</td>
                   </tr>
                   <tr class="hover:bg-slate-50">
@@ -135,8 +135,8 @@
                     <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Credit</span></td>
                     <td class="px-4 py-3">Government Grant</td>
                     <td class="px-4 py-3">HDFC ****9012</td>
-                    <td class="px-4 py-3 font-semibold text-green-600">+₹5,00,000</td>
-                    <td class="px-4 py-3">₹5,80,000</td>
+                    <td class="px-4 py-3 font-semibold text-green-600">+Tsh 5,00,000</td>
+                    <td class="px-4 py-3">Tsh 5,80,000</td>
                     <td class="px-4 py-3">GRT/2024/005</td>
                   </tr>
                 </tbody>
@@ -161,10 +161,10 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y">
-                  <tr class="hover:bg-slate-50"><td class="px-4 py-3">2024-01-15</td><td class="px-4 py-3">₹1,25,000</td><td class="px-4 py-3 text-green-600">+₹2,45,000</td><td class="px-4 py-3 text-red-600">-₹85,000</td><td class="px-4 py-3 font-semibold">₹2,85,000</td><td class="px-4 py-3">Cashier</td></tr>
-                  <tr class="hover:bg-slate-50"><td class="px-4 py-3">2024-01-14</td><td class="px-4 py-3">₹98,000</td><td class="px-4 py-3 text-green-600">+₹1,80,000</td><td class="px-4 py-3 text-red-600">-₹1,53,000</td><td class="px-4 py-3 font-semibold">₹1,25,000</td><td class="px-4 py-3">Cashier</td></tr>
-                  <tr class="hover:bg-slate-50"><td class="px-4 py-3">2024-01-13</td><td class="px-4 py-3">₹1,45,000</td><td class="px-4 py-3 text-green-600">+₹1,65,000</td><td class="px-4 py-3 text-red-600">-₹2,12,000</td><td class="px-4 py-3 font-semibold">₹98,000</td><td class="px-4 py-3">Cashier</td></tr>
-                  <tr class="hover:bg-slate-50"><td class="px-4 py-3">2024-01-12</td><td class="px-4 py-3">₹1,12,000</td><td class="px-4 py-3 text-green-600">+₹2,20,000</td><td class="px-4 py-3 text-red-600">-₹1,87,000</td><td class="px-4 py-3 font-semibold">₹1,45,000</td><td class="px-4 py-3">Cashier</td></tr>
+                  <tr class="hover:bg-slate-50"><td class="px-4 py-3">2024-01-15</td><td class="px-4 py-3">Tsh 1,25,000</td><td class="px-4 py-3 text-green-600">+Tsh 2,45,000</td><td class="px-4 py-3 text-red-600">-Tsh 85,000</td><td class="px-4 py-3 font-semibold">Tsh 2,85,000</td><td class="px-4 py-3">Cashier</td></tr>
+                  <tr class="hover:bg-slate-50"><td class="px-4 py-3">2024-01-14</td><td class="px-4 py-3">Tsh 98,000</td><td class="px-4 py-3 text-green-600">+Tsh 1,80,000</td><td class="px-4 py-3 text-red-600">-Tsh 1,53,000</td><td class="px-4 py-3 font-semibold">Tsh 1,25,000</td><td class="px-4 py-3">Cashier</td></tr>
+                  <tr class="hover:bg-slate-50"><td class="px-4 py-3">2024-01-13</td><td class="px-4 py-3">Tsh 1,45,000</td><td class="px-4 py-3 text-green-600">+Tsh 1,65,000</td><td class="px-4 py-3 text-red-600">-Tsh 2,12,000</td><td class="px-4 py-3 font-semibold">Tsh 98,000</td><td class="px-4 py-3">Cashier</td></tr>
+                  <tr class="hover:bg-slate-50"><td class="px-4 py-3">2024-01-12</td><td class="px-4 py-3">Tsh 1,12,000</td><td class="px-4 py-3 text-green-600">+Tsh 2,20,000</td><td class="px-4 py-3 text-red-600">-Tsh 1,87,000</td><td class="px-4 py-3 font-semibold">Tsh 1,45,000</td><td class="px-4 py-3">Cashier</td></tr>
                 </tbody>
               </table>
             </div>

@@ -6,6 +6,7 @@ use App\Models\HealthInsurance;
 use App\Models\LoanConfigurations;
 use App\Models\LoanType;
 use App\Models\NSSFPSSF;
+use App\Services\AccountantContextService;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
@@ -13,6 +14,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AccountantSettings extends Controller
 {
+    public function __construct(private AccountantContextService $accountantContext)
+    {
+    }
+
     //show the setting page
     public function showSettings()
     {
@@ -69,12 +74,10 @@ class AccountantSettings extends Controller
             'contribution_type' => 'psssf',
         ];
 
+        $schoolId = $this->accountantContext->requireSchoolId();
+
         NSSFPSSF::updateOrCreate(
-            /**
-             * The school_id is hardcoded to 1 for now, but in a real application, you would want to get this from the authenticated user's school or from the session.
-             */
-            ['school_id' => 1], 
-            //add th relevant data (contribution type and respsctive percentages as well)
+            ['school_id' => $schoolId],
             $updatedData
         );
 
@@ -155,8 +158,10 @@ class AccountantSettings extends Controller
 
         try {
             //3. save the health insurance settings to the database
+            $schoolId = $this->accountantContext->requireSchoolId();
+
             $healthInsurance = HealthInsurance::updateOrCreate(
-                ['school_id' => 1], // In a real application, you would get this from the authenticated user's school or from the session
+                ['school_id' => $schoolId],
                 [
                     'provider_name' => $providerName,
                     'type' => $contributionType, // default to percentage if not provided
@@ -307,8 +312,7 @@ class AccountantSettings extends Controller
         $validated['notify_on_deduction'] = $request->has('notify_on_deduction');
         $validated['notify_on_completion'] = $request->has('notify_on_completion');
 
-        // Get the school_id from the authenticated user or session (replace with your actual logic)
-        $schoolId = Auth::user()?->school_id ?? 1;
+        $schoolId = $this->accountantContext->requireSchoolId();
         $validated['school_id'] = $schoolId;
 
         try {

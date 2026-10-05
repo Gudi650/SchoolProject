@@ -75,7 +75,7 @@
                 </div>
                 <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $approvedCount }}</p>
                 <p class="text-xs sm:text-sm text-green-600 mt-2">
-                    ₹{{ number_format($totalApprovedAmount / 100000, 1) }}L approved</p>
+                    {{ money_format_app($totalApprovedAmount / 100000, 1) }}L approved</p>
             </div>
 
             <div class="bg-white rounded-xl p-4 sm:p-6 border border-red-100 shadow-sm">
@@ -160,7 +160,7 @@
                                             {{ $loan->user->lname ?? '' }}</td>
                                         <td class="px-4 py-3">{{ $loan->loanType->name ?? 'N/A' }}</td>
                                         <td class="px-4 py-3 font-semibold text-slate-900">
-                                            ₹{{ number_format($loan->amount, 0) }}</td>
+                                            {{ money_format_app($loan->amount, 0) }}</td>
                                         <td class="px-4 py-3">{{ $loan->duration_months }} months</td>
                                         <td class="px-4 py-3">{{ $loan->created_at->format('Y-m-d') }}</td>
                                         <td class="px-4 py-3"><span
@@ -277,7 +277,7 @@
                                             {{ $loan->user->lname ?? '' }}</td>
                                         <td class="px-4 py-3">{{ $loan->loanType->name ?? 'N/A' }}</td>
                                         <td class="px-4 py-3 font-semibold text-slate-900">
-                                            ₹{{ number_format($loan->amount, 0) }}</td>
+                                            {{ money_format_app($loan->amount, 0) }}</td>
                                         <td class="px-4 py-3">{{ $loan->duration_months }} months</td>
                                         <td class="px-4 py-3">{{ $loan->created_at->format('Y-m-d') }}</td>
                                         <td class="px-4 py-3"><span
@@ -403,7 +403,7 @@
                                             {{ $loan->user->lname ?? '' }}</td>
                                         <td class="px-4 py-3">{{ $loan->loanType->name ?? 'N/A' }}</td>
                                         <td class="px-4 py-3 font-semibold text-slate-900">
-                                            ₹{{ number_format($loan->amount, 0) }}</td>
+                                            {{ money_format_app($loan->amount, 0) }}</td>
                                         <td class="px-4 py-3">{{ $loan->duration_months }} months</td>
                                         <td class="px-4 py-3">{{ $loan->created_at->format('Y-m-d') }}</td>
                                         <td class="px-4 py-3"><span
@@ -522,7 +522,7 @@
                                             {{ $loan->user->lname ?? '' }}</td>
                                         <td class="px-4 py-3">{{ $loan->loanType->name ?? 'N/A' }}</td>
                                         <td class="px-4 py-3 font-semibold text-slate-900">
-                                            ₹{{ number_format($loan->amount, 0) }}</td>
+                                            {{ money_format_app($loan->amount, 0) }}</td>
                                         <td class="px-4 py-3">{{ $loan->duration_months }} months</td>
                                         <td class="px-4 py-3">{{ $loan->created_at->format('Y-m-d') }}</td>
                                         <td class="px-4 py-3"><span
@@ -554,12 +554,12 @@
                                                     <div><p class="text-slate-500">Applicant</p><p class="font-semibold text-slate-800">{{ $loan->user->fname ?? 'N/A' }} {{ $loan->user->lname ?? '' }}</p></div>
                                                     <div><p class="text-slate-500">Loan Type</p><p class="font-semibold text-slate-800">{{ $loan->loanType->name ?? 'N/A' }}</p></div>
                                                     <div><p class="text-slate-500">Status</p><p class="font-semibold text-slate-800">{{ ucfirst(str_replace('_', ' ', $loan->status)) }}</p></div>
-                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->amount, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Amount</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->amount, 2) }}</p></div>
                                                     <div><p class="text-slate-500">Duration</p><p class="font-semibold text-slate-800">{{ $loan->duration_months }} months</p></div>
                                                     <div><p class="text-slate-500">Interest Rate</p><p class="font-semibold text-slate-800">{{ number_format($loan->interest_rate, 2) }}%</p></div>
-                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->monthly_installment ?? 0, 2) }}</p></div>
-                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_interest ?? 0, 2) }}</p></div>
-                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">₹{{ number_format($loan->total_repayment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Monthly Installment</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->monthly_installment ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Interest</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->total_interest ?? 0, 2) }}</p></div>
+                                                    <div><p class="text-slate-500">Total Repayment</p><p class="font-semibold text-slate-800">{{ money_format_app($loan->total_repayment ?? 0, 2) }}</p></div>
                                                     <div><p class="text-slate-500">Rejected At</p><p class="font-semibold text-slate-800">{{ optional($loan->rejected_at)->format('Y-m-d H:i') ?? '-' }}</p></div>
                                                     <div><p class="text-slate-500">Remarks</p><p class="font-semibold text-slate-800">{{ $loan->remarks ?: '-' }}</p></div>
                                                     <div>

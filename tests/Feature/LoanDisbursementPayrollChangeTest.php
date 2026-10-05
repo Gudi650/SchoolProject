@@ -30,6 +30,15 @@ class LoanDisbursementPayrollChangeTest extends TestCase
             'roles' => 'accountant',
         ]);
 
+        Teacher::create([
+            'fname' => 'Acct',
+            'lname' => 'User',
+            'email' => 'accountant-staff@example.com',
+            'gender' => 'female',
+            'school_id' => $school->id,
+            'user_id' => $accountant->id,
+        ]);
+
         $borrower = User::create([
             'fname' => 'John',
             'lname' => 'Doe',

@@ -6,7 +6,7 @@
   $budgetTotal = (float) ($stats['budgetTotal'] ?? 0);
   $budgetAllocated = (float) ($stats['budgetAllocated'] ?? 0);
   $budgetPct = $budgetTotal > 0 ? min(100, round(($budgetAllocated / $budgetTotal) * 100, 1)) : 0;
-  $fmt = fn ($n) => 'Tsh ' . number_format((float) $n, 0);
+  $fmt = fn ($n) => money_format_app($n);
 @endphp
 
 <x-Account-sidebar>

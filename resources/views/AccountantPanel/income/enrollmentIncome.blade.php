@@ -33,7 +33,7 @@
           </div>
           <p class="text-xs sm:text-sm text-slate-600">Collected (Cycle)</p>
         </div>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900">INR 23.8L</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 23.8L</p>
         <p class="text-xs sm:text-sm text-green-600 mt-2">74.6% of enrollment target</p>
       </div>
 
@@ -56,7 +56,7 @@
           <p class="text-xs sm:text-sm text-slate-600">Partially Paid</p>
         </div>
         <p class="text-xl sm:text-2xl font-bold text-slate-900">67</p>
-        <p class="text-xs sm:text-sm text-amber-600 mt-2">INR 5.1L pending</p>
+        <p class="text-xs sm:text-sm text-amber-600 mt-2">Tsh 5.1L pending</p>
       </div>
 
       <div class="bg-white rounded-xl p-4 border border-red-100 shadow-sm">
@@ -67,7 +67,7 @@
           <p class="text-xs sm:text-sm text-slate-600">Overdue Enrollment</p>
         </div>
         <p class="text-xl sm:text-2xl font-bold text-slate-900">41</p>
-        <p class="text-xs sm:text-sm text-red-600 mt-2">INR 3.2L at risk</p>
+        <p class="text-xs sm:text-sm text-red-600 mt-2">Tsh 3.2L at risk</p>
       </div>
 
       <div class="bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
@@ -229,7 +229,7 @@
               <td class="px-4 py-3">Aarav Mehta</td>
               <td class="px-4 py-3">ADM-2247</td>
               <td class="px-4 py-3">Class 7</td>
-              <td class="px-4 py-3 font-semibold text-green-600">INR 35,000</td>
+              <td class="px-4 py-3 font-semibold text-green-600">Tsh 35,000</td>
               <td class="px-4 py-3">Online</td>
               <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Fully Paid</span></td>
               <td class="px-4 py-3"><button class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100">View Receipt</button></td>
@@ -240,7 +240,7 @@
               <td class="px-4 py-3">Siya Nair</td>
               <td class="px-4 py-3">ADM-2239</td>
               <td class="px-4 py-3">Class 6</td>
-              <td class="px-4 py-3 font-semibold text-amber-600">INR 20,000</td>
+              <td class="px-4 py-3 font-semibold text-amber-600">Tsh 20,000</td>
               <td class="px-4 py-3">Bank Transfer</td>
               <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Partially Paid</span></td>
               <td class="px-4 py-3"><button class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100">Collect Balance</button></td>
@@ -251,7 +251,7 @@
               <td class="px-4 py-3">Rohan Kamat</td>
               <td class="px-4 py-3">ADM-2204</td>
               <td class="px-4 py-3">Class 8</td>
-              <td class="px-4 py-3 font-semibold text-red-600">INR 12,000</td>
+              <td class="px-4 py-3 font-semibold text-red-600">Tsh 12,000</td>
               <td class="px-4 py-3">Cash</td>
               <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Overdue</span></td>
               <td class="px-4 py-3"><button class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100">Send Reminder</button></td>
