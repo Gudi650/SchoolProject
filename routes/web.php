@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountantController;
 use App\Http\Controllers\AccountantSettings;
 use App\Http\Controllers\Announcements\AnnouncementController;
 use App\Http\Controllers\Announcements\StudentController;
@@ -369,13 +370,13 @@ Route::post('teacher-registration',[TeacherregistrationController::class, 'regis
 
 
 
+Route::middleware(['auth', 'accountant'])->group(function () {
+
 //////////////////////////////////////////////////////////////////////
 //route for accounting
 
 //route for dashboard
-Route::get('/accounting-dashboard', function () {
-    return view('AccountantPanel.dashboard');
-})->name('accounting.dashboard');
+Route::get('/accounting-dashboard', [AccountantController::class, 'dashboard'])->name('accounting.dashboard');
 
 //route for fee management
 Route::get('/fee-management', function () {
@@ -627,6 +628,8 @@ Route::post('/accounting-settings/health-insurance',
 Route::post('/accounting-settings/loan-settings',
 [AccountantSettings::class, 'saveLoanSettings'])
 ->name('accounting.loanSettings.save');
+
+}); // end accountant auth routes
 
 ///////////////////////////////////////////////////////////////////////
 

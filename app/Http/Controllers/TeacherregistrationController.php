@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\availablesubject;
 use App\Models\Teacher;
+use App\Services\AccountantContextService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TeacherregistrationController extends Controller
 {
+    public function __construct(private AccountantContextService $accountantContext)
+    {
+    }
+
     //function to show teacher registration form
     public function showTeacherRegistration(){
 
@@ -101,13 +106,15 @@ class TeacherregistrationController extends Controller
 
         return redirect()->route('teacher.dashboard')->with('success', 'Teacher registration completed successfully.');
 
-        }else if($user->roles === 'librarian'){
-
+        } elseif ($user->roles === 'librarian') {
             return redirect()->route('library.dashboard')->with('success', 'Librarian registration completed successfully.');
+        } elseif ($user->roles === 'accountant') {
+            $this->accountantContext->syncSchoolSession($user);
 
+            return redirect()->route('accounting.dashboard')->with('success', 'Profile linked. Welcome to the finance dashboard.');
         }
 
-
+        return redirect()->route('showlogin');
     }
 
     //get personal information of the user from the user table and prefill the form
@@ -155,11 +162,15 @@ class TeacherregistrationController extends Controller
             return $role;
         }
 
-        if($user->roles === 'librarian'){
-            $role = 'librarian';
-            return $role;
+        if ($user->roles === 'librarian') {
+            return 'librarian';
         }
 
+        if ($user->roles === 'accountant') {
+            return 'accountant';
+        }
+
+        return 'teacher';
     }
 
 }

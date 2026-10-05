@@ -34,6 +34,8 @@
             Teacher Registration
           @elseif ($role == 'librarian')
             Librarian Registration
+          @elseif ($role == 'accountant')
+            Accountant profile
           @endif
         </h1>
         

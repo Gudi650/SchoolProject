@@ -4,12 +4,73 @@ namespace App\Http\Controllers;
 
 use App\Models\School;
 use App\Models\User;
+use App\Services\AccountantContextService;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    public function __construct(private AccountantContextService $accountantContext)
+    {
+    }
+
+    private function redirectAfterLogin(User $user)
+    {
+        $this->accountantContext->syncSchoolSession($user);
+
+        if ($user->roles === 'teacher') {
+            return redirect()->route('teacher.dashboard');
+        }
+
+        if ($user->roles === 'student') {
+            return redirect()->route('student.homepage');
+        }
+
+        if ($user->roles === 'accountant') {
+            if ($this->accountantContext->resolveSchoolIdForUser($user)) {
+                return redirect()->route('accounting.dashboard');
+            }
+
+            return redirect()
+                ->route('showteacherregistration')
+                ->with('info', 'Link your school profile to access the finance dashboard.');
+        }
+
+        if ($user->roles === 'librarian') {
+            return redirect()->route('library.dashboard');
+        }
+
+        return redirect()->route('student.homepage');
+    }
+
+    private function redirectAfterSignup(User $user)
+    {
+        $this->accountantContext->syncSchoolSession($user);
+
+        if ($user->roles === 'teacher') {
+            return redirect()->route('showteacherregistration');
+        }
+
+        if ($user->roles === 'student') {
+            return redirect()->route('studentregistration');
+        }
+
+        if ($user->roles === 'librarian') {
+            return redirect()->route('showteacherregistration');
+        }
+
+        if ($user->roles === 'accountant') {
+            if ($this->accountantContext->resolveSchoolIdForUser($user)) {
+                return redirect()->route('accounting.dashboard');
+            }
+
+            return redirect()->route('showteacherregistration');
+        }
+
+        return redirect()->route('studentregistration');
+    }
+
     //showing the login page
     public function showLogin()
     {
@@ -47,21 +108,7 @@ class AuthController extends Controller
             //regenerate session cookies
             $request->session()->regenerate();
 
-            //get the role of the logged in user
-            $user = Auth::user();
-
-            if($user->roles === 'teacher'){
-                //redirect to a specific page after successful login
-                return redirect()->route('teacher.dashboard');
-            }
-
-            if($user->roles === 'student'){
-                //redirect to a specific page after successful login
-                return redirect()->route('student.homepage');
-            }
-
-            // fallback redirect
-            return redirect()->route('student.homepage');
+            return $this->redirectAfterLogin(Auth::user());
         }
 
         //if login fails, redirect back with an error message
@@ -81,10 +128,10 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email',
             'email_confirmation' => 'required|same:email',
             'password' => 'required|string|min:8|confirmed',
+            'school_id' => 'required|exists:schools,id',
         ]);
 
-        //get the school id from the selected school and store it in session
-        session()->put('school_id', $request->input('school_id'));
+        session()->put('school_id', $validatedData['school_id']);
 
         //create user in the database
         $user = User::create([
@@ -98,19 +145,7 @@ class AuthController extends Controller
         //login the user 
         Auth::login($user);
 
-        //checking user role and redirecting accordingly
-        if($user->roles === 'teacher'){
-            return redirect()->route('showteacherregistration');
-        }
-        if($user->roles === 'student'){
-            return redirect()->route('studentregistration');
-        }
-        if($user->roles === 'librarian'){
-            return redirect()->route('showteacherregistration');
-        }
-
-        // default fallback
-        return redirect()->route('studentregistration');
+        return $this->redirectAfterSignup($user);
     }
 
     //logout function

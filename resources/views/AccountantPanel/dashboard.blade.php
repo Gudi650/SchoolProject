@@ -1,257 +1,214 @@
+@php
+  $stats = $stats ?? [];
+  $payrollTrend = $payrollTrend ?? [];
+  $recentActivity = $recentActivity ?? collect();
+  $maxTrend = max(1, collect($payrollTrend)->max('total') ?: 0);
+  $budgetTotal = (float) ($stats['budgetTotal'] ?? 0);
+  $budgetAllocated = (float) ($stats['budgetAllocated'] ?? 0);
+  $budgetPct = $budgetTotal > 0 ? min(100, round(($budgetAllocated / $budgetTotal) * 100, 1)) : 0;
+  $fmt = fn ($n) => 'Tsh ' . number_format((float) $n, 0);
+@endphp
+
 <x-Account-sidebar>
   <x-slot name="title">Accountant Dashboard</x-slot>
- 
-    <main class="p-6 bg-white">
-        <!-- Today's Collection Highlight -->
-        <div class="mb-6">
-          <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl p-8 text-white shadow-xl">
-            <div class="flex items-start justify-between">
-              <div>
-                <p class="text-indigo-100 text-sm font-medium mb-2">Today's Cash Collection</p>
-                <h2 class="text-4xl font-bold mb-2">₹2,45,500</h2>
-                <p class="text-indigo-100 text-sm"><span class="font-semibold text-white">+18.5%</span> vs yesterday (₹2,07,200)</p>
-              </div>
-              <div class="bg-white/20 backdrop-blur-sm p-4 rounded-xl">
-                <i data-lucide="dollar-sign" class="w-8 h-8"></i>
-              </div>
-            </div>
 
-            <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-indigo-500/30">
-              <div>
-                <p class="text-indigo-100 text-xs mb-1">Cash</p>
-                <p class="text-lg font-semibold">₹1,25,000</p>
-              </div>
-              <div>
-                <p class="text-indigo-100 text-xs mb-1">Online</p>
-                <p class="text-lg font-semibold">₹95,500</p>
-              </div>
-              <div>
-                <p class="text-indigo-100 text-xs mb-1">Cheque</p>
-                <p class="text-lg font-semibold">₹25,000</p>
-              </div>
+  <main class="p-6 bg-white min-w-0">
+    @if(empty($schoolId))
+      <div class="rounded-xl border border-amber-200 bg-amber-50 p-8 text-center text-slate-700">
+        <i data-lucide="building-2" class="w-10 h-10 mx-auto text-amber-600 mb-3"></i>
+        <p class="font-semibold">School context not found</p>
+        <p class="text-sm mt-2 text-slate-600">Sign in with an accountant account linked to a school, or set your school in session.</p>
+      </div>
+    @else
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 class="text-xl font-bold text-slate-900">Finance overview</h1>
+          <p class="text-sm text-slate-600 mt-1">Live counts from payroll, loans, budget, fees, and enrollment.</p>
+        </div>
+        <p class="text-sm text-slate-500">{{ now()->format('l, M j, Y') }}</p>
+      </div>
+
+      <div class="mb-6">
+        <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl p-8 text-white shadow-xl">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-indigo-100 text-sm font-medium mb-2">Payroll disbursed this month</p>
+              <h2 class="text-4xl font-bold mb-2">{{ $fmt($stats['payrollNetMonth'] ?? 0) }}</h2>
+              <p class="text-indigo-100 text-sm">
+                <span class="font-semibold text-white">{{ (int) ($stats['payrollRunsMonth'] ?? 0) }}</span>
+                payroll run(s) in {{ now()->format('F') }}
+              </p>
+            </div>
+            <div class="bg-white/20 backdrop-blur-sm p-4 rounded-xl shrink-0">
+              <i data-lucide="wallet" class="w-8 h-8"></i>
+            </div>
+          </div>
+          <p class="text-xs text-indigo-200 mt-4 border-t border-indigo-500/30 pt-4">
+            Fee collections and bank balances are not tracked in the database yet — this dashboard uses modules that already exist.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white rounded-xl p-4 border border-slate-200">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="users" class="w-5 h-5 text-indigo-600"></i>
+            </div>
+            <div>
+              <p class="text-xs text-slate-600">Students</p>
+              <p class="text-lg font-semibold">{{ number_format($stats['students'] ?? 0) }}</p>
             </div>
           </div>
         </div>
 
-        <!-- Quick Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          <div class="bg-white rounded-xl p-4 border border-slate-200">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <i data-lucide="users" class="w-5 h-5 text-indigo-600"></i>
-              </div>
-              <div>
-                <p class="text-xs text-slate-600">Total Students</p>
-                <p class="text-lg font-semibold">1,248</p>
-                <p class="text-xs text-slate-500">+24 this month</p>
-              </div>
+        <div class="bg-white rounded-xl p-4 border border-slate-200">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="graduation-cap" class="w-5 h-5 text-sky-600"></i>
             </div>
-          </div>
-
-          <div class="bg-white rounded-xl p-4 border border-slate-200">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i>
-              </div>
-              <div>
-                <p class="text-xs text-slate-600">Fee Defaulters</p>
-                <p class="text-lg font-semibold">30</p>
-                <p class="text-xs text-slate-500">5 overdue &gt;30 days</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-xl p-4 border border-slate-200">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                <i data-lucide="calendar" class="w-5 h-5 text-purple-600"></i>
-              </div>
-              <div>
-                <p class="text-xs text-slate-600">Upcoming Expenses</p>
-                <p class="text-lg font-semibold">₹4.2L</p>
-                <p class="text-xs text-slate-500">Due in next 7 days</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-xl p-4 border border-slate-200">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <i data-lucide="building-2" class="w-5 h-5 text-green-600"></i>
-              </div>
-              <div>
-                <p class="text-xs text-slate-600">Bank Balance</p>
-                <p class="text-lg font-semibold">₹18.5L</p>
-                <p class="text-xs text-slate-500">+12.3% this month</p>
-              </div>
+            <div>
+              <p class="text-xs text-slate-600">Staff (teachers)</p>
+              <p class="text-lg font-semibold">{{ number_format($stats['teachers'] ?? 0) }}</p>
             </div>
           </div>
         </div>
 
-        <!-- Charts and Outstanding -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          <div class="lg:col-span-2 bg-white rounded-xl p-6 border border-slate-200">
-            <h3 class="text-sm font-semibold mb-4">Revenue (last 6 months)</h3>
-            <div class="h-64 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400">(Chart placeholder)</div>
+        <div class="bg-white rounded-xl p-4 border border-slate-200">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="file-clock" class="w-5 h-5 text-amber-600"></i>
+            </div>
+            <div>
+              <p class="text-xs text-slate-600">Loans pending review</p>
+              <p class="text-lg font-semibold">{{ number_format($stats['pendingLoans'] ?? 0) }}</p>
+            </div>
           </div>
+        </div>
 
-          <div class="bg-white rounded-xl p-6 border border-slate-200">
-            <div class="flex items-start justify-between mb-6">
-              <div>
-                <h3 class="text-lg font-semibold text-slate-900">Outstanding Fee Balance</h3>
-                <p class="text-sm text-slate-600 mt-1">Total pending payments</p>
-              </div>
-              <div class="p-2 bg-amber-100 rounded-lg">
-                <i data-lucide="alert-circle" class="w-5 h-5 text-amber-600"></i>
-              </div>
+        <div class="bg-white rounded-xl p-4 border border-slate-200">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="badge-check" class="w-5 h-5 text-emerald-600"></i>
             </div>
-
-            <div class="mb-6">
-              <p class="text-3xl font-bold text-slate-900">₹4,36,000</p>
-              <p class="text-sm text-slate-600 mt-1">30 students with pending fees</p>
+            <div>
+              <p class="text-xs text-slate-600">Loans approved (awaiting disburse)</p>
+              <p class="text-lg font-semibold">{{ number_format($stats['approvedLoans'] ?? 0) }}</p>
             </div>
+          </div>
+        </div>
+      </div>
 
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="lg:col-span-2 bg-white rounded-xl p-6 border border-slate-200">
+          <h3 class="text-sm font-semibold mb-4 text-slate-900">Payroll net pay (last 6 months)</h3>
+          @if(collect($payrollTrend)->sum('total') <= 0)
+            <div class="h-48 bg-slate-50 rounded-lg flex items-center justify-center text-slate-500 text-sm">
+              No payroll runs recorded yet.
+            </div>
+          @else
             <div class="space-y-3">
-              <p class="text-sm font-medium text-slate-700 mb-3">Class-wise Breakdown</p>
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-medium text-slate-900">Class 10</span>
-                    <span class="text-xs text-slate-500">(8 students)</span>
+              @foreach($payrollTrend as $row)
+                @php $w = round(((float) $row['total'] / $maxTrend) * 100); @endphp
+                <div>
+                  <div class="flex items-center justify-between mb-1 text-sm">
+                    <span class="text-slate-600">{{ $row['label'] }}</span>
+                    <span class="font-semibold text-slate-900">{{ $fmt($row['total']) }}</span>
                   </div>
-                  <span class="text-sm font-semibold text-slate-900">₹1,25,000</span>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-amber-500 h-2 rounded-full" style="width:28%"></div></div>
-              </div>
-
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-medium text-slate-900">Class 9</span>
-                    <span class="text-xs text-slate-500">(6 students)</span>
+                  <div class="w-full bg-slate-100 rounded-full h-2">
+                    <div class="bg-indigo-600 h-2 rounded-full transition-all" style="width: {{ $w }}%"></div>
                   </div>
-                  <span class="text-sm font-semibold text-slate-900">₹98,000</span>
                 </div>
-                <div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-amber-500 h-2 rounded-full" style="width:22%"></div></div>
-              </div>
-
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-medium text-slate-900">Class 8</span>
-                    <span class="text-xs text-slate-500">(5 students)</span>
-                  </div>
-                  <span class="text-sm font-semibold text-slate-900">₹76,000</span>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-amber-500 h-2 rounded-full" style="width:16%"></div></div>
-              </div>
-
+              @endforeach
             </div>
-
-            <button class="w-full mt-6 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
-              <i data-lucide="trending-up" class="w-4 h-4"></i>
-              Send Payment Reminders
-            </button>
-          </div>
+          @endif
         </div>
 
-        <!-- Additional Stats Row -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <div class="bg-white rounded-xl p-6 border border-slate-200">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-sm font-semibold text-slate-900">Fee Collection Rate</h3>
-              <i data-lucide="percent" class="w-5 h-5 text-green-600"></i>
+        <div class="bg-white rounded-xl p-6 border border-slate-200">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-slate-900">Latest budget</h3>
+              <p class="text-sm text-slate-600 mt-1">Category allocation vs total</p>
             </div>
-            <div class="relative pt-1">
-              <div class="flex items-center justify-center mb-2"><span class="text-4xl font-bold text-slate-900">87.5%</span></div>
-              <div class="w-full bg-slate-100 rounded-full h-3"><div class="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-full" style="width:87.5%"></div></div>
-              <p class="text-xs text-slate-600 mt-3 text-center">₹52.5L collected of ₹60L total fees</p>
+            <div class="p-2 bg-indigo-100 rounded-lg">
+              <i data-lucide="pie-chart" class="w-5 h-5 text-indigo-600"></i>
             </div>
           </div>
 
-          <div class="bg-white rounded-xl p-6 border border-slate-200">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-sm font-semibold text-slate-900">Budget vs Actual</h3>
-              <i data-lucide="target" class="w-5 h-5 text-indigo-600"></i>
+          @if($budgetTotal <= 0)
+            <p class="text-sm text-slate-500 py-6 text-center">No budget created yet.</p>
+            <a href="{{ route('accounting.createBudget') }}" class="block w-full text-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg">
+              Create budget
+            </a>
+          @else
+            <p class="text-3xl font-bold text-slate-900">{{ $fmt($budgetTotal) }}</p>
+            <p class="text-sm text-slate-600 mt-1">{{ $fmt($budgetAllocated) }} allocated across categories ({{ $budgetPct }}%)</p>
+            <div class="w-full bg-slate-100 rounded-full h-3 mt-4">
+              <div class="bg-indigo-500 h-3 rounded-full" style="width: {{ $budgetPct }}%"></div>
             </div>
-            <div class="space-y-4">
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-xs text-slate-600">Budget</span>
-                  <span class="text-sm font-semibold text-slate-900">₹5.2L</span>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-indigo-500 h-2 rounded-full" style="width:100%"></div></div>
-              </div>
-
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-xs text-slate-600">Actual Spent</span>
-                  <span class="text-sm font-semibold text-slate-900">₹4.8L</span>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-green-500 h-2 rounded-full" style="width:92.3%"></div></div>
-              </div>
-            </div>
-            <div class="mt-4 p-3 bg-green-50 rounded-lg"><p class="text-xs text-green-700 font-medium">₹40,000 under budget (7.7%)</p></div>
-          </div>
-
-          <div class="bg-white rounded-xl p-6 border border-slate-200">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-sm font-semibold text-slate-900">This Month</h3>
-              <i data-lucide="trending-up" class="w-5 h-5 text-purple-600"></i>
-            </div>
-            <div class="space-y-3">
-              <div class="flex items-center justify-between py-2 border-b border-slate-100">
-                <span class="text-sm text-slate-600">Total Income</span>
-                <span class="text-sm font-semibold text-green-600">₹6.8L</span>
-              </div>
-              <div class="flex items-center justify-between py-2 border-b border-slate-100">
-                <span class="text-sm text-slate-600">Total Expenses</span>
-                <span class="text-sm font-semibold text-red-600">₹4.2L</span>
-              </div>
-              <div class="flex items-center justify-between py-2">
-                <span class="text-sm font-semibold text-slate-900">Net Profit</span>
-                <span class="text-sm font-bold text-indigo-600">₹2.6L</span>
-              </div>
-            </div>
-          </div>
+            <a href="{{ route('accounting.budgetingManagement') }}" class="block w-full mt-6 text-center px-4 py-2.5 border border-slate-200 hover:bg-slate-50 text-sm font-medium rounded-lg text-indigo-700">
+              Manage budgets
+            </a>
+          @endif
         </div>
+      </div>
 
-        <!-- Transactions Feed -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white rounded-xl p-6 border border-slate-200">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-sm font-semibold">Recent Transactions</h3>
-            <a href="#" class="text-sm text-indigo-600">View all</a>
+            <h3 class="text-sm font-semibold text-slate-900">Fee structures</h3>
+            <i data-lucide="receipt" class="w-5 h-5 text-indigo-600"></i>
           </div>
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center">
-                  <i data-lucide="credit-card" class="w-5 h-5 text-slate-400"></i>
-                </div>
-                <div>
-                  <p class="text-sm font-medium">Tuition Fee — Rahul</p>
-                  <p class="text-xs text-slate-500">Class 10 • 2 hours ago</p>
-                </div>
-              </div>
-              <div class="text-sm font-semibold text-slate-900">₹12,000</div>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center">
-                  <i data-lucide="dollar-sign" class="w-5 h-5 text-slate-400"></i>
-                </div>
-                <div>
-                  <p class="text-sm font-medium">Bus Fee — Grade 9</p>
-                  <p class="text-xs text-slate-500">2 days ago</p>
-                </div>
-              </div>
-              <div class="text-sm font-semibold text-slate-900">₹1,200</div>
-            </div>
-
-          </div>
+          <p class="text-4xl font-bold text-slate-900">{{ number_format($stats['feeStructures'] ?? 0) }}</p>
+          <p class="text-xs text-slate-600 mt-3">Configured for your school</p>
+          <a href="{{ route('accounting.feeStructure') }}" class="inline-block mt-4 text-sm text-indigo-600 hover:text-indigo-800">Open fee structure →</a>
         </div>
 
-      </main>
+        <div class="bg-white rounded-xl p-6 border border-slate-200">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-slate-900">Enrollment applications</h3>
+            <i data-lucide="user-plus" class="w-5 h-5 text-purple-600"></i>
+          </div>
+          <p class="text-4xl font-bold text-slate-900">{{ number_format($stats['pendingEnrollments'] ?? 0) }}</p>
+          <p class="text-xs text-slate-600 mt-3">Pending applicant details</p>
+        </div>
 
+        <div class="bg-white rounded-xl p-6 border border-slate-200">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-slate-900">Quick links</h3>
+            <i data-lucide="link" class="w-5 h-5 text-slate-500"></i>
+          </div>
+          <div class="space-y-2 text-sm">
+            <a href="{{ route('accounting.payrollManagement') }}" class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800"><i data-lucide="banknote" class="w-4 h-4"></i> Payroll</a>
+            <a href="{{ route('accounting.proposalManagement') }}" class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800"><i data-lucide="hand-coins" class="w-4 h-4"></i> Loan proposals</a>
+            <a href="{{ route('accounting.feeManagement') }}" class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800"><i data-lucide="wallet-cards" class="w-4 h-4"></i> Fee management</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl p-6 border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-semibold text-slate-900">Recent payroll &amp; loans</h3>
+        </div>
+        <div class="space-y-3">
+          @forelse($recentActivity as $item)
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center shrink-0">
+                  <i data-lucide="{{ $item['type'] === 'payroll' ? 'banknote' : 'hand-coins' }}" class="w-5 h-5 text-slate-500"></i>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-sm font-medium text-slate-900 truncate">{{ $item['title'] }}</p>
+                  <p class="text-xs text-slate-500">{{ $item['meta'] }}</p>
+                </div>
+              </div>
+              <div class="text-sm font-semibold text-slate-900 shrink-0">{{ $fmt($item['amount']) }}</div>
+            </div>
+          @empty
+            <p class="text-sm text-slate-500 text-center py-6">No payroll runs or loan applications yet.</p>
+          @endforelse
+        </div>
+      </div>
+    @endif
+  </main>
 </x-Account-sidebar>
