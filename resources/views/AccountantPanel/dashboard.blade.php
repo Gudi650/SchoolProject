@@ -38,11 +38,11 @@
         <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl p-8 text-white shadow-xl">
           <div class="flex items-start justify-between gap-4">
             <div>
-              <p class="text-indigo-100 text-sm font-medium mb-2">Processed payroll this month</p>
-              <h2 class="text-4xl font-bold mb-2">{{ $fmt($stats['payrollNetMonth'] ?? 0) }}</h2>
+              <p class="text-indigo-100 text-sm font-medium mb-2">Fee collected this month</p>
+              <h2 class="text-4xl font-bold mb-2">{{ $fmt($stats['collectedMonth'] ?? 0) }}</h2>
               <p class="text-indigo-100 text-sm">
-                <span class="font-semibold text-white">{{ (int) ($stats['payrollRunsMonth'] ?? 0) }}</span>
-                payroll run(s) in {{ now()->format('F') }}
+                Today {{ $fmt($stats['collectedToday'] ?? 0) }} ·
+                Payroll {{ $fmt($stats['payrollNetMonth'] ?? 0) }} ({{ (int) ($stats['payrollRunsMonth'] ?? 0) }} runs)
               </p>
             </div>
             <div class="bg-white/20 backdrop-blur-sm p-4 rounded-xl shrink-0">
@@ -50,7 +50,7 @@
             </div>
           </div>
           <p class="text-xs text-indigo-200 mt-4 border-t border-indigo-500/30 pt-4">
-            Fee collections and bank balances are not tracked in the database yet — this dashboard uses modules that already exist.
+            <a href="{{ route('accounting.feeCollection') }}" class="underline text-white">Record fee payment</a>
           </p>
         </div>
       </div>

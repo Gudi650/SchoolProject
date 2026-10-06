@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountantController;
+use App\Http\Controllers\FeePaymentController;
 use App\Http\Controllers\AccountantSettings;
 use App\Http\Controllers\Announcements\AnnouncementController;
 use App\Http\Controllers\Announcements\StudentController;
@@ -380,6 +381,9 @@ Route::get('/accounting-dashboard', [AccountantController::class, 'dashboard'])-
 
 //route for fee management
 Route::get('/fee-management', [AccountantController::class, 'feeManagement'])->name('accounting.feeManagement');
+
+Route::get('/fee-collection', [FeePaymentController::class, 'index'])->name('accounting.feeCollection');
+Route::post('/fee-collection', [FeePaymentController::class, 'store'])->name('accounting.feeCollection.store');
 
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////

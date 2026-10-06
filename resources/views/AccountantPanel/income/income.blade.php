@@ -40,10 +40,10 @@
         <p class="text-xs sm:text-sm text-slate-600">Pending enrollments</p>
         <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ number_format($stats['pendingEnrollments']) }}</p>
       </div>
-      <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-        <p class="text-xs sm:text-sm text-slate-600">Cash collected</p>
-        <p class="text-xl sm:text-2xl font-bold text-slate-400 mt-2">—</p>
-        <p class="text-xs text-slate-500 mt-1">Not tracked yet</p>
+      <div class="bg-white rounded-xl p-4 border border-green-100 shadow-sm">
+        <p class="text-xs sm:text-sm text-slate-600">Collected (MTD)</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['collectedMonth'] ?? 0) }}</p>
+        <a href="{{ route('accounting.feeCollection') }}" class="text-xs text-indigo-600 mt-1 inline-block">Record payment</a>
       </div>
     </div>
 

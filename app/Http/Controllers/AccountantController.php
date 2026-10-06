@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FeePayment;
 use App\Models\FeeStructure;
 use App\Models\LoanApplication;
 use App\Models\PayrollConfigurations;
@@ -60,6 +61,8 @@ class AccountantController extends Controller
             'loansDisbursedMonth' => LoanApplication::where('school_id', $schoolId)->where('status', 'disbursed')->where('disbursed_at', '>=', $monthStart)->count(),
             'rejectedLoans' => LoanApplication::where('school_id', $schoolId)->where('status', 'rejected')->count(),
             'feeConfiguredTotal' => (float) FeeStructure::where('school_id', $schoolId)->get()->sum(fn ($f) => (float) $f->tuition_fee + (float) $f->transport_fee + (float) $f->hostel_fee + (float) $f->library_fee + (float) $f->exam_fee),
+            'collectedMonth' => (float) FeePayment::where('school_id', $schoolId)->where('paid_at', '>=', $monthStart)->sum('amount'),
+            'collectedToday' => (float) FeePayment::where('school_id', $schoolId)->whereDate('paid_at', today())->sum('amount'),
         ];
 
         $payrollTrend = [];
@@ -291,11 +294,13 @@ class AccountantController extends Controller
     public function incomeHub()
     {
         $schoolId = $this->accountantContext->resolveSchoolId();
+        $monthStart = now()->startOfMonth();
         $stats = [
             'students' => $schoolId ? Student::where('school_id', $schoolId)->count() : 0,
             'feeConfigured' => $schoolId ? (float) FeeStructure::where('school_id', $schoolId)->get()->sum(fn ($f) => (float) $f->tuition_fee + (float) $f->transport_fee + (float) $f->hostel_fee + (float) $f->library_fee + (float) $f->exam_fee) : 0,
             'pendingEnrollments' => $schoolId ? studentEnrollDetails::where('status', 'pending')->whereHas('studentEnrollment', fn ($q) => $q->where('school_id', $schoolId))->count() : 0,
             'feeStructures' => $schoolId ? FeeStructure::where('school_id', $schoolId)->count() : 0,
+            'collectedMonth' => $schoolId ? (float) FeePayment::where('school_id', $schoolId)->where('paid_at', '>=', $monthStart)->sum('amount') : 0,
         ];
 
         return view('AccountantPanel.income.income', compact('schoolId', 'stats'));
