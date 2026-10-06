@@ -262,6 +262,26 @@
               </div>
             </div>
 
+            @if (empty($schoolId))
+              <div>
+                <label for="school_id" class="block text-sm font-medium text-gray-700">
+                  School
+                </label>
+                <select name="school_id" id="school_id" required
+                  class="mt-1 block w-full rounded-md border-gray-200 px-3 py-2 shadow-sm focus:ring-indigo-400 focus:border-indigo-400 @error('school_id') border-red-500 @enderror">
+                  <option value="">Select school</option>
+                  @foreach ($schools as $school)
+                    <option value="{{ $school->id }}" {{ (string) old('school_id') === (string) $school->id ? 'selected' : '' }}>
+                      {{ $school->name }}
+                    </option>
+                  @endforeach
+                </select>
+                @error('school_id')
+                  <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
+                @enderror
+              </div>
+            @endif
+
             <!--for qualification-->
             <div>
               <label for="qualification" class="block text-sm font-medium text-gray-700">
@@ -354,9 +374,11 @@
         });
       }
 
-      subjectsToggle.addEventListener('click', function(e){ e.preventDefault(); subjectsMenu.classList.toggle('hidden'); const exp = subjectsToggle.getAttribute('aria-expanded') === 'true'; subjectsToggle.setAttribute('aria-expanded', (!exp).toString()); });
-      document.addEventListener('click', function(e){ if(!document.getElementById('subjectsDropdown').contains(e.target)){ subjectsMenu.classList.add('hidden'); subjectsToggle.setAttribute('aria-expanded','false'); } });
-      subjectOptions.forEach(cb => cb.addEventListener('change', ()=>{ updateSubjectsLabel(); renderSubjectChips(); }));
+      if (subjectsToggle && subjectsMenu) {
+        subjectsToggle.addEventListener('click', function(e){ e.preventDefault(); subjectsMenu.classList.toggle('hidden'); const exp = subjectsToggle.getAttribute('aria-expanded') === 'true'; subjectsToggle.setAttribute('aria-expanded', (!exp).toString()); });
+        document.addEventListener('click', function(e){ if(!document.getElementById('subjectsDropdown').contains(e.target)){ subjectsMenu.classList.add('hidden'); subjectsToggle.setAttribute('aria-expanded','false'); } });
+        subjectOptions.forEach(cb => cb.addEventListener('change', ()=>{ updateSubjectsLabel(); renderSubjectChips(); }));
+      }
 
       // Photo upload + preview
       const photoBtn = document.getElementById('photoBtn');

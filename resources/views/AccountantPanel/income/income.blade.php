@@ -1,3 +1,8 @@
+@php
+  $stats = $stats ?? ['students' => 0, 'feeConfigured' => 0, 'pendingEnrollments' => 0, 'feeStructures' => 0];
+  $fmt = fn ($n) => money_format_app($n);
+@endphp
+
 <x-Account-sidebar>
   <x-slot name="title">Income Management</x-slot>
 
@@ -6,26 +11,45 @@
       <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
         <div>
           <h1 class="text-xl sm:text-2xl font-bold text-slate-900">School Income Overview</h1>
-          <p class="text-xs sm:text-sm text-slate-700 mt-1">Monitor institution-wide income, collection performance, and financial control status</p>
+          <p class="text-xs sm:text-sm text-slate-700 mt-1">Live school metrics; fee collections require a payments module (Phase 2).</p>
         </div>
         <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-3 pt-3">
-          <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
-            <i data-lucide="calendar-range" class="w-4 h-4"></i>
-            This Academic Year
-          </button>
-          <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
-            <i data-lucide="download" class="w-4 h-4"></i>
-            Export Summary
-          </button>
-          <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
-            <i data-lucide="plus" class="w-4 h-4"></i>
-            Record Income
-          </button>
+          <a href="{{ route('accounting.enrollmentIncome') }}" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            Enrollment applications
+          </a>
+          <a href="{{ route('accounting.feeManagement') }}" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center">
+            <i data-lucide="receipt" class="w-4 h-4"></i>
+            Fee structures
+          </a>
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
+        <p class="text-xs sm:text-sm text-slate-600">Students enrolled</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ number_format($stats['students']) }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
+        <p class="text-xs sm:text-sm text-slate-600">Configured fees (standard)</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['feeConfigured']) }}</p>
+        <p class="text-xs text-slate-500 mt-1">{{ number_format($stats['feeStructures']) }} structure(s)</p>
+      </div>
+      <div class="bg-white rounded-xl p-4 border border-amber-100 shadow-sm">
+        <p class="text-xs sm:text-sm text-slate-600">Pending enrollments</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ number_format($stats['pendingEnrollments']) }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+        <p class="text-xs sm:text-sm text-slate-600">Cash collected</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-400 mt-2">—</p>
+        <p class="text-xs text-slate-500 mt-1">Not tracked yet</p>
+      </div>
+    </div>
+
+    <details class="mb-6">
+      <summary class="text-sm text-slate-500 cursor-pointer">Show legacy demo sections</summary>
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-6 mt-4 opacity-60">
       <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
           <div class="p-2 rounded-md bg-indigo-100">
@@ -33,8 +57,8 @@
           </div>
           <p class="text-xs sm:text-sm text-slate-600">Total Income (YTD)</p>
         </div>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 8.42Cr</p>
-        <p class="text-xs sm:text-sm text-green-600 mt-2">+9.8% vs last year</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900">Demo</p>
+        <p class="text-xs sm:text-sm text-green-600 mt-2">Placeholder</p>
       </div>
       <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
@@ -43,8 +67,8 @@
           </div>
           <p class="text-xs sm:text-sm text-slate-600">Collected (MTD)</p>
         </div>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 72.6L</p>
-        <p class="text-xs sm:text-sm text-slate-600 mt-2">Target: Tsh 80L</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900">Demo</p>
+        <p class="text-xs sm:text-sm text-slate-600 mt-2">Placeholder</p>
       </div>
       <div class="bg-white rounded-xl p-4 border border-green-100 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
@@ -406,6 +430,7 @@
         </table>
       </div>
     </div>
+    </details>
   </main>
  
 </x-Account-sidebar>

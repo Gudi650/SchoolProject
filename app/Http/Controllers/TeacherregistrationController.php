@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\availablesubject;
+use App\Models\School;
 use App\Models\Teacher;
 use App\Services\AccountantContextService;
 use Illuminate\Http\Request;
@@ -26,19 +27,23 @@ class TeacherregistrationController extends Controller
         //get the role of the user to show the appropriate form
         $role = $this->checkRoleAndShowForm();
 
+        $schoolId = $this->knownSchoolId();
+        $schools = $schoolId ? collect() : School::orderBy('name')->get();
+
         //return view
         return view('teacherregistration', [
             'personalInfo' => $personalInfo,
             'subjects' => $subjects,
             'role' => $role,
+            'schoolId' => $schoolId,
+            'schools' => $schools,
         ]);
     }
 
     //function to handle teacher registration form submission
     public function register(Request $request){
 
-        //validate the form data
-        $validatedData = $request->validate([
+        $rules = [
             'fname' => 'required|string|max:255',
             'mname' => 'required|string|max:255',
             'lname' => 'required|string|max:255',
@@ -47,7 +52,14 @@ class TeacherregistrationController extends Controller
             'gender' => 'required|string|max:10',
             'subject_specialization' => 'nullable|string|max:255',
             'qualification' => 'required|string|max:255',
-        ]);
+        ];
+
+        // Login does not keep the school chosen at signup, so the profile form must send one.
+        if (!$this->knownSchoolId()) {
+            $rules['school_id'] = 'required|integer|exists:schools,id';
+        }
+
+        $validatedData = $request->validate($rules);
 
         //get the current user
         $user = Auth::user();
@@ -55,9 +67,8 @@ class TeacherregistrationController extends Controller
         //get the user_id to be filled in the table 
         $userId = $user->id;
 
-        //getting the school id
-        //do this using session generated when the user logged in and selected the school to work with
-        $schoolId = session('school_id'); 
+        $schoolId = $this->knownSchoolId() ?: (int) $validatedData['school_id'];
+        session(['school_id' => $schoolId]); 
 
 
         //get the teacher record
@@ -171,6 +182,13 @@ class TeacherregistrationController extends Controller
         }
 
         return 'teacher';
+    }
+
+    protected function knownSchoolId(): ?int
+    {
+        $schoolId = session('school_id') ?: $this->accountantContext->resolveSchoolId();
+
+        return $schoolId ? (int) $schoolId : null;
     }
 
 }

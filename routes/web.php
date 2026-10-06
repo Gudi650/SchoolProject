@@ -379,9 +379,7 @@ Route::middleware(['auth', 'accountant'])->group(function () {
 Route::get('/accounting-dashboard', [AccountantController::class, 'dashboard'])->name('accounting.dashboard');
 
 //route for fee management
-Route::get('/fee-management', function () {
-    return view('AccountantPanel.feeManagement');
-})->name('accounting.feeManagement');
+Route::get('/fee-management', [AccountantController::class, 'feeManagement'])->name('accounting.feeManagement');
 
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
@@ -414,14 +412,10 @@ Route::post('/fee-settings' ,
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 //route for income management
-Route::get('/income-management', function () {
-    return view('AccountantPanel.income.income');
-})->name('accounting.incomeManagement');
+Route::get('/income-management', [AccountantController::class, 'incomeHub'])->name('accounting.incomeManagement');
 
 //route for enrollment income management
-Route::get('/enrollment-income', function () {
-    return view('AccountantPanel.income.enrollmentIncome');
-})->name('accounting.enrollmentIncome');
+Route::get('/enrollment-income', [AccountantController::class, 'enrollmentIncome'])->name('accounting.enrollmentIncome');
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -436,9 +430,7 @@ Route::get('/expenses-management', function () {
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 //route for payroll management
-Route::get('/payroll-management', function () {
-    return view('AccountantPanel.payrolls.payroll');
-})->name('accounting.payrollManagement');
+Route::get('/payroll-management', [AccountantController::class, 'payrollHub'])->name('accounting.payrollManagement');
 
 //route to process payroll runs for current period
 Route::post('/payroll-management/process',
@@ -474,9 +466,7 @@ Route::post('/payroll-configuration/temporary-change',
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //route for loans manaagement
-Route::get('/loans-management', function () {
-    return view('AccountantPanel.Loans.dashboard');
-})->name('accounting.loansManagement');
+Route::get('/loans-management', [AccountantController::class, 'loansHub'])->name('accounting.loansManagement');
 
 //route for proposal management - show all loan applications
 Route::get('/loan-proposals', [LoanApplicationController::class, 'accountantProposals'])->name('accounting.proposalManagement');
@@ -488,9 +478,9 @@ Route::post('/loan-proposals/{loan}/under-review', [LoanApplicationController::c
 Route::post('/loan-proposals/{loan}/approve', [LoanApplicationController::class, 'moveToApproved'])->name('accounting.proposal.approve');
 Route::post('/loan-proposals/{loan}/reject', [LoanApplicationController::class, 'moveToRejected'])->name('accounting.proposal.reject');
 
-//route for loan lists
+// Static loan list is retired; old bookmarks land on the live loans hub.
 Route::get('/loan-list', function () {
-    return view('AccountantPanel.Loans.loanprogess');
+    return redirect()->route('accounting.loansManagement');
 })->name('accounting.loanList');
 
 //route for loan disbursements - show approved and disbursed loans
@@ -528,9 +518,7 @@ Route::get('/create-vendor', function () {
 
 
 //route for budgeting management
-Route::get('/budgeting-management', function () {
-    return view('AccountantPanel.budget');
-})->name('accounting.budgetingManagement');
+Route::get('/budgeting-management', [AccountantController::class, 'budgetHub'])->name('accounting.budgetingManagement');
 
 ///////////////////////////////////////////////////////////////
 

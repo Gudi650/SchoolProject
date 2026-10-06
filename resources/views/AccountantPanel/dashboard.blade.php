@@ -29,7 +29,7 @@
       @if(!empty($alerts))
         <div class="mb-4 flex flex-wrap gap-2">
           @foreach($alerts as $alert)
-            <span class="text-xs px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200">{{ $alert }}</span>
+            <a href="{{ $alert['url'] }}" class="text-xs px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100">{{ $alert['text'] }}</a>
           @endforeach
         </div>
       @endif
@@ -105,6 +105,21 @@
         </a>
       </div>
 
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <a href="{{ route('accounting.payrollSettings') }}" class="bg-slate-50 rounded-lg p-3 border border-slate-200 hover:border-indigo-300 block text-sm">
+          <span class="text-slate-500">On payroll</span>
+          <span class="font-semibold block">{{ number_format($stats['payrollEmployees'] ?? 0) }} staff</span>
+        </a>
+        <a href="{{ route('accounting.loanDisbursements') }}" class="bg-slate-50 rounded-lg p-3 border border-slate-200 hover:border-indigo-300 block text-sm">
+          <span class="text-slate-500">Disbursed this month</span>
+          <span class="font-semibold block">{{ number_format($stats['loansDisbursedMonth'] ?? 0) }} loans</span>
+        </a>
+        <a href="{{ route('accounting.proposalManagement') }}" class="bg-slate-50 rounded-lg p-3 border border-slate-200 hover:border-indigo-300 block text-sm">
+          <span class="text-slate-500">Rejected loans</span>
+          <span class="font-semibold block">{{ number_format($stats['rejectedLoans'] ?? 0) }}</span>
+        </a>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div class="lg:col-span-2 bg-white rounded-xl p-6 border border-slate-200">
           <h3 class="text-sm font-semibold mb-4 text-slate-900">Payroll net pay (last 6 months)</h3>
@@ -147,8 +162,12 @@
               Create budget
             </a>
           @else
+            @if($latestBudget ?? null)
+              <p class="text-sm font-medium text-slate-800">{{ $latestBudget->budget_name }}</p>
+              <p class="text-xs text-slate-500 mb-2">{{ $latestBudget->start_date }} – {{ $latestBudget->end_date }}</p>
+            @endif
             <p class="text-3xl font-bold text-slate-900">{{ $fmt($budgetTotal) }}</p>
-            <p class="text-sm text-slate-600 mt-1">{{ $fmt($budgetAllocated) }} allocated across categories ({{ $budgetPct }}%)</p>
+            <p class="text-sm text-slate-600 mt-1">{{ $fmt($budgetAllocated) }} allocated ({{ $budgetPct }}%)</p>
             <div class="w-full bg-slate-100 rounded-full h-3 mt-4">
               <div class="bg-indigo-500 h-3 rounded-full" style="width: {{ $budgetPct }}%"></div>
             </div>
@@ -165,8 +184,8 @@
             <h3 class="text-sm font-semibold text-slate-900">Fee structures</h3>
             <i data-lucide="receipt" class="w-5 h-5 text-indigo-600"></i>
           </div>
-          <p class="text-4xl font-bold text-slate-900">{{ number_format($stats['feeStructures'] ?? 0) }}</p>
-          <p class="text-xs text-slate-600 mt-3">Configured for your school</p>
+          <p class="text-2xl font-bold text-slate-900">{{ $fmt($stats['feeConfiguredTotal'] ?? 0) }}</p>
+          <p class="text-xs text-slate-600 mt-1">{{ number_format($stats['feeStructures'] ?? 0) }} structure(s) · standard fees total</p>
           <a href="{{ route('accounting.feeStructure') }}" class="inline-block mt-4 text-sm text-indigo-600 hover:text-indigo-800">Open fee structure →</a>
         </div>
 

@@ -23,4 +23,9 @@ class budgetCategories extends Model
         return $this->belongsTo(budget::class, 'budget_id');
     }
 
+    public function department()
+    {
+        return $this->belongsTo(budgetDepartment::class, 'department_id');
+    }
+
 }

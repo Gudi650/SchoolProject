@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FeeStructure;
 use App\Models\LoanApplication;
+use App\Models\PayrollConfigurations;
 use App\Models\PayrollRun;
 use App\Models\School;
 use App\Models\Student;
@@ -55,6 +56,10 @@ class AccountantController extends Controller
                 ->count(),
             'budgetTotal' => $budgetTotal,
             'budgetAllocated' => $budgetAllocated,
+            'payrollEmployees' => PayrollConfigurations::where('school_id', $schoolId)->count(),
+            'loansDisbursedMonth' => LoanApplication::where('school_id', $schoolId)->where('status', 'disbursed')->where('disbursed_at', '>=', $monthStart)->count(),
+            'rejectedLoans' => LoanApplication::where('school_id', $schoolId)->where('status', 'rejected')->count(),
+            'feeConfiguredTotal' => (float) FeeStructure::where('school_id', $schoolId)->get()->sum(fn ($f) => (float) $f->tuition_fee + (float) $f->transport_fee + (float) $f->hostel_fee + (float) $f->library_fee + (float) $f->exam_fee),
         ];
 
         $payrollTrend = [];
@@ -93,13 +98,206 @@ class AccountantController extends Controller
 
         $school = School::find($schoolId);
         $user = Auth::user();
-        $alerts = array_filter([
-            ($stats['pendingLoans'] ?? 0) > 0 ? $stats['pendingLoans'] . ' loan(s) need review' : null,
-            ($stats['approvedLoans'] ?? 0) > 0 ? $stats['approvedLoans'] . ' loan(s) ready to disburse' : null,
-            ($stats['pendingEnrollments'] ?? 0) > 0 ? $stats['pendingEnrollments'] . ' enrollment application(s) pending' : null,
-            $budgetTotal <= 0 ? 'No budget set for this school' : null,
-        ]);
+        $alerts = array_values(array_filter([
+            ($stats['pendingLoans'] ?? 0) > 0 ? ['text' => $stats['pendingLoans'] . ' loan(s) need review', 'url' => route('accounting.proposalManagement')] : null,
+            ($stats['approvedLoans'] ?? 0) > 0 ? ['text' => $stats['approvedLoans'] . ' loan(s) ready to disburse', 'url' => route('accounting.loanDisbursements')] : null,
+            ($stats['pendingEnrollments'] ?? 0) > 0 ? ['text' => $stats['pendingEnrollments'] . ' enrollment pending', 'url' => route('accounting.enrollmentIncome')] : null,
+            $budgetTotal <= 0 ? ['text' => 'No budget set', 'url' => route('accounting.createBudget')] : null,
+        ]));
 
-        return view('AccountantPanel.dashboard', compact('schoolId', 'stats', 'payrollTrend', 'recentActivity', 'school', 'user', 'alerts'));
+        return view('AccountantPanel.dashboard', compact('schoolId', 'stats', 'payrollTrend', 'recentActivity', 'school', 'user', 'alerts', 'latestBudget'));
+    }
+
+    public function feeManagement()
+    {
+        $schoolId = $this->accountantContext->resolveSchoolId();
+        $structures = $schoolId
+            ? FeeStructure::with('classes')->where('school_id', $schoolId)->latest()->get()
+            : collect();
+
+        $rows = $structures->map(function (FeeStructure $structure) {
+            $standard = (float) $structure->tuition_fee
+                + (float) $structure->transport_fee
+                + (float) $structure->hostel_fee
+                + (float) $structure->library_fee
+                + (float) $structure->exam_fee;
+            $custom = collect($structure->dynamic_attributes['all_components'] ?? [])
+                ->sum(fn ($component) => (float) ($component['amount'] ?? 0));
+
+            return [
+                'scope' => $structure->for === 'specific' ? 'Specific classes' : 'General',
+                'classes' => $structure->classes->pluck('name')->filter()->implode(', ') ?: '—',
+                'tuition' => (float) $structure->tuition_fee,
+                'other' => (float) $structure->transport_fee + (float) $structure->hostel_fee + (float) $structure->library_fee + (float) $structure->exam_fee + $custom,
+                'total' => $standard + $custom,
+                'currency' => $structure->currency,
+            ];
+        });
+
+        $stats = [
+            'count' => $rows->count(),
+            'general' => $rows->where('scope', 'General')->count(),
+            'specific' => $rows->where('scope', 'Specific classes')->count(),
+            'configuredTotal' => (float) $rows->sum('total'),
+        ];
+
+        return view('AccountantPanel.feeManagement', compact('schoolId', 'rows', 'stats'));
+    }
+
+    public function payrollHub()
+    {
+        $schoolId = $this->accountantContext->resolveSchoolId();
+        $monthStart = now()->startOfMonth();
+
+        $configs = $schoolId
+            ? PayrollConfigurations::with(['employee', 'teachers'])->where('school_id', $schoolId)->get()
+            : collect();
+
+        $runs = $schoolId
+            ? PayrollRun::with(['payrollConfiguration.employee', 'payrollConfiguration.teachers'])
+                ->where('school_id', $schoolId)
+                ->latest()
+                ->limit(25)
+                ->get()
+            : collect();
+
+        $monthRuns = $schoolId
+            ? PayrollRun::where('school_id', $schoolId)
+                ->where(function ($q) use ($monthStart) {
+                    $q->where('paid_at', '>=', $monthStart)
+                        ->orWhere(fn ($q2) => $q2->whereNull('paid_at')->where('created_at', '>=', $monthStart));
+                })
+                ->get()
+            : collect();
+
+        $processed = $monthRuns->whereIn('status', ['processed', 'paid']);
+
+        $stats = [
+            'employees' => $configs->count(),
+            'configuredNet' => (float) $configs->sum('net_salary'),
+            'configuredGross' => (float) $configs->sum('gross_salary'),
+            'monthRuns' => $monthRuns->count(),
+            'monthNet' => (float) $processed->sum('net_salary'),
+            'processedCount' => $processed->count(),
+            'draftCount' => $monthRuns->where('status', 'draft')->count(),
+            'loanDeductions' => (float) $processed->sum('loan_deductions_total'),
+        ];
+
+        return view('AccountantPanel.payrolls.payroll', compact('schoolId', 'configs', 'runs', 'stats'));
+    }
+
+    public function loansHub()
+    {
+        $schoolId = $this->accountantContext->resolveSchoolId();
+
+        $loans = $schoolId
+            ? LoanApplication::with(['user', 'loanType'])->where('school_id', $schoolId)->latest()->get()
+            : collect();
+
+        $active = $loans->whereIn('status', ['disbursed', 'active']);
+        $counts = [
+            'total' => $loans->count(),
+            'pending' => $loans->where('status', 'pending')->count(),
+            'under_review' => $loans->where('status', 'under_review')->count(),
+            'approved' => $loans->where('status', 'approved')->count(),
+            'rejected' => $loans->where('status', 'rejected')->count(),
+            'disbursed' => $loans->whereIn('status', ['disbursed', 'active', 'completed'])->count(),
+        ];
+
+        $stats = [
+            'portfolio' => (float) $active->sum('amount'),
+            'activeCount' => $active->count(),
+            'repaid' => (float) $active->sum('total_paid'),
+            'outstanding' => (float) $active->sum(fn ($loan) => max(0, (float) $loan->total_repayment - (float) $loan->total_paid)),
+            'awaitingAmount' => (float) $loans->whereIn('status', ['pending', 'under_review'])->sum('amount'),
+            'approvedAmount' => (float) $loans->where('status', 'approved')->sum('amount'),
+        ];
+
+        return view('AccountantPanel.Loans.dashboard', [
+            'schoolId' => $schoolId,
+            'loans' => $loans->take(20),
+            'counts' => $counts,
+            'stats' => $stats,
+        ]);
+    }
+
+    public function budgetHub()
+    {
+        $schoolId = $this->accountantContext->resolveSchoolId();
+
+        $budgets = $schoolId
+            ? budget::with(['categories.department'])->where('school_id', $schoolId)->latest()->get()
+            : collect();
+
+        $latest = $budgets->first();
+        $allocated = $latest ? (float) $latest->categories->sum('amount') : 0;
+        $total = (float) ($latest?->total_amount ?? 0);
+
+        $departmentTotals = $latest
+            ? $latest->categories
+                ->groupBy(fn ($category) => $category->department_id ?: 0)
+                ->map(function ($rows) use ($total) {
+                    $amount = (float) $rows->sum('amount');
+
+                    return [
+                        'name' => $rows->first()->department->department_name ?? 'Unassigned',
+                        'allocated' => $amount,
+                        'lines' => $rows->count(),
+                        'share' => $total > 0 ? min(100, round(($amount / $total) * 100, 1)) : 0,
+                    ];
+                })
+                ->sortByDesc('allocated')
+                ->values()
+            : collect();
+
+        $stats = [
+            'count' => $budgets->count(),
+            'total' => $total,
+            'allocated' => $allocated,
+            'remaining' => $total - $allocated,
+            'departments' => $departmentTotals->count(),
+        ];
+
+        return view('AccountantPanel.budget', compact('schoolId', 'budgets', 'latest', 'departmentTotals', 'stats'));
+    }
+
+    public function enrollmentIncome()
+    {
+        $schoolId = $this->accountantContext->resolveSchoolId();
+
+        $details = $schoolId
+            ? studentEnrollDetails::with('studentEnrollment')
+                ->whereHas('studentEnrollment', fn ($q) => $q->where('school_id', $schoolId))
+                ->latest()
+                ->get()
+            : collect();
+
+        $pending = $details->where('status', 'pending')->values();
+        $byGrade = $pending
+            ->groupBy(fn ($detail) => $detail->grade_applied_for ?: 'Unspecified')
+            ->map->count()
+            ->sortDesc();
+
+        $stats = [
+            'pending' => $pending->count(),
+            'approved' => $details->where('status', 'approved')->count(),
+            'rejected' => $details->where('status', 'rejected')->count(),
+            'total' => $details->count(),
+        ];
+
+        return view('AccountantPanel.income.enrollmentIncome', compact('schoolId', 'pending', 'byGrade', 'stats'));
+    }
+
+    public function incomeHub()
+    {
+        $schoolId = $this->accountantContext->resolveSchoolId();
+        $stats = [
+            'students' => $schoolId ? Student::where('school_id', $schoolId)->count() : 0,
+            'feeConfigured' => $schoolId ? (float) FeeStructure::where('school_id', $schoolId)->get()->sum(fn ($f) => (float) $f->tuition_fee + (float) $f->transport_fee + (float) $f->hostel_fee + (float) $f->library_fee + (float) $f->exam_fee) : 0,
+            'pendingEnrollments' => $schoolId ? studentEnrollDetails::where('status', 'pending')->whereHas('studentEnrollment', fn ($q) => $q->where('school_id', $schoolId))->count() : 0,
+            'feeStructures' => $schoolId ? FeeStructure::where('school_id', $schoolId)->count() : 0,
+        ];
+
+        return view('AccountantPanel.income.income', compact('schoolId', 'stats'));
     }
 }
