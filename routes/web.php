@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountantController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FeePaymentController;
 use App\Http\Controllers\AccountantSettings;
 use App\Http\Controllers\Announcements\AnnouncementController;
@@ -425,10 +426,10 @@ Route::get('/enrollment-income', [AccountantController::class, 'enrollmentIncome
 ////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-//route for expenses management
-Route::get('/expenses-management', function () {
-    return view('AccountantPanel.expenses');
-})->name('accounting.expensesManagement');
+Route::get('/expenses-management', [ExpenseController::class, 'index'])->name('accounting.expensesManagement');
+Route::post('/expenses-management', [ExpenseController::class, 'store'])->name('accounting.expensesManagement.store');
+Route::put('/expenses-management/{expense}', [ExpenseController::class, 'update'])->name('accounting.expensesManagement.update');
+Route::delete('/expenses-management/{expense}', [ExpenseController::class, 'destroy'])->name('accounting.expensesManagement.destroy');
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////

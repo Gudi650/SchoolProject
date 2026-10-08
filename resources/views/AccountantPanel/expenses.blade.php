@@ -1,231 +1,87 @@
+@php $fmt = fn ($n) => money_format_app($n); @endphp
 <x-Account-sidebar>
-  <x-slot name="title">Expenses Management</x-slot>
+  <x-slot name="title">Expenses</x-slot>
+  <main class="p-4 sm:p-6 bg-slate-50 min-h-screen">
+    <div class="mb-6">
+      <h1 class="text-xl font-bold text-slate-900">Expenses</h1>
+      <p class="text-sm text-slate-600">This month: {{ $fmt($monthTotal ?? 0) }}</p>
+    </div>
+    @if(session('success'))<div class="mb-4 p-3 rounded-lg bg-green-50 text-green-800 text-sm">{{ session('success') }}</div>@endif
 
-    <main class="p-4 sm:p-6 bg-slate-50 min-h-screen">
-        <!-- Page header (title + actions) -->
-        <div class="mb-6 rounded-lg border border-indigo-100 bg-indigo-50 px-4 sm:px-6 py-4">
-          <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-            <div>
-              <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Expense Management</h1>
-              <p class="text-xs sm:text-sm text-slate-700 mt-1">Track and manage all school expenses</p>
-            </div>
-            <div class="flex flex-col sm:flex-row lg:flex-nowrap sm:items-center gap-2 sm:gap-3 lg:justify-end">
-              <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center whitespace-nowrap">
-                <i data-lucide="alert-circle" class="w-4 h-4"></i>
-                Pending Approvals
-              </button>
-              <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 hover:border-slate-300 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center whitespace-nowrap">
-                <i data-lucide="download" class="w-4 h-4"></i>
-                Export
-              </button>
-              <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center whitespace-nowrap">
-                <i data-lucide="plus" class="w-4 h-4"></i>
-                Record Expense
-              </button>
-            </div>
-          </div>
-        </div>
+    <div class="grid lg:grid-cols-2 gap-6">
+      <form method="POST" action="{{ $editExpense ? route('accounting.expensesManagement.update', $editExpense) : route('accounting.expensesManagement.store') }}" class="bg-white border rounded-xl p-6 space-y-3">
+        @csrf
+        @if($editExpense) @method('PUT') @endif
+        <h2 class="font-semibold">{{ $editExpense ? 'Edit expense #'.$editExpense->id : 'Record expense' }}</h2>
+        @if($editExpense)<a href="{{ route('accounting.expensesManagement') }}" class="text-xs text-indigo-600">Cancel edit</a>@endif
+        <input type="text" name="title" required placeholder="Title" value="{{ old('title', $editExpense->title ?? '') }}" class="w-full border rounded-lg px-3 py-2">
+        <select name="category" required class="w-full border rounded-lg px-3 py-2">
+          @foreach(['utilities','salaries','maintenance','supplies','other'] as $c)
+            <option value="{{ $c }}" @selected(old('category', $editExpense->category ?? '') === $c)>{{ ucfirst($c) }}</option>
+          @endforeach
+        </select>
+        <input type="text" name="vendor" placeholder="Vendor" value="{{ old('vendor', $editExpense->vendor ?? '') }}" class="w-full border rounded-lg px-3 py-2">
+        <input type="number" name="amount" step="0.01" min="0.01" required value="{{ old('amount', $editExpense->amount ?? '') }}" class="w-full border rounded-lg px-3 py-2">
+        <input type="date" name="expense_date" required value="{{ old('expense_date', optional($editExpense?->expense_date)->format('Y-m-d') ?? now()->format('Y-m-d')) }}" class="w-full border rounded-lg px-3 py-2">
+        <select name="status" required class="w-full border rounded-lg px-3 py-2">
+          @foreach(['paid','pending'] as $s)
+            <option value="{{ $s }}" @selected(old('status', $editExpense->status ?? 'paid') === $s)>{{ ucfirst($s) }}</option>
+          @endforeach
+        </select>
+        <select name="payment_method" class="w-full border rounded-lg px-3 py-2">
+          <option value="">Payment method</option>
+          @foreach(['cash','mobile','bank','cheque'] as $m)
+            <option value="{{ $m }}" @selected(old('payment_method', $editExpense->payment_method ?? '') === $m)>{{ ucfirst($m) }}</option>
+          @endforeach
+        </select>
+        <input type="text" name="reference" placeholder="Reference" value="{{ old('reference', $editExpense->reference ?? '') }}" class="w-full border rounded-lg px-3 py-2">
+        <textarea name="notes" rows="2" placeholder="Notes" class="w-full border rounded-lg px-3 py-2">{{ old('notes', $editExpense->notes ?? '') }}</textarea>
+        <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white rounded-lg">{{ $editExpense ? 'Update' : 'Save' }}</button>
+      </form>
 
-        <!-- Summary Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
-          <div class="bg-white rounded-xl p-4 sm:p-6 border border-indigo-100 shadow-sm">
-            <div class="flex items-center gap-3 mb-2">
-              <div class="p-2 rounded-md bg-indigo-100">
-                <i data-lucide="wallet" class="w-4 h-4 text-indigo-600"></i>
-              </div>
-              <p class="text-xs sm:text-sm text-slate-600">Total Expenses (This Month)</p>
-            </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 42.8L</p>
-            <p class="text-xs sm:text-sm text-red-600 mt-2">+8.3% from last month</p>
-          </div>
-          <div class="bg-white rounded-xl p-4 sm:p-6 border border-amber-100 shadow-sm">
-            <div class="flex items-center gap-3 mb-2">
-              <div class="p-2 rounded-md bg-amber-100">
-                <i data-lucide="clock" class="w-4 h-4 text-amber-600"></i>
-              </div>
-              <p class="text-xs sm:text-sm text-slate-600">Pending Payments</p>
-            </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 1.2L</p>
-            <p class="text-xs sm:text-sm text-amber-600 mt-2">8 pending</p>
-          </div>
-          <div class="bg-white rounded-xl p-4 sm:p-6 border border-indigo-100 shadow-sm">
-            <div class="flex items-center gap-3 mb-2">
-              <div class="p-2 rounded-md bg-indigo-100">
-                <i data-lucide="alert-circle" class="w-4 h-4 text-indigo-600"></i>
-              </div>
-              <p class="text-xs sm:text-sm text-slate-600">Pending Approvals</p>
-            </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 3.5L</p>
-            <p class="text-xs sm:text-sm text-indigo-600 mt-2">5 awaiting approval</p>
-          </div>
-          <div class="bg-white rounded-xl p-4 sm:p-6 border border-indigo-100 shadow-sm">
-            <div class="flex items-center gap-3 mb-2">
-              <div class="p-2 rounded-md bg-indigo-100">
-                <i data-lucide="calendar-days" class="w-4 h-4 text-indigo-600"></i>
-              </div>
-              <p class="text-xs sm:text-sm text-slate-600">Average Daily Expense</p>
-            </div>
-            <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 1.4L</p>
-            <p class="text-xs sm:text-sm text-slate-600 mt-2">Last 30 days</p>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-5 mb-6">
-          <div class="flex items-center justify-between gap-3 mb-4">
-            <h2 class="text-base sm:text-lg font-semibold text-slate-900 flex items-center gap-2">
-              <span class="w-1 h-6 bg-indigo-600 rounded"></span>
-              Expense Filters & Controls
-            </h2>
-            <button class="text-xs sm:text-sm px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50">Reset</button>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-4">
-            <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
-              <option>Academic Year: 2026-27</option>
-              <option>Academic Year: 2025-26</option>
-            </select>
-            <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
-              <option>All Branches</option>
-              <option>Main Campus</option>
-              <option>City Campus</option>
-            </select>
-            <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
-              <option>All Categories</option>
-              <option>Salary & Wages</option>
-              <option>Utilities</option>
-              <option>Maintenance</option>
-              <option>Supplies</option>
-            </select>
-            <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
-              <option>All Status</option>
-              <option>Paid</option>
-              <option>Pending</option>
-              <option>Needs Approval</option>
-            </select>
-            <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
-              <option>All Vendors</option>
-              <option>Payroll</option>
-              <option>State Electricity Board</option>
-              <option>ABC Furniture</option>
-            </select>
-            <input type="text" placeholder="Search expense ID / vendor / note" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100" />
-          </div>
-
-          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-            <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center">
-              <i data-lucide="filter" class="w-4 h-4"></i>
-              Apply Filters
-            </button>
-            <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-2 justify-center">
-              <i data-lucide="clock" class="w-4 h-4"></i>
-              Open Pending Payments
-            </button>
-            <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-2 justify-center">
-              <i data-lucide="file-down" class="w-4 h-4"></i>
-              Download Expense Ledger
-            </button>
-          </div>
-        </div>
-
-        <!-- Budget Utilization -->
-        <div class="mb-6">
-          <h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-            <span class="w-1 h-6 bg-indigo-600 rounded"></span>
-            Budget Utilization (This Month)
-          </h2>
-          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto relative z-0">
-              <table class="w-full text-left text-sm relative z-0">
-                <thead class="bg-indigo-50 border-b border-indigo-100">
+      <div class="space-y-6">
+        <div class="bg-white border rounded-xl overflow-hidden">
+          <h2 class="px-4 py-3 font-semibold border-b bg-indigo-50 text-sm">Recent expenses</h2>
+          <div class="overflow-x-auto max-h-80">
+            <table class="w-full text-sm">
+              <thead class="border-b"><tr><th class="px-3 py-2 text-left">Date</th><th class="px-3 py-2 text-left">Title</th><th class="px-3 py-2">Amount</th><th class="px-3 py-2"></th></tr></thead>
+              <tbody class="divide-y">
+                @forelse($expenses as $e)
                   <tr>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Category</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Budget</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Spent</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Remaining</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Utilization</th>
+                    <td class="px-3 py-2">{{ $e->expense_date->format('M j') }}</td>
+                    <td class="px-3 py-2">{{ $e->title }}<span class="block text-xs text-slate-500">{{ ucfirst($e->category) }} · {{ ucfirst($e->status) }}</span></td>
+                    <td class="px-3 py-2 font-medium">{{ $fmt($e->amount) }}</td>
+                    <td class="px-3 py-2 whitespace-nowrap">
+                      <a href="{{ route('accounting.expensesManagement', ['edit' => $e->id]) }}" class="text-indigo-600 text-xs">Edit</a>
+                      <form method="POST" action="{{ route('accounting.expensesManagement.destroy', $e) }}" class="inline" onsubmit="return confirm('Delete?')">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="text-red-600 text-xs ml-2">Del</button>
+                      </form>
+                    </td>
                   </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                  <tr class="hover:bg-indigo-50 transition-colors">
-                    <td class="px-4 py-3">Salary &amp; Wages</td>
-                    <td class="px-4 py-3">Tsh 50,00,000</td>
-                    <td class="px-4 py-3 text-red-600 font-medium">Tsh 42,00,000</td>
-                    <td class="px-4 py-3 text-green-600 font-medium">Tsh 8,00,000</td>
-                    <td class="px-4 py-3 w-64"><div class="flex items-center gap-3"><div class="flex-1 bg-slate-100 rounded-full h-2"><div class="h-2 rounded-full bg-red-500" style="width:84%"></div></div><span class="text-sm font-medium text-slate-700 w-12">84%</span></div></td>
-                  </tr>
-                  <tr class="hover:bg-indigo-50 transition-colors">
-                    <td class="px-4 py-3">Utilities</td>
-                    <td class="px-4 py-3">Tsh 3,00,000</td>
-                    <td class="px-4 py-3 text-red-600 font-medium">Tsh 2,45,000</td>
-                    <td class="px-4 py-3 text-green-600 font-medium">Tsh 55,000</td>
-                    <td class="px-4 py-3 w-64"><div class="flex items-center gap-3"><div class="flex-1 bg-slate-100 rounded-full h-2"><div class="h-2 rounded-full bg-amber-500" style="width:82%"></div></div><span class="text-sm font-medium text-slate-700 w-12">82%</span></div></td>
-                  </tr>
-                  <tr class="hover:bg-indigo-50 transition-colors">
-                    <td class="px-4 py-3">Maintenance</td>
-                    <td class="px-4 py-3">Tsh 4,00,000</td>
-                    <td class="px-4 py-3 text-red-600 font-medium">Tsh 3,20,000</td>
-                    <td class="px-4 py-3 text-green-600 font-medium">Tsh 80,000</td>
-                    <td class="px-4 py-3 w-64"><div class="flex items-center gap-3"><div class="flex-1 bg-slate-100 rounded-full h-2"><div class="h-2 rounded-full bg-amber-500" style="width:80%"></div></div><span class="text-sm font-medium text-slate-700 w-12">80%</span></div></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                @empty
+                  <tr><td colspan="4" class="px-4 py-8 text-center text-slate-500">No expenses yet.</td></tr>
+                @endforelse
+              </tbody>
+            </table>
+          </div>
         </div>
-
-        <!-- Recent Expenses -->
-        <div class="mb-6">
-          <h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-            <span class="w-1 h-6 bg-indigo-600 rounded"></span>
-            Recent Expenses
-          </h2>
-          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto relative z-0">
-              <table class="w-full text-left text-sm relative z-0">
-                <thead class="bg-indigo-50 border-b border-indigo-100">
-                  <tr>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Expense ID</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Date</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Category</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Description</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Vendor</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Amount</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Status</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Approved By</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                  <tr class="hover:bg-indigo-50 transition-colors">
-                    <td class="px-4 py-3">EXP001</td>
-                    <td class="px-4 py-3">2024-01-15</td>
-                    <td class="px-4 py-3">Salary</td>
-                    <td class="px-4 py-3">Teaching Staff Salary - January</td>
-                    <td class="px-4 py-3">Payroll</td>
-                    <td class="px-4 py-3 font-semibold text-red-600">Tsh 8,50,000</td>
-                    <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Paid</span></td>
-                    <td class="px-4 py-3">Principal</td>
-                  </tr>
-                  <tr class="hover:bg-indigo-50 transition-colors">
-                    <td class="px-4 py-3">EXP002</td>
-                    <td class="px-4 py-3">2024-01-14</td>
-                    <td class="px-4 py-3">Utilities</td>
-                    <td class="px-4 py-3">Electricity Bill - December</td>
-                    <td class="px-4 py-3">State Electricity Board</td>
-                    <td class="px-4 py-3 font-semibold text-red-600">Tsh 45,000</td>
-                    <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Paid</span></td>
-                    <td class="px-4 py-3">Admin Head</td>
-                  </tr>
-                  <tr class="hover:bg-indigo-50 transition-colors">
-                    <td class="px-4 py-3">EXP003</td>
-                    <td class="px-4 py-3">2024-01-13</td>
-                    <td class="px-4 py-3">Maintenance</td>
-                    <td class="px-4 py-3">Classroom Furniture Repair</td>
-                    <td class="px-4 py-3">ABC Furniture</td>
-                    <td class="px-4 py-3 font-semibold text-red-600">Tsh 28,000</td>
-                    <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Pending</span></td>
-                    <td class="px-4 py-3">Maintenance Head</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+        <div class="bg-white border rounded-xl overflow-hidden">
+          <h2 class="px-4 py-3 font-semibold border-b bg-slate-50 text-sm">Audit log</h2>
+          <ul class="divide-y text-sm max-h-48 overflow-y-auto">
+            @forelse($audits as $a)
+              <li class="px-4 py-2">
+                <span class="font-medium">{{ ucfirst($a->action) }}</span>
+                @if($a->expense_id) #{{ $a->expense_id }} @endif
+                · {{ trim(($a->user->fname ?? '').' '.($a->user->lname ?? '')) ?: 'User' }}
+                · {{ $a->created_at->format('M j, H:i') }}
+              </li>
+            @empty
+              <li class="px-4 py-6 text-center text-slate-500">No audit entries.</li>
+            @endforelse
+          </ul>
         </div>
-      </main>
-
+      </div>
+    </div>
+  </main>
 </x-Account-sidebar>
