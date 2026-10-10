@@ -57,7 +57,7 @@
                   <td class="px-4 py-3 text-slate-600">{{ $e->expense_date->format('M j, Y') }}</td>
                   <td class="px-4 py-3 font-semibold text-slate-900">{{ $e->title }}</td>
                   <td class="px-4 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-700">{{ ucfirst($e->category) }}</span></td>
-                  <td class="px-4 py-3 text-slate-600">{{ $e->vendor ?: '—' }}</td>
+                  <td class="px-4 py-3 text-slate-600">{{ $e->vendorRecord->name ?? $e->vendor ?? '—' }}</td>
                   <td class="px-4 py-3 font-medium">{{ $fmt($e->amount) }}</td>
                   <td class="px-4 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium {{ $e->status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700' }}">{{ ucfirst($e->status) }}</span></td>
                   <td class="px-4 py-3 whitespace-nowrap text-right">
@@ -118,13 +118,18 @@
       <form id="expenseForm" method="POST" action="{{ route('accounting.expensesManagement.store') }}" class="space-y-3">
         @csrf
         <input type="hidden" name="_method" id="expenseMethod" disabled>
+        <select name="vendor_id" id="ex_vendor" onchange="applyVendor()" class="w-full border rounded-lg px-3 py-2">
+          <option value="">No vendor (enter details)</option>
+          @foreach($vendors as $v)
+            <option value="{{ $v->id }}">{{ $v->name }}</option>
+          @endforeach
+        </select>
         <input name="title" id="ex_title" required placeholder="Title" class="w-full border rounded-lg px-3 py-2">
         <select name="category" id="ex_category" required class="w-full border rounded-lg px-3 py-2">
           @foreach(['utilities','salaries','maintenance','supplies','other'] as $c)
             <option value="{{ $c }}">{{ ucfirst($c) }}</option>
           @endforeach
         </select>
-        <input name="vendor" id="ex_vendor" placeholder="Vendor" class="w-full border rounded-lg px-3 py-2">
         <input type="number" name="amount" id="ex_amount" step="0.01" min="0.01" required placeholder="Amount" class="w-full border rounded-lg px-3 py-2">
         <input type="date" name="expense_date" id="ex_date" required class="w-full border rounded-lg px-3 py-2">
         <select name="status" id="ex_status" required class="w-full border rounded-lg px-3 py-2">
@@ -146,6 +151,21 @@
   <script>
     const storeUrl = @json(route('accounting.expensesManagement.store'));
     const updateBase = @json(url('/expenses-management'));
+    const vendorMap = @json($vendors->mapWithKeys(fn ($v) => [$v->id => ['category' => strtolower((string) $v->category)]]));
+    const cats = ['utilities','salaries','maintenance','supplies','other'];
+    function applyVendor() {
+      const id = document.getElementById('ex_vendor').value;
+      const cat = document.getElementById('ex_category');
+      if (id && vendorMap[id]) {
+        const c = vendorMap[id].category;
+        cat.value = cats.includes(c) ? c : 'other';
+        cat.disabled = true;
+        cat.classList.add('bg-slate-100');
+      } else {
+        cat.disabled = false;
+        cat.classList.remove('bg-slate-100');
+      }
+    }
     function openExpense(row) {
       const form = document.getElementById('expenseForm');
       const method = document.getElementById('expenseMethod');
@@ -157,21 +177,26 @@
         document.getElementById('expenseSubmit').textContent = 'Update';
         document.getElementById('ex_title').value = row.title || '';
         document.getElementById('ex_category').value = row.category || 'other';
-        document.getElementById('ex_vendor').value = row.vendor || '';
+        document.getElementById('ex_vendor').value = row.vendor_id || '';
         document.getElementById('ex_amount').value = row.amount || '';
         document.getElementById('ex_date').value = (row.expense_date || '').slice(0, 10);
         document.getElementById('ex_status').value = row.status || 'paid';
         document.getElementById('ex_method').value = row.payment_method || '';
         document.getElementById('ex_ref').value = row.reference || '';
         document.getElementById('ex_notes').value = row.notes || '';
+        applyVendor();
       } else {
         form.action = storeUrl; method.disabled = true;
         document.getElementById('expenseModalTitle').textContent = 'Record expense';
         document.getElementById('expenseSubmit').textContent = 'Save';
         form.reset();
         document.getElementById('ex_date').value = new Date().toISOString().slice(0, 10);
+        applyVendor();
       }
     }
+    document.getElementById('expenseForm').addEventListener('submit', () => {
+      document.getElementById('ex_category').disabled = false;
+    });
     function closeExpense() { document.getElementById('expenseModal').classList.add('hidden'); }
     @if($errors->any()) document.addEventListener('DOMContentLoaded', () => openExpense()); @endif
   </script>

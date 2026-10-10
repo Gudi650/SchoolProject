@@ -31,8 +31,8 @@
         <div class="flex gap-2 justify-end">
           <a href="{{ route('accounting.vendorsManagement') }}" class="px-4 py-2 border rounded-lg text-sm">Cancel</a>
           <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm">{{ $editVendor ? 'Update' : 'Save' }}</button>
-        </div>
-      </form>
+          </div>
+        </form>
     </div>
   </div>
 </x-Account-sidebar>

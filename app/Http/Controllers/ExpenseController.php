@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Expense;
 use App\Models\ExpenseAudit;
+use App\Models\Vendor;
 use App\Services\AccountantContextService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,11 +24,13 @@ class ExpenseController extends Controller
         $schoolId = $this->accountantContext->requireSchoolId();
         $monthStart = now()->startOfMonth();
 
-        $expenses = Expense::with(['creator', 'updater'])
+        $expenses = Expense::with(['creator', 'vendorRecord'])
             ->where('school_id', $schoolId)
             ->latest('expense_date')
             ->limit(50)
             ->get();
+
+        $vendors = Vendor::where('school_id', $schoolId)->where('status', 'active')->orderBy('name')->get();
 
         $audits = ExpenseAudit::with('user')
             ->where('school_id', $schoolId)
@@ -43,13 +46,13 @@ class ExpenseController extends Controller
             'count' => (clone $base)->count(),
         ];
 
-        return view('AccountantPanel.expenses', compact('expenses', 'audits', 'stats'));
+        return view('AccountantPanel.expenses', compact('expenses', 'audits', 'stats', 'vendors'));
     }
 
     public function store(Request $request)
     {
         $schoolId = $this->accountantContext->requireSchoolId();
-        $data = $this->validated($request);
+        $data = $this->validated($request, $schoolId);
 
         $expense = Expense::create([
             ...$data,
@@ -67,7 +70,7 @@ class ExpenseController extends Controller
     {
         $schoolId = $this->accountantContext->requireSchoolId();
         $row = Expense::where('school_id', $schoolId)->findOrFail($expense);
-        $data = $this->validated($request);
+        $data = $this->validated($request, $schoolId);
         $before = $row->only(array_keys($data));
 
         $row->fill([...$data, 'updated_by' => Auth::id()]);
@@ -90,11 +93,11 @@ class ExpenseController extends Controller
         return redirect()->route('accounting.expensesManagement')->with('success', 'Expense deleted.');
     }
 
-    private function validated(Request $request): array
+    private function validated(Request $request, int $schoolId): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'category' => 'required|in:' . implode(',', self::CATEGORIES),
-            'vendor' => 'nullable|string|max:255',
+            'vendor_id' => 'nullable|exists:vendors,id',
             'title' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0.01',
             'status' => 'required|in:' . implode(',', self::STATUSES),
@@ -103,6 +106,20 @@ class ExpenseController extends Controller
             'reference' => 'nullable|string|max:100',
             'notes' => 'nullable|string|max:500',
         ]);
+
+        if (!empty($data['vendor_id'])) {
+            $vendor = Vendor::where('school_id', $schoolId)->where('id', $data['vendor_id'])->firstOrFail();
+            $data['vendor'] = $vendor->name;
+            $cat = strtolower(trim((string) $vendor->category));
+            if (in_array($cat, self::CATEGORIES, true)) {
+                $data['category'] = $cat;
+            }
+        } else {
+            $data['vendor_id'] = null;
+            $data['vendor'] = null;
+        }
+
+        return $data;
     }
 
     private function audit(int $schoolId, ?int $expenseId, string $action, array $changes): void

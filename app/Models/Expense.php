@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Expense extends Model
 {
     protected $fillable = [
-        'school_id', 'category', 'vendor', 'title', 'amount', 'status',
+        'school_id', 'category', 'vendor_id', 'vendor', 'title', 'amount', 'status',
         'expense_date', 'payment_method', 'reference', 'notes',
         'created_by', 'updated_by',
     ];
@@ -17,6 +17,11 @@ class Expense extends Model
         'expense_date' => 'date',
         'amount' => 'decimal:2',
     ];
+
+    public function vendorRecord(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id');
+    }
 
     public function creator(): BelongsTo
     {
