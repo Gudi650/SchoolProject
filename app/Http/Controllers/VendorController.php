@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FinanceCategory;
 use App\Models\Vendor;
 use App\Models\VendorAudit;
 use App\Services\AccountantContextService;
@@ -37,13 +38,16 @@ class VendorController extends Controller
             ? Vendor::where('school_id', $schoolId)->find(request('edit'))
             : null;
 
-        return view('AccountantPanel.vendors.createvendors', compact('editVendor'));
+        $categories = FinanceCategory::namesFor($schoolId);
+
+        return view('AccountantPanel.vendors.createvendors', compact('editVendor', 'categories'));
     }
 
     public function store(Request $request)
     {
         $schoolId = $this->accountantContext->requireSchoolId();
         $data = $this->validated($request);
+        $data['category'] = FinanceCategory::remember($schoolId, $data['category'] ?? null);
 
         $vendor = Vendor::create([
             ...$data,
@@ -62,6 +66,7 @@ class VendorController extends Controller
         $schoolId = $this->accountantContext->requireSchoolId();
         $row = Vendor::where('school_id', $schoolId)->findOrFail($vendor);
         $data = $this->validated($request);
+        $data['category'] = FinanceCategory::remember($schoolId, $data['category'] ?? null);
         $before = $row->only(array_keys($data));
 
         $row->fill([...$data, 'updated_by' => Auth::id()])->save();

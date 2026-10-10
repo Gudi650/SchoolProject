@@ -218,17 +218,17 @@
 
 
             <div class="relative">
-              <button id="vendorToggle" aria-expanded="{{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+              <button id="vendorToggle" aria-expanded="{{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor', 'accounting.financeCategories') ? 'true' : 'false' }}" class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor', 'accounting.financeCategories') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                 <span class="flex items-center gap-3">
                   <i data-lucide="pie-chart" class="w-5 h-5"></i>
                   <span class="text-sm font-medium nav-label">Vendors </span>
                 </span>
-                <span id="vendorChevron" class="transition-transform duration-200 {{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor') ? 'rotate-180' : '' }}">
+                <span id="vendorChevron" class="transition-transform duration-200 {{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor', 'accounting.financeCategories') ? 'rotate-180' : '' }}">
                   <i data-lucide="chevron-down" class="w-4 h-4 text-sm"></i>
                 </span>
               </button>
               
-              <ul id="vendorMenu" class="{{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
+              <ul id="vendorMenu" class="{{ request()->routeIs('accounting.vendorsManagement', 'accounting.createVendor', 'accounting.financeCategories') ? 'mt-1 space-y-1 pl-10' : 'hidden mt-1 space-y-1 pl-10' }}">
 
                 <li>
                   <a href="{{ route('accounting.vendorsManagement') }}" 
@@ -243,6 +243,13 @@
                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.createVendor') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
                     <i data-lucide="layers" class="w-4 h-4"></i>
                     Add New Vendor
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ route('accounting.financeCategories') }}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.financeCategories') ? 'text-indigo-700 bg-indigo-100/50' : 'text-slate-700 hover:bg-indigo-100/50 hover:text-indigo-700' }}">
+                    <i data-lucide="tags" class="w-4 h-4"></i>
+                    Categories
                   </a>
                 </li>
 

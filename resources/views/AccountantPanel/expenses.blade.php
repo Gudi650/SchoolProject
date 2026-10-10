@@ -8,9 +8,12 @@
           <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Expense Management</h1>
           <p class="text-xs sm:text-sm text-slate-700 mt-1">Track and manage all school expenses</p>
         </div>
+        <div class="flex flex-col sm:flex-row gap-2">
+        <a href="{{ route('accounting.financeCategories') }}" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 flex items-center gap-2 shadow-sm justify-center">Categories</a>
         <button type="button" onclick="openExpense()" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 flex items-center gap-2 shadow-sm justify-center">
           <i data-lucide="plus" class="w-4 h-4"></i> Record Expense
         </button>
+        </div>
       </div>
     </div>
     @if(session('success'))<div class="mb-4 p-3 rounded-lg bg-green-50 text-green-800 text-sm">{{ session('success') }}</div>@endif
@@ -110,7 +113,7 @@
 
   <div id="expenseModal" class="fixed inset-0 z-50 hidden">
     <div class="absolute inset-0 bg-slate-900/40" onclick="closeExpense()"></div>
-    <div class="relative mx-auto mt-16 w-full max-w-lg bg-white rounded-xl shadow-xl p-6">
+    <div class="relative mx-auto mt-16 w-full max-w-lg bg-white rounded-xl shadow-xl p-6 overflow-visible">
       <div class="flex items-center justify-between mb-4">
         <h2 id="expenseModalTitle" class="text-lg font-semibold">Record expense</h2>
         <button type="button" onclick="closeExpense()" class="text-slate-500 hover:text-slate-800">✕</button>
@@ -126,10 +129,12 @@
         </select>
         <input name="title" id="ex_title" required placeholder="Title" class="w-full border rounded-lg px-3 py-2">
         <select name="category" id="ex_category" required class="w-full border rounded-lg px-3 py-2">
-          @foreach(['utilities','salaries','maintenance','supplies','other'] as $c)
-            <option value="{{ $c }}">{{ ucfirst($c) }}</option>
+          <option value="">Select category</option>
+          @foreach($categories ?? [] as $c)
+            <option value="{{ $c }}">{{ $c }}</option>
           @endforeach
         </select>
+        <p class="text-xs text-slate-500">Manage list in <a href="{{ route('accounting.financeCategories') }}" class="text-indigo-600">Categories</a>.</p>
         <input type="number" name="amount" id="ex_amount" step="0.01" min="0.01" required placeholder="Amount" class="w-full border rounded-lg px-3 py-2">
         <input type="date" name="expense_date" id="ex_date" required class="w-full border rounded-lg px-3 py-2">
         <select name="status" id="ex_status" required class="w-full border rounded-lg px-3 py-2">
@@ -151,14 +156,19 @@
   <script>
     const storeUrl = @json(route('accounting.expensesManagement.store'));
     const updateBase = @json(url('/expenses-management'));
-    const vendorMap = @json($vendors->mapWithKeys(fn ($v) => [$v->id => ['category' => strtolower((string) $v->category)]]));
-    const cats = ['utilities','salaries','maintenance','supplies','other'];
+    const vendorMap = @json($vendors->mapWithKeys(fn ($v) => [$v->id => ['category' => (string) $v->category]]));
+    function setCategory(value) {
+      const cat = document.getElementById('ex_category');
+      if (value && ![...cat.options].some(o => o.value === value)) {
+        cat.add(new Option(value, value));
+      }
+      cat.value = value || '';
+    }
     function applyVendor() {
       const id = document.getElementById('ex_vendor').value;
       const cat = document.getElementById('ex_category');
-      if (id && vendorMap[id]) {
-        const c = vendorMap[id].category;
-        cat.value = cats.includes(c) ? c : 'other';
+      if (id && vendorMap[id] && vendorMap[id].category) {
+        setCategory(vendorMap[id].category);
         cat.disabled = true;
         cat.classList.add('bg-slate-100');
       } else {
@@ -176,7 +186,7 @@
         document.getElementById('expenseModalTitle').textContent = 'Edit expense';
         document.getElementById('expenseSubmit').textContent = 'Update';
         document.getElementById('ex_title').value = row.title || '';
-        document.getElementById('ex_category').value = row.category || 'other';
+        setCategory(row.category || '');
         document.getElementById('ex_vendor').value = row.vendor_id || '';
         document.getElementById('ex_amount').value = row.amount || '';
         document.getElementById('ex_date').value = (row.expense_date || '').slice(0, 10);

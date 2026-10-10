@@ -21,7 +21,17 @@
         <input name="name" required placeholder="Full name / company" value="{{ old('name', $editVendor->name ?? '') }}" class="w-full border rounded-lg px-3 py-2">
         <input name="email" type="email" placeholder="Email" value="{{ old('email', $editVendor->email ?? '') }}" class="w-full border rounded-lg px-3 py-2">
         <input name="phone" placeholder="Phone" value="{{ old('phone', $editVendor->phone ?? '') }}" class="w-full border rounded-lg px-3 py-2">
-        <input name="category" placeholder="Category" value="{{ old('category', $editVendor->category ?? '') }}" class="w-full border rounded-lg px-3 py-2">
+        <select name="category" class="w-full border rounded-lg px-3 py-2">
+          <option value="">Select category</option>
+          @php $currentCat = old('category', $editVendor->category ?? ''); @endphp
+          @if($currentCat && !collect($categories ?? [])->contains($currentCat))
+            <option value="{{ $currentCat }}" selected>{{ $currentCat }}</option>
+          @endif
+          @foreach($categories ?? [] as $c)
+            <option value="{{ $c }}" @selected($currentCat === $c)>{{ $c }}</option>
+          @endforeach
+        </select>
+        <p class="text-xs text-slate-500">Manage list in <a href="{{ route('accounting.financeCategories') }}" class="text-indigo-600">Categories</a>.</p>
         <select name="status" required class="w-full border rounded-lg px-3 py-2">
           @foreach(['active','inactive'] as $s)
             <option value="{{ $s }}" @selected(old('status', $editVendor->status ?? 'active') === $s)>{{ ucfirst($s) }}</option>

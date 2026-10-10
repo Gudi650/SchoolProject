@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountantController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FeePaymentController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\FinanceCategoryController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\AccountantSettings;
 use App\Http\Controllers\Announcements\AnnouncementController;
@@ -514,6 +515,10 @@ Route::post('/vendors-management', [VendorController::class, 'store'])->name('ac
 Route::put('/vendors-management/{vendor}', [VendorController::class, 'update'])->name('accounting.vendorsManagement.update');
 Route::delete('/vendors-management/{vendor}', [VendorController::class, 'destroy'])->name('accounting.vendorsManagement.destroy');
 Route::get('/create-vendor', [VendorController::class, 'create'])->name('accounting.createVendor');
+Route::get('/finance-categories', [FinanceCategoryController::class, 'index'])->name('accounting.financeCategories');
+Route::post('/finance-categories', [FinanceCategoryController::class, 'store'])->name('accounting.financeCategories.store');
+Route::put('/finance-categories/{category}', [FinanceCategoryController::class, 'update'])->name('accounting.financeCategories.update');
+Route::delete('/finance-categories/{category}', [FinanceCategoryController::class, 'destroy'])->name('accounting.financeCategories.destroy');
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

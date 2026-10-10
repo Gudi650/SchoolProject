@@ -8,6 +8,9 @@
           <p class="text-xs sm:text-sm text-slate-700 mt-1">Manage vendors, suppliers, and payment tracking</p>
         </div>
         <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 pt-2">
+          <a href="{{ route('accounting.financeCategories') }}" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center">
+            Categories
+          </a>
           <a href="{{ route('accounting.createVendor') }}" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center">
             <i data-lucide="plus" class="w-4 h-4"></i>
             Add Vendor

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Expense;
 use App\Models\ExpenseAudit;
+use App\Models\FinanceCategory;
 use App\Models\Vendor;
 use App\Services\AccountantContextService;
 use Illuminate\Http\Request;
@@ -11,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
-    private const CATEGORIES = ['utilities', 'salaries', 'maintenance', 'supplies', 'other'];
     private const STATUSES = ['paid', 'pending'];
     private const METHODS = ['cash', 'mobile', 'bank', 'cheque'];
 
@@ -31,6 +31,7 @@ class ExpenseController extends Controller
             ->get();
 
         $vendors = Vendor::where('school_id', $schoolId)->where('status', 'active')->orderBy('name')->get();
+        $categories = FinanceCategory::namesFor($schoolId);
 
         $audits = ExpenseAudit::with('user')
             ->where('school_id', $schoolId)
@@ -46,7 +47,7 @@ class ExpenseController extends Controller
             'count' => (clone $base)->count(),
         ];
 
-        return view('AccountantPanel.expenses', compact('expenses', 'audits', 'stats', 'vendors'));
+        return view('AccountantPanel.expenses', compact('expenses', 'audits', 'stats', 'vendors', 'categories'));
     }
 
     public function store(Request $request)
@@ -96,7 +97,7 @@ class ExpenseController extends Controller
     private function validated(Request $request, int $schoolId): array
     {
         $data = $request->validate([
-            'category' => 'required|in:' . implode(',', self::CATEGORIES),
+            'category' => 'required|string|max:64',
             'vendor_id' => 'nullable|exists:vendors,id',
             'title' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0.01',
@@ -110,14 +111,15 @@ class ExpenseController extends Controller
         if (!empty($data['vendor_id'])) {
             $vendor = Vendor::where('school_id', $schoolId)->where('id', $data['vendor_id'])->firstOrFail();
             $data['vendor'] = $vendor->name;
-            $cat = strtolower(trim((string) $vendor->category));
-            if (in_array($cat, self::CATEGORIES, true)) {
-                $data['category'] = $cat;
+            if (trim((string) $vendor->category) !== '') {
+                $data['category'] = $vendor->category;
             }
         } else {
             $data['vendor_id'] = null;
             $data['vendor'] = null;
         }
+
+        $data['category'] = FinanceCategory::remember($schoolId, $data['category']);
 
         return $data;
     }
