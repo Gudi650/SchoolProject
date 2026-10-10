@@ -513,7 +513,7 @@ Route::get('/vendors-management', [VendorController::class, 'index'])->name('acc
 Route::post('/vendors-management', [VendorController::class, 'store'])->name('accounting.vendorsManagement.store');
 Route::put('/vendors-management/{vendor}', [VendorController::class, 'update'])->name('accounting.vendorsManagement.update');
 Route::delete('/vendors-management/{vendor}', [VendorController::class, 'destroy'])->name('accounting.vendorsManagement.destroy');
-Route::get('/create-vendor', fn () => redirect()->route('accounting.vendorsManagement'))->name('accounting.createVendor');
+Route::get('/create-vendor', [VendorController::class, 'create'])->name('accounting.createVendor');
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

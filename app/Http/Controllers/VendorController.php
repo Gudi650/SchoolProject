@@ -20,11 +20,24 @@ class VendorController extends Controller
 
         $vendors = Vendor::where('school_id', $schoolId)->latest()->limit(50)->get();
         $audits = VendorAudit::with('user')->where('school_id', $schoolId)->latest('created_at')->limit(20)->get();
+        $stats = [
+            'total' => Vendor::where('school_id', $schoolId)->count(),
+            'active' => Vendor::where('school_id', $schoolId)->where('status', 'active')->count(),
+            'inactive' => Vendor::where('school_id', $schoolId)->where('status', 'inactive')->count(),
+            'month' => Vendor::where('school_id', $schoolId)->where('created_at', '>=', now()->startOfMonth())->count(),
+        ];
+
+        return view('AccountantPanel.vendors.vendorsManagement', compact('vendors', 'audits', 'stats'));
+    }
+
+    public function create()
+    {
+        $schoolId = $this->accountantContext->requireSchoolId();
         $editVendor = request('edit')
             ? Vendor::where('school_id', $schoolId)->find(request('edit'))
             : null;
 
-        return view('AccountantPanel.vendors.vendorsManagement', compact('vendors', 'audits', 'editVendor'));
+        return view('AccountantPanel.vendors.createvendors', compact('editVendor'));
     }
 
     public function store(Request $request)
