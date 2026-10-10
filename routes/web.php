@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountantController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FeePaymentController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AccountantSettings;
 use App\Http\Controllers\Announcements\AnnouncementController;
 use App\Http\Controllers\Announcements\StudentController;
@@ -558,30 +559,11 @@ Route::controller(BudgetDepartmentController::class)->group(function () {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
-//route for reports management
-Route::get('/reports-management', function () {
-    return view('AccountantPanel.reports.report');
-})->name('accounting.reportsManagement');
-
-//route for balance sheet
-Route::get('/reports/balance-sheet', function () {
-    return view('AccountantPanel.reports.balanceSheet');
-})->name('accounting.reports.balanceSheet');
-
-//route for trial balance
-Route::get('/reports/trial-balance', function () {
-    return view('AccountantPanel.reports.trialBalance');
-})->name('accounting.reports.trialBalance');
-
-//route for cash flow
-Route::get('/reports/cash-flow', function () {
-    return view('AccountantPanel.reports.cashFlow');
-})->name('accounting.reports.cashFlow');
-
-//route for profit and loss
-Route::get('/reports/profit-loss', function () {
-    return view('AccountantPanel.reports.profitLoss');
-})->name('accounting.reports.profitLoss');
+Route::get('/reports-management', [ReportController::class, 'index'])->name('accounting.reportsManagement');
+Route::get('/reports/balance-sheet', [ReportController::class, 'balanceSheet'])->name('accounting.reports.balanceSheet');
+Route::get('/reports/trial-balance', [ReportController::class, 'trialBalance'])->name('accounting.reports.trialBalance');
+Route::get('/reports/cash-flow', [ReportController::class, 'cashFlow'])->name('accounting.reports.cashFlow');
+Route::get('/reports/profit-loss', [ReportController::class, 'profitLoss'])->name('accounting.reports.profitLoss');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
