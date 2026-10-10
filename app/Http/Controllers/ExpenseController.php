@@ -35,17 +35,15 @@ class ExpenseController extends Controller
             ->limit(20)
             ->get();
 
-        $monthTotal = (float) Expense::where('school_id', $schoolId)
-            ->where('expense_date', '>=', $monthStart)
-            ->sum('amount');
+        $base = Expense::where('school_id', $schoolId);
+        $stats = [
+            'monthTotal' => (float) (clone $base)->where('expense_date', '>=', $monthStart)->sum('amount'),
+            'pending' => (float) (clone $base)->where('status', 'pending')->sum('amount'),
+            'pendingCount' => (clone $base)->where('status', 'pending')->count(),
+            'count' => (clone $base)->count(),
+        ];
 
-        $editExpense = request('edit')
-            ? Expense::where('school_id', $schoolId)->find(request('edit'))
-            : null;
-
-        return view('AccountantPanel.expenses', compact(
-            'expenses', 'audits', 'monthTotal', 'editExpense'
-        ));
+        return view('AccountantPanel.expenses', compact('expenses', 'audits', 'stats'));
     }
 
     public function store(Request $request)

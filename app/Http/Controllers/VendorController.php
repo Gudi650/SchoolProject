@@ -18,7 +18,7 @@ class VendorController extends Controller
     {
         $schoolId = $this->accountantContext->requireSchoolId();
 
-        $vendors = Vendor::where('school_id', $schoolId)->latest()->limit(50)->get();
+        $vendors = Vendor::with('creator')->where('school_id', $schoolId)->latest()->limit(50)->get();
         $audits = VendorAudit::with('user')->where('school_id', $schoolId)->latest('created_at')->limit(20)->get();
         $stats = [
             'total' => Vendor::where('school_id', $schoolId)->count(),
