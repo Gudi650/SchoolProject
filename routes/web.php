@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountantController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FeePaymentController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\VendorController;
 use App\Http\Controllers\AccountantSettings;
 use App\Http\Controllers\Announcements\AnnouncementController;
 use App\Http\Controllers\Announcements\StudentController;
@@ -508,15 +509,11 @@ Route::get('/banking-cash-management', function () {
 //vendor management routes
 
 
-//route for vendors management
-Route::get('/vendors-management', function () {
-    return view('AccountantPanel.vendors.vendorsManagement');
-})->name('accounting.vendorsManagement');
-
-//route for creating vendors
-Route::get('/create-vendor', function () {
-    return view('AccountantPanel.vendors.createvendors');
-})->name('accounting.createVendor');
+Route::get('/vendors-management', [VendorController::class, 'index'])->name('accounting.vendorsManagement');
+Route::post('/vendors-management', [VendorController::class, 'store'])->name('accounting.vendorsManagement.store');
+Route::put('/vendors-management/{vendor}', [VendorController::class, 'update'])->name('accounting.vendorsManagement.update');
+Route::delete('/vendors-management/{vendor}', [VendorController::class, 'destroy'])->name('accounting.vendorsManagement.destroy');
+Route::get('/create-vendor', fn () => redirect()->route('accounting.vendorsManagement'))->name('accounting.createVendor');
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
