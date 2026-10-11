@@ -24,13 +24,10 @@
                 <i data-lucide="settings" class="w-4 h-4"></i>
                 Payroll settings
               </a>
-              <form method="POST" action="{{ route('accounting.payrollRuns.process') }}">
-                @csrf
-                <button type="submit" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
-                  <i data-lucide="play" class="w-4 h-4"></i>
-                  Process payroll
-                </button>
-              </form>
+              <button type="button" onclick="document.getElementById('payrollPayModal').classList.remove('hidden')" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
+                <i data-lucide="play" class="w-4 h-4"></i>
+                Process payroll
+              </button>
             </div>
           </div>
         </div>
@@ -40,6 +37,12 @@
         @endif
         @if (session('error'))
           <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{{ session('error') }}</div>
+        @endif
+        @if ($errors->any())
+          <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{{ $errors->first() }}</div>
+        @endif
+        @if ($errors->any())
+          <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{{ $errors->first() }}</div>
         @endif
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
@@ -133,4 +136,42 @@
             </div>
           </div>
       </main>
+
+  <div id="payrollPayModal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-slate-900/40" onclick="this.parentElement.classList.add('hidden')"></div>
+    <form method="POST" action="{{ route('accounting.payrollRuns.process') }}" class="relative mx-auto mt-20 w-full max-w-md bg-white rounded-xl p-6 space-y-3">
+      @csrf
+      <h2 class="text-lg font-semibold">Process payroll</h2>
+      <p class="text-sm text-slate-600">Net pay will be deducted from the account(s) you select.</p>
+      @if($needsBank ?? true)
+        <div>
+          <label class="block text-sm font-medium mb-1">Bank account</label>
+          <select name="bank_account_id" required class="w-full border rounded-lg px-3 py-2">
+            <option value="">Select bank</option>
+            @foreach(($accounts ?? collect())->where('kind', 'bank') as $a)
+              <option value="{{ $a->id }}">{{ $a->name }}</option>
+            @endforeach
+          </select>
+        </div>
+      @endif
+      @if($needsCash ?? false)
+        <div>
+          <label class="block text-sm font-medium mb-1">Cash account</label>
+          <select name="cash_account_id" required class="w-full border rounded-lg px-3 py-2">
+            <option value="">Select cash</option>
+            @foreach(($accounts ?? collect())->where('kind', 'cash') as $a)
+              <option value="{{ $a->id }}">{{ $a->name }}</option>
+            @endforeach
+          </select>
+        </div>
+      @endif
+      @if(($accounts ?? collect())->isEmpty())
+        <p class="text-xs text-amber-700">Add a bank/cash account under Banking first.</p>
+      @endif
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="document.getElementById('payrollPayModal').classList.add('hidden')" class="px-4 py-2 border rounded-lg text-sm">Cancel</button>
+        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm">Process</button>
+      </div>
+    </form>
+  </div>
 </x-Account-sidebar>

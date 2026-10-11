@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankAccount;
 use App\Models\FeePayment;
 use App\Models\FeeStructure;
 use App\Models\LoanApplication;
@@ -186,7 +187,13 @@ class AccountantController extends Controller
             'loanDeductions' => (float) $processed->sum('loan_deductions_total'),
         ];
 
-        return view('AccountantPanel.payrolls.payroll', compact('schoolId', 'configs', 'runs', 'stats'));
+        $accounts = $schoolId
+            ? BankAccount::where('school_id', $schoolId)->orderBy('kind')->orderBy('name')->get()
+            : collect();
+        $needsBank = $configs->contains(fn ($c) => ($c->payment_method ?? 'bank') !== 'cash');
+        $needsCash = $configs->contains(fn ($c) => ($c->payment_method ?? '') === 'cash');
+
+        return view('AccountantPanel.payrolls.payroll', compact('schoolId', 'configs', 'runs', 'stats', 'accounts', 'needsBank', 'needsCash'));
     }
 
     public function loansHub()

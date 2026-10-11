@@ -12,7 +12,9 @@ use App\Models\PayrollChange;
 use App\Models\PayrollConfigurations;
 use App\Models\PayrollRun;
 use App\Models\Teacher;
+use App\Models\BankAccount;
 use App\Services\AccountantContextService;
+use App\Services\BankingLedgerService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,8 +25,10 @@ use Throwable;
 
 class PayrollConfigurationsController extends Controller
 {
-    public function __construct(private AccountantContextService $accountantContext)
-    {
+    public function __construct(
+        private AccountantContextService $accountantContext,
+        private BankingLedgerService $ledger,
+    ) {
     }
 
     //process payroll runs for a period using baseline payroll + active payroll changes
@@ -35,6 +39,8 @@ class PayrollConfigurationsController extends Controller
         $validated = $request->validate([
             'pay_period_start' => ['nullable', 'date'],
             'pay_period_end' => ['nullable', 'date', 'after_or_equal:pay_period_start'],
+            'bank_account_id' => ['nullable', 'exists:bank_accounts,id'],
+            'cash_account_id' => ['nullable', 'exists:bank_accounts,id'],
         ]);
 
         // 2) Resolve school/user context for this run.
@@ -67,6 +73,22 @@ class PayrollConfigurationsController extends Controller
         if ($payrollConfigs->isEmpty()) {
             return redirect()->route('accounting.payrollManagement')
                 ->with('error', 'No payroll configurations found for processing.');
+        }
+
+        $needsBank = $payrollConfigs->contains(fn ($c) => ($c->payment_method ?? 'bank') !== 'cash');
+        $needsCash = $payrollConfigs->contains(fn ($c) => ($c->payment_method ?? '') === 'cash');
+        $bankAccount = $needsBank
+            ? BankAccount::where('school_id', $schoolId)->where('kind', 'bank')->where('id', $validated['bank_account_id'] ?? 0)->first()
+            : null;
+        $cashAccount = $needsCash
+            ? BankAccount::where('school_id', $schoolId)->where('kind', 'cash')->where('id', $validated['cash_account_id'] ?? 0)->first()
+            : null;
+
+        if ($needsBank && ! $bankAccount) {
+            return back()->withErrors(['bank_account_id' => 'Select the bank account to pay from.'])->withInput();
+        }
+        if ($needsCash && ! $cashAccount) {
+            return back()->withErrors(['cash_account_id' => 'Select the cash account to pay from.'])->withInput();
         }
 
         // 5) Load PAYE rules + NSSF/PSSSF contribution setup used in calculations.
@@ -250,6 +272,22 @@ class PayrollConfigurationsController extends Controller
                 }
             }
         });
+
+        $periodRuns = PayrollRun::with('payrollConfiguration')
+            ->where('school_id', $schoolId)
+            ->whereDate('pay_period_start', $periodStart->toDateString())
+            ->whereDate('pay_period_end', $periodEnd->toDateString())
+            ->get();
+
+        $bankNet = (float) $periodRuns->filter(fn ($r) => ($r->payrollConfiguration->payment_method ?? 'bank') !== 'cash')->sum('net_salary');
+        $cashNet = (float) $periodRuns->filter(fn ($r) => ($r->payrollConfiguration->payment_method ?? '') === 'cash')->sum('net_salary');
+
+        if ($bankAccount && $bankNet > 0) {
+            $this->ledger->postPayroll($schoolId, $bankAccount, $bankNet, $payPeriodLabel, $periodEnd);
+        }
+        if ($cashAccount && $cashNet > 0) {
+            $this->ledger->postPayroll($schoolId, $cashAccount, $cashNet, $payPeriodLabel, $periodEnd);
+        }
 
         // 14) Return with processing outcome message.
         return redirect()->route('accounting.payrollManagement')

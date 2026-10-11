@@ -85,4 +85,24 @@ class BankingLedgerService
             'occurred_at' => $expense->expense_date,
         ]);
     }
+
+    public function postPayroll(int $schoolId, BankAccount $account, float $amount, string $label, $occurredAt): void
+    {
+        if ($amount <= 0) {
+            return;
+        }
+        $exists = BankTransaction::where('school_id', $schoolId)
+            ->where('source', 'payroll')
+            ->where('bank_account_id', $account->id)
+            ->where('description', 'Payroll '.$label)
+            ->exists();
+        if ($exists) {
+            return;
+        }
+        $this->post($schoolId, $account, 'debit', $amount, [
+            'description' => 'Payroll '.$label,
+            'source' => 'payroll',
+            'occurred_at' => $occurredAt,
+        ]);
+    }
 }

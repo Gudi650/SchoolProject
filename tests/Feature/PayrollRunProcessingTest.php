@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\BankAccount;
+use App\Models\BankTransaction;
 use App\Models\LoanApplication;
 use App\Models\LoanType;
 use App\Models\NSSFPSSF;
@@ -165,6 +167,15 @@ class PayrollRunProcessingTest extends TestCase
             'status' => 'active',
         ]);
 
+        $bankAccount = BankAccount::create([
+            'school_id' => $school->id,
+            'name' => 'CRDB',
+            'kind' => 'bank',
+            'account_type' => 'Current',
+            'account_number' => '12345678',
+            'opening_balance' => 5000000,
+        ]);
+
         PayrollChange::create([
             'school_id' => $school->id,
             'payroll_configuration_id' => $configWithLoan->id,
@@ -187,7 +198,9 @@ class PayrollRunProcessingTest extends TestCase
         ]);
 
         $this->actingAs($accountant)
-            ->post(route('accounting.payrollRuns.process'))
+            ->post(route('accounting.payrollRuns.process'), [
+                'bank_account_id' => $bankAccount->id,
+            ])
             ->assertSessionHas('success');
 
         $this->assertDatabaseCount('payroll_runs', 2);
@@ -212,5 +225,13 @@ class PayrollRunProcessingTest extends TestCase
             'loan_total_applied' => 108000,
             'loan_remaining_balance' => 1188000,
         ]);
+
+        $netTotal = (float) \App\Models\PayrollRun::sum('net_salary');
+        $this->assertDatabaseHas('bank_transactions', [
+            'bank_account_id' => $bankAccount->id,
+            'type' => 'debit',
+            'source' => 'payroll',
+        ]);
+        $this->assertEquals($netTotal, (float) BankTransaction::where('source', 'payroll')->sum('amount'));
     }
 }
