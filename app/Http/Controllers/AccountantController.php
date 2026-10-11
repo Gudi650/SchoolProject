@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BankAccount;
+use App\Models\Expense;
 use App\Models\FeePayment;
 use App\Models\FeeStructure;
 use App\Models\LoanApplication;
@@ -248,15 +249,52 @@ class AccountantController extends Controller
         $allocated = $latest ? (float) $latest->categories->sum('amount') : 0;
         $total = (float) ($latest?->total_amount ?? 0);
 
+        $spentByCategory = collect();
+        $payrollSpent = 0.0;
+        if ($schoolId && $latest?->start_date && $latest?->end_date) {
+            $from = $latest->start_date;
+            $to = $latest->end_date;
+            $spentByCategory = Expense::where('school_id', $schoolId)
+                ->where('status', 'paid')
+                ->whereBetween('expense_date', [$from, $to])
+                ->selectRaw('LOWER(category) as cat, SUM(amount) as total')
+                ->groupByRaw('LOWER(category)')
+                ->pluck('total', 'cat');
+            $payrollSpent = (float) PayrollRun::where('school_id', $schoolId)
+                ->whereIn('status', ['processed', 'paid'])
+                ->whereDate('pay_period_start', '>=', $from)
+                ->whereDate('pay_period_end', '<=', $to)
+                ->sum('net_salary');
+        }
+
+        $salaryKeys = ['salaries', 'salary', 'payroll', 'wages'];
+        $spent = 0.0;
+        if ($latest) {
+            foreach ($latest->categories->groupBy(fn ($l) => strtolower(trim((string) $l->expense_type))) as $key => $lines) {
+                $raw = (float) ($spentByCategory[$key] ?? 0);
+                if (in_array($key, $salaryKeys, true)) {
+                    $raw += $payrollSpent;
+                }
+                $allocSum = (float) $lines->sum('amount');
+                foreach ($lines as $line) {
+                    $line->spent = $allocSum > 0 ? $raw * ((float) $line->amount / $allocSum) : 0;
+                    $line->remaining = (float) $line->amount - $line->spent;
+                }
+                $spent += $raw;
+            }
+        }
+
         $departmentTotals = $latest
             ? $latest->categories
                 ->groupBy(fn ($category) => $category->department_id ?: 0)
                 ->map(function ($rows) use ($total) {
                     $amount = (float) $rows->sum('amount');
+                    $deptSpent = (float) $rows->sum(fn ($r) => (float) ($r->spent ?? 0));
 
                     return [
                         'name' => $rows->first()->department->department_name ?? 'Unassigned',
                         'allocated' => $amount,
+                        'spent' => $deptSpent,
                         'lines' => $rows->count(),
                         'share' => $total > 0 ? min(100, round(($amount / $total) * 100, 1)) : 0,
                     ];
@@ -269,7 +307,10 @@ class AccountantController extends Controller
             'count' => $budgets->count(),
             'total' => $total,
             'allocated' => $allocated,
-            'remaining' => $total - $allocated,
+            'spent' => $spent,
+            'remaining' => $allocated - $spent,
+            'overspend' => max(0, $spent - $allocated),
+            'unallocated' => $total - $allocated,
             'departments' => $departmentTotals->count(),
         ];
 

@@ -30,7 +30,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
           <div class="bg-white rounded-xl p-4 sm:p-6 border border-indigo-100 shadow-sm">
             <p class="text-xs sm:text-sm text-slate-600">Latest budget</p>
             <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['total']) }}</p>
@@ -41,10 +41,20 @@
             <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['allocated']) }}</p>
             <p class="text-xs sm:text-sm text-slate-600 mt-2">{{ $allocatedPct }}% of the latest budget</p>
           </div>
+          <div class="bg-white rounded-xl p-4 sm:p-6 border border-indigo-100 shadow-sm">
+            <p class="text-xs sm:text-sm text-slate-600">Spent (period)</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['spent'] ?? 0) }}</p>
+            <p class="text-xs sm:text-sm text-slate-600 mt-2">Paid expenses + payroll on salary lines</p>
+          </div>
           <div class="bg-white rounded-xl p-4 sm:p-6 border border-green-100 shadow-sm">
-            <p class="text-xs sm:text-sm text-slate-600">Unallocated</p>
+            <p class="text-xs sm:text-sm text-slate-600">Remaining</p>
             <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['remaining']) }}</p>
-            <p class="text-xs sm:text-sm text-slate-600 mt-2">Latest total minus category lines</p>
+            <p class="text-xs sm:text-sm text-slate-600 mt-2">Allocated minus spent</p>
+          </div>
+          <div class="bg-white rounded-xl p-4 sm:p-6 border border-red-100 shadow-sm">
+            <p class="text-xs sm:text-sm text-slate-600">Overspend</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['overspend'] ?? 0) }}</p>
+            <p class="text-xs sm:text-sm text-red-600 mt-2">Unallocated {{ $fmt($stats['unallocated'] ?? 0) }}</p>
           </div>
           <div class="bg-white rounded-xl p-4 sm:p-6 border border-amber-100 shadow-sm">
             <p class="text-xs sm:text-sm text-slate-600">Budgets on file</p>
@@ -62,6 +72,7 @@
                   <th class="px-4 py-3 font-medium text-indigo-900">Department</th>
                   <th class="px-4 py-3 font-medium text-indigo-900">Lines</th>
                   <th class="px-4 py-3 font-medium text-indigo-900">Allocated</th>
+                  <th class="px-4 py-3 font-medium text-indigo-900">Spent</th>
                   <th class="px-4 py-3 font-medium text-indigo-900">Share of budget</th>
                 </tr>
               </thead>
@@ -71,6 +82,7 @@
                     <td class="px-4 py-3">{{ $department['name'] }}</td>
                     <td class="px-4 py-3">{{ number_format($department['lines']) }}</td>
                     <td class="px-4 py-3 font-semibold">{{ $fmt($department['allocated']) }}</td>
+                    <td class="px-4 py-3">{{ $fmt($department['spent'] ?? 0) }}</td>
                     <td class="px-4 py-3 w-64">
                       <div class="flex items-center gap-3">
                         <div class="flex-1 bg-slate-100 rounded-full h-2">
@@ -82,7 +94,7 @@
                   </tr>
                 @empty
                   <tr>
-                    <td colspan="4" class="px-4 py-8 text-center text-slate-500">No department allocations yet.</td>
+                    <td colspan="5" class="px-4 py-8 text-center text-slate-500">No department allocations yet.</td>
                   </tr>
                 @endforelse
               </tbody>
@@ -136,8 +148,10 @@
                 <thead class="bg-indigo-50 border-b border-indigo-100">
                   <tr>
                     <th class="px-4 py-3 font-medium text-indigo-900">Department</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Expense type</th>
-                    <th class="px-4 py-3 font-medium text-indigo-900">Amount</th>
+                    <th class="px-4 py-3 font-medium text-indigo-900">Category</th>
+                    <th class="px-4 py-3 font-medium text-indigo-900">Plan</th>
+                    <th class="px-4 py-3 font-medium text-indigo-900">Spent</th>
+                    <th class="px-4 py-3 font-medium text-indigo-900">Remaining</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -146,6 +160,8 @@
                       <td class="px-4 py-3">{{ $category->department->department_name ?? 'Unassigned' }}</td>
                       <td class="px-4 py-3">{{ $category->expense_type }}</td>
                       <td class="px-4 py-3 font-semibold">{{ $fmt($category->amount) }}</td>
+                      <td class="px-4 py-3">{{ $fmt($category->spent ?? 0) }}</td>
+                      <td class="px-4 py-3 {{ ($category->remaining ?? 0) < 0 ? 'text-red-600' : '' }}">{{ $fmt($category->remaining ?? 0) }}</td>
                     </tr>
                   @endforeach
                 </tbody>
