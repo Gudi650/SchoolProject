@@ -73,7 +73,9 @@
                   <th class="px-4 py-3 font-medium text-indigo-900">Lines</th>
                   <th class="px-4 py-3 font-medium text-indigo-900">Allocated</th>
                   <th class="px-4 py-3 font-medium text-indigo-900">Spent</th>
-                  <th class="px-4 py-3 font-medium text-indigo-900">Share of budget</th>
+                  <th class="px-4 py-3 font-medium text-indigo-900">Remaining</th>
+                  <th class="px-4 py-3 font-medium text-indigo-900">% used</th>
+                  <th class="px-4 py-3 font-medium text-indigo-900">Status</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
@@ -83,18 +85,28 @@
                     <td class="px-4 py-3">{{ number_format($department['lines']) }}</td>
                     <td class="px-4 py-3 font-semibold">{{ $fmt($department['allocated']) }}</td>
                     <td class="px-4 py-3">{{ $fmt($department['spent'] ?? 0) }}</td>
-                    <td class="px-4 py-3 w-64">
+                    <td class="px-4 py-3 {{ ($department['remaining'] ?? 0) < 0 ? 'text-red-600' : '' }}">{{ $fmt($department['remaining'] ?? 0) }}</td>
+                    <td class="px-4 py-3 w-56">
                       <div class="flex items-center gap-3">
                         <div class="flex-1 bg-slate-100 rounded-full h-2">
-                          <div class="h-2 rounded-full bg-indigo-500" style="width: {{ $department['share'] }}%"></div>
+                          <div class="h-2 rounded-full {{ ($department['usedPct'] ?? 0) >= 100 ? 'bg-red-500' : (($department['usedPct'] ?? 0) >= 90 ? 'bg-amber-500' : 'bg-indigo-500') }}" style="width: {{ min(100, $department['usedPct'] ?? 0) }}%"></div>
                         </div>
-                        <span class="text-sm font-medium text-slate-700 w-12">{{ $department['share'] }}%</span>
+                        <span class="text-sm font-medium text-slate-700 w-14">{{ $department['usedPct'] ?? 0 }}%</span>
                       </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      @if(($department['overspend'] ?? 0) > 0)
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Over {{ $fmt($department['overspend']) }}</span>
+                      @elseif(($department['usedPct'] ?? 0) >= 90)
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Near limit</span>
+                      @else
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">On track</span>
+                      @endif
                     </td>
                   </tr>
                 @empty
                   <tr>
-                    <td colspan="5" class="px-4 py-8 text-center text-slate-500">No department allocations yet.</td>
+                    <td colspan="7" class="px-4 py-8 text-center text-slate-500">No department allocations yet.</td>
                   </tr>
                 @endforelse
               </tbody>

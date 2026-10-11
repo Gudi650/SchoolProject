@@ -290,11 +290,15 @@ class AccountantController extends Controller
                 ->map(function ($rows) use ($total) {
                     $amount = (float) $rows->sum('amount');
                     $deptSpent = (float) $rows->sum(fn ($r) => (float) ($r->spent ?? 0));
+                    $usedPct = $amount > 0 ? round(($deptSpent / $amount) * 100, 1) : ($deptSpent > 0 ? 100 : 0);
 
                     return [
                         'name' => $rows->first()->department->department_name ?? 'Unassigned',
                         'allocated' => $amount,
                         'spent' => $deptSpent,
+                        'remaining' => $amount - $deptSpent,
+                        'overspend' => max(0, $deptSpent - $amount),
+                        'usedPct' => $usedPct,
                         'lines' => $rows->count(),
                         'share' => $total > 0 ? min(100, round(($amount / $total) * 100, 1)) : 0,
                     ];
