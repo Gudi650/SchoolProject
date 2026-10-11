@@ -185,7 +185,12 @@ class AccountantController extends Controller
             'processedCount' => $processed->count(),
             'draftCount' => $monthRuns->where('status', 'draft')->count(),
             'loanDeductions' => (float) $processed->sum('loan_deductions_total'),
+            'paye' => (float) $processed->sum('paye_amount'),
+            'nssf' => (float) $processed->sum('nssf_amount'),
+            'psssf' => (float) $processed->sum('psssf_amount'),
         ];
+        $stats['pension'] = $stats['nssf'] + $stats['psssf'];
+        $stats['statutoryDue'] = $stats['paye'] + $stats['pension'];
 
         $accounts = $schoolId
             ? BankAccount::where('school_id', $schoolId)->orderBy('kind')->orderBy('name')->get()

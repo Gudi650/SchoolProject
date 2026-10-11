@@ -88,6 +88,24 @@
           </div>
         </div>
 
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
+          <div class="bg-white rounded-xl p-4 sm:p-6 border border-amber-100 shadow-sm">
+            <p class="text-xs sm:text-sm text-slate-600">PAYE to TRA</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['paye'] ?? 0) }}</p>
+            <p class="text-xs sm:text-sm text-amber-600 mt-2">Withheld this month · not remitted yet</p>
+          </div>
+          <div class="bg-white rounded-xl p-4 sm:p-6 border border-indigo-100 shadow-sm">
+            <p class="text-xs sm:text-sm text-slate-600">NSSF / PSSSF</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['pension'] ?? 0) }}</p>
+            <p class="text-xs sm:text-sm text-slate-600 mt-2">NSSF {{ $fmt($stats['nssf'] ?? 0) }} · PSSSF {{ $fmt($stats['psssf'] ?? 0) }}</p>
+          </div>
+          <div class="bg-white rounded-xl p-4 sm:p-6 border border-red-100 shadow-sm">
+            <p class="text-xs sm:text-sm text-slate-600">Still with the school</p>
+            <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['statutoryDue'] ?? 0) }}</p>
+            <p class="text-xs sm:text-sm text-red-600 mt-2">PAYE + pension to remit</p>
+          </div>
+        </div>
+
         <div class="mb-6">
           <h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
             <span class="w-1 h-6 bg-indigo-600 rounded"></span>
