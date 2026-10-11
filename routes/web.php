@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountantController;
+use App\Http\Controllers\BankingController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FeePaymentController;
 use App\Http\Controllers\ReportController;
@@ -500,10 +501,10 @@ Route::post('/loan-disbursements/{loan}/disburse', [LoanApplicationController::c
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-//route for banking and cash management
-Route::get('/banking-cash-management', function () {
-    return view('AccountantPanel.bankingCash');
-})->name('accounting.bankingCashManagement');
+Route::get('/banking-cash-management', [BankingController::class, 'index'])->name('accounting.bankingCashManagement');
+Route::post('/banking-cash-management/accounts', [BankingController::class, 'storeAccount'])->name('accounting.banking.accounts.store');
+Route::post('/banking-cash-management/transactions', [BankingController::class, 'storeTransaction'])->name('accounting.banking.transactions.store');
+Route::post('/banking-cash-management/transactions/{transaction}/reconcile', [BankingController::class, 'reconcile'])->name('accounting.banking.reconcile');
 
 
 //////////////////////////////////////////////////////////////////////////////////////////

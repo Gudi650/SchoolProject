@@ -7,6 +7,7 @@ use App\Models\ExpenseAudit;
 use App\Models\FinanceCategory;
 use App\Models\Vendor;
 use App\Services\AccountantContextService;
+use App\Services\BankingLedgerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,8 +16,10 @@ class ExpenseController extends Controller
     private const STATUSES = ['paid', 'pending'];
     private const METHODS = ['cash', 'mobile', 'bank', 'cheque'];
 
-    public function __construct(private AccountantContextService $accountantContext)
-    {
+    public function __construct(
+        private AccountantContextService $accountantContext,
+        private BankingLedgerService $ledger,
+    ) {
     }
 
     public function index()
@@ -63,6 +66,7 @@ class ExpenseController extends Controller
         ]);
 
         $this->audit($schoolId, $expense->id, 'created', ['after' => $expense->only(array_keys($data))]);
+        $this->ledger->postFromExpense($schoolId, $expense);
 
         return redirect()->route('accounting.expensesManagement')->with('success', 'Expense recorded.');
     }
@@ -78,6 +82,7 @@ class ExpenseController extends Controller
         $row->save();
 
         $this->audit($schoolId, $row->id, 'updated', ['before' => $before, 'after' => $data]);
+        $this->ledger->postFromExpense($schoolId, $row);
 
         return redirect()->route('accounting.expensesManagement')->with('success', 'Expense updated.');
     }

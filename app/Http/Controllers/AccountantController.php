@@ -294,15 +294,64 @@ class AccountantController extends Controller
     public function incomeHub()
     {
         $schoolId = $this->accountantContext->resolveSchoolId();
+        $yearStart = now()->startOfYear();
         $monthStart = now()->startOfMonth();
-        $stats = [
-            'students' => $schoolId ? Student::where('school_id', $schoolId)->count() : 0,
-            'feeConfigured' => $schoolId ? (float) FeeStructure::where('school_id', $schoolId)->get()->sum(fn ($f) => (float) $f->tuition_fee + (float) $f->transport_fee + (float) $f->hostel_fee + (float) $f->library_fee + (float) $f->exam_fee) : 0,
-            'pendingEnrollments' => $schoolId ? studentEnrollDetails::where('status', 'pending')->whereHas('studentEnrollment', fn ($q) => $q->where('school_id', $schoolId))->count() : 0,
-            'feeStructures' => $schoolId ? FeeStructure::where('school_id', $schoolId)->count() : 0,
-            'collectedMonth' => $schoolId ? (float) FeePayment::where('school_id', $schoolId)->where('paid_at', '>=', $monthStart)->sum('amount') : 0,
-        ];
+        $pay = fn () => FeePayment::where('school_id', $schoolId);
 
-        return view('AccountantPanel.income.income', compact('schoolId', 'stats'));
+        $ytd = $schoolId ? (float) $pay()->where('paid_at', '>=', $yearStart)->sum('amount') : 0;
+        $mtd = $schoolId ? (float) $pay()->where('paid_at', '>=', $monthStart)->sum('amount') : 0;
+        $structures = $schoolId ? FeeStructure::where('school_id', $schoolId)->get() : collect();
+        $feeParts = [
+            'Tuition Fee' => (float) $structures->sum('tuition_fee'),
+            'Transport Fee' => (float) $structures->sum('transport_fee'),
+            'Hostel Fee' => (float) $structures->sum('hostel_fee'),
+            'Enrollment Fee' => (float) $structures->sum('exam_fee'),
+            'Other Income' => (float) $structures->sum('library_fee'),
+        ];
+        $feeConfigured = array_sum($feeParts);
+        $students = $schoolId ? Student::where('school_id', $schoolId)->count() : 0;
+        $paidStudents = $schoolId ? (int) $pay()->distinct('student_id')->count('student_id') : 0;
+        $pendingEnroll = $schoolId ? studentEnrollDetails::where('status', 'pending')->whereHas('studentEnrollment', fn ($q) => $q->where('school_id', $schoolId))->count() : 0;
+        $matched = $schoolId ? (int) $pay()->whereNotNull('reference')->where('reference', '!=', '')->count() : 0;
+        $payCount = $schoolId ? (int) $pay()->count() : 0;
+        $unmatched = max(0, $payCount - $matched);
+        $pendingAmt = max(0, $feeConfigured - $ytd);
+        $efficiency = $feeConfigured > 0 ? round(($ytd / $feeConfigured) * 100, 1) : ($ytd > 0 ? 100 : 0);
+        $reconPct = $payCount > 0 ? (int) round(($matched / $payCount) * 100) : 0;
+
+        $trend = [];
+        $trendMax = 1;
+        for ($i = 5; $i >= 0; $i--) {
+            $start = now()->subMonths($i)->startOfMonth();
+            $end = now()->subMonths($i)->endOfMonth();
+            $total = $schoolId ? (float) $pay()->whereBetween('paid_at', [$start, $end])->sum('amount') : 0;
+            $trend[] = ['label' => $start->format('M'), 'total' => $total];
+            $trendMax = max($trendMax, $total);
+        }
+
+        $units = $structures->map(function ($f) use ($ytd, $feeConfigured) {
+            $expected = (float) $f->tuition_fee + (float) $f->transport_fee + (float) $f->hostel_fee + (float) $f->library_fee + (float) $f->exam_fee;
+            $share = $feeConfigured > 0 ? $ytd * ($expected / $feeConfigured) : 0;
+            $eff = $expected > 0 ? round(($share / $expected) * 100, 1) : 0;
+            return [
+                'name' => $f->for ?: ('Structure #'.$f->id),
+                'expected' => $expected,
+                'collected' => $share,
+                'efficiency' => $eff,
+                'variance' => $share - $expected,
+            ];
+        });
+
+        $recent = $schoolId
+            ? FeePayment::with('student')->where('school_id', $schoolId)->latest('paid_at')->limit(8)->get()
+            : collect();
+
+        $lowUnits = $units->where('efficiency', '<', 80)->count();
+
+        return view('AccountantPanel.income.income', compact(
+            'schoolId', 'ytd', 'mtd', 'feeParts', 'feeConfigured', 'students', 'paidStudents',
+            'pendingEnroll', 'matched', 'unmatched', 'pendingAmt', 'efficiency', 'reconPct',
+            'trend', 'trendMax', 'units', 'recent', 'lowUnits', 'payCount'
+        ));
     }
 }

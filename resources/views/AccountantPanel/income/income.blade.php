@@ -1,6 +1,9 @@
 @php
-  $stats = $stats ?? ['students' => 0, 'feeConfigured' => 0, 'pendingEnrollments' => 0, 'feeStructures' => 0];
   $fmt = fn ($n) => money_format_app($n);
+  $feeParts = $feeParts ?? [];
+  $feeTotal = $feeConfigured ?: 0;
+  $pct = fn ($n) => $feeTotal > 0 ? (int) round(($n / $feeTotal) * 100) : 0;
+  $trendMax = $trendMax ?: 1;
 @endphp
 
 <x-Account-sidebar>
@@ -11,45 +14,22 @@
       <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
         <div>
           <h1 class="text-xl sm:text-2xl font-bold text-slate-900">School Income Overview</h1>
-          <p class="text-xs sm:text-sm text-slate-700 mt-1">Live school metrics; fee collections require a payments module (Phase 2).</p>
+          <p class="text-xs sm:text-sm text-slate-700 mt-1">Whole-school collections, enrollment income, and reconciliation.</p>
         </div>
         <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-3 pt-3">
           <a href="{{ route('accounting.enrollmentIncome') }}" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center">
             <i data-lucide="user-plus" class="w-4 h-4"></i>
             Enrollment applications
           </a>
-          <a href="{{ route('accounting.feeManagement') }}" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center">
+          <a href="{{ route('accounting.feeCollection') }}" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center">
             <i data-lucide="receipt" class="w-4 h-4"></i>
-            Fee structures
+            Fee collection
           </a>
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-      <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
-        <p class="text-xs sm:text-sm text-slate-600">Students enrolled</p>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ number_format($stats['students']) }}</p>
-      </div>
-      <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
-        <p class="text-xs sm:text-sm text-slate-600">Configured fees (standard)</p>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['feeConfigured']) }}</p>
-        <p class="text-xs text-slate-500 mt-1">{{ number_format($stats['feeStructures']) }} structure(s)</p>
-      </div>
-      <div class="bg-white rounded-xl p-4 border border-amber-100 shadow-sm">
-        <p class="text-xs sm:text-sm text-slate-600">Pending enrollments</p>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ number_format($stats['pendingEnrollments']) }}</p>
-      </div>
-      <div class="bg-white rounded-xl p-4 border border-green-100 shadow-sm">
-        <p class="text-xs sm:text-sm text-slate-600">Collected (MTD)</p>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{{ $fmt($stats['collectedMonth'] ?? 0) }}</p>
-        <a href="{{ route('accounting.feeCollection') }}" class="text-xs text-indigo-600 mt-1 inline-block">Record payment</a>
-      </div>
-    </div>
-
-    <details class="mb-6">
-      <summary class="text-sm text-slate-500 cursor-pointer">Show legacy demo sections</summary>
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-6 mt-4 opacity-60">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-6">
       <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
           <div class="p-2 rounded-md bg-indigo-100">
@@ -57,8 +37,8 @@
           </div>
           <p class="text-xs sm:text-sm text-slate-600">Total Income (YTD)</p>
         </div>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900">Demo</p>
-        <p class="text-xs sm:text-sm text-green-600 mt-2">Placeholder</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $fmt($ytd ?? 0) }}</p>
+        <p class="text-xs sm:text-sm text-green-600 mt-2">{{ now()->year }} collections</p>
       </div>
       <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
@@ -67,8 +47,8 @@
           </div>
           <p class="text-xs sm:text-sm text-slate-600">Collected (MTD)</p>
         </div>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900">Demo</p>
-        <p class="text-xs sm:text-sm text-slate-600 mt-2">Placeholder</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $fmt($mtd ?? 0) }}</p>
+        <p class="text-xs sm:text-sm text-slate-600 mt-2">{{ now()->format('F') }}</p>
       </div>
       <div class="bg-white rounded-xl p-4 border border-green-100 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
@@ -77,8 +57,8 @@
           </div>
           <p class="text-xs sm:text-sm text-slate-600">Collection Efficiency</p>
         </div>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900">90.8%</p>
-        <p class="text-xs sm:text-sm text-green-600 mt-2">On track</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $efficiency ?? 0 }}%</p>
+        <p class="text-xs sm:text-sm {{ ($efficiency ?? 0) >= 80 ? 'text-green-600' : 'text-amber-600' }} mt-2">{{ ($efficiency ?? 0) >= 80 ? 'On track' : 'Needs follow-up' }}</p>
       </div>
       <div class="bg-white rounded-xl p-4 border border-amber-100 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
@@ -87,8 +67,8 @@
           </div>
           <p class="text-xs sm:text-sm text-slate-600">Pending & Overdue</p>
         </div>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900">Tsh 41.3L</p>
-        <p class="text-xs sm:text-sm text-amber-600 mt-2">Tsh 12.8L overdue</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $fmt($pendingAmt ?? 0) }}</p>
+        <p class="text-xs sm:text-sm text-amber-600 mt-2">{{ max(0, ($students ?? 0) - ($paidStudents ?? 0)) }} students unpaid</p>
       </div>
       <div class="bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
@@ -97,8 +77,8 @@
           </div>
           <p class="text-xs sm:text-sm text-slate-600">Reconciliation Health</p>
         </div>
-        <p class="text-xl sm:text-2xl font-bold text-slate-900">86%</p>
-        <p class="text-xs sm:text-sm text-blue-600 mt-2">44 entries unmatched</p>
+        <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $reconPct ?? 0 }}%</p>
+        <p class="text-xs sm:text-sm text-blue-600 mt-2">{{ $unmatched ?? 0 }} entries unmatched</p>
       </div>
     </div>
 
@@ -120,19 +100,19 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 mt-4">
         <div class="rounded-lg border border-slate-200 p-3">
           <p class="text-xs text-slate-500">Collected (Cycle)</p>
-          <p class="text-lg font-semibold text-slate-900 mt-1">Tsh 23.8L</p>
+          <p class="text-lg font-semibold text-slate-900 mt-1">{{ $fmt($mtd ?? 0) }}</p>
         </div>
         <div class="rounded-lg border border-slate-200 p-3">
           <p class="text-xs text-slate-500">Fully Paid Students</p>
-          <p class="text-lg font-semibold text-slate-900 mt-1">182</p>
+          <p class="text-lg font-semibold text-slate-900 mt-1">{{ number_format($paidStudents ?? 0) }}</p>
         </div>
         <div class="rounded-lg border border-slate-200 p-3">
           <p class="text-xs text-slate-500">Pending Enrollment Dues</p>
-          <p class="text-lg font-semibold text-amber-600 mt-1">Tsh 5.1L</p>
+          <p class="text-lg font-semibold text-amber-600 mt-1">{{ number_format($pendingEnroll ?? 0) }} pending</p>
         </div>
         <div class="rounded-lg border border-slate-200 p-3">
           <p class="text-xs text-slate-500">Overdue Cases</p>
-          <p class="text-lg font-semibold text-red-600 mt-1">41 Students</p>
+          <p class="text-lg font-semibold text-red-600 mt-1">{{ number_format(max(0, ($students ?? 0) - ($paidStudents ?? 0))) }} Students</p>
         </div>
       </div>
     </div>
@@ -147,31 +127,19 @@
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-4">
         <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
-          <option>Academic Year: 2026-27</option>
-          <option>Academic Year: 2025-26</option>
+          <option>Academic Year: {{ now()->year }}-{{ now()->year + 1 }}</option>
         </select>
         <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
           <option>All Branches</option>
-          <option>Main Campus</option>
-          <option>City Campus</option>
         </select>
         <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
           <option>All Standards</option>
-          <option>Primary</option>
-          <option>Secondary</option>
-          <option>Higher Secondary</option>
         </select>
         <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
           <option>All Categories</option>
-          <option>Tuition Fee</option>
-          <option>Transport Fee</option>
-          <option>Hostel Fee</option>
         </select>
         <select class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-700">
           <option>All Status</option>
-          <option>Collected</option>
-          <option>Pending</option>
-          <option>Overdue</option>
         </select>
         <input type="text" placeholder="Search source / class / route" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-100" />
       </div>
@@ -198,41 +166,17 @@
           Income Composition (YTD)
         </h2>
         <div class="space-y-4 text-sm">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-slate-600">Tuition Fee</span>
-              <span class="font-semibold text-slate-900">62%</span>
+          @forelse($feeParts as $label => $amt)
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-slate-600">{{ $label }}</span>
+                <span class="font-semibold text-slate-900">{{ $pct($amt) }}%</span>
+              </div>
+              <div class="w-full h-2 bg-slate-100 rounded-full"><div class="h-2 bg-indigo-500 rounded-full" style="width:{{ $pct($amt) }}%"></div></div>
             </div>
-            <div class="w-full h-2 bg-slate-100 rounded-full"><div class="h-2 bg-indigo-500 rounded-full" style="width:62%"></div></div>
-          </div>
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-slate-600">Transport Fee</span>
-              <span class="font-semibold text-slate-900">15%</span>
-            </div>
-            <div class="w-full h-2 bg-slate-100 rounded-full"><div class="h-2 bg-indigo-500 rounded-full" style="width:15%"></div></div>
-          </div>
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-slate-600">Hostel Fee</span>
-              <span class="font-semibold text-slate-900">13%</span>
-            </div>
-            <div class="w-full h-2 bg-slate-100 rounded-full"><div class="h-2 bg-indigo-500 rounded-full" style="width:13%"></div></div>
-          </div>
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-slate-600">Enrollment Fee</span>
-              <span class="font-semibold text-slate-900">7%</span>
-            </div>
-            <div class="w-full h-2 bg-slate-100 rounded-full"><div class="h-2 bg-indigo-500 rounded-full" style="width:7%"></div></div>
-          </div>
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-slate-600">Other Income</span>
-              <span class="font-semibold text-slate-900">3%</span>
-            </div>
-            <div class="w-full h-2 bg-slate-100 rounded-full"><div class="h-2 bg-indigo-500 rounded-full" style="width:3%"></div></div>
-          </div>
+          @empty
+            <p class="text-slate-500">No fee structures yet.</p>
+          @endforelse
         </div>
       </div>
 
@@ -242,12 +186,12 @@
           Collection Trend (Last 6 Months)
         </h2>
         <div class="grid grid-cols-6 gap-2 text-center text-xs text-slate-600 mt-2">
-          <div><div class="h-20 bg-indigo-100 rounded-md flex items-end"><div class="w-full bg-indigo-500 rounded-md" style="height:58%"></div></div><p class="mt-1">Nov</p></div>
-          <div><div class="h-20 bg-indigo-100 rounded-md flex items-end"><div class="w-full bg-indigo-500 rounded-md" style="height:64%"></div></div><p class="mt-1">Dec</p></div>
-          <div><div class="h-20 bg-indigo-100 rounded-md flex items-end"><div class="w-full bg-indigo-500 rounded-md" style="height:70%"></div></div><p class="mt-1">Jan</p></div>
-          <div><div class="h-20 bg-indigo-100 rounded-md flex items-end"><div class="w-full bg-indigo-500 rounded-md" style="height:78%"></div></div><p class="mt-1">Feb</p></div>
-          <div><div class="h-20 bg-indigo-100 rounded-md flex items-end"><div class="w-full bg-indigo-500 rounded-md" style="height:83%"></div></div><p class="mt-1">Mar</p></div>
-          <div><div class="h-20 bg-indigo-100 rounded-md flex items-end"><div class="w-full bg-indigo-500 rounded-md" style="height:76%"></div></div><p class="mt-1">Apr</p></div>
+          @foreach($trend ?? [] as $row)
+            <div>
+              <div class="h-20 bg-indigo-100 rounded-md flex items-end"><div class="w-full bg-indigo-500 rounded-md" style="height:{{ (int) round(($row['total'] / $trendMax) * 100) }}%"></div></div>
+              <p class="mt-1">{{ $row['label'] }}</p>
+            </div>
+          @endforeach
         </div>
       </div>
     </div>
@@ -270,30 +214,21 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
-            <tr class="hover:bg-indigo-50 transition-colors">
-              <td class="px-4 py-3">Main Campus - Secondary</td>
-              <td class="px-4 py-3">Tsh 26,00,000</td>
-              <td class="px-4 py-3 font-semibold">Tsh 24,90,000</td>
-              <td class="px-4 py-3">95.8%</td>
-              <td class="px-4 py-3 text-amber-600 font-medium">-Tsh 1,10,000</td>
-              <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Healthy</span></td>
-            </tr>
-            <tr class="hover:bg-indigo-50 transition-colors">
-              <td class="px-4 py-3">City Campus - Primary</td>
-              <td class="px-4 py-3">Tsh 18,00,000</td>
-              <td class="px-4 py-3 font-semibold">Tsh 14,20,000</td>
-              <td class="px-4 py-3">78.9%</td>
-              <td class="px-4 py-3 text-amber-600 font-medium">-Tsh 3,80,000</td>
-              <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Needs Follow-up</span></td>
-            </tr>
-            <tr class="hover:bg-indigo-50 transition-colors">
-              <td class="px-4 py-3">Hostel Operations</td>
-              <td class="px-4 py-3">Tsh 9,00,000</td>
-              <td class="px-4 py-3 font-semibold">Tsh 9,45,000</td>
-              <td class="px-4 py-3">105.0%</td>
-              <td class="px-4 py-3 text-green-600 font-medium">+Tsh 45,000</td>
-              <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Above Target</span></td>
-            </tr>
+            @forelse($units as $u)
+              @php
+                $status = $u['efficiency'] >= 100 ? ['Above Target', 'bg-green-100 text-green-700'] : ($u['efficiency'] >= 80 ? ['Healthy', 'bg-green-100 text-green-700'] : ['Needs Follow-up', 'bg-amber-100 text-amber-700']);
+              @endphp
+              <tr class="hover:bg-indigo-50 transition-colors">
+                <td class="px-4 py-3">{{ $u['name'] }}</td>
+                <td class="px-4 py-3">{{ $fmt($u['expected']) }}</td>
+                <td class="px-4 py-3 font-semibold">{{ $fmt($u['collected']) }}</td>
+                <td class="px-4 py-3">{{ $u['efficiency'] }}%</td>
+                <td class="px-4 py-3 {{ $u['variance'] >= 0 ? 'text-green-600' : 'text-amber-600' }} font-medium">{{ $u['variance'] >= 0 ? '+' : '' }}{{ $fmt($u['variance']) }}</td>
+                <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full {{ $status[1] }}">{{ $status[0] }}</span></td>
+              </tr>
+            @empty
+              <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">No fee structures yet.</td></tr>
+            @endforelse
           </tbody>
         </table>
       </div>
@@ -303,9 +238,9 @@
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div class="flex items-start gap-2">
           <i data-lucide="triangle-alert" class="w-4 h-4 text-amber-600 mt-0.5"></i>
-          <p class="text-xs sm:text-sm text-amber-800">2 units dropped below 80% collection efficiency and 44 records are pending bank reconciliation.</p>
+          <p class="text-xs sm:text-sm text-amber-800">{{ $lowUnits ?? 0 }} units dropped below 80% collection efficiency and {{ $unmatched ?? 0 }} records are pending bank reconciliation.</p>
         </div>
-        <button class="text-xs sm:text-sm px-3 py-1.5 bg-white border border-amber-200 rounded-lg text-amber-700 hover:bg-amber-100">Open Action Queue</button>
+        <a href="{{ route('accounting.feeCollection') }}" class="text-xs sm:text-sm px-3 py-1.5 bg-white border border-amber-200 rounded-lg text-amber-700 hover:bg-amber-100">Open Action Queue</a>
       </div>
     </div>
 
@@ -319,23 +254,23 @@
           <div>
             <div class="flex items-center justify-between text-sm mb-1">
               <span class="text-slate-600">Matched Transactions</span>
-              <span class="font-semibold text-slate-900">86%</span>
+              <span class="font-semibold text-slate-900">{{ $reconPct ?? 0 }}%</span>
             </div>
             <div class="w-full h-2 bg-slate-100 rounded-full">
-              <div class="h-2 bg-indigo-500 rounded-full" style="width: 86%"></div>
+              <div class="h-2 bg-indigo-500 rounded-full" style="width: {{ $reconPct ?? 0 }}%"></div>
             </div>
           </div>
           <div class="grid grid-cols-2 gap-3 text-sm">
             <div class="rounded-lg border border-slate-200 p-3">
               <p class="text-slate-500">Matched</p>
-              <p class="font-semibold text-slate-900">274</p>
+              <p class="font-semibold text-slate-900">{{ number_format($matched ?? 0) }}</p>
             </div>
             <div class="rounded-lg border border-slate-200 p-3">
               <p class="text-slate-500">Unmatched</p>
-              <p class="font-semibold text-amber-600">44</p>
+              <p class="font-semibold text-amber-600">{{ number_format($unmatched ?? 0) }}</p>
             </div>
           </div>
-          <button class="w-full px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors">Open Reconciliation Queue</button>
+          <a href="{{ route('accounting.feeCollection') }}" class="block text-center w-full px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors">Open Reconciliation Queue</a>
         </div>
       </div>
 
@@ -347,21 +282,21 @@
         <div class="space-y-3 text-sm">
           <div class="flex items-center justify-between">
             <span class="text-slate-600">0-15 days</span>
-            <span class="font-semibold text-slate-900">Tsh 15.2L</span>
+            <span class="font-semibold text-slate-900">{{ $fmt($pendingAmt ?? 0) }}</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="text-slate-600">16-30 days</span>
-            <span class="font-semibold text-slate-900">Tsh 13.3L</span>
+            <span class="font-semibold text-slate-900">{{ $fmt(0) }}</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="text-slate-600">31+ days</span>
-            <span class="font-semibold text-amber-600">Tsh 12.8L</span>
+            <span class="font-semibold text-amber-600">{{ $fmt(0) }}</span>
           </div>
           <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
             <span class="text-slate-600">Total Pending</span>
-            <span class="font-semibold text-slate-900">Tsh 41.3L</span>
+            <span class="font-semibold text-slate-900">{{ $fmt($pendingAmt ?? 0) }}</span>
           </div>
-          <button class="w-full px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors">View Defaulter Breakdown</button>
+          <a href="{{ route('accounting.feeCollection') }}" class="block text-center w-full px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors">View Defaulter Breakdown</a>
         </div>
       </div>
     </div>
@@ -386,51 +321,23 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
-            <tr class="hover:bg-indigo-50 transition-colors">
-              <td class="px-4 py-3">INC1120</td>
-              <td class="px-4 py-3">2026-04-12</td>
-              <td class="px-4 py-3">Main Campus</td>
-              <td class="px-4 py-3">Tuition Fee</td>
-              <td class="px-4 py-3 font-semibold text-green-600">Tsh 4,80,000</td>
-              <td class="px-4 py-3">Online</td>
-              <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Collected</span></td>
-              <td class="px-4 py-3"><button class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100">View</button></td>
-            </tr>
-            <tr class="hover:bg-indigo-50 transition-colors">
-              <td class="px-4 py-3">INC1119</td>
-              <td class="px-4 py-3">2026-04-11</td>
-              <td class="px-4 py-3">Admissions Desk</td>
-              <td class="px-4 py-3">Enrollment Fee</td>
-              <td class="px-4 py-3 font-semibold text-green-600">Tsh 2,10,000</td>
-              <td class="px-4 py-3">Online</td>
-              <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Collected</span></td>
-              <td class="px-4 py-3"><a href="{{ route('accounting.enrollmentIncome') }}" class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100 inline-flex">View</a></td>
-            </tr>
-            <tr class="hover:bg-indigo-50 transition-colors">
-              <td class="px-4 py-3">INC1118</td>
-              <td class="px-4 py-3">2026-04-11</td>
-              <td class="px-4 py-3">City Campus</td>
-              <td class="px-4 py-3">Library Fee</td>
-              <td class="px-4 py-3 font-semibold text-green-600">Tsh 45,000</td>
-              <td class="px-4 py-3">Cash</td>
-              <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Collected</span></td>
-              <td class="px-4 py-3"><button class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100">View</button></td>
-            </tr>
-            <tr class="hover:bg-indigo-50 transition-colors">
-              <td class="px-4 py-3">INC1115</td>
-              <td class="px-4 py-3">2026-04-10</td>
-              <td class="px-4 py-3">Hostel Block A</td>
-              <td class="px-4 py-3">Hostel Fee</td>
-              <td class="px-4 py-3 font-semibold text-amber-600">Tsh 3,20,000</td>
-              <td class="px-4 py-3">Bank Transfer</td>
-              <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Pending Receipt</span></td>
-              <td class="px-4 py-3"><button class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100">Follow Up</button></td>
-            </tr>
+            @forelse($recent as $p)
+              <tr class="hover:bg-indigo-50 transition-colors">
+                <td class="px-4 py-3">INC{{ $p->id }}</td>
+                <td class="px-4 py-3">{{ $p->paid_at?->format('Y-m-d') }}</td>
+                <td class="px-4 py-3">{{ trim(($p->student->fname ?? '').' '.($p->student->lname ?? '')) ?: 'Student' }}</td>
+                <td class="px-4 py-3">Tuition Fee</td>
+                <td class="px-4 py-3 font-semibold text-green-600">{{ $fmt($p->amount) }}</td>
+                <td class="px-4 py-3">{{ ucfirst($p->payment_method) }}</td>
+                <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Collected</span></td>
+                <td class="px-4 py-3"><a href="{{ route('accounting.feeCollection') }}" class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100 inline-flex">View</a></td>
+              </tr>
+            @empty
+              <tr><td colspan="8" class="px-4 py-8 text-center text-slate-500">No payments recorded yet.</td></tr>
+            @endforelse
           </tbody>
         </table>
       </div>
     </div>
-    </details>
   </main>
- 
 </x-Account-sidebar>

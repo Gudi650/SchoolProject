@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\FeePayment;
 use App\Models\Student;
 use App\Services\AccountantContextService;
+use App\Services\BankingLedgerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class FeePaymentController extends Controller
 {
-    public function __construct(private AccountantContextService $accountantContext)
-    {
+    public function __construct(
+        private AccountantContextService $accountantContext,
+        private BankingLedgerService $ledger,
+    ) {
     }
 
     public function index()
@@ -54,7 +57,7 @@ class FeePaymentController extends Controller
 
         $student = Student::where('id', $validated['student_id'])->where('school_id', $schoolId)->firstOrFail();
 
-        FeePayment::create([
+        $payment = FeePayment::create([
             'school_id' => $schoolId,
             'student_id' => $student->id,
             'amount' => $validated['amount'],
@@ -64,6 +67,8 @@ class FeePaymentController extends Controller
             'paid_at' => $validated['paid_at'],
             'recorded_by' => Auth::id(),
         ]);
+
+        $this->ledger->postFromFee($schoolId, $payment);
 
         return redirect()->route('accounting.feeCollection')->with('success', 'Payment recorded.');
     }
