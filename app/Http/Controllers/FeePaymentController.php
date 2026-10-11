@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankAccount;
 use App\Models\FeePayment;
 use App\Models\Student;
 use App\Services\AccountantContextService;
@@ -39,7 +40,9 @@ class FeePaymentController extends Controller
             'count' => FeePayment::where('school_id', $schoolId)->count(),
         ];
 
-        return view('AccountantPanel.fees.feeCollection', compact('schoolId', 'payments', 'students', 'stats'));
+        $accounts = BankAccount::where('school_id', $schoolId)->orderBy('kind')->orderBy('name')->get();
+
+        return view('AccountantPanel.fees.feeCollection', compact('schoolId', 'payments', 'students', 'stats', 'accounts'));
     }
 
     public function store(Request $request)
@@ -50,10 +53,21 @@ class FeePaymentController extends Controller
             'student_id' => 'required|exists:students,id',
             'amount' => 'required|numeric|min:0.01',
             'payment_method' => 'required|in:cash,mobile,bank,cheque',
+            'bank_account_id' => 'required|exists:bank_accounts,id',
             'reference' => 'nullable|string|max:100',
             'notes' => 'nullable|string|max:500',
             'paid_at' => 'required|date',
         ]);
+
+        $kind = $this->ledger->kindForMethod($validated['payment_method']);
+        $account = BankAccount::where('school_id', $schoolId)
+            ->where('kind', $kind)
+            ->where('id', $validated['bank_account_id'])
+            ->first();
+
+        if (! $account) {
+            return back()->withErrors(['bank_account_id' => 'Select an account that matches this payment method.'])->withInput();
+        }
 
         $student = Student::where('id', $validated['student_id'])->where('school_id', $schoolId)->firstOrFail();
 
@@ -68,7 +82,7 @@ class FeePaymentController extends Controller
             'recorded_by' => Auth::id(),
         ]);
 
-        $this->ledger->postFromFee($schoolId, $payment);
+        $this->ledger->postFromFee($schoolId, $payment, $account);
 
         return redirect()->route('accounting.feeCollection')->with('success', 'Payment recorded.');
     }

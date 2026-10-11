@@ -9,11 +9,14 @@ use Illuminate\Support\Facades\Auth;
 
 class BankingLedgerService
 {
+    public function kindForMethod(string $method): string
+    {
+        return $method === 'cash' ? 'cash' : 'bank';
+    }
+
     public function accountForMethod(int $schoolId, string $method): ?BankAccount
     {
-        $kind = $method === 'cash' ? 'cash' : 'bank';
-
-        return BankAccount::where('school_id', $schoolId)->where('kind', $kind)->orderBy('id')->first();
+        return BankAccount::where('school_id', $schoolId)->where('kind', $this->kindForMethod($method))->orderBy('id')->first();
     }
 
     public function post(int $schoolId, BankAccount $account, string $type, float $amount, array $meta = []): BankTransaction
@@ -44,9 +47,9 @@ class BankingLedgerService
         return $txn;
     }
 
-    public function postFromFee(int $schoolId, $payment): void
+    public function postFromFee(int $schoolId, $payment, ?BankAccount $account = null): void
     {
-        $account = $this->accountForMethod($schoolId, $payment->payment_method);
+        $account ??= $this->accountForMethod($schoolId, $payment->payment_method);
         if (! $account) {
             return;
         }

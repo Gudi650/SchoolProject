@@ -11,6 +11,7 @@
       <a href="{{ route('accounting.feeManagement') }}" class="text-sm text-indigo-600">Fee structures</a>
     </div>
     @if(session('success'))<div class="mb-4 p-3 rounded-lg bg-green-50 text-green-800 text-sm">{{ session('success') }}</div>@endif
+    @if($errors->any())<div class="mb-4 p-3 rounded-lg bg-red-50 text-red-800 text-sm">{{ $errors->first() }}</div>@endif
 
     <div class="grid lg:grid-cols-2 gap-6">
       <form method="POST" action="{{ route('accounting.feeCollection.store') }}" class="bg-white border border-slate-200 rounded-xl p-6 space-y-4">
@@ -30,12 +31,51 @@
         </div>
         <div>
           <label class="block text-sm font-medium mb-1">Method</label>
-          <select name="payment_method" required class="w-full border rounded-lg px-3 py-2">
+          <select name="payment_method" id="fee_method" required class="w-full border rounded-lg px-3 py-2">
+            <option value="">Select method</option>
             @foreach(['cash','mobile','bank','cheque'] as $m)
               <option value="{{ $m }}" @selected(old('payment_method') === $m)>{{ ucfirst($m) }}</option>
             @endforeach
           </select>
         </div>
+        <div id="fee_account_wrap" class="{{ old('payment_method') ? '' : 'hidden' }}">
+          <label class="block text-sm font-medium mb-1" id="fee_account_label">Account</label>
+          <select name="bank_account_id" id="fee_account" class="w-full border rounded-lg px-3 py-2">
+            <option value="">Select account</option>
+            @foreach($accounts ?? [] as $a)
+              <option value="{{ $a->id }}" data-kind="{{ $a->kind }}" @selected(old('bank_account_id') == $a->id)>{{ $a->name }} ({{ ucfirst($a->kind) }})</option>
+            @endforeach
+          </select>
+          <p id="fee_account_empty" class="hidden text-xs text-amber-700 mt-1">No matching account. Add one under Banking first.</p>
+        </div>
+        <script>
+          const methodEl = document.getElementById('fee_method');
+          const wrap = document.getElementById('fee_account_wrap');
+          const accountEl = document.getElementById('fee_account');
+          const emptyEl = document.getElementById('fee_account_empty');
+          const labelEl = document.getElementById('fee_account_label');
+          function kindFor(m) { return m === 'cash' ? 'cash' : 'bank'; }
+          function filterAccounts() {
+            const m = methodEl.value;
+            wrap.classList.toggle('hidden', !m);
+            accountEl.required = !!m;
+            if (!m) { accountEl.value = ''; return; }
+            const kind = kindFor(m);
+            labelEl.textContent = kind === 'cash' ? 'Cash account' : 'Bank account';
+            let visible = 0;
+            [...accountEl.options].forEach((opt, i) => {
+              if (i === 0) return;
+              const show = opt.dataset.kind === kind;
+              opt.hidden = !show;
+              opt.disabled = !show;
+              if (show) visible++;
+            });
+            if (accountEl.selectedOptions[0]?.hidden) accountEl.value = '';
+            emptyEl.classList.toggle('hidden', visible > 0);
+          }
+          methodEl.addEventListener('change', filterAccounts);
+          filterAccounts();
+        </script>
         <div>
           <label class="block text-sm font-medium mb-1">Paid at</label>
           <input type="datetime-local" name="paid_at" required value="{{ old('paid_at', now()->format('Y-m-d\TH:i')) }}" class="w-full border rounded-lg px-3 py-2">
