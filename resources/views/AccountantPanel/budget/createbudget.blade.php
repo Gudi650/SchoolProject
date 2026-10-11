@@ -214,8 +214,11 @@
         <!-- Section 2: Budget Allocation -->
         <div class="p-6 border-b border-slate-200 bg-white">
 
+            @if(empty($financeCategories) || count($financeCategories) === 0)
+              <p class="mb-3 text-sm text-amber-700">Add categories first under <a href="{{ route('accounting.financeCategories') }}" class="underline">Vendors → Categories</a>.</p>
+            @endif
             {{-- Livewire component renders categories dynamically --}}
-            @livewire('create-budget', ['departments' => $departments , 'previousBudgets' => $previousBudgets])
+            @livewire('create-budget', ['departments' => $departments , 'previousBudgets' => $previousBudgets, 'financeCategories' => $financeCategories ?? []])
 
         </div>
 

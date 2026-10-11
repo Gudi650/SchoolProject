@@ -92,12 +92,19 @@
             Expense Type
           </label>
           {{-- Wire:model.live syncs value with component property in real-time --}}
-          <input 
-            type="text" 
+          <select
             wire:model.live="categories.{{ $index }}.expenseType"
-            placeholder="e.g., Teaching Staff, Facilities, Equipment"
             class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm transition-all bg-slate-50 focus:bg-white"
           >
+            <option value="">Select category</option>
+            @php $current = $category['expenseType'] ?? ''; @endphp
+            @if($current && !collect($financeCategories ?? [])->contains($current))
+              <option value="{{ $current }}">{{ $current }}</option>
+            @endif
+            @foreach($financeCategories ?? [] as $catName)
+              <option value="{{ $catName }}">{{ $catName }}</option>
+            @endforeach
+          </select>
         </div>
 
         {{-- Amount Input --}}

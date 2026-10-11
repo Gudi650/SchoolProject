@@ -19,14 +19,16 @@ class CreateBudget extends Component
 
     // accept previousBudgets from parent
     public $previousBudgets;
+    public $financeCategories = [];
 
     // Initialize component state with provided data
-    public function mount($departments = [], $previousBudgets = [])
+    public function mount($departments = [], $previousBudgets = [], $financeCategories = [])
     {
         $this->categories = [];
         $this->categoryCount = 0;
         $this->departments = $departments ?? [];
         $this->previousBudgets = $previousBudgets ?? [];
+        $this->financeCategories = $financeCategories ?? [];
     }
 
     //add new budget category when button is clicked
@@ -110,7 +112,7 @@ class CreateBudget extends Component
 
             // Check expense type is filled
             if (empty($category['expenseType'])) {
-                $this->dispatch('categoryError', "Category " . ($index + 1) . ": Please enter expense type");
+                $this->dispatch('categoryError', "Category " . ($index + 1) . ": Please select a category");
                 return false;
             }
 

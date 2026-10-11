@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\budget as ModelsBudget;
 use App\Models\budgetCategories;
 use App\Models\budgetDepartment;
+use App\Models\FinanceCategory;
 use App\Models\Teacher;
 use App\Services\AccountantContextService;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class Budget extends Controller
@@ -36,6 +38,7 @@ class Budget extends Controller
         return view('AccountantPanel.budget.createbudget',[
             'departments' => $departments,
             'previousBudgets' => $previousBudgets,
+            'financeCategories' => FinanceCategory::namesFor($schoolId),
         ]);
 
     }
@@ -55,7 +58,7 @@ class Budget extends Controller
                 'description' => 'nullable|string|max:1000',
                 'categories' => 'required|array|min:1',
                 'categories.*.departmentId' => 'required|exists:budget_departments,id,school_id,' . $schoolId,
-                'categories.*.expenseType' => 'required|string|max:255',
+                'categories.*.expenseType' => ['required', 'string', 'max:64', Rule::in(FinanceCategory::namesFor($schoolId)->all())],
                 'categories.*.amount' => 'required|numeric|min:0.01',
             ]);
 
