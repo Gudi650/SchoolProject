@@ -20,15 +20,17 @@ class CreateBudget extends Component
     // accept previousBudgets from parent
     public $previousBudgets;
     public $financeCategories = [];
+    public $editCategories = [];
 
     // Initialize component state with provided data
-    public function mount($departments = [], $previousBudgets = [], $financeCategories = [])
+    public function mount($departments = [], $previousBudgets = [], $financeCategories = [], $editCategories = [])
     {
-        $this->categories = [];
-        $this->categoryCount = 0;
         $this->departments = $departments ?? [];
         $this->previousBudgets = $previousBudgets ?? [];
         $this->financeCategories = $financeCategories ?? [];
+        $this->editCategories = $editCategories ?? [];
+        $this->categories = $this->editCategories;
+        $this->categoryCount = count($this->categories);
     }
 
     //add new budget category when button is clicked

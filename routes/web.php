@@ -538,6 +538,8 @@ Route::controller(Budget::class)->group(function () {
 
     //store budget data route
     Route::post('/store-budget', 'storeBudget')->name('accounting.storeBudget');
+    Route::put('/update-budget/{id}', 'updateBudget')->name('accounting.updateBudget');
+    Route::delete('/delete-budget/{id}', 'destroyBudget')->name('accounting.deleteBudget');
 
 });
 

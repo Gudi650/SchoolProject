@@ -13,6 +13,7 @@ use App\Models\School;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\budget;
+use App\Models\BudgetAudit;
 use App\Models\studentEnrollDetails;
 use App\Services\AccountantContextService;
 use Illuminate\Support\Facades\Auth;
@@ -318,7 +319,11 @@ class AccountantController extends Controller
             'departments' => $departmentTotals->count(),
         ];
 
-        return view('AccountantPanel.budget', compact('schoolId', 'budgets', 'latest', 'departmentTotals', 'stats'));
+        $audits = $schoolId
+            ? BudgetAudit::with('user')->where('school_id', $schoolId)->latest('created_at')->limit(20)->get()
+            : collect();
+
+        return view('AccountantPanel.budget', compact('schoolId', 'budgets', 'latest', 'departmentTotals', 'stats', 'audits'));
     }
 
     public function enrollmentIncome()

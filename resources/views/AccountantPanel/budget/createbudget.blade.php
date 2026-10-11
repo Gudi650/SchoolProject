@@ -1,5 +1,9 @@
+@php
+  $editBudget = $editBudget ?? null;
+  $editCategories = $editCategories ?? [];
+@endphp
 <x-Account-sidebar>
-  <x-slot name="title">Budget Management</x-slot>
+  <x-slot name="title">{{ $editBudget ? 'Edit Budget' : 'Budget Management' }}</x-slot>
 
   <main class="p-4 sm:p-6 bg-slate-50 min-h-screen">
     <div class="max-w-5xl mx-auto">
@@ -44,8 +48,8 @@
               <i data-lucide="wallet" class="w-5 sm:w-6 h-5 sm:h-6 text-indigo-600"></i>
             </div>
             <div class="min-w-0">
-              <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Create Budget</h1>
-              <p class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-2">Set up a new budget and allocate funds across departments</p>
+              <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">{{ $editBudget ? 'Edit Budget' : 'Create Budget' }}</h1>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-2">{{ $editBudget ? 'Update this budget and its department allocations' : 'Set up a new budget and allocate funds across departments' }}</p>
             </div>
           </div>
           <div class="flex flex-col xs:flex-row gap-2 w-full sm:w-auto">
@@ -57,6 +61,7 @@
               <span class="hidden sm:inline">Manage Departments</span>
               <span class="sm:hidden">Departments</span>
             </a>
+            @unless($editBudget)
             <button 
               type="button" 
               onclick="loadLastBudget()"
@@ -66,6 +71,7 @@
               <span class="hidden sm:inline">Copy from Last Budget</span>
               <span class="sm:hidden">Copy</span>
             </button>
+            @endunless
           </div>
         </div>
       </div>
@@ -73,11 +79,12 @@
       <!-- Main Form Container - Wrapped in Livewire -->
       
       <form id="budgetForm" 
-      action="{{ route('accounting.storeBudget') }}"
+      action="{{ $editBudget ? route('accounting.updateBudget', $editBudget->id) : route('accounting.storeBudget') }}"
       method="POST"
       class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
 
       @csrf
+      @if($editBudget) @method('PUT') @endif
         
         <!-- Section 1: Budget Overview -->
         <div class="p-6 border-b border-slate-200 bg-indigo-50">
@@ -100,7 +107,7 @@
                 id="budgetName" 
                 name="budgetName" 
                 placeholder="e.g., FY 2026 School Operations"
-                value="{{ old('budgetName') }}"
+                value="{{ old('budgetName', $editBudget->budget_name ?? '') }}"
                 class="w-full px-4 py-2.5 border @error('budgetName') border-red-500 @else border-slate-300 @enderror rounded-lg focus:ring-2 @error('budgetName') focus:ring-red-500 focus:border-red-500 @else focus:ring-indigo-500 focus:border-indigo-500 @enderror outline-none text-sm transition-all bg-slate-50 focus:bg-white"
                 required
               >
@@ -128,7 +135,7 @@
                   placeholder="0.00"
                   step="0.01"
                   min="0"
-                  value="{{ old('totalBudget') }}"
+                  value="{{ old('totalBudget', $editBudget->total_amount ?? '') }}"
                   class="w-full pl-8 pr-4 py-2.5 border @error('totalBudget') border-red-500 @else border-slate-300 @enderror rounded-lg focus:ring-2 @error('totalBudget') focus:ring-red-500 focus:border-red-500 @else focus:ring-indigo-500 focus:border-indigo-500 @enderror outline-none text-sm transition-all bg-slate-50 focus:bg-white font-semibold text-slate-900"
                   required
                 >
@@ -152,7 +159,7 @@
                 type="date" 
                 id="budgetStartDate" 
                 name="budgetStartDate" 
-                value="{{ old('budgetStartDate') }}"
+                value="{{ old('budgetStartDate', isset($editBudget) ? \Carbon\Carbon::parse($editBudget->start_date)->format('Y-m-d') : '') }}"
                 class="w-full px-4 py-2.5 border @error('budgetStartDate') border-red-500 @else border-slate-300 @enderror rounded-lg focus:ring-2 @error('budgetStartDate') focus:ring-red-500 focus:border-red-500 @else focus:ring-indigo-500 focus:border-indigo-500 @enderror outline-none text-sm transition-all bg-slate-50 focus:bg-white"
                 required
               >
@@ -175,7 +182,7 @@
                 type="date" 
                 id="budgetEndDate" 
                 name="budgetEndDate" 
-                value="{{ old('budgetEndDate') }}"
+                value="{{ old('budgetEndDate', isset($editBudget) ? \Carbon\Carbon::parse($editBudget->end_date)->format('Y-m-d') : '') }}"
                 class="w-full px-4 py-2.5 border @error('budgetEndDate') border-red-500 @else border-slate-300 @enderror rounded-lg focus:ring-2 @error('budgetEndDate') focus:ring-red-500 focus:border-red-500 @else focus:ring-indigo-500 focus:border-indigo-500 @enderror outline-none text-sm transition-all bg-slate-50 focus:bg-white"
                 required
               >
@@ -200,7 +207,7 @@
                 rows="3"
                 placeholder="Add notes or details about this budget..."
                 class="w-full px-4 py-2.5 border @error('description') border-red-500 @else border-slate-300 @enderror rounded-lg focus:ring-2 @error('description') focus:ring-red-500 focus:border-red-500 @else focus:ring-indigo-500 focus:border-indigo-500 @enderror outline-none text-sm resize-none transition-all bg-slate-50 focus:bg-white"
-              >{{ old('description') }}</textarea>
+              >{{ old('description', $editBudget->description ?? '') }}</textarea>
               @error('description')
                 <p class="text-xs text-red-600 mt-1 flex items-center gap-1">
                   <i data-lucide="alert-circle" class="w-3 h-3"></i>
@@ -218,7 +225,12 @@
               <p class="mb-3 text-sm text-amber-700">Add categories first under <a href="{{ route('accounting.financeCategories') }}" class="underline">Vendors → Categories</a>.</p>
             @endif
             {{-- Livewire component renders categories dynamically --}}
-            @livewire('create-budget', ['departments' => $departments , 'previousBudgets' => $previousBudgets, 'financeCategories' => $financeCategories ?? []])
+            @livewire('create-budget', [
+              'departments' => $departments,
+              'previousBudgets' => $previousBudgets,
+              'financeCategories' => $financeCategories ?? [],
+              'editCategories' => $editCategories ?? [],
+            ], key($editBudget->id ?? 'new'))
 
         </div>
 
@@ -289,7 +301,7 @@
           </button>
           <button type="submit" class="px-6 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 shadow-sm">
             <i data-lucide="check-circle" class="w-4 h-4"></i>
-            Create Budget
+            {{ $editBudget ? 'Save changes' : 'Create Budget' }}
           </button>
         </div>
       </form>
@@ -496,6 +508,13 @@
       reinitIcons();
       autoDismissMessage('successMessage', 5000);
       autoDismissMessage('errorMessage', 7000);
+      const livewireOnLoad = getLivewireComponent();
+      if (livewireOnLoad) {
+        const cats = typeof livewireOnLoad.getCategories === 'function'
+          ? livewireOnLoad.getCategories()
+          : livewireOnLoad.categories || [];
+        updateBudgetSummaryFromLivewire(cats);
+      }
 
       document.getElementById('budgetForm').addEventListener('submit', function(e) {
         const livewireComponent = getLivewireComponent();

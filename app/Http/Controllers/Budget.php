@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\budget as ModelsBudget;
 use App\Models\budgetCategories;
 use App\Models\budgetDepartment;
+use App\Models\BudgetAudit;
 use App\Models\FinanceCategory;
 use App\Models\Teacher;
 use App\Services\AccountantContextService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
@@ -34,11 +37,24 @@ class Budget extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        //return the view and pass the departments and previous budgets data
+        $editBudget = request('edit')
+            ? ModelsBudget::with('categories')->where('school_id', $schoolId)->find(request('edit'))
+            : null;
+
+        $editCategories = $editBudget
+            ? $editBudget->categories->map(fn ($c) => [
+                'departmentId' => $c->department_id,
+                'expenseType' => $c->expense_type,
+                'amount' => (float) $c->amount,
+            ])->values()->all()
+            : [];
+
         return view('AccountantPanel.budget.createbudget',[
             'departments' => $departments,
             'previousBudgets' => $previousBudgets,
             'financeCategories' => FinanceCategory::namesFor($schoolId),
+            'editBudget' => $editBudget,
+            'editCategories' => $editCategories,
         ]);
 
     }
@@ -48,19 +64,7 @@ class Budget extends Controller
     {
         try {
             $schoolId = $this->accountantContext->requireSchoolId();
-
-            //validate the request data - field names must match form input names
-            $validatedData = $request->validate([
-                'budgetName' => 'required|string|max:255',
-                'totalBudget' => 'required|numeric|min:0.01',
-                'budgetStartDate' => 'required|date',
-                'budgetEndDate' => 'required|date|after_or_equal:budgetStartDate',
-                'description' => 'nullable|string|max:1000',
-                'categories' => 'required|array|min:1',
-                'categories.*.departmentId' => 'required|exists:budget_departments,id,school_id,' . $schoolId,
-                'categories.*.expenseType' => ['required', 'string', 'max:64', Rule::in(FinanceCategory::namesFor($schoolId)->all())],
-                'categories.*.amount' => 'required|numeric|min:0.01',
-            ]);
+            $validatedData = $this->validatedBudget($request, $schoolId);
 
             //store the budget main data in the budgets table
             //also get the newly created budget id
@@ -69,10 +73,9 @@ class Budget extends Controller
             //process the validated data
             $categories = $validatedData['categories'];
 
-            //store the budget categories data
             $this->storeBudgetCategories($budgetId, $categories);
-            
-            //redirect to the create budget page with success message
+            $this->audit($schoolId, $budgetId, 'created', ['after' => $validatedData]);
+
             return redirect()->route('accounting.createBudget')->with('success', 'Budget created successfully with ' . count($categories) . ' categories!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -89,6 +92,89 @@ class Budget extends Controller
 
     }
 
+
+    public function updateBudget(Request $request, int $id)
+    {
+        $schoolId = $this->accountantContext->requireSchoolId();
+        $budget = ModelsBudget::with('categories')->where('school_id', $schoolId)->findOrFail($id);
+
+        try {
+            $validatedData = $this->validatedBudget($request, $schoolId);
+            $before = $this->snapshot($budget);
+
+            DB::transaction(function () use ($budget, $validatedData) {
+                $budget->update([
+                    'budget_name' => $validatedData['budgetName'],
+                    'start_date' => $validatedData['budgetStartDate'],
+                    'end_date' => $validatedData['budgetEndDate'],
+                    'total_amount' => $validatedData['totalBudget'],
+                    'description' => $validatedData['description'] ?? null,
+                ]);
+                budgetCategories::where('budget_id', $budget->id)->delete();
+                $this->storeBudgetCategories($budget->id, $validatedData['categories']);
+            });
+
+            $this->audit($schoolId, $budget->id, 'updated', ['before' => $before, 'after' => $validatedData]);
+
+            return redirect()->route('accounting.budgetingManagement')->with('success', 'Budget updated.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->route('accounting.createBudget', ['edit' => $id])->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->route('accounting.createBudget', ['edit' => $id])->with('error', 'Error updating budget: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    public function destroyBudget(int $id)
+    {
+        $schoolId = $this->accountantContext->requireSchoolId();
+        $budget = ModelsBudget::with('categories')->where('school_id', $schoolId)->findOrFail($id);
+        $this->audit($schoolId, $budget->id, 'deleted', ['before' => $this->snapshot($budget)]);
+        $budget->delete();
+
+        return redirect()->route('accounting.budgetingManagement')->with('success', 'Budget deleted.');
+    }
+
+    protected function validatedBudget(Request $request, int $schoolId): array
+    {
+        return $request->validate([
+            'budgetName' => 'required|string|max:255',
+            'totalBudget' => 'required|numeric|min:0.01',
+            'budgetStartDate' => 'required|date',
+            'budgetEndDate' => 'required|date|after_or_equal:budgetStartDate',
+            'description' => 'nullable|string|max:1000',
+            'categories' => 'required|array|min:1',
+            'categories.*.departmentId' => 'required|exists:budget_departments,id,school_id,' . $schoolId,
+            'categories.*.expenseType' => ['required', 'string', 'max:64', Rule::in(FinanceCategory::namesFor($schoolId)->all())],
+            'categories.*.amount' => 'required|numeric|min:0.01',
+        ]);
+    }
+
+    protected function snapshot(ModelsBudget $budget): array
+    {
+        return [
+            'budget_name' => $budget->budget_name,
+            'start_date' => $budget->start_date,
+            'end_date' => $budget->end_date,
+            'total_amount' => $budget->total_amount,
+            'description' => $budget->description,
+            'categories' => $budget->categories->map(fn ($c) => [
+                'department_id' => $c->department_id,
+                'expense_type' => $c->expense_type,
+                'amount' => $c->amount,
+            ])->values()->all(),
+        ];
+    }
+
+    protected function audit(int $schoolId, ?int $budgetId, string $action, array $changes): void
+    {
+        BudgetAudit::create([
+            'school_id' => $schoolId,
+            'budget_id' => $budgetId,
+            'user_id' => Auth::id(),
+            'action' => $action,
+            'changes' => $changes,
+        ]);
+    }
 
     //function to store budget data in the table in the database
     protected function storeBudgetData($budgetData, int $schoolId)

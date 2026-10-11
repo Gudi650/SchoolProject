@@ -30,6 +30,9 @@
           </div>
         </div>
 
+        @if(session('success'))<div class="mb-4 p-3 rounded-lg bg-green-50 text-green-800 text-sm">{{ session('success') }}</div>@endif
+        @if(session('error'))<div class="mb-4 p-3 rounded-lg bg-red-50 text-red-800 text-sm">{{ session('error') }}</div>@endif
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
           <div class="bg-white rounded-xl p-4 sm:p-6 border border-indigo-100 shadow-sm">
             <p class="text-xs sm:text-sm text-slate-600">Latest budget</p>
@@ -125,6 +128,7 @@
                   <th class="px-4 py-3 font-medium text-indigo-900">Total</th>
                   <th class="px-4 py-3 font-medium text-indigo-900">Allocated</th>
                   <th class="px-4 py-3 font-medium text-indigo-900">Unallocated</th>
+                  <th class="px-4 py-3 font-medium text-indigo-900">Actions</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
@@ -138,14 +142,58 @@
                     <td class="px-4 py-3">{{ $fmt($budget->total_amount) }}</td>
                     <td class="px-4 py-3">{{ $fmt($lineTotal) }}</td>
                     <td class="px-4 py-3">{{ $fmt((float) $budget->total_amount - $lineTotal) }}</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <a href="{{ route('accounting.createBudget', ['edit' => $budget->id]) }}" class="px-2 py-1 text-xs font-medium text-indigo-700 bg-indigo-50 rounded hover:bg-indigo-100">Edit</a>
+                        <form method="POST" action="{{ route('accounting.deleteBudget', $budget->id) }}" onsubmit="return confirm('Delete this budget?');">
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" class="px-2 py-1 text-xs font-medium text-red-700 bg-red-50 rounded hover:bg-red-100">Delete</button>
+                        </form>
+                      </div>
+                    </td>
                   </tr>
                 @empty
                   <tr>
-                    <td colspan="5" class="px-4 py-8 text-center text-slate-500">
+                    <td colspan="6" class="px-4 py-8 text-center text-slate-500">
                       No budgets yet.
                       <a href="{{ route('accounting.createBudget') }}" class="text-indigo-600 hover:text-indigo-800">Create a budget</a>
                     </td>
                   </tr>
+                @endforelse
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        @php $audits = $audits ?? collect(); @endphp
+        <div class="mb-6 bg-white rounded-xl border border-indigo-100 shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-indigo-100 bg-indigo-50 flex items-center gap-2">
+            <span class="w-1 h-5 bg-indigo-600 rounded"></span>
+            <h2 class="font-semibold text-slate-900">Audit log</h2>
+          </div>
+          <div class="overflow-x-auto max-h-72">
+            <table class="w-full text-sm">
+              <thead class="bg-indigo-50/70 border-b border-indigo-100 sticky top-0">
+                <tr class="text-left text-xs font-semibold uppercase tracking-wide text-indigo-900">
+                  <th class="px-4 py-3">Action</th>
+                  <th class="px-4 py-3">Budget</th>
+                  <th class="px-4 py-3">User</th>
+                  <th class="px-4 py-3">When</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                @forelse($audits as $a)
+                  <tr class="hover:bg-indigo-50/40">
+                    <td class="px-4 py-3">
+                      <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium {{ $a->action === 'deleted' ? 'bg-red-100 text-red-700' : ($a->action === 'updated' ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700') }}">{{ ucfirst($a->action) }}</span>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">{{ $a->budget_id ? '#'.$a->budget_id : '—' }}</td>
+                    <td class="px-4 py-3 text-slate-800">{{ trim(($a->user->fname ?? '').' '.($a->user->lname ?? '')) ?: 'User' }}</td>
+                    <td class="px-4 py-3 text-slate-500">{{ $a->created_at?->format('M j, Y H:i') }}</td>
+                  </tr>
+                @empty
+                  <tr><td colspan="4" class="px-4 py-10 text-center text-slate-500">No audit entries.</td></tr>
                 @endforelse
               </tbody>
             </table>
