@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankAccount;
 use App\Models\Expense;
 use App\Models\ExpenseAudit;
 use App\Models\FinanceCategory;
@@ -35,6 +36,7 @@ class ExpenseController extends Controller
 
         $vendors = Vendor::where('school_id', $schoolId)->where('status', 'active')->orderBy('name')->get();
         $categories = FinanceCategory::namesFor($schoolId);
+        $accounts = BankAccount::where('school_id', $schoolId)->orderBy('kind')->orderBy('name')->get();
 
         $audits = ExpenseAudit::with('user')
             ->where('school_id', $schoolId)
@@ -50,13 +52,18 @@ class ExpenseController extends Controller
             'count' => (clone $base)->count(),
         ];
 
-        return view('AccountantPanel.expenses', compact('expenses', 'audits', 'stats', 'vendors', 'categories'));
+        return view('AccountantPanel.expenses', compact('expenses', 'audits', 'stats', 'vendors', 'categories', 'accounts'));
     }
 
     public function store(Request $request)
     {
         $schoolId = $this->accountantContext->requireSchoolId();
         $data = $this->validated($request, $schoolId);
+        $account = $this->accountForExpense($request, $schoolId, $data);
+        if ($account === false) {
+            return back()->withErrors(['bank_account_id' => 'Select an account that matches this payment method.'])->withInput();
+        }
+        unset($data['bank_account_id']);
 
         $expense = Expense::create([
             ...$data,
@@ -66,7 +73,7 @@ class ExpenseController extends Controller
         ]);
 
         $this->audit($schoolId, $expense->id, 'created', ['after' => $expense->only(array_keys($data))]);
-        $this->ledger->postFromExpense($schoolId, $expense);
+        $this->ledger->postFromExpense($schoolId, $expense, $account);
 
         return redirect()->route('accounting.expensesManagement')->with('success', 'Expense recorded.');
     }
@@ -76,13 +83,18 @@ class ExpenseController extends Controller
         $schoolId = $this->accountantContext->requireSchoolId();
         $row = Expense::where('school_id', $schoolId)->findOrFail($expense);
         $data = $this->validated($request, $schoolId);
+        $account = $this->accountForExpense($request, $schoolId, $data);
+        if ($account === false) {
+            return back()->withErrors(['bank_account_id' => 'Select an account that matches this payment method.'])->withInput();
+        }
+        unset($data['bank_account_id']);
         $before = $row->only(array_keys($data));
 
         $row->fill([...$data, 'updated_by' => Auth::id()]);
         $row->save();
 
         $this->audit($schoolId, $row->id, 'updated', ['before' => $before, 'after' => $data]);
-        $this->ledger->postFromExpense($schoolId, $row);
+        $this->ledger->postFromExpense($schoolId, $row, $account);
 
         return redirect()->route('accounting.expensesManagement')->with('success', 'Expense updated.');
     }
@@ -109,6 +121,7 @@ class ExpenseController extends Controller
             'status' => 'required|in:' . implode(',', self::STATUSES),
             'expense_date' => 'required|date',
             'payment_method' => 'nullable|in:' . implode(',', self::METHODS),
+            'bank_account_id' => 'nullable|exists:bank_accounts,id',
             'reference' => 'nullable|string|max:100',
             'notes' => 'nullable|string|max:500',
         ]);
@@ -127,6 +140,22 @@ class ExpenseController extends Controller
         $data['category'] = FinanceCategory::remember($schoolId, $data['category']);
 
         return $data;
+    }
+
+    private function accountForExpense(Request $request, int $schoolId, array $data): BankAccount|false|null
+    {
+        $needsAccount = ($data['status'] ?? '') === 'paid' && ! empty($data['payment_method']);
+        if (! $needsAccount) {
+            return null;
+        }
+        $id = $request->input('bank_account_id');
+        if (! $id) {
+            return false;
+        }
+        $kind = $this->ledger->kindForMethod($data['payment_method']);
+        $account = BankAccount::where('school_id', $schoolId)->where('kind', $kind)->where('id', $id)->first();
+
+        return $account ?: false;
     }
 
     private function audit(int $schoolId, ?int $expenseId, string $action, array $changes): void

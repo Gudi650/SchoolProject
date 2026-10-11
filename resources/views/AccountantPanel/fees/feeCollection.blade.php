@@ -33,9 +33,11 @@
           <label class="block text-sm font-medium mb-1">Method</label>
           <select name="payment_method" id="fee_method" required class="w-full border rounded-lg px-3 py-2">
             <option value="">Select method</option>
-            @foreach(['cash','mobile','bank','cheque'] as $m)
+
+            @foreach(['cash','mobile','bank'] as $m)
               <option value="{{ $m }}" @selected(old('payment_method') === $m)>{{ ucfirst($m) }}</option>
             @endforeach
+            
           </select>
         </div>
         <div id="fee_account_wrap" class="{{ old('payment_method') ? '' : 'hidden' }}">

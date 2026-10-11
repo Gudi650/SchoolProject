@@ -65,12 +65,12 @@ class BankingLedgerService
         ]);
     }
 
-    public function postFromExpense(int $schoolId, $expense): void
+    public function postFromExpense(int $schoolId, $expense, ?BankAccount $account = null): void
     {
         if (($expense->status ?? '') !== 'paid' || empty($expense->payment_method)) {
             return;
         }
-        $account = $this->accountForMethod($schoolId, $expense->payment_method);
+        $account ??= $this->accountForMethod($schoolId, $expense->payment_method);
         if (! $account) {
             return;
         }

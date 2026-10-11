@@ -144,6 +144,16 @@
           <option value="">Payment method</option>
           @foreach(['cash','mobile','bank','cheque'] as $m)<option value="{{ $m }}">{{ ucfirst($m) }}</option>@endforeach
         </select>
+        <div id="ex_account_wrap" class="hidden">
+          <label class="block text-sm font-medium mb-1" id="ex_account_label">Account</label>
+          <select name="bank_account_id" id="ex_account" class="w-full border rounded-lg px-3 py-2">
+            <option value="">Select account</option>
+            @foreach($accounts ?? [] as $a)
+              <option value="{{ $a->id }}" data-kind="{{ $a->kind }}">{{ $a->name }} ({{ ucfirst($a->kind) }})</option>
+            @endforeach
+          </select>
+          <p id="ex_account_empty" class="hidden text-xs text-amber-700 mt-1">No matching account. Add one under Banking first.</p>
+        </div>
         <input name="reference" id="ex_ref" placeholder="Reference" class="w-full border rounded-lg px-3 py-2">
         <textarea name="notes" id="ex_notes" rows="2" placeholder="Notes" class="w-full border rounded-lg px-3 py-2"></textarea>
         <div class="flex justify-end gap-2 pt-2">
@@ -163,6 +173,27 @@
         cat.add(new Option(value, value));
       }
       cat.value = value || '';
+    }
+    function filterExpenseAccounts() {
+      const m = document.getElementById('ex_method').value;
+      const paid = document.getElementById('ex_status').value === 'paid';
+      const wrap = document.getElementById('ex_account_wrap');
+      const accountEl = document.getElementById('ex_account');
+      wrap.classList.toggle('hidden', !m);
+      accountEl.required = !!(m && paid);
+      if (!m) { accountEl.value = ''; return; }
+      const kind = m === 'cash' ? 'cash' : 'bank';
+      document.getElementById('ex_account_label').textContent = kind === 'cash' ? 'Cash account' : 'Bank account';
+      let visible = 0;
+      [...accountEl.options].forEach((opt, i) => {
+        if (i === 0) return;
+        const show = opt.dataset.kind === kind;
+        opt.hidden = !show;
+        opt.disabled = !show;
+        if (show) visible++;
+      });
+      if (accountEl.selectedOptions[0]?.hidden) accountEl.value = '';
+      document.getElementById('ex_account_empty').classList.toggle('hidden', visible > 0);
     }
     function applyVendor() {
       const id = document.getElementById('ex_vendor').value;
@@ -195,6 +226,7 @@
         document.getElementById('ex_ref').value = row.reference || '';
         document.getElementById('ex_notes').value = row.notes || '';
         applyVendor();
+        filterExpenseAccounts();
       } else {
         form.action = storeUrl; method.disabled = true;
         document.getElementById('expenseModalTitle').textContent = 'Record expense';
@@ -202,8 +234,11 @@
         form.reset();
         document.getElementById('ex_date').value = new Date().toISOString().slice(0, 10);
         applyVendor();
+        filterExpenseAccounts();
       }
     }
+    document.getElementById('ex_method').addEventListener('change', filterExpenseAccounts);
+    document.getElementById('ex_status').addEventListener('change', filterExpenseAccounts);
     document.getElementById('expenseForm').addEventListener('submit', () => {
       document.getElementById('ex_category').disabled = false;
     });
