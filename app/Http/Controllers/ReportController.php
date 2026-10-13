@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankAccount;
 use App\Models\Expense;
 use App\Models\FeePayment;
 use App\Models\Invoice;
 use App\Models\PayrollRun;
 use App\Services\AccountantContextService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -17,7 +19,15 @@ class ReportController extends Controller
 
     public function index(Request $request)
     {
-        return $this->show($request, 'hub');
+        $data = $this->metrics($request);
+        $schoolId = $data['schoolId'];
+        $data['cashOnHand'] = BankAccount::where('school_id', $schoolId)->get()->sum(fn ($a) => $a->balance());
+        $data['overdue'] = (float) Invoice::where('school_id', $schoolId)
+            ->whereIn('status', ['sent', 'partial'])
+            ->whereDate('due_date', '<', today())
+            ->sum(DB::raw('total - paid_amount'));
+
+        return view('AccountantPanel.reports.hub', $data);
     }
 
     public function profitLoss(Request $request)
@@ -42,6 +52,14 @@ class ReportController extends Controller
 
     private function show(Request $request, string $type)
     {
+        $data = $this->metrics($request);
+        $data['type'] = $type;
+
+        return view('AccountantPanel.reports.report', $data);
+    }
+
+    private function metrics(Request $request): array
+    {
         $schoolId = $this->accountantContext->requireSchoolId();
         $from = $request->date('from')?->startOfDay() ?? now()->startOfMonth();
         $to = $request->date('to')?->endOfDay() ?? now()->endOfMonth();
@@ -63,7 +81,6 @@ class ReportController extends Controller
             ->pluck('total', 'category');
 
         $trend = [];
-        
         for ($i = 5; $i >= 0; $i--) {
             $start = now()->subMonths($i)->startOfMonth();
             $end = now()->subMonths($i)->endOfMonth();
@@ -74,11 +91,14 @@ class ReportController extends Controller
             $trend[] = ['label' => $start->format('M Y'), 'in' => $in, 'out' => $out];
         }
 
-        $data = compact('type', 'from', 'to', 'fees', 'invoiceOther', 'income', 'expensesPaid', 'expensesAll', 'payroll', 'byCategory', 'trend');
-        $data['out'] = $expensesPaid + $payroll;
-        $data['surplus'] = $income - $expensesAll - $payroll;
-        $data['cash'] = $income - $expensesPaid - $payroll;
+        $out = $expensesPaid + $payroll;
+        $surplus = $income - $expensesAll - $payroll;
+        $cash = $income - $expensesPaid - $payroll;
 
-        return view('AccountantPanel.reports.report', $data);
+        return compact(
+            'schoolId', 'from', 'to', 'fees', 'invoiceOther', 'income',
+            'expensesPaid', 'expensesAll', 'payroll', 'byCategory', 'trend',
+            'out', 'surplus', 'cash'
+        );
     }
 }

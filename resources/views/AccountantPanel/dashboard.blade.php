@@ -23,7 +23,7 @@
         <p class="font-semibold">School context not found</p>
         <p class="text-sm mt-2 text-slate-600">Sign in with an accountant account linked to a school, or set your school in session.</p>
       </div>
-      
+
     @else
       <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
@@ -32,11 +32,13 @@
         </div>
       </div>
       @if(!empty($alerts))
+
         <div class="mb-4 flex flex-wrap gap-2">
           @foreach($alerts as $alert)
             <a href="{{ $alert['url'] }}" class="text-xs px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100">{{ $alert['text'] }}</a>
           @endforeach
         </div>
+        
       @endif
 
         <div class="mb-6">
