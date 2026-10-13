@@ -12,6 +12,7 @@ use App\Models\Student;
 use App\Services\AccountantContextService;
 use App\Services\BankingLedgerService;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -190,6 +191,16 @@ class InvoiceController extends Controller
         $invoice = $this->owned($schoolId, $id)->load(['student', 'items']);
 
         return view('AccountantPanel.invoices.print', compact('invoice'));
+    }
+
+    public function pdf(int $id)
+    {
+        $schoolId = $this->accountantContext->requireSchoolId();
+        $invoice = $this->owned($schoolId, $id)->load(['student', 'items']);
+        $filename = $invoice->invoice_number.'.pdf';
+
+        return Pdf::loadView('AccountantPanel.invoices.pdf', compact('invoice'))
+            ->download($filename);
     }
 
     private function formView(?int $id = null)

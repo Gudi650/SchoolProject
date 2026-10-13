@@ -584,6 +584,7 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::post('/invoices/{id}/send', 'send')->name('accounting.sendInvoice');
     Route::post('/invoices/{id}/pay', 'pay')->name('accounting.payInvoice');
     Route::get('/invoices/{id}/print', 'print')->name('accounting.printInvoice');
+    Route::get('/invoices/{id}/pdf', 'pdf')->name('accounting.pdfInvoice');
 });
 
 

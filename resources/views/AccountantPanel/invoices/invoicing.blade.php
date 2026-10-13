@@ -100,6 +100,7 @@
                 <td class="px-4 py-3">
                   <div class="flex flex-wrap gap-1">
                     <a href="{{ route('accounting.printInvoice', $inv->id) }}" class="px-2 py-1 text-xs bg-slate-100 rounded">Print</a>
+                    <a href="{{ route('accounting.pdfInvoice', $inv->id) }}" class="px-2 py-1 text-xs bg-slate-100 rounded">PDF</a>
                     @if($inv->isEditable())
                       <a href="{{ route('accounting.editInvoice', $inv->id) }}" class="px-2 py-1 text-xs bg-indigo-50 text-indigo-700 rounded">Edit</a>
                     @endif
