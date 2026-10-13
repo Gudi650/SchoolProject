@@ -11,7 +11,7 @@
 
 <x-Account-sidebar>
   <x-slot name="title">Accountant Dashboard</x-slot>
-
+ 
   <main class="p-6 bg-white min-w-0">
     @if(empty($schoolId))
       <div class="rounded-xl border border-amber-200 bg-amber-50 p-8 text-center text-slate-700">
@@ -34,10 +34,10 @@
         </div>
       @endif
 
-      <div class="mb-6">
-        <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl p-8 text-white shadow-xl">
+        <div class="mb-6">
+          <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl p-8 text-white shadow-xl">
           <div class="flex items-start justify-between gap-4">
-            <div>
+              <div>
               <p class="text-indigo-100 text-sm font-medium mb-2">Fee collected this month</p>
               <h2 class="text-4xl font-bold mb-2">{{ $fmt($stats['collectedMonth'] ?? 0) }}</h2>
               <p class="text-indigo-100 text-sm">
@@ -52,40 +52,40 @@
           <p class="text-xs text-indigo-200 mt-4 border-t border-indigo-500/30 pt-4">
             <a href="{{ route('accounting.feeCollection') }}" class="underline text-white">Record fee payment</a>
           </p>
+          </div>
         </div>
-      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <div class="bg-white rounded-xl p-4 border border-slate-200">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-              <i data-lucide="users" class="w-5 h-5 text-indigo-600"></i>
-            </div>
-            <div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <div class="bg-white rounded-xl p-4 border border-slate-200">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <i data-lucide="users" class="w-5 h-5 text-indigo-600"></i>
+              </div>
+              <div>
               <p class="text-xs text-slate-600">Students</p>
               <p class="text-lg font-semibold">{{ number_format($stats['students'] ?? 0) }}</p>
             </div>
+            </div>
           </div>
-        </div>
 
-        <div class="bg-white rounded-xl p-4 border border-slate-200">
-          <div class="flex items-center gap-3">
+          <div class="bg-white rounded-xl p-4 border border-slate-200">
+            <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center">
               <i data-lucide="graduation-cap" class="w-5 h-5 text-sky-600"></i>
-            </div>
-            <div>
+              </div>
+              <div>
               <p class="text-xs text-slate-600">Staff (teachers)</p>
               <p class="text-lg font-semibold">{{ number_format($stats['teachers'] ?? 0) }}</p>
             </div>
+            </div>
           </div>
-        </div>
 
         <a href="{{ route('accounting.proposalManagement') }}" class="bg-white rounded-xl p-4 border border-slate-200 hover:border-amber-300 block">
-          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
               <i data-lucide="file-clock" class="w-5 h-5 text-amber-600"></i>
-            </div>
-            <div>
+              </div>
+              <div>
               <p class="text-xs text-slate-600">Loans pending review</p>
               <p class="text-lg font-semibold">{{ number_format($stats['pendingLoans'] ?? 0) }}</p>
             </div>
@@ -93,11 +93,11 @@
         </a>
 
         <a href="{{ route('accounting.loanDisbursements') }}" class="bg-white rounded-xl p-4 border border-slate-200 hover:border-emerald-300 block">
-          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
               <i data-lucide="badge-check" class="w-5 h-5 text-emerald-600"></i>
-            </div>
-            <div>
+              </div>
+              <div>
               <p class="text-xs text-slate-600">Loans approved (awaiting disburse)</p>
               <p class="text-lg font-semibold">{{ number_format($stats['approvedLoans'] ?? 0) }}</p>
             </div>
@@ -118,10 +118,10 @@
           <span class="text-slate-500">Rejected loans</span>
           <span class="font-semibold block">{{ number_format($stats['rejectedLoans'] ?? 0) }}</span>
         </a>
-      </div>
+        </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <div class="lg:col-span-2 bg-white rounded-xl p-6 border border-slate-200">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <div class="lg:col-span-2 bg-white rounded-xl p-6 border border-slate-200">
           <h3 class="text-sm font-semibold mb-4 text-slate-900">Payroll net pay (last 6 months)</h3>
           @if(collect($payrollTrend)->sum('total') <= 0)
             <div class="h-48 bg-slate-50 rounded-lg flex items-center justify-center text-slate-500 text-sm">
@@ -131,7 +131,7 @@
             <div class="space-y-3">
               @foreach($payrollTrend as $row)
                 @php $w = round(((float) $row['total'] / $maxTrend) * 100); @endphp
-                <div>
+              <div>
                   <div class="flex items-center justify-between mb-1 text-sm">
                     <span class="text-slate-600">{{ $row['label'] }}</span>
                     <span class="font-semibold text-slate-900">{{ $fmt($row['total']) }}</span>
@@ -145,7 +145,7 @@
           @endif
         </div>
 
-        <div class="bg-white rounded-xl p-6 border border-slate-200">
+          <div class="bg-white rounded-xl p-6 border border-slate-200">
           <div class="flex items-start justify-between mb-4">
             <div>
               <h3 class="text-lg font-semibold text-slate-900">Latest budget</h3>
@@ -175,12 +175,12 @@
               Manage budgets
             </a>
           @endif
-        </div>
-      </div>
+                </div>
+              </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="bg-white rounded-xl p-6 border border-slate-200">
-          <div class="flex items-center justify-between mb-4">
+          <div class="bg-white rounded-xl p-6 border border-slate-200">
+            <div class="flex items-center justify-between mb-4">
             <h3 class="text-sm font-semibold text-slate-900">Fee structures</h3>
             <i data-lucide="receipt" class="w-5 h-5 text-indigo-600"></i>
           </div>
@@ -207,9 +207,9 @@
             <a href="{{ route('accounting.payrollManagement') }}" class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800"><i data-lucide="banknote" class="w-4 h-4"></i> Payroll</a>
             <a href="{{ route('accounting.proposalManagement') }}" class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800"><i data-lucide="hand-coins" class="w-4 h-4"></i> Loan proposals</a>
             <a href="{{ route('accounting.feeManagement') }}" class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800"><i data-lucide="wallet-cards" class="w-4 h-4"></i> Fee management</a>
-          </div>
-        </div>
-      </div>
+                </div>
+              </div>
+            </div>
 
       <div class="bg-white rounded-xl p-6 border border-slate-200">
         <div class="flex items-center justify-between mb-4 gap-2 flex-wrap">
@@ -239,5 +239,5 @@
         </div>
       </div>
     @endif
-  </main>
+      </main>
 </x-Account-sidebar>

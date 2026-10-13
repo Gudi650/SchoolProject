@@ -6,6 +6,7 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FeePaymentController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\FinanceCategoryController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\AccountantSettings;
 use App\Http\Controllers\Announcements\AnnouncementController;
@@ -573,15 +574,17 @@ Route::get('/reports/profit-loss', [ReportController::class, 'profitLoss'])->nam
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-//route for invoice management
-Route::get('/invoice-management', function () {
-    return view('AccountantPanel.invoices.invoicing');
-})->name('accounting.invoiceManagement');
-
-//route for creating invoices
-Route::get('/create-invoice', function () {
-    return view('AccountantPanel.invoices.createinvoices');
-})->name('accounting.createInvoice');
+Route::controller(InvoiceController::class)->group(function () {
+    Route::get('/invoice-management', 'index')->name('accounting.invoiceManagement');
+    Route::get('/create-invoice', 'create')->name('accounting.createInvoice');
+    Route::post('/store-invoice', 'store')->name('accounting.storeInvoice');
+    Route::get('/invoices/{id}/edit', 'edit')->name('accounting.editInvoice');
+    Route::put('/invoices/{id}', 'update')->name('accounting.updateInvoice');
+    Route::delete('/invoices/{id}', 'destroy')->name('accounting.deleteInvoice');
+    Route::post('/invoices/{id}/send', 'send')->name('accounting.sendInvoice');
+    Route::post('/invoices/{id}/pay', 'pay')->name('accounting.payInvoice');
+    Route::get('/invoices/{id}/print', 'print')->name('accounting.printInvoice');
+});
 
 
 

@@ -1,13 +1,31 @@
+@php
+  $invoice = $invoice ?? null;
+  $students = $students ?? collect();
+  $categories = $categories ?? collect();
+  $preset = $preset ?? null;
+  $billTo = old('bill_to', $invoice->bill_to ?? 'other');
+  $pt = old('payment_terms', $invoice->payment_terms ?? '');
+  $lines = old('items');
+  if (! $lines) {
+    $lines = $invoice?->items?->map(fn ($i) => [
+      'name' => $i->name, 'category' => $i->category, 'description' => $i->description,
+      'quantity' => $i->quantity, 'rate' => $i->rate, 'tax' => $i->tax_percent, 'discount' => $i->discount,
+    ])->all();
+  }
+  if (! $lines) {
+    $lines = [['name' => $preset, 'category' => '', 'description' => '', 'quantity' => 1, 'rate' => '', 'tax' => '', 'discount' => '']];
+  }
+@endphp
 <x-Account-sidebar>
-	<x-slot name="title">Invoice Management</x-slot>
+	<x-slot name="title">{{ $invoice ? 'Edit Invoice' : 'Invoice Management' }}</x-slot>
 
 	<div class="px-4 py-6 sm:px-6 lg:px-8">
 		<div class="mx-auto w-full max-w-6xl">
 			<div class="rounded-lg border border-indigo-100 bg-indigo-50/60 px-4 py-4 sm:px-5">
 				<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 					<div>
-						<h1 class="text-xl font-semibold text-gray-900 sm:text-2xl">Create Invoice</h1>
-						<p class="mt-1 text-sm text-gray-700">Issue a new invoice and send it to a customer.</p>
+						<h1 class="text-xl font-semibold text-gray-900 sm:text-2xl">{{ $invoice ? 'Edit Invoice' : 'Create Invoice' }}</h1>
+						<p class="mt-1 text-sm text-gray-700">Bill a student or any other party — fees, rentals, donations, services.</p>
 					</div>
 					<div class="flex items-center gap-2">
 						<span class="inline-flex items-center rounded-md bg-indigo-100 px-2 py-1 text-xs font-semibold text-indigo-700">Accounting</span>
@@ -21,8 +39,10 @@
 					<p class="mt-1 text-sm text-gray-700">Complete the form below to create an invoice.</p>
 				</div>
 
-				<form class="px-6 py-6" method="POST" action="#">
+				<form class="px-6 py-6" method="POST" action="{{ $invoice ? route('accounting.updateInvoice', $invoice->id) : route('accounting.storeInvoice') }}">
 					@csrf
+					@if($invoice) @method('PUT') @endif
+					@if($errors->any())<div class="mb-4 p-3 rounded-lg bg-red-50 text-red-800 text-sm">{{ $errors->first() }}</div>@endif
 
 					<div class="grid grid-cols-1 gap-6 lg:grid-cols-[220px,1fr]">
 						<aside class="rounded-lg border border-indigo-100 bg-indigo-50 p-4">
@@ -47,63 +67,44 @@
 						<div class="space-y-6">
 							<!-- Customer and invoice metadata -->
 							<div class="grid grid-cols-1 gap-4 rounded-lg border border-gray-200 bg-white p-4 sm:grid-cols-2">
-								<div class="sm:col-span-2">
-									<label class="text-sm font-medium text-gray-700" for="customer_name">Customer</label>
-									<input
-										id="customer_name"
-										name="customer_name"
-										type="text"
-										placeholder="e.g., Helios Trading Ltd"
-										class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-base text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-									/>
+								<div class="sm:col-span-2 flex gap-4">
+									<label class="text-sm"><input type="radio" name="bill_to" value="student" {{ $billTo === 'student' ? 'checked' : '' }} onchange="toggleBillTo()"> Student</label>
+									<label class="text-sm"><input type="radio" name="bill_to" value="other" {{ $billTo !== 'student' ? 'checked' : '' }} onchange="toggleBillTo()"> Other income / party</label>
+								</div>
+								<div class="sm:col-span-2" id="studentWrap" style="{{ $billTo === 'student' ? '' : 'display:none' }}">
+									<label class="text-sm font-medium text-gray-700" for="student_id">Student</label>
+									<select id="student_id" name="student_id" class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
+										<option value="">Select student</option>
+										@foreach($students as $s)
+											<option value="{{ $s->id }}" {{ (string) old('student_id', $invoice->student_id ?? '') === (string) $s->id ? 'selected' : '' }}>{{ trim($s->fname.' '.$s->lname) }}</option>
+										@endforeach
+									</select>
+								</div>
+								<div class="sm:col-span-2" id="otherWrap" style="{{ $billTo === 'student' ? 'display:none' : '' }}">
+									<label class="text-sm font-medium text-gray-700" for="customer_name">Party name</label>
+									<input id="customer_name" name="customer_name" type="text" value="{{ old('customer_name', $invoice->customer_name ?? '') }}" placeholder="Parent, company, donor, tenant..." class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
 								</div>
 								<div>
 									<label class="text-sm font-medium text-gray-700" for="customer_email">Email</label>
-									<input
-										id="customer_email"
-										name="customer_email"
-										type="email"
-										placeholder="billing@company.com"
-										class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-									/>
+									<input id="customer_email" name="customer_email" type="email" value="{{ old('customer_email', $invoice->customer_email ?? '') }}" class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
 								</div>
 								<div>
 									<label class="text-sm font-medium text-gray-700" for="customer_phone">Phone</label>
-									<input
-										id="customer_phone"
-										name="customer_phone"
-										type="tel"
-										placeholder="+234 800 000 0000"
-										class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-									/>
+									<input id="customer_phone" name="customer_phone" type="tel" value="{{ old('customer_phone', $invoice->customer_phone ?? '') }}" class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
 								</div>
+								@if($invoice)
 								<div>
-									<label class="text-sm font-medium text-gray-700" for="invoice_number">Invoice Number</label>
-									<input
-										id="invoice_number"
-										name="invoice_number"
-										type="text"
-										placeholder="INV-2026-001"
-										class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-									/>
+									<label class="text-sm font-medium text-gray-700">Invoice Number</label>
+									<input type="text" value="{{ $invoice->invoice_number }}" disabled class="mt-2 w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm">
 								</div>
+								@endif
 								<div>
 									<label class="text-sm font-medium text-gray-700" for="issue_date">Issue Date</label>
-									<input
-										id="issue_date"
-										name="issue_date"
-										type="date"
-										class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-									/>
+									<input id="issue_date" name="issue_date" type="date" value="{{ old('issue_date', optional($invoice?->issue_date)->format('Y-m-d') ?? now()->toDateString()) }}" class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm" required>
 								</div>
 								<div>
 									<label class="text-sm font-medium text-gray-700" for="due_date">Due Date</label>
-									<input
-										id="due_date"
-										name="due_date"
-										type="date"
-										class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-									/>
+									<input id="due_date" name="due_date" type="date" value="{{ old('due_date', optional($invoice?->due_date)->format('Y-m-d')) }}" class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm" required>
 								</div>
 								<div>
 									<label class="text-sm font-medium text-gray-700" for="payment_terms">Payment Terms</label>
@@ -113,10 +114,10 @@
 										class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
 									>
 										<option value="">Select terms</option>
-										<option value="due-on-receipt">Due on receipt</option>
-										<option value="net-7">Net 7</option>
-										<option value="net-14">Net 14</option>
-										<option value="net-30">Net 30</option>
+										<option value="due-on-receipt" @selected($pt === 'due-on-receipt')>Due on receipt</option>
+										<option value="net-7" @selected($pt === 'net-7')>Net 7</option>
+										<option value="net-14" @selected($pt === 'net-14')>Net 14</option>
+										<option value="net-30" @selected($pt === 'net-30')>Net 30</option>
 									</select>
 								</div>
 								<div>
@@ -143,6 +144,7 @@
 											id="billing_address"
 											name="billing_address"
 											type="text"
+											value="{{ old('billing_address', $invoice->billing_address ?? '') }}"
 											placeholder="Street address"
 											class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
 										/>
@@ -215,6 +217,7 @@
 											id="reference"
 											name="reference"
 											type="text"
+											value="{{ old('reference', $invoice->reference ?? '') }}"
 											placeholder="PO or reference number"
 											class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
 										/>
@@ -242,6 +245,7 @@
 										<thead class="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
 											<tr>
 												<th scope="col" class="px-4 py-3">Item</th>
+												<th scope="col" class="px-4 py-3">Category</th>
 												<th scope="col" class="px-4 py-3">Description</th>
 												<th scope="col" class="px-4 py-3">Qty</th>
 												<th scope="col" class="px-4 py-3">Rate</th>
@@ -252,78 +256,40 @@
 											</tr>
 										</thead>
 										<tbody class="divide-y divide-gray-200" data-line-items>
+											@foreach($lines as $i => $line)
 											<tr data-line-item>
 												<td class="px-4 py-3">
-													<input
-														name="items[0][name]"
-														type="text"
-														placeholder="Item name"
-														class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-													/>
+													<input name="items[{{ $i }}][name]" type="text" value="{{ $line['name'] ?? '' }}" placeholder="Item name" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
 												</td>
 												<td class="px-4 py-3">
-													<input
-														name="items[0][description]"
-														type="text"
-														placeholder="Short description"
-														class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-													/>
+													<select name="items[{{ $i }}][category]" class="w-36 rounded-md border border-gray-300 px-2 py-2 text-sm">
+														<option value="">Any</option>
+														@foreach($categories as $cat)
+															<option value="{{ $cat }}" @selected(($line['category'] ?? '') === $cat)>{{ $cat }}</option>
+														@endforeach
+													</select>
 												</td>
 												<td class="px-4 py-3">
-													<input
-														name="items[0][quantity]"
-														type="number"
-														min="0"
-														step="1"
-														value="1"
-														class="w-20 rounded-md border border-gray-300 px-2 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-														data-qty
-													/>
+													<input name="items[{{ $i }}][description]" type="text" value="{{ $line['description'] ?? '' }}" placeholder="Short description" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
 												</td>
 												<td class="px-4 py-3">
-													<input
-														name="items[0][rate]"
-														type="number"
-														min="0"
-														step="0.01"
-														placeholder="0.00"
-														class="w-24 rounded-md border border-gray-300 px-2 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-														data-rate
-													/>
+													<input name="items[{{ $i }}][quantity]" type="number" min="0" step="0.01" value="{{ $line['quantity'] ?? 1 }}" class="w-20 rounded-md border border-gray-300 px-2 py-2 text-sm" data-qty>
 												</td>
 												<td class="px-4 py-3">
-													<input
-														name="items[0][tax]"
-														type="number"
-														min="0"
-														step="0.01"
-														placeholder="0"
-														class="w-20 rounded-md border border-gray-300 px-2 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-														data-tax
-													/>
+													<input name="items[{{ $i }}][rate]" type="number" min="0" step="0.01" value="{{ $line['rate'] ?? '' }}" placeholder="0.00" class="w-24 rounded-md border border-gray-300 px-2 py-2 text-sm" data-rate>
 												</td>
 												<td class="px-4 py-3">
-													<input
-														name="items[0][discount]"
-														type="number"
-														min="0"
-														step="0.01"
-														placeholder="0.00"
-														class="w-24 rounded-md border border-gray-300 px-2 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-														data-discount
-													/>
+													<input name="items[{{ $i }}][tax]" type="number" min="0" step="0.01" value="{{ $line['tax'] ?? '' }}" placeholder="0" class="w-20 rounded-md border border-gray-300 px-2 py-2 text-sm" data-tax>
+												</td>
+												<td class="px-4 py-3">
+													<input name="items[{{ $i }}][discount]" type="number" min="0" step="0.01" value="{{ $line['discount'] ?? '' }}" placeholder="0.00" class="w-24 rounded-md border border-gray-300 px-2 py-2 text-sm" data-discount>
 												</td>
 												<td class="px-4 py-3 font-medium text-gray-900" data-line-total>0.00</td>
 												<td class="px-4 py-3 text-right">
-													<button
-														type="button"
-														class="inline-flex items-center rounded-md border border-red-200 bg-red-50 px-2 py-1 text-xs font-semibold text-red-700 hover:bg-red-100"
-														data-remove-line
-													>
-														Remove
-													</button>
+													<button type="button" class="inline-flex items-center rounded-md border border-red-200 bg-red-50 px-2 py-1 text-xs font-semibold text-red-700 hover:bg-red-100" data-remove-line>Remove</button>
 												</td>
 											</tr>
+											@endforeach
 										</tbody>
 									</table>
 								</div>
@@ -342,7 +308,7 @@
 										rows="4"
 										placeholder="Add a short note or thank you message..."
 										class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-									></textarea>
+									>{{ old('notes', $invoice->notes ?? '') }}</textarea>
 								</div>
 								<div>
 									<label class="text-sm font-medium text-gray-700" for="terms">Terms and conditions</label>
@@ -352,22 +318,14 @@
 										rows="4"
 										placeholder="Payment terms, late fees, delivery info..."
 										class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-									></textarea>
+									>{{ old('terms', $invoice->terms ?? '') }}</textarea>
 								</div>
 							</div>
 						</div>
 					</div>
 
 					<div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-						<button
-							type="button"
-							class="inline-flex items-center justify-center rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 shadow-sm transition hover:bg-red-100"
-						>
-							<svg class="mr-2 h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-								<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-							</svg>
-							Cancel
-						</button>
+						<a href="{{ route('accounting.invoiceManagement') }}" class="inline-flex items-center justify-center rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 shadow-sm hover:bg-red-100">Cancel</a>
 						<button
 							type="submit"
 							class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-200"
@@ -384,6 +342,11 @@
 	</div>
 
 	<script>
+		function toggleBillTo() {
+			const student = document.querySelector('input[name="bill_to"]:checked')?.value === 'student';
+			document.getElementById('studentWrap').style.display = student ? '' : 'none';
+			document.getElementById('otherWrap').style.display = student ? 'none' : '';
+		}
 		document.addEventListener('DOMContentLoaded', () => {
 			const lineItems = document.querySelector('[data-line-items]');
 			const addButton = document.querySelector('[data-add-line]');
@@ -429,7 +392,7 @@
 
 			const updateIndexes = () => {
 				lineItems.querySelectorAll('[data-line-item]').forEach((row, index) => {
-					row.querySelectorAll('input').forEach((input) => {
+					row.querySelectorAll('input, select').forEach((input) => {
 						if (input.name) {
 							input.name = input.name.replace(/items\[\d+\]/, `items[${index}]`);
 						}
@@ -456,9 +419,11 @@
 				const template = lineItems.querySelector('[data-line-item]');
 				const clone = template.cloneNode(true);
 
-				clone.querySelectorAll('input').forEach((input) => {
-					if (input.type === 'number') {
-						input.value = input.dataset.qty ? 1 : '';
+				clone.querySelectorAll('input, select').forEach((input) => {
+					if (input.tagName === 'SELECT') {
+						input.selectedIndex = 0;
+					} else if (input.type === 'number') {
+						input.value = input.dataset.qty !== null && input.hasAttribute('data-qty') ? 1 : '';
 					} else {
 						input.value = '';
 					}
