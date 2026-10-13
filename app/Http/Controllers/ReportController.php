@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Expense;
 use App\Models\FeePayment;
+use App\Models\Invoice;
 use App\Models\PayrollRun;
 use App\Services\AccountantContextService;
 use Illuminate\Http\Request;
@@ -46,6 +47,8 @@ class ReportController extends Controller
         $to = $request->date('to')?->endOfDay() ?? now()->endOfMonth();
 
         $fees = (float) FeePayment::where('school_id', $schoolId)->whereBetween('paid_at', [$from, $to])->sum('amount');
+        $invoiceOther = Invoice::otherCredits($schoolId, $from, $to);
+        $income = $fees + $invoiceOther;
         $expensesPaid = (float) Expense::where('school_id', $schoolId)->where('status', 'paid')->whereBetween('expense_date', [$from, $to])->sum('amount');
         $expensesAll = (float) Expense::where('school_id', $schoolId)->whereBetween('expense_date', [$from, $to])->sum('amount');
         $payroll = (float) PayrollRun::where('school_id', $schoolId)
@@ -64,16 +67,17 @@ class ReportController extends Controller
         for ($i = 5; $i >= 0; $i--) {
             $start = now()->subMonths($i)->startOfMonth();
             $end = now()->subMonths($i)->endOfMonth();
-            $in = (float) FeePayment::where('school_id', $schoolId)->whereBetween('paid_at', [$start, $end])->sum('amount');
+            $in = (float) FeePayment::where('school_id', $schoolId)->whereBetween('paid_at', [$start, $end])->sum('amount')
+                + Invoice::otherCredits($schoolId, $start, $end);
             $out = (float) Expense::where('school_id', $schoolId)->where('status', 'paid')->whereBetween('expense_date', [$start, $end])->sum('amount')
                 + (float) PayrollRun::where('school_id', $schoolId)->where('status', 'processed')->whereBetween('created_at', [$start, $end])->sum('net_salary');
             $trend[] = ['label' => $start->format('M Y'), 'in' => $in, 'out' => $out];
         }
 
-        $data = compact('type', 'from', 'to', 'fees', 'expensesPaid', 'expensesAll', 'payroll', 'byCategory', 'trend');
+        $data = compact('type', 'from', 'to', 'fees', 'invoiceOther', 'income', 'expensesPaid', 'expensesAll', 'payroll', 'byCategory', 'trend');
         $data['out'] = $expensesPaid + $payroll;
-        $data['surplus'] = $fees - $expensesAll - $payroll;
-        $data['cash'] = $fees - $expensesPaid - $payroll;
+        $data['surplus'] = $income - $expensesAll - $payroll;
+        $data['cash'] = $income - $expensesPaid - $payroll;
 
         return view('AccountantPanel.reports.report', $data);
     }

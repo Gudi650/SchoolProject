@@ -25,6 +25,10 @@
             <i data-lucide="receipt" class="w-4 h-4"></i>
             Fee collection
           </a>
+          <a href="{{ route('accounting.invoiceManagement') }}" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            Invoices
+          </a>
         </div>
       </div>
     </div>
@@ -38,7 +42,7 @@
           <p class="text-xs sm:text-sm text-slate-600">Total Income (YTD)</p>
         </div>
         <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $fmt($ytd ?? 0) }}</p>
-        <p class="text-xs sm:text-sm text-green-600 mt-2">{{ now()->year }} collections</p>
+        <p class="text-xs sm:text-sm text-green-600 mt-2">Fees {{ $fmt($feesYtd ?? 0) }} · Invoices {{ $fmt($invoiceYtd ?? 0) }}</p>
       </div>
       <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
@@ -324,13 +328,13 @@
             @forelse($recent as $p)
               <tr class="hover:bg-indigo-50 transition-colors">
                 <td class="px-4 py-3">INC{{ $p->id }}</td>
-                <td class="px-4 py-3">{{ $p->paid_at?->format('Y-m-d') }}</td>
-                <td class="px-4 py-3">{{ trim(($p->student->fname ?? '').' '.($p->student->lname ?? '')) ?: 'Student' }}</td>
-                <td class="px-4 py-3">Tuition Fee</td>
+                <td class="px-4 py-3">{{ optional($p->paid_at)->format('Y-m-d') }}</td>
+                <td class="px-4 py-3">{{ $p->party }}</td>
+                <td class="px-4 py-3">{{ $p->category }}</td>
                 <td class="px-4 py-3 font-semibold text-green-600">{{ $fmt($p->amount) }}</td>
-                <td class="px-4 py-3">{{ ucfirst($p->payment_method) }}</td>
+                <td class="px-4 py-3">{{ ucfirst($p->mode) }}</td>
                 <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Collected</span></td>
-                <td class="px-4 py-3"><a href="{{ route('accounting.feeCollection') }}" class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100 inline-flex">View</a></td>
+                <td class="px-4 py-3"><a href="{{ $p->url }}" class="text-xs px-2.5 py-1.5 border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100 inline-flex">View</a></td>
               </tr>
             @empty
               <tr><td colspan="8" class="px-4 py-8 text-center text-slate-500">No payments recorded yet.</td></tr>

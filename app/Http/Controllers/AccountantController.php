@@ -12,7 +12,9 @@ use App\Models\PayrollRun;
 use App\Models\School;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\BankTransaction;
 use App\Models\budget;
+use App\Models\Invoice;
 use App\Models\BudgetAudit;
 use App\Models\studentEnrollDetails;
 use App\Services\AccountantContextService;
@@ -360,8 +362,12 @@ class AccountantController extends Controller
         $monthStart = now()->startOfMonth();
         $pay = fn () => FeePayment::where('school_id', $schoolId);
 
-        $ytd = $schoolId ? (float) $pay()->where('paid_at', '>=', $yearStart)->sum('amount') : 0;
-        $mtd = $schoolId ? (float) $pay()->where('paid_at', '>=', $monthStart)->sum('amount') : 0;
+        $feesYtd = $schoolId ? (float) $pay()->where('paid_at', '>=', $yearStart)->sum('amount') : 0;
+        $feesMtd = $schoolId ? (float) $pay()->where('paid_at', '>=', $monthStart)->sum('amount') : 0;
+        $invoiceYtd = $schoolId ? Invoice::otherCredits($schoolId, $yearStart) : 0;
+        $invoiceMtd = $schoolId ? Invoice::otherCredits($schoolId, $monthStart) : 0;
+        $ytd = $feesYtd + $invoiceYtd;
+        $mtd = $feesMtd + $invoiceMtd;
         $structures = $schoolId ? FeeStructure::where('school_id', $schoolId)->get() : collect();
         $feeParts = [
             'Tuition Fee' => (float) $structures->sum('tuition_fee'),
@@ -377,8 +383,8 @@ class AccountantController extends Controller
         $matched = $schoolId ? (int) $pay()->whereNotNull('reference')->where('reference', '!=', '')->count() : 0;
         $payCount = $schoolId ? (int) $pay()->count() : 0;
         $unmatched = max(0, $payCount - $matched);
-        $pendingAmt = max(0, $feeConfigured - $ytd);
-        $efficiency = $feeConfigured > 0 ? round(($ytd / $feeConfigured) * 100, 1) : ($ytd > 0 ? 100 : 0);
+        $pendingAmt = max(0, $feeConfigured - $feesYtd);
+        $efficiency = $feeConfigured > 0 ? round(($feesYtd / $feeConfigured) * 100, 1) : ($feesYtd > 0 ? 100 : 0);
         $reconPct = $payCount > 0 ? (int) round(($matched / $payCount) * 100) : 0;
 
         $trend = [];
@@ -386,14 +392,16 @@ class AccountantController extends Controller
         for ($i = 5; $i >= 0; $i--) {
             $start = now()->subMonths($i)->startOfMonth();
             $end = now()->subMonths($i)->endOfMonth();
-            $total = $schoolId ? (float) $pay()->whereBetween('paid_at', [$start, $end])->sum('amount') : 0;
+            $total = $schoolId
+                ? (float) $pay()->whereBetween('paid_at', [$start, $end])->sum('amount') + Invoice::otherCredits($schoolId, $start, $end)
+                : 0;
             $trend[] = ['label' => $start->format('M'), 'total' => $total];
             $trendMax = max($trendMax, $total);
         }
 
-        $units = $structures->map(function ($f) use ($ytd, $feeConfigured) {
+        $units = $structures->map(function ($f) use ($feesYtd, $feeConfigured) {
             $expected = (float) $f->tuition_fee + (float) $f->transport_fee + (float) $f->hostel_fee + (float) $f->library_fee + (float) $f->exam_fee;
-            $share = $feeConfigured > 0 ? $ytd * ($expected / $feeConfigured) : 0;
+            $share = $feeConfigured > 0 ? $feesYtd * ($expected / $feeConfigured) : 0;
             $eff = $expected > 0 ? round(($share / $expected) * 100, 1) : 0;
             return [
                 'name' => $f->for ?: ('Structure #'.$f->id),
@@ -404,16 +412,40 @@ class AccountantController extends Controller
             ];
         });
 
-        $recent = $schoolId
-            ? FeePayment::with('student')->where('school_id', $schoolId)->latest('paid_at')->limit(8)->get()
+        $recentFees = $schoolId
+            ? FeePayment::with('student')->where('school_id', $schoolId)->latest('paid_at')->limit(8)->get()->map(fn ($p) => (object) [
+                'id' => 'F'.$p->id,
+                'paid_at' => $p->paid_at,
+                'party' => trim(($p->student->fname ?? '').' '.($p->student->lname ?? '')) ?: 'Student',
+                'category' => $p->invoice_id ? 'Invoice (fee)' : 'Fee',
+                'amount' => $p->amount,
+                'mode' => $p->payment_method,
+                'url' => route('accounting.feeCollection'),
+            ])
             : collect();
+        $recentInv = $schoolId
+            ? BankTransaction::where('school_id', $schoolId)->where('source', 'invoice')->where('type', 'credit')->latest('occurred_at')->limit(8)->get()->map(function ($t) {
+                $inv = Invoice::find($t->source_id);
+
+                return (object) [
+                    'id' => 'I'.$t->id,
+                    'paid_at' => $t->occurred_at,
+                    'party' => $inv?->partyName() ?: 'Invoice',
+                    'category' => 'Invoice',
+                    'amount' => $t->amount,
+                    'mode' => 'invoice',
+                    'url' => route('accounting.invoiceManagement'),
+                ];
+            })
+            : collect();
+        $recent = $recentFees->concat($recentInv)->sortByDesc('paid_at')->take(8)->values();
 
         $lowUnits = $units->where('efficiency', '<', 80)->count();
 
         return view('AccountantPanel.income.income', compact(
             'schoolId', 'ytd', 'mtd', 'feeParts', 'feeConfigured', 'students', 'paidStudents',
             'pendingEnroll', 'matched', 'unmatched', 'pendingAmt', 'efficiency', 'reconPct',
-            'trend', 'trendMax', 'units', 'recent', 'lowUnits', 'payCount'
+            'trend', 'trendMax', 'units', 'recent', 'lowUnits', 'payCount', 'feesYtd', 'invoiceYtd'
         ));
     }
 }

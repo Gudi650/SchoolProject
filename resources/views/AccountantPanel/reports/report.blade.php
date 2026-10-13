@@ -22,7 +22,7 @@
         </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="bg-white border rounded-xl p-4"><p class="text-xs text-slate-500">Fee income</p><p class="text-xl font-bold">{{ $fmt($fees) }}</p></div>
+      <div class="bg-white border rounded-xl p-4"><p class="text-xs text-slate-500">Total income</p><p class="text-xl font-bold">{{ $fmt($income) }}</p><p class="text-xs text-slate-500 mt-1">Fees {{ $fmt($fees) }} · Invoices {{ $fmt($invoiceOther) }}</p></div>
       <div class="bg-white border rounded-xl p-4"><p class="text-xs text-slate-500">Payroll</p><p class="text-xl font-bold">{{ $fmt($payroll) }}</p></div>
       <div class="bg-white border rounded-xl p-4"><p class="text-xs text-slate-500">Other expenses</p><p class="text-xl font-bold">{{ $fmt($type === 'cash' ? $expensesPaid : $expensesAll) }}</p></div>
       <div class="bg-white border rounded-xl p-4"><p class="text-xs text-slate-500">{{ $type === 'cash' ? 'Net cash' : 'Surplus / deficit' }}</p><p class="text-xl font-bold {{ ($type === 'cash' ? $cash : $surplus) >= 0 ? 'text-green-700' : 'text-red-700' }}">{{ $fmt($type === 'cash' ? $cash : $surplus) }}</p></div>
@@ -35,7 +35,8 @@
           <tbody class="divide-y">
             <tr><td class="px-4 py-2 font-medium">Income</td><td></td></tr>
             <tr><td class="px-4 py-2 text-slate-600">Fee collections</td><td class="px-4 py-2 text-right">{{ $fmt($fees) }}</td></tr>
-            <tr class="bg-slate-50"><td class="px-4 py-2 font-semibold">Total income</td><td class="px-4 py-2 text-right font-semibold">{{ $fmt($fees) }}</td></tr>
+            <tr><td class="px-4 py-2 text-slate-600">Invoiced other</td><td class="px-4 py-2 text-right">{{ $fmt($invoiceOther) }}</td></tr>
+            <tr class="bg-slate-50"><td class="px-4 py-2 font-semibold">Total income</td><td class="px-4 py-2 text-right font-semibold">{{ $fmt($income) }}</td></tr>
             <tr><td class="px-4 py-2 font-medium">Outflows</td><td></td></tr>
             <tr><td class="px-4 py-2 text-slate-600">Payroll (processed)</td><td class="px-4 py-2 text-right">{{ $fmt($payroll) }}</td></tr>
             @foreach($byCategory as $cat => $amt)

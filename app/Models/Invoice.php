@@ -50,6 +50,21 @@ class Invoice extends Model
         return $this->customer_name ?: '—';
     }
 
+    public static function otherCredits(int $schoolId, $from = null, $to = null): float
+    {
+        $q = BankTransaction::query()
+            ->where('school_id', $schoolId)
+            ->where('source', 'invoice')
+            ->where('type', 'credit');
+        if ($from && $to) {
+            $q->whereBetween('occurred_at', [$from, $to]);
+        } elseif ($from) {
+            $q->where('occurred_at', '>=', $from);
+        }
+
+        return (float) $q->sum('amount');
+    }
+
     public function displayStatus(): string
     {
         if (in_array($this->status, ['sent', 'partial'], true) && $this->due_date && $this->due_date->lt(today())) {
