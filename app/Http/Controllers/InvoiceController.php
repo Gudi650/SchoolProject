@@ -33,6 +33,8 @@ class InvoiceController extends Controller
             ->limit(50)
             ->get();
         $audits = InvoiceAudit::with('user')->where('school_id', $schoolId)->latest('created_at')->limit(20)->get();
+        $reminders = InvoiceAudit::with('user')->where('school_id', $schoolId)->where('action', 'reminded')->latest('created_at')->limit(15)->get();
+        $overdueInvoices = $invoices->filter(fn ($inv) => $inv->isOverdue());
         $accounts = BankAccount::where('school_id', $schoolId)->orderBy('kind')->orderBy('name')->get();
 
         $base = Invoice::where('school_id', $schoolId)->where('status', '!=', 'cancelled');
@@ -46,7 +48,7 @@ class InvoiceController extends Controller
             'overdueCount' => (clone $base)->whereIn('status', ['sent', 'partial'])->whereDate('due_date', '<', today())->count(),
         ];
 
-        return view('AccountantPanel.invoices.invoicing', compact('invoices', 'audits', 'stats', 'accounts'));
+        return view('AccountantPanel.invoices.invoicing', compact('invoices', 'audits', 'stats', 'accounts', 'reminders', 'overdueInvoices'));
     }
 
     public function create()
@@ -183,6 +185,97 @@ class InvoiceController extends Controller
         $this->audit($schoolId, $invoice->id, 'paid', ['amount' => $validated['amount'], 'status' => $status]);
 
         return redirect()->route('accounting.invoiceManagement')->with('success', 'Payment recorded.');
+    }
+
+    public function cancel(int $id)
+    {
+        $schoolId = $this->accountantContext->requireSchoolId();
+        $invoice = $this->owned($schoolId, $id);
+        abort_if($invoice->status === 'cancelled', 403);
+        abort_if($invoice->remaining() <= 0, 403, 'Fully paid invoices cannot be cancelled. Refund instead.');
+        $invoice->update(['status' => 'cancelled', 'updated_by' => Auth::id()]);
+        $this->audit($schoolId, $invoice->id, 'cancelled', ['remaining' => $invoice->remaining()]);
+
+        return back()->with('success', 'Invoice cancelled.');
+    }
+
+    public function refund(Request $request, int $id)
+    {
+        $schoolId = $this->accountantContext->requireSchoolId();
+        $invoice = $this->owned($schoolId, $id);
+        abort_if((float) $invoice->paid_amount <= 0, 403, 'Nothing to refund.');
+
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'payment_method' => 'required|in:cash,mobile,bank,cheque',
+            'bank_account_id' => 'required|exists:bank_accounts,id',
+            'reference' => 'nullable|string|max:100',
+            'paid_at' => 'required|date',
+        ]);
+        abort_if($validated['amount'] - (float) $invoice->paid_amount > 0.009, 422, 'Amount exceeds paid total.');
+
+        $kind = $this->ledger->kindForMethod($validated['payment_method']);
+        $account = BankAccount::where('school_id', $schoolId)->where('kind', $kind)->where('id', $validated['bank_account_id'])->first();
+        if (! $account) {
+            return back()->withErrors(['bank_account_id' => 'Select an account that matches this payment method.']);
+        }
+
+        $amount = (float) $validated['amount'];
+        if ($invoice->student_id) {
+            $payment = FeePayment::create([
+                'school_id' => $schoolId,
+                'student_id' => $invoice->student_id,
+                'invoice_id' => $invoice->id,
+                'amount' => -$amount,
+                'payment_method' => $validated['payment_method'],
+                'reference' => $validated['reference'] ?? $invoice->invoice_number,
+                'notes' => 'Refund invoice '.$invoice->invoice_number,
+                'paid_at' => $validated['paid_at'],
+                'recorded_by' => Auth::id(),
+            ]);
+            $this->ledger->post($schoolId, $account, 'debit', $amount, [
+                'description' => 'Refund invoice '.$invoice->invoice_number,
+                'reference' => $validated['reference'] ?? $invoice->invoice_number,
+                'source' => 'fee_payment',
+                'source_id' => $payment->id,
+                'occurred_at' => $validated['paid_at'],
+            ]);
+        } else {
+            $this->ledger->post($schoolId, $account, 'debit', $amount, [
+                'description' => 'Refund invoice '.$invoice->invoice_number,
+                'reference' => $validated['reference'] ?? $invoice->invoice_number,
+                'source' => 'invoice',
+                'source_id' => $invoice->id,
+                'occurred_at' => $validated['paid_at'],
+            ]);
+        }
+
+        $paid = max(0, (float) $invoice->paid_amount - $amount);
+        $status = $invoice->status === 'cancelled' ? 'cancelled' : ($paid <= 0.009 ? 'sent' : 'partial');
+        $invoice->update([
+            'paid_amount' => $paid,
+            'status' => $status,
+            'paid_at' => $paid <= 0.009 ? null : $invoice->paid_at,
+            'updated_by' => Auth::id(),
+        ]);
+        $this->audit($schoolId, $invoice->id, 'refunded', ['amount' => $amount, 'status' => $status]);
+
+        return redirect()->route('accounting.invoiceManagement')->with('success', 'Refund recorded.');
+    }
+
+    public function remind(Request $request, int $id)
+    {
+        $schoolId = $this->accountantContext->requireSchoolId();
+        $invoice = $this->owned($schoolId, $id);
+        abort_unless($invoice->remaining() > 0 && in_array($invoice->status, ['sent', 'partial'], true), 403);
+        $note = $request->validate(['note' => 'nullable|string|max:255'])['note'] ?? null;
+        $this->audit($schoolId, $invoice->id, 'reminded', [
+            'due' => $invoice->due_date?->toDateString(),
+            'remaining' => $invoice->remaining(),
+            'note' => $note,
+        ]);
+
+        return back()->with('success', 'Reminder logged for '.$invoice->invoice_number.'.');
     }
 
     public function print(int $id)

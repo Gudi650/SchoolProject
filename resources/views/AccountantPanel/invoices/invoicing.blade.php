@@ -74,6 +74,32 @@
       </div>
     </div>
 
+    @if(($overdueInvoices ?? collect())->isNotEmpty() || ($reminders ?? collect())->isNotEmpty())
+    <div class="mb-6 bg-white rounded-xl border border-red-100 shadow-sm overflow-hidden">
+      <div class="px-4 py-3 border-b border-red-100 bg-red-50"><h2 class="font-semibold text-red-900">Overdue reminders</h2></div>
+      <div class="p-4 space-y-3">
+        @forelse($overdueInvoices as $inv)
+          <div class="flex flex-wrap items-center justify-between gap-2 text-sm">
+            <p><span class="font-medium">{{ $inv->invoice_number }}</span> · {{ $inv->partyName() }} · due {{ $inv->due_date?->format('Y-m-d') }} · {{ $fmt($inv->remaining()) }} left</p>
+            <form method="POST" action="{{ route('accounting.remindInvoice', $inv->id) }}" class="flex gap-1">
+              @csrf
+              <input type="text" name="note" placeholder="Note" class="border rounded px-2 py-1 text-xs w-40">
+              <button class="px-2 py-1 text-xs bg-red-100 text-red-800 rounded">Log reminder</button>
+            </form>
+          </div>
+        @empty
+          <p class="text-sm text-slate-500">No overdue invoices.</p>
+        @endforelse
+        @if(($reminders ?? collect())->isNotEmpty())
+          <p class="text-xs font-medium text-slate-500 pt-2">Recent logs</p>
+          @foreach($reminders as $r)
+            <p class="text-xs text-slate-600">#{{ $r->invoice_id }} · {{ $r->created_at?->format('M j, H:i') }} · {{ trim(($r->user->fname ?? '').' '.($r->user->lname ?? '')) }}@if(!empty($r->changes['note'])) — {{ $r->changes['note'] }}@endif</p>
+          @endforeach
+        @endif
+      </div>
+    </div>
+    @endif
+
     <div class="mb-6">
       <h2 class="text-base sm:text-lg font-semibold text-slate-900 mb-4">Invoices</h2>
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
@@ -110,6 +136,13 @@
                     @endif
                     @if($inv->remaining() > 0 && $inv->status !== 'cancelled')
                       <button type="button" class="px-2 py-1 text-xs bg-green-50 text-green-700 rounded" onclick="openPay({{ $inv->id }}, '{{ $inv->invoice_number }}', {{ $inv->remaining() }})">Pay</button>
+                      <form method="POST" action="{{ route('accounting.cancelInvoice', $inv->id) }}" onsubmit="return confirm('Cancel this invoice? Unpaid balance will be written off.')">@csrf<button class="px-2 py-1 text-xs bg-slate-100 text-slate-700 rounded">Cancel</button></form>
+                    @endif
+                    @if($inv->paid_amount > 0)
+                      <button type="button" class="px-2 py-1 text-xs bg-amber-50 text-amber-800 rounded" onclick="openRefund({{ $inv->id }}, '{{ $inv->invoice_number }}', {{ $inv->paid_amount }})">Refund</button>
+                    @endif
+                    @if($inv->isOverdue())
+                      <form method="POST" action="{{ route('accounting.remindInvoice', $inv->id) }}">@csrf<button class="px-2 py-1 text-xs bg-red-50 text-red-700 rounded">Remind</button></form>
                     @endif
                   </div>
                 </td>
@@ -146,7 +179,7 @@
     <div id="payModal" class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4">
       <form method="POST" id="payForm" class="bg-white rounded-xl p-6 w-full max-w-md space-y-3">
         @csrf
-        <h3 class="font-semibold text-lg">Record payment <span id="payLabel" class="text-slate-500 font-normal"></span></h3>
+        <h3 class="font-semibold text-lg"><span id="payTitle">Record payment</span> <span id="payLabel" class="text-slate-500 font-normal"></span></h3>
         <input type="number" name="amount" id="payAmount" step="0.01" min="0.01" required class="w-full border rounded-lg px-3 py-2">
         <select name="payment_method" id="pay_method" required class="w-full border rounded-lg px-3 py-2">
           <option value="">Method</option>
@@ -169,14 +202,17 @@
       </form>
     </div>
     <script>
-      function openPay(id, num, remaining) {
+      function openMoney(id, num, amount, kind) {
         const m = document.getElementById('payModal');
-        document.getElementById('payForm').action = @json(url('/invoices')) + '/' + id + '/pay';
+        document.getElementById('payForm').action = @json(url('/invoices')) + '/' + id + '/' + kind;
+        document.getElementById('payTitle').textContent = kind === 'refund' ? 'Refund' : 'Record payment';
         document.getElementById('payLabel').textContent = num;
-        document.getElementById('payAmount').value = remaining;
-        document.getElementById('payAmount').max = remaining;
+        document.getElementById('payAmount').value = amount;
+        document.getElementById('payAmount').max = amount;
         m.classList.remove('hidden'); m.classList.add('flex');
       }
+      function openPay(id, num, remaining) { openMoney(id, num, remaining, 'pay'); }
+      function openRefund(id, num, paid) { openMoney(id, num, paid, 'refund'); }
       const methodEl = document.getElementById('pay_method');
       const accountEl = document.getElementById('pay_account');
       methodEl?.addEventListener('change', () => {

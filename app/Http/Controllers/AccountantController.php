@@ -111,6 +111,8 @@ class AccountantController extends Controller
             ($stats['approvedLoans'] ?? 0) > 0 ? ['text' => $stats['approvedLoans'] . ' loan(s) ready to disburse', 'url' => route('accounting.loanDisbursements')] : null,
             ($stats['pendingEnrollments'] ?? 0) > 0 ? ['text' => $stats['pendingEnrollments'] . ' enrollment pending', 'url' => route('accounting.enrollmentIncome')] : null,
             $budgetTotal <= 0 ? ['text' => 'No budget set', 'url' => route('accounting.createBudget')] : null,
+            ($overdueInv = Invoice::where('school_id', $schoolId)->whereIn('status', ['sent', 'partial'])->whereDate('due_date', '<', today())->count()) > 0
+                ? ['text' => $overdueInv.' invoice(s) overdue', 'url' => route('accounting.invoiceManagement')] : null,
         ]));
 
         return view('AccountantPanel.dashboard', compact('schoolId', 'stats', 'payrollTrend', 'recentActivity', 'school', 'user', 'alerts', 'latestBudget'));

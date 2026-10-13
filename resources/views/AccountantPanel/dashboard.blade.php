@@ -1,4 +1,5 @@
 @php
+
   $stats = $stats ?? [];
   $payrollTrend = $payrollTrend ?? [];
   $recentActivity = $recentActivity ?? collect();
@@ -7,18 +8,22 @@
   $budgetAllocated = (float) ($stats['budgetAllocated'] ?? 0);
   $budgetPct = $budgetTotal > 0 ? min(100, round(($budgetAllocated / $budgetTotal) * 100, 1)) : 0;
   $fmt = fn ($n) => money_format_app($n);
+
 @endphp
 
 <x-Account-sidebar>
+
   <x-slot name="title">Accountant Dashboard</x-slot>
  
   <main class="p-6 bg-white min-w-0">
     @if(empty($schoolId))
+
       <div class="rounded-xl border border-amber-200 bg-amber-50 p-8 text-center text-slate-700">
         <i data-lucide="building-2" class="w-10 h-10 mx-auto text-amber-600 mb-3"></i>
         <p class="font-semibold">School context not found</p>
         <p class="text-sm mt-2 text-slate-600">Sign in with an accountant account linked to a school, or set your school in session.</p>
       </div>
+      
     @else
       <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>

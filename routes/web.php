@@ -583,6 +583,9 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::delete('/invoices/{id}', 'destroy')->name('accounting.deleteInvoice');
     Route::post('/invoices/{id}/send', 'send')->name('accounting.sendInvoice');
     Route::post('/invoices/{id}/pay', 'pay')->name('accounting.payInvoice');
+    Route::post('/invoices/{id}/cancel', 'cancel')->name('accounting.cancelInvoice');
+    Route::post('/invoices/{id}/refund', 'refund')->name('accounting.refundInvoice');
+    Route::post('/invoices/{id}/remind', 'remind')->name('accounting.remindInvoice');
     Route::get('/invoices/{id}/print', 'print')->name('accounting.printInvoice');
     Route::get('/invoices/{id}/pdf', 'pdf')->name('accounting.pdfInvoice');
 });

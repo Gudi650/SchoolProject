@@ -54,15 +54,23 @@ class Invoice extends Model
     {
         $q = BankTransaction::query()
             ->where('school_id', $schoolId)
-            ->where('source', 'invoice')
-            ->where('type', 'credit');
+            ->where('source', 'invoice');
         if ($from && $to) {
             $q->whereBetween('occurred_at', [$from, $to]);
         } elseif ($from) {
             $q->where('occurred_at', '>=', $from);
         }
 
-        return (float) $q->sum('amount');
+        return (float) (clone $q)->where('type', 'credit')->sum('amount')
+            - (float) (clone $q)->where('type', 'debit')->sum('amount');
+    }
+
+    public function isOverdue(): bool
+    {
+        return in_array($this->status, ['sent', 'partial'], true)
+            && $this->due_date
+            && $this->due_date->lt(today())
+            && $this->remaining() > 0;
     }
 
     public function displayStatus(): string
