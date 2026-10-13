@@ -6,6 +6,7 @@ use App\Models\BankAccount;
 use App\Models\Expense;
 use App\Models\FeePayment;
 use App\Models\Invoice;
+use App\Models\LoanApplication;
 use App\Models\PayrollRun;
 use App\Services\AccountantContextService;
 use Illuminate\Http\Request;
@@ -32,30 +33,57 @@ class ReportController extends Controller
 
     public function profitLoss(Request $request)
     {
-        return $this->show($request, 'pl');
+        return view('AccountantPanel.reports.profitLoss', $this->metrics($request));
     }
 
     public function cashFlow(Request $request)
     {
-        return $this->show($request, 'cash');
+        return view('AccountantPanel.reports.cashFlow', $this->extra($this->metrics($request)));
     }
 
     public function trialBalance(Request $request)
     {
-        return $this->show($request, 'trial');
+        return view('AccountantPanel.reports.trialBalance', $this->extra($this->metrics($request)));
     }
 
     public function balanceSheet(Request $request)
     {
-        return $this->show($request, 'balance');
+        return view('AccountantPanel.reports.balanceSheet', $this->extra($this->metrics($request)));
     }
 
-    private function show(Request $request, string $type)
+    private function extra(array $data): array
     {
-        $data = $this->metrics($request);
-        $data['type'] = $type;
+        $schoolId = $data['schoolId'];
+        $from = $data['from'];
+        $to = $data['to'];
+        $data['loansOut'] = (float) LoanApplication::where('school_id', $schoolId)
+            ->whereNotNull('disbursed_at')
+            ->whereBetween('disbursed_at', [$from, $to])
+            ->sum('amount');
+        $data['loansOutstanding'] = (float) LoanApplication::where('school_id', $schoolId)
+            ->whereIn('status', ['disbursed', 'active'])
+            ->get()
+            ->sum(fn ($l) => max(0, (float) $l->total_repayment - (float) $l->total_paid));
+        $data['expensesUnpaid'] = (float) Expense::where('school_id', $schoolId)->where('status', '!=', 'paid')->sum('amount');
+        $data['invoicesOpen'] = (float) Invoice::where('school_id', $schoolId)
+            ->whereIn('status', ['sent', 'partial'])
+            ->sum(DB::raw('total - paid_amount'));
+        $accounts = BankAccount::where('school_id', $schoolId)->orderBy('kind')->orderBy('name')->get();
+        $data['accounts'] = $accounts->map(fn ($a) => [
+            'name' => $a->name,
+            'kind' => $a->kind,
+            'balance' => $a->balance(),
+        ]);
+        $data['cashOnHand'] = (float) $data['accounts']->sum('balance');
+        $data['cashNet'] = $data['cash'] - $data['loansOut'];
+        $data['receivables'] = $data['invoicesOpen'];
+        $data['assets'] = $data['cashOnHand'] + $data['invoicesOpen'];
+        $data['liabilities'] = $data['expensesUnpaid'] + $data['loansOutstanding'];
+        $data['equity'] = $data['assets'] - $data['liabilities'];
+        $data['debitTotal'] = $data['payroll'] + $data['expensesAll'] + $data['loansOut'];
+        $data['creditTotal'] = $data['fees'] + $data['invoiceOther'];
 
-        return view('AccountantPanel.reports.report', $data);
+        return $data;
     }
 
     private function metrics(Request $request): array

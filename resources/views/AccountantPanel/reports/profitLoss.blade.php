@@ -1,46 +1,65 @@
+@php
+  $fmt = fn ($n) => money_format_app($n);
+  $expenseTotal = $payroll + $expensesAll;
+@endphp
 <x-Account-sidebar>
   <x-slot name="title">Profit & Loss</x-slot>
-
-  <main class="p-4 sm:p-6 bg-slate-50 min-h-screen">
-    <div class="mb-6 rounded-lg border border-indigo-100 bg-indigo-50 px-4 sm:px-6 py-4">
-      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-        <div>
-          <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Profit & Loss Statement</h1>
-          <p class="text-xs sm:text-sm text-slate-700 mt-1">Review revenue, expenditure, and net surplus for the selected period.</p>
-        </div>
-        <button class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center">
-          <i data-lucide="download" class="w-4 h-4"></i>
-          Export P&L
-        </button>
+  <main class="p-4 sm:p-6 bg-slate-50 min-h-screen space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div>
+        <h1 class="text-xl font-bold text-slate-900">Profit &amp; loss</h1>
+        <p class="text-sm text-slate-600">{{ $from->format('M j, Y') }} – {{ $to->format('M j, Y') }} · recorded income vs expenses</p>
       </div>
+      <form method="GET" class="flex flex-wrap gap-2 items-end">
+        <input type="date" name="from" value="{{ $from->format('Y-m-d') }}" class="border rounded-lg px-3 py-2 text-sm">
+        <input type="date" name="to" value="{{ $to->format('Y-m-d') }}" class="border rounded-lg px-3 py-2 text-sm">
+        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm">Apply</button>
+        <a href="{{ route('accounting.reportsManagement', ['from' => $from->format('Y-m-d'), 'to' => $to->format('Y-m-d')]) }}" class="px-4 py-2 border rounded-lg text-sm">Hub</a>
+      </form>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      <div class="bg-white rounded-xl border border-indigo-100 p-4 shadow-sm"><p class="text-xs text-slate-500">Total Revenue</p><p class="text-2xl font-bold text-slate-900 mt-1">Tsh 8.42Cr</p></div>
-      <div class="bg-white rounded-xl border border-red-100 p-4 shadow-sm"><p class="text-xs text-slate-500">Total Expenses</p><p class="text-2xl font-bold text-red-700 mt-1">Tsh 6.98Cr</p></div>
-      <div class="bg-white rounded-xl border border-green-100 p-4 shadow-sm"><p class="text-xs text-slate-500">Net Surplus</p><p class="text-2xl font-bold text-green-700 mt-1">Tsh 1.44Cr</p></div>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="bg-white border rounded-xl p-4"><p class="text-xs text-slate-500">Revenue</p><p class="text-2xl font-bold">{{ $fmt($income) }}</p></div>
+      <div class="bg-white border rounded-xl p-4"><p class="text-xs text-slate-500">Expenses</p><p class="text-2xl font-bold text-red-700">{{ $fmt($expenseTotal) }}</p></div>
+      <div class="bg-white border rounded-xl p-4"><p class="text-xs text-slate-500">Net surplus</p><p class="text-2xl font-bold {{ $surplus >= 0 ? 'text-green-700' : 'text-red-700' }}">{{ $fmt($surplus) }}</p></div>
     </div>
 
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead class="bg-indigo-50 border-b border-indigo-100">
-          <tr>
-            <th class="px-4 py-3 text-left font-medium text-indigo-900">Particulars</th>
-            <th class="px-4 py-3 text-right font-medium text-indigo-900">Amount</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100">
-          <tr><td class="px-4 py-3 font-medium text-slate-900">Revenue</td><td class="px-4 py-3 text-right"></td></tr>
-          <tr><td class="px-4 py-3 text-slate-600">Tuition & Academic Fees</td><td class="px-4 py-3 text-right">Tsh 5,95,00,000</td></tr>
-          <tr><td class="px-4 py-3 text-slate-600">Enrollment & Other Income</td><td class="px-4 py-3 text-right">Tsh 2,47,00,000</td></tr>
-          <tr class="bg-slate-50"><td class="px-4 py-3 font-semibold text-slate-900">Total Revenue</td><td class="px-4 py-3 text-right font-semibold text-slate-900">Tsh 8,42,00,000</td></tr>
-          <tr><td class="px-4 py-3 font-medium text-slate-900">Expenses</td><td class="px-4 py-3 text-right"></td></tr>
-          <tr><td class="px-4 py-3 text-slate-600">Payroll & Benefits</td><td class="px-4 py-3 text-right">Tsh 4,92,00,000</td></tr>
-          <tr><td class="px-4 py-3 text-slate-600">Utilities, Maintenance, Operations</td><td class="px-4 py-3 text-right">Tsh 2,06,00,000</td></tr>
-          <tr class="bg-slate-50"><td class="px-4 py-3 font-semibold text-slate-900">Total Expenses</td><td class="px-4 py-3 text-right font-semibold text-red-700">Tsh 6,98,00,000</td></tr>
-          <tr class="bg-green-50"><td class="px-4 py-3 font-semibold text-green-800">Net Surplus</td><td class="px-4 py-3 text-right font-semibold text-green-800">Tsh 1,44,00,000</td></tr>
-        </tbody>
-      </table>
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="bg-white border rounded-xl overflow-hidden">
+        <h2 class="px-4 py-3 font-semibold border-b bg-indigo-50 text-sm">Statement</h2>
+        <table class="w-full text-sm">
+          <tbody class="divide-y">
+            <tr><td class="px-4 py-2 font-medium" colspan="2">Revenue</td></tr>
+            <tr><td class="px-4 py-2 text-slate-600">Fee collections</td><td class="px-4 py-2 text-right">{{ $fmt($fees) }}</td></tr>
+            <tr><td class="px-4 py-2 text-slate-600">Invoiced other</td><td class="px-4 py-2 text-right">{{ $fmt($invoiceOther) }}</td></tr>
+            <tr class="bg-slate-50"><td class="px-4 py-2 font-semibold">Total revenue</td><td class="px-4 py-2 text-right font-semibold">{{ $fmt($income) }}</td></tr>
+            <tr><td class="px-4 py-2 font-medium" colspan="2">Expenses</td></tr>
+            <tr><td class="px-4 py-2 text-slate-600">Payroll (processed)</td><td class="px-4 py-2 text-right">{{ $fmt($payroll) }}</td></tr>
+            @forelse($byCategory as $cat => $amt)
+              <tr><td class="px-4 py-2 text-slate-600">{{ ucfirst($cat ?: 'Uncategorised') }}</td><td class="px-4 py-2 text-right">{{ $fmt($amt) }}</td></tr>
+            @empty
+              <tr><td class="px-4 py-2 text-slate-500" colspan="2">No expenses in this period</td></tr>
+            @endforelse
+            <tr class="bg-slate-50"><td class="px-4 py-2 font-semibold">Total expenses</td><td class="px-4 py-2 text-right font-semibold">{{ $fmt($expenseTotal) }}</td></tr>
+            <tr><td class="px-4 py-2 font-bold">Net surplus / deficit</td><td class="px-4 py-2 text-right font-bold {{ $surplus >= 0 ? 'text-green-700' : 'text-red-700' }}">{{ $fmt($surplus) }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="bg-white border rounded-xl overflow-hidden">
+        <h2 class="px-4 py-3 font-semibold border-b bg-slate-50 text-sm">Last 6 months (cash in / out)</h2>
+        <table class="w-full text-sm">
+          <thead class="border-b"><tr><th class="px-4 py-2 text-left">Month</th><th class="px-4 py-2 text-right">In</th><th class="px-4 py-2 text-right">Out</th></tr></thead>
+          <tbody class="divide-y">
+            @foreach($trend as $row)
+              <tr>
+                <td class="px-4 py-2">{{ $row['label'] }}</td>
+                <td class="px-4 py-2 text-right">{{ $fmt($row['in']) }}</td>
+                <td class="px-4 py-2 text-right">{{ $fmt($row['out']) }}</td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
     </div>
   </main>
 </x-Account-sidebar>
